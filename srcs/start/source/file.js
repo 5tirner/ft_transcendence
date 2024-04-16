@@ -1,6 +1,6 @@
 //-------------------------------
 //console stuff
-console.log("Browser Console By Zasabri\n");
+console.log("Browser Console By ZakariaSabri\n");
 //-------------------------------
 
 document.write("Today Date Is: " + Date());
@@ -9,19 +9,28 @@ window.alert("Did You Want To See L'morphine's Math?");
 
 //-------------------------------
 //console stuff
-var a = 5, b = 5;
+let a = 5, b = 5;
 a *= a, b *= b;
-var c = a + b;
+let c = a + b;
 console.log("a = " + a + ", b = ", + b + '.');
 //-------------------------------
-
-document.write("If We Add " + a + " To " + b + " We Will Have: " + c);
+arr = ["HI", "By", "Say"];
+i = 0;
+while (i < 3)
+{
+    document.write(arr[i]);
+    document.write("<br>");
+    i++;
+}
+document.write("If We Add 5 To 5 We Will Have: " + c);
 
 //-------------------------------
 //console stuff
 console.log(c);
 clore = 1 + 1 + "1";
+let gogo;
 console.log("clore = " + clore);
 clore = "a" + " " + "b";
 console.log("clore = " + clore);
+console.log("GOGO: " + gogo);
 //------------------------------
