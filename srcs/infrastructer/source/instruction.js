@@ -14,14 +14,14 @@ a *= a, b *= b;
 let c = a + b;
 console.log("a = " + a + ", b = ", + b + '.');
 //-------------------------------
-arr = ["HI", "By", "Say"];
-i = 0;
-while (i < 3)
-{
-    document.write(arr[i]);
-    document.write("<br>");
-    i++;
-}
+// arr = ["Die", "Die", "Die"];
+// i = 0;
+// while (i < 3)
+// {
+//     document.write(arr[i]);
+//     document.write("<br>");
+//     i++;
+// }
 document.write("If We Add 5 To 5 We Will Have: " + c);
 
 //-------------------------------

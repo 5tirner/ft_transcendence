@@ -4,7 +4,7 @@ server
 	listen [::]:80 default_server;
 
 	root /var/www/html;
-    index   file.html
+    index   structure.html
 	server_name ysabr_yachaab_zasabri;
 
 	location / {
