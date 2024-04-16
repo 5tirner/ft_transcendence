@@ -9,7 +9,7 @@ services:
   infrastructer:
     container_name: infrastructer
     image: infrastructer
-    build: ./start
+    build: ./infrastructer
     ports:
       - "8000:80"
     networks:
