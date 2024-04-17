@@ -11,7 +11,7 @@ services:
     image: infrastructer
     build: ./infrastructer
     ports:
-      - "8000:80"
+      - "12345:80"
     networks:
       - net
     restart: always
