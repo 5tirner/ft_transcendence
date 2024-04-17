@@ -1,8 +1,44 @@
-video {
+video
+{
     position:fixed;
     top: 0;
     left: 0;
     min-width: 100%;
     min-height: 100%;
     z-index:-100;
+}
+
+.button
+{
+    display:block;
+    margin:auto;
+    padding: 10px 24px;
+    color: gold;
+    border-radius: 12px;
+    border: 1px solid gold;
+    text-align: center;
+    text-decoration: solid;
+    text-shadow: 4px;
+    font-size: 12px;
+    cursor:pointer;
+}
+
+.button:hover
+{ background-color: rgb(211, 197, 120); color: black; }
+
+.ripple {
+  width: 1px;
+  height: 1px;
+  background-color: rgb(255, 255, 255);
+  position: fixed;
+  border-radius: 50%;
+  border: 1px solid rgb(241, 241, 241);
+  pointer-events: none;
+}
+
+@keyframes ripple-effect {
+  to {
+     transform:scale(10);
+     opacity: 0.1;
   }
+}
