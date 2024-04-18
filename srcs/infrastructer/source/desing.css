@@ -17,9 +17,8 @@ video
     border-radius: 12px;
     border: 1px solid gold;
     text-align: center;
-    text-decoration:overline;
-    text-shadow: 4px;
-    font-size: 12px;
+    text-decoration: wavy;
+    font-size: 14px;
     cursor:pointer;
 }
 
