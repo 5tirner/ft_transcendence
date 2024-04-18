@@ -29,4 +29,3 @@ player =
     }
 };
 player.describe();
-/*Events*/
