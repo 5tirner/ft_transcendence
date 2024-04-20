@@ -64,3 +64,5 @@ a = BigInt(9007199254740991 + (Math.pow(2, 53) - 1));
 a++;
 console.log(a);
 console.log(typeof a);
+a = (32 + 5).toString();
+console.log(typeof a + " " + a);
