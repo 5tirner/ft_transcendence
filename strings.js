@@ -56,13 +56,6 @@ for (a of dataToCollect)
     collect += `${a}`;
     a++;
 }
-num = 45673465763498393475884375943957483590n;
-console.log(collect);
-console.log(num);
-console.log(typeof num);
-a = BigInt(9007199254740991 + (Math.pow(2, 53) - 1));
-a++;
-console.log(a);
-console.log(typeof a);
-a = (32 + 5).toString();
-console.log(typeof a + " " + a);
+str = "1234";
+n = Number(str);
+console.log(typeof n + ": " + n);
