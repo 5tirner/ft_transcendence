@@ -65,5 +65,14 @@ function GreatThanZero(v){
     return (v > 0);
 }
 console.log(checker);
-
-bbbb = fff.from("ABCDEFGHIJKLMNOPURSTQVWXYZ");
+checker = names.some(LessThanZero);
+function LessThanZero(v)
+{
+    return (v <= 0);
+}
+console.log(checker);
+//const array
+const br = ["HI", "BY", "DI"];
+br.forEach(print);
+br[1] = "TY";
+br.forEach(print);
