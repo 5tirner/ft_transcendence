@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/icon-pp.png' %}" type="image/x-icon">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="wrapped">
+        <form method="POST">
+            {% csrf_token %}
+            <h1>Signup</h1>
+            <div class="input-box">
+                {{ form.username }}
+                <i class='bx bx-user'></i>
+            </div>
+            <div class="input-box">
+                {{ form.email }}
+                <i class='bx bx-user'></i>
+            </div>
+            <div class="input-box">
+                {{ form.password1 }}
+                <i class='bx bx-lock-alt'></i>
+            </div>
+            <div class="input-box">
+                {{ form.password2 }}
+                <i class='bx bx-lock-alt'></i>
+            </div>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <center>
+                        <p>
+                            <b>
+                                {{ error }}
+                            </b>
+                        </p>
+                    </center>
+                {% endfor %}
+            {% endfor %}
+            <br>
+            <button type="submit" class="btn">Signup</button>
+            <div class="register-link">
+                <p>Already have an account?<a href="{% url 'login' %}">Login</a></p>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
