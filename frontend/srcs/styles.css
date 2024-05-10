@@ -1,0 +1,91 @@
+:root {
+  --background-col1: #3f7472;
+  --background-col2: #e68c5a;
+  --primaryColor: #43281c;
+  --secondaryColor: #333d29;
+  --color3: #7f4f24;
+  --color4: #b08968;
+  --color5: #ddb892;
+  --color6: #ede0d4;
+  --highlight: #fbf2c6;
+}
+
+body {
+  background-color: rgb(230, 140, 90);
+  background-image: linear-gradient(
+    180deg,
+    rgba(230, 140, 90, 1) 15%,
+    rgba(63, 116, 114, 1) 100%
+  );
+  background-repeat: no-repeat;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+#login,
+#register {
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+#login div,
+#register div {
+  width: 400px;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.6);
+  text-align: center;
+}
+
+#login h2,
+#register h2 {
+  color: #00215e;
+  font-size: 40px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#login label,
+#register lable {
+  color: #00215e;
+  font-weight: bold;
+  margin: 5px 0px;
+  display: block;
+  text-align: left;
+}
+
+#login_email,
+#login_password,
+#register_name,
+#register_email,
+#register_password {
+  position: relative;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #2c4e80;
+  border-radius: 3px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  background-color: #ffc55a;
+}
+
+#login button,
+#register button {
+  background-color: #ef6b11;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+#login button:hover,
+#register button:hover {
+  opacity: 0.8;
+}
