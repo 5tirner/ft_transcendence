@@ -8,3 +8,5 @@ env
 # python cach
 __pycache__
 *.pyc
+.DS_Store
+db.sqlite3
