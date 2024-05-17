@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+</head>
+<body>
+    <h1>Welcome <span id="username"></span></h1>
+
+    <script src="{% static 'js/home.js' %}"></script>
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/icon-pp.png' %}" type="image/x-icon">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="wrapped">
+        {% if request.user.is_authenticated %}
+            <p>Welcome, {{ request.user.username }}</p>
+            <a href="{% url 'api_logout' %}" class="btn">Logout</a>
+        {% else %}
+            <a href="{% url 'login_42' %}" class="btn">Login with 42</a>
+            <a href="{% url 'api_login' %}" class="btn">Login</a>
+            <a href="{% url 'api_signup' %}" class="btn">Signup</a>
+        {% endif %}
+        <h1>Welcome!</h1>
+    </div>
+</body>
+</html> -->

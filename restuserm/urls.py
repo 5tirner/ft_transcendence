@@ -1,0 +1,18 @@
+from django.urls import path
+from .views import UserLogin,UserSignup
+from . import views
+
+urlpatterns = [
+    # path('', Home.as_view()),
+    path('login/', UserLogin.as_view(), name='api_login'),
+    path('logout/', views.logout, name='api_logout'),
+    path('signup/', UserSignup.as_view(), name='api_signup'),
+    path('oauth/intra/', views.login42, name='login_42'), #
+    path('oauth/callback/', views.callback42, name='callback_42'),
+    path('google/', views.login_google, name='googleView'),
+    path('google/callback/', views.callback_google, name='googlebackview'),
+    path('2FA/codeqr/', views.tfa_qr_code, name='two_factor_qrcode'),
+    path('2FA/verify/', views.tfa_verification, name='two_factor_verify'),
+    # path('signin/', views.login_view, name='signin'),
+    path('home/', views.home, name='home'),
+]
