@@ -25,17 +25,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Page</title>
-    <link rel="icon" type="image/x-icon" href="https://png.pngtree.com/png-vector/20190330/ourmid/pngtree-vector-ping-pong-icon-png-image_892769.jpg">
+    <title>{{user.username}} Informations</title>
+    <link rel="icon" type="image/x-icon" href="https://img.lovepik.com/element/40127/4259.png_1200.png">
 </head>
 <body>
-    <p class="h1">Click To See Friend Information</p>
-    <ul>
-        {%for i in user%}
-            <button><a href="show/{{i.id}}"> `{{i.username}}` PROFILE</a></button>
-        {%endfor%}
-    </ul>
-    <p>Click To Back To The Welcome Page</p>
-    <button><a href="/">BACK!</a></button>
+    <p>Click To Back To Your Profile</p>
+    <button><a href="/pingpong">BACK!</a></button>
 </body>
 </html>
