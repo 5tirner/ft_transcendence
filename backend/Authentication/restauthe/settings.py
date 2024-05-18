@@ -81,18 +81,26 @@ WSGI_APPLICATION = 'restauthe.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+#
+# DATABASES = {
+#     'default': {
+#         # "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgres',
+#         'USER': 'admin',
+#         'PASSWORD': '12345678',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5050',       # default PostgreSQL port
+#     }
+# }
+#
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'authdb',
-        'USER': 'postgres',
-        'PASSWORD': '1998',
-        'HOST': '127.0.0.1',
-        'PORT': '',       # default PostgreSQL port
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
