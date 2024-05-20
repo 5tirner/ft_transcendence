@@ -35,6 +35,15 @@
             <button><a href="show/{{i.id}}"> `{{i.username}}` PROFILE</a></button>
         {%endfor%}
     </ul>
+    <script>
+        const ws = new WebSocket('ws://localhost:8000/ws/myurl/');
+        ws.onmessage = function(event){
+            const data = JSON.parse(event.data);
+            console.log('data:');
+            console.log(data);
+            document.write(data.nbr);
+        };
+    </script>
     <p>Click To Back To The Welcome Page</p>
     <button><a href="/">BACK!</a></button>
 </body>

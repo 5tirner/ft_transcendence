@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'daphne',
     'django.contrib.staticfiles',
-    'pingpong',
     'channels',
+    'pingpong',
 ]
 
 MIDDLEWARE = [
