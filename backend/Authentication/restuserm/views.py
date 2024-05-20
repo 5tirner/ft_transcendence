@@ -296,6 +296,7 @@ def tfa_verification(request):
         return response
 
 
+@permission_classes([AllowAny])
 class UserSignup(APIView):
     def post(self, request):
         username = request.data.get("username")
@@ -348,4 +349,3 @@ class PlayerAvatarUpload(APIView):
         avatar_file = request.FILES["avatar"]
 
     # except:
-

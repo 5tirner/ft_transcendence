@@ -1,69 +1,69 @@
 :root {
-  --color1: #1e0342;
-  --color-1: #4e03ee;
-  --color2: #0e46a3;
-  --color3: #9ac8cd;
-  --color4: #e1f7f5;
-  --color5: #d5e9ff;
-  --white: #fff;
-  --black: #000;
-  --bg: #f8f8f8;
-  --grey: #999;
-  --dark: #1a1a1a;
-  --light: #e6e6e6;
-  --wrapper: 1000px;
-  --blue: #00b0ff;
+    --color1: #1e0342;
+    --color-1: #4e03ee;
+    --color2: #0e46a3;
+    --color3: #9ac8cd;
+    --color4: #e1f7f5;
+    --color5: #d5e9ff;
+    --white: #fff;
+    --black: #000;
+    --bg: #f8f8f8;
+    --grey: #999;
+    --dark: #1a1a1a;
+    --light: #e6e6e6;
+    --wrapper: 1000px;
+    --blue: #00b0ff;
 }
 
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  background: var(--color5);
-  height: 100vh;
+    background: var(--color5);
+    height: 100vh;
 }
 
 .container {
-  display: flex;
+    display: flex;
 }
 
 #login,
 #register {
-  padding: 40px;
-  display: flex;
-  justify-content: center;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
 }
 
 #login div,
 #register div {
-  display: flex;
-  background: var(--color2);
-  width: 400px;
-  margin: 0 auto;
-  padding: 40px;
-  border-radius: 20px;
-  box-shadow: 10px 10px 10px var(--color1);
-  text-align: center;
+    display: flex;
+    background: var(--color2);
+    width: 400px;
+    margin: 0 auto;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 10px 10px 10px var(--color1);
+    text-align: center;
 }
 
 #login h2,
 #register h2 {
-  color: var(--color1);
-  font-size: 40px;
-  margin-bottom: 20px;
-  text-align: center;
+    color: var(--color1);
+    font-size: 40px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 #login label,
 #register lable {
-  color: var(--color4);
-  font-weight: bold;
-  margin: 5px 0px;
-  display: block;
-  text-align: left;
+    color: var(--color4);
+    font-weight: bold;
+    margin: 5px 0px;
+    display: block;
+    text-align: left;
 }
 
 #login_email,
@@ -71,146 +71,400 @@ body {
 #register_name,
 #register_email,
 #register_password {
-  position: relative;
-  width: 100%;
-  padding: 10px;
-  border: 1px solid var(--color1);
-  border-radius: 3px;
-  margin-bottom: 15px;
-  font-size: 16px;
-  background-color: var(--color3);
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--color1);
+    border-radius: 3px;
+    margin-bottom: 15px;
+    font-size: 16px;
+    background-color: var(--color3);
 }
 
 #login button,
 #register button {
-  background-color: var(--color-1);
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 18px;
+    background-color: var(--color-1);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
 }
 
 #login button:hover,
 #register button:hover {
-  opacity: 0.8;
+    opacity: 0.8;
 }
 
 #nav_bar ul {
-  list-style-type: none;
+    list-style-type: none;
 }
 
 .sidebar {
-  height: 100vh;
-  width: 78px;
-  background: #11101d;
-  padding: 6px 14px;
+    height: 100vh;
+    width: 78px;
+    background: #11101d;
+    padding: 6px 14px;
 }
 
 .sidebar i {
-  color: #fff;
-  height: 60px;
-  min-width: 50px;
-  font-size: 28px;
-  text-align: center;
-  line-height: 60px;
+    color: #fff;
+    height: 60px;
+    min-width: 50px;
+    font-size: 28px;
+    text-align: center;
+    line-height: 60px;
 }
 
 .sidebar .nav-list {
-  margin-top: 20px;
-  height: 100%;
+    margin-top: 20px;
+    height: 100%;
 }
 
 .sidebar li {
-  position: relative;
-  margin: 8px 0;
-  list-style: none;
+    position: relative;
+    margin: 8px 0;
+    list-style: none;
 }
 
 .sidebar li .tooltip {
-  position: absolute;
-  top: -20px;
-  left: calc(100% + 15px);
-  z-index: 3;
-  background: #fff;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 15px;
-  font-weight: 400;
-  opacity: 0;
-  white-space: nowrap;
-  pointer-events: none;
-  transition: 0s;
+    position: absolute;
+    top: -20px;
+    left: calc(100% + 15px);
+    z-index: 3;
+    background: #fff;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 400;
+    opacity: 0;
+    white-space: nowrap;
+    pointer-events: none;
+    transition: 0s;
 }
 
 .sidebar li:hover .tooltip {
-  opacity: 1;
-  pointer-events: auto;
-  transition: all 0.4s ease;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #000;
+    opacity: 1;
+    pointer-events: auto;
+    transition: all 0.4s ease;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #000;
 }
 
 .sidebar input {
-  font-size: 15px;
-  color: #fff;
-  font-weight: 400;
-  outline: none;
-  height: 50px;
-  width: 100%;
-  width: 50px;
-  border: none;
-  border-radius: 12px;
-  transition: all 0.5s ease;
-  background: #1d1b31;
+    font-size: 15px;
+    color: #fff;
+    font-weight: 400;
+    outline: none;
+    height: 50px;
+    width: 100%;
+    width: 50px;
+    border: none;
+    border-radius: 12px;
+    transition: all 0.5s ease;
+    background: #1d1b31;
 }
 
 .sidebar li a {
-  display: flex;
-  height: 100%;
-  width: 100%;
-  border-radius: 12px;
-  align-items: center;
-  text-decoration: none;
-  transition: all 0.4s ease;
-  background: #11101d;
+    display: flex;
+    height: 100%;
+    width: 100%;
+    border-radius: 12px;
+    align-items: center;
+    text-decoration: none;
+    transition: all 0.4s ease;
+    background: #11101d;
 }
 
 .sidebar li a:hover {
-  background: #fff;
-  color: #000;
+    background: #fff;
+    color: #000;
 }
 
 .sidebar li i {
-  height: 50px;
-  line-height: 50px;
-  font-size: 18px;
-  border-radius: 12px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 18px;
+    border-radius: 12px;
 }
 
 .sidebar li.profile {
-  position: fixed;
-  height: 60px;
-  width: 78px;
-  left: 0;
-  bottom: -8px;
-  padding: 10px 14px;
-  background: #1d1b31;
-  transition: all 0.5s ease;
-  overflow: hidden;
+    position: fixed;
+    height: 60px;
+    width: 78px;
+    left: 0;
+    bottom: -8px;
+    padding: 10px 14px;
+    background: #1d1b31;
+    transition: all 0.5s ease;
+    overflow: hidden;
 }
 
 .sidebar .profile #log_out {
-  position: absolute;
-  top: 50%;
-  right: 0;
-  transform: translateY(-50%);
-  width: 100%;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 100%;
 }
 
 main {
-  flex: 1;
+    flex: 1;
+}
+
+.wrapper {
+    position: relative;
+    left: 50%;
+    width: var(--wrapper);
+    height: 800px;
+    transform: translate(-50%, 0);
+}
+
+.chat-con {
+    position: relative;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 75%;
+    background-color: var(--white);
+    transform: translate(-50%, -50%);
+}
+
+.chat-con .right {
+    position: relative;
+    float: left;
+    width: 62.4%;
+    height: 100%;
+}
+
+.chat-con .right .top {
+    width: 100%;
+    height: 47px;
+    padding: 15px 29px;
+    background-color: #eceff1;
+}
+
+.chat-con .right .top span {
+    font-size: 15px;
+    color: var(--grey);
+}
+
+.chat-con .right .top span .name {
+    color: var(--dark);
+    font-weight: 600;
+}
+
+.chat-con .right .chat {
+    position: relative;
+    display: none;
+    overflow: hidden;
+    padding: 0 35px 92px;
+    border-width: 1px 1px 1px 0;
+    border-style: solid;
+    border-color: var(--light);
+    height: calc(100% - 48px);
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+
+.chat-con .right .chat.active-chat {
+    display: block;
+    display: flex;
+}
+
+.chat-con .right .write {
+    position: absolute;
+    display: block;
+    bottom: 29px;
+    left: 30px;
+    height: 42px;
+    padding-left: 8px;
+    border: 1px solid var(--light);
+    background-color: #eceff1;
+    width: calc(100% - 58px);
+    border-radius: 5px;
+    z-index: 1;
+}
+
+.chat-con .right .write input {
+    font-size: 16px;
+    display: none;
+    float: left;
+    width: 347px;
+    height: 40px;
+    padding: 0 10px;
+    color: var(--dark);
+    border: 0;
+    outline: none;
+    background-color: #eceff1;
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 400;
+}
+
+.chat-con .right .bubble {
+    font-size: 16px;
+    position: relative;
+    display: inline-block;
+    clear: both;
+    margin-bottom: 8px;
+    padding: 13px 14px;
+    vertical-align: top;
+    border-radius: 5px;
+}
+
+.chat-con .right .bubble:before {
+    position: absolute;
+    top: 19px;
+    display: block;
+    width: 8px;
+    height: 6px;
+    content: " ";
+    transform: rotate(29deg) skew(-35deg);
+}
+
+.chat-con .right .bubble.you {
+    float: left;
+    color: var(--white);
+    background-color: var(--blue);
+    align-self: flex-start;
+    -webkit-animation-name: slideFromLeft;
+    animation-name: slideFromLeft;
+}
+
+.chat-con .right .bubble.you:before {
+    left: -3px;
+    background-color: var(--blue);
+}
+
+.chat-con .right .bubble.me {
+    float: right;
+    color: var(--dark);
+    background-color: #eceff1;
+    align-self: flex-end;
+    -webkit-animation-name: slideFromRight;
+    animation-name: slideFromRight;
+}
+
+.chat-con .right .bubble.me:before {
+    right: -3px;
+    background-color: #eceff1;
+}
+
+.chat-con .right .conversation-start {
+    position: relative;
+    width: 100%;
+    margin-bottom: 27px;
+    text-align: center;
+}
+
+.chat-con .right .conversation-start span {
+    font-size: 14px;
+    display: inline-block;
+    color: var(--grey);
+}
+
+.chat-con .right .conversation-start span:before,
+.chat-con .right .conversation-start span:after {
+    position: absolute;
+    top: 10px;
+    display: inline-block;
+    width: 30%;
+    height: 1px;
+    content: "";
+    background-color: var(--light);
+}
+
+.chat-con .right .conversation-start span:before {
+    left: 0;
+}
+
+.chat-con .right .conversation-start span:after {
+    right: 0;
+}
+
+.chat-con .left {
+    float: left;
+    width: 37.6%;
+    height: 100%;
+    border: 1px solid var(--light);
+    background-color: var(--white);
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+
+.chat-con .left .people {
+    margin-left: -1px;
+    border-right: 1px solid var(--light);
+    border-left: 1px solid var(--light);
+    width: calc(100% + 2px);
+}
+
+.chat-con .left .people .person {
+    position: relative;
+    width: 100%;
+    padding: 12px 10% 30px;
+    cursor: pointer;
+    background-color: var(--white);
+}
+
+.chat-con .left .people .person:after {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    display: block;
+    width: 80%;
+    height: 1px;
+    content: "";
+    background-color: var(--light);
+    transform: translate(-50%, 0);
+}
+
+.chat-con .left .people .person img {
+    float: left;
+    width: 40px;
+    height: 40px;
+    margin-right: 12px;
+    border-radius: 50%;
+    -o-object-fit: cover;
+    object-fit: cover;
+}
+
+.chat-con .left .people .person .name {
+    font-size: 14px;
+    line-height: 22px;
+    color: var(--dark);
+    font-family: "Source Sans Pro", sans-serif;
+    font-weight: 600;
+}
+
+
+
+.chat-con .left .people .person.active,
+.chat-con .left .people .person:hover {
+    margin-top: -1px;
+    margin-left: -1px;
+    padding-top: 13px;
+    border: 0;
+    background-color: var(--blue);
+    width: calc(100% + 2px);
+    padding-left: calc(10% + 1px);
+}
+
+
+.chat-con .left .people .person.active span,
+.chat-con .left .people .person:hover span {
+    color: var(--white);
+    background: transparent;
+}
+
+.chat-con .right {
+    position: relative;
+    float: left;
+    width: 62.4%;
+    height: 100%;
 }

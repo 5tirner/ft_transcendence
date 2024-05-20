@@ -12,7 +12,7 @@ const Auth = {
             // save username and authToke to make feuture requests
             user = username;
 
-            console.log(response, username, user)
+            console.log(response, username, user);
             localStorage.setItem("token", token);
             Router.go("/");
         } else {
@@ -29,9 +29,8 @@ const Auth = {
     logout: async () => {
         //TODO: delete JWT or anything that keep user authToke
 
-
         // const user = null;
-        localStorage.removeItem("token")
+        localStorage.removeItem("token");
         Router.go("/login");
     },
 
@@ -48,8 +47,8 @@ const Auth = {
 
     login: async (event) => {
         event.preventDefault();
-        const username = document.getElementById('login_email').value;
-        const password = document.getElementById('login_password').value;
+        const username = document.getElementById("login_email").value;
+        const password = document.getElementById("login_password").value;
         const user = { username, password };
 
         // send request to login API endpoint
@@ -58,6 +57,9 @@ const Auth = {
             ...user,
             name: response.name,
         });
+    },
+    loginIntra: async (event) => {
+        window.location.href = "http://127.0.0.1:8000/api/oauth/intra/";
     },
     init: () => { },
 };

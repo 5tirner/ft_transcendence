@@ -11,15 +11,15 @@ const expectedOrigin = `${protocol}://${rpID}:${port}`;
 app.use(express.static("srcs"));
 app.use(express.json());
 app.use(
-  express.urlencoded({
-    extended: true,
-  }),
+    express.urlencoded({
+        extended: true,
+    }),
 );
 
 app.get("*", (req, res) => {
-  res.sendFile(__dirname + "srcs/index.html");
+    res.sendFile(__dirname + "srcs/index.html");
 });
 
 app.listen(port, () => {
-  console.log(`App listening on port http://localhost:${port}`);
+    console.log(`App listening on port http://localhost:${port}`);
 });

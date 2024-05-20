@@ -1,6 +1,6 @@
 const API = {
     authEndpoint: "http://localhost:8000/api/auth/",
-    chatEndpoint: "http://localhost:8000/api/chatrooms/",
+    chatEndpoint: "http://localhost:8001/api/chatrooms/",
 
 
     // ADD HERE ALL THE OTHER API FUNCTIONS

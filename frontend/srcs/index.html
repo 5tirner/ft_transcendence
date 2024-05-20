@@ -87,11 +87,12 @@
                         <input placeholder="email" id="login_email" required autocomplete="username">
                         <label for="login_password">Password</label>
                         <input type="password" id="login_password" autocomplete="current-password">
-                        <button>Log In</button>
 
+                        <button>Log In</button>
                         <button>
                             <a href="/register" class="navlink">Register</a>
                         </button>
+                        <button onclick="Auth.loginIntra(event)">Login with 42</button>
                     </form>
                 </div>
             </section>
@@ -109,7 +110,20 @@
             </section>
 
             <section class="page" id="chat" style="display: none;">
-                <h2>chat page</h2>
+                <div class="wrapper">
+                    <div class="chat-con">
+
+                        <div class="left">
+                            <ul class="people">
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="top"><span>Chat with: <span class="name"></span></span></div>
+                            <div class="write">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section class="page" id="game" style="display: none;">

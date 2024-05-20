@@ -25,18 +25,32 @@ const Router = {
         });
         // Process initial URL
         const token = localStorage.getItem("token");
-        if (token) {
-            const respons = await API.getUser();
-            if (respons.ok) {
-                const { username } = await respons.json();
-                Auth.user = username;
-                Router.go(location.pathname);
-            } else {
-                Router.go("/login");
-            }
-        } else {
-            Router.go("/login");
-        }
+
+
+
+        //NOTE: check the user is logged in 
+        // Ex: Auth.isAuth()
+        // if yes:
+        //    Router.go(location.pathname)
+        // else:
+        //    Router.go("/login")
+
+        Router.go(location.pathname)
+        // Example usage
+        // const jwtToken = getCookieByName('jwt_token');
+        // if (jwtToken) {
+        //     Router.go(location.pathname);
+        //     // const respons = await API.getUser();
+        //     // if (respons.ok) {
+        //     //     const { username } = await respons.json();
+        //     //     Auth.user = username;
+        //     //     Router.go(location.pathname);
+        //     // } else {
+        //     //     Router.go("/login");
+        //     // }
+        // } else {
+        //     Router.go("/login");
+        // }
     },
     go: (route, addToHistory = true) => {
         if (addToHistory) {
@@ -75,5 +89,30 @@ const Router = {
     },
 };
 
+
+function getCookieByName(name) {
+    // Get all cookies as a single string
+    const cookies = document.cookie;
+
+    // Construct the search string
+    const nameEQ = name + "=";
+
+    // Split the cookie string into individual cookies
+    const cookieArray = cookies.split(';');
+
+    // Iterate over the array to find the cookie
+    for (let cookie of cookieArray) {
+        // Trim any leading whitespace and check if the cookie starts with the name
+        while (cookie.charAt(0) === ' ') {
+            cookie = cookie.substring(1);
+        }
+        if (cookie.indexOf(nameEQ) === 0) {
+            return decodeURIComponent(cookie.substring(nameEQ.length));
+        }
+    }
+
+    // Return null if the cookie was not found
+    return null;
+}
 window.Router = Router; // make it "public"
 export default Router;

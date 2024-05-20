@@ -2,23 +2,39 @@ version: "3.8"
 
 name: ft_transcendence
 
+networks:
+  myNetwork:
+    name: ft_transcendence
+  # postgres_db:
+  #   container_name: postgress_db
+  #   build:
+  #     context: ./backend/postgresql
+  #     dockerfile: Dockerfile
+  #     args:
+  #       POSTGRS_PASSWORD: ${POSTGRS_PASSWORD}
+  #       POSTGRES_USER: ${POSTGRES_USER}
+  #       POSTGRES_DB: ${POSTGRES_DB}
+  #   image: ft_postgres:1
+  #   env_file:
+  #     - .env
+  #   ports:
+  #     - "5050:5432"
+  #   volumes:
+  #     - postgres_db:/var/lib/postgresql/data
+  #   restart: always
 services:
-  postgres_db:
-    container_name: postgress_db
+  myServer:
+    container_name: myServer
     build:
-      context: ./backend/postgresql
+      context: ./frontend
       dockerfile: Dockerfile
-      args:
-        POSTGRS_PASSWORD: ${POSTGRS_PASSWORD}
-        POSTGRES_USER: ${POSTGRES_USER}
-        POSTGRES_DB: ${POSTGRES_DB}
-    image: ft_postgres:1
-    env_file:
-      - .env
+    image: my_server:1337
     ports:
-      - "5050:5432"
+      - "443:443"
     volumes:
-      - postgres_db:/var/lib/postgresql/data
+      - www:/var/www
+    networks:
+      - myNetwork
     restart: always
 
 volumes:
@@ -28,4 +44,11 @@ volumes:
     driver_opts:
       type: none
       device: /home/belkarto/data/postgres_db
+      o: bind
+  www:
+    name: front_end
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/belkarto/data/www
       o: bind
