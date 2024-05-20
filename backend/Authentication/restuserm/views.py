@@ -124,7 +124,7 @@ def callback42(request):
             if player is None:
                 return redirect("https://127.0.0.1:8000/api/login/", permanent=True)
             jwt_token = jwt_generation(player.id, player.two_factor)
-            response = redirect("http://127.0.0.1:5050", permanent=True)
+            response = redirect("http://127.0.0.1:8000", permanent=True)
             response.set_cookie(
                 "jwt_token", value=jwt_token, httponly=True, secure=True
             )

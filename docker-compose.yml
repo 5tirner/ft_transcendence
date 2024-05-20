@@ -5,24 +5,26 @@ name: ft_transcendence
 networks:
   myNetwork:
     name: ft_transcendence
-  # postgres_db:
-  #   container_name: postgress_db
-  #   build:
-  #     context: ./backend/postgresql
-  #     dockerfile: Dockerfile
-  #     args:
-  #       POSTGRS_PASSWORD: ${POSTGRS_PASSWORD}
-  #       POSTGRES_USER: ${POSTGRES_USER}
-  #       POSTGRES_DB: ${POSTGRES_DB}
-  #   image: ft_postgres:1
-  #   env_file:
-  #     - .env
-  #   ports:
-  #     - "5050:5432"
-  #   volumes:
-  #     - postgres_db:/var/lib/postgresql/data
-  #   restart: always
+
 services:
+  postgres_db:
+    container_name: postgres_db
+    build:
+      context: ./backend/postgresql
+      dockerfile: Dockerfile
+      args:
+        POSTGRS_PASSWORD: ${POSTGRS_PASSWORD}
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_DB: ${POSTGRES_DB}
+    image: postgres_db:1
+    env_file:
+      - .env
+    networks:
+      - myNetwork
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
+    restart: always
+
   myServer:
     container_name: myServer
     build:
@@ -30,11 +32,43 @@ services:
       dockerfile: Dockerfile
     image: my_server:1337
     ports:
-      - "443:443"
+      - "8000:8000"
     volumes:
       - www:/var/www
     networks:
       - myNetwork
+    depends_on:
+      - postgres_db
+    restart: always
+
+  auth:
+    container_name: auth
+    build:
+      context: ./backend/Authentication
+      dockerfile: Dockerfile
+    command: sh -c "python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
+    image: auth:1337
+    env_file:
+      - .env
+    networks:
+      - myNetwork
+    depends_on:
+      - postgres_db
+    restart: always
+
+  chat:
+    container_name: chat
+    build:
+      context: ./backend/chat
+      dockerfile: Dockerfile
+    # command: sh -c "python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
+    image: chat:1337
+    env_file:
+      - .env
+    networks:
+      - myNetwork
+    depends_on:
+      - postgres_db
     restart: always
 
 volumes:

@@ -59,7 +59,7 @@ const Auth = {
         });
     },
     loginIntra: async (event) => {
-        window.location.href = "http://127.0.0.1:8000/api/oauth/intra/";
+        window.location.href = "http://localhost:8000/api/oauth/intra/";
     },
     init: () => { },
 };

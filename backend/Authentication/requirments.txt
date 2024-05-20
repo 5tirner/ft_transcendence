@@ -38,7 +38,7 @@ olefile==0.46
 packaging==24.0
 paramiko==2.9.3
 pexpect==4.8.0
-Pillow==9.0.1
+#Pillow==9.0.1
 protobuf==3.12.4
 psycopg2-binary==2.9.9
 ptyprocess==0.7.0
