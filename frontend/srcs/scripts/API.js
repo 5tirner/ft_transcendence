@@ -25,13 +25,9 @@ const API = {
     },
 
     makePostRequest: async (url, data) => {
-        const token = localStorage.getItem("token");
         const headers = {
             "Content-Type": "application/json",
         };
-        if (token) {
-            headers.Authorization = `Token ${token}`;
-        }
         const response = await fetch(url, {
             method: "POST",
             headers: headers,
@@ -41,15 +37,16 @@ const API = {
     },
 
     makeGetRequest: async (url) => {
-        const token = localStorage.getItem("token");
         const headers = {
             "Content-Type": "application/json",
+            "Cookie": "test=asdfdasf",
+            "nonono": "tkhawer",
         };
-        if (token) {
-            headers.Authorization = `Token ${token}`;
-        }
         const response = await fetch(url, {
+            method: "GET",
+            mode: "same-origin",
             headers: headers,
+            credentials: "same-origin",
         });
         return response;
     },

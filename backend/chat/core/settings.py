@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,7 +43,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     # temp app for auth
-    "rest_framework.authtoken",
+    # "rest_framework.authtoken",
     # local apps
     "api",
     "chat",
@@ -103,7 +104,6 @@ WSGI_APPLICATION = "core.wsgi.application"
 
 DATABASES = {
     "default": {
-        # "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "postgres",
         "USER": "admin",
@@ -150,6 +150,7 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 

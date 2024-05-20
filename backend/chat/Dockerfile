@@ -16,4 +16,4 @@ RUN pip install -r requirements.txt
 
 COPY . /app/
 
-CMD [ "sleep", "infinity" ]
+# CMD [ "sleep", "infinity" ]

@@ -18,6 +18,10 @@ class GetAllConversations(ListAPIView):
         print("cookies ===> ")
         for cookie, value in self.request.COOKIES.items():
             print(f"{cookie}: {value}")
+
+        print("HEADERS ===> ")
+        for cookie, value in self.request.headers.items():
+            print(f"{cookie}: {value}")
         return ChatRoom.objects.filter(members=user)
 
 
