@@ -3,7 +3,7 @@ import API from "../API.js";
 function initSocketConnection(roomName, counter) {
     const token = localStorage.getItem("token");
     const chatSocket = new WebSocket(
-        "ws://localhost:8000/ws/chat/" +
+        "ws://127.0.0.1:8000/ws/chat/" +
         roomName.substring(0, 8) +
         "/?token=" +
         token,

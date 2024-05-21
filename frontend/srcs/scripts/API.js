@@ -1,6 +1,6 @@
 const API = {
-    authEndpoint: "http://localhost:8000/api/auth/",
-    chatEndpoint: "http://localhost:8000/api/chatrooms/",
+    authEndpoint: "http://127.0.0.1:8000/api/auth/",
+    chatEndpoint: "http://127.0.0.1:8000/api/chatrooms/",
 
 
     // ADD HERE ALL THE OTHER API FUNCTIONS
@@ -40,15 +40,24 @@ const API = {
         const headers = {
             "Content-Type": "application/json",
             "Cookie": "test=asdfdasf",
-            "nonono": "tkhawer",
+            // "nonono": "tkhawer",
         };
-        const response = await fetch(url, {
-            method: "GET",
-            mode: "same-origin",
-            headers: headers,
-            credentials: "same-origin",
-        });
-        return response;
+        try {
+            const response = await fetch(url, {
+                method: "GET",
+                mode: "same-origin",
+                headers: headers,
+                credentials: "include", // Ensure cookies are included
+            });
+            return response;
+        } catch (e) {
+            console.log("error", e);
+        }
+        return null;
+        // const res = await axios.get(url, {
+        //     headers,
+        //     withCredentials: true
+        // })
     },
 };
 
