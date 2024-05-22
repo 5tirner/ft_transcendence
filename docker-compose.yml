@@ -46,7 +46,7 @@ services:
     build:
       context: ./backend/Authentication
       dockerfile: Dockerfile
-    command: sh -c "python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "python3 manage.py makemigrations --noinput  && python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
     image: auth:1337
     env_file:
       - .env
