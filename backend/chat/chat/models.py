@@ -5,7 +5,7 @@ from django.db import models
 import uuid
 
 from rest_framework.generics import ValidationError
-from restuserm import Player
+from restuserm.models import Player
 
 
 # Create your models here.

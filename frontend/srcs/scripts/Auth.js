@@ -7,13 +7,11 @@ const Auth = {
     postLogin: async (response, user) => {
         if (response.ok) {
             response = await response.json();
-            const { username, token } = response;
+            const { username } = response;
 
             // save username and authToke to make feuture requests
             user = username;
 
-            console.log(response, username, user);
-            localStorage.setItem("token", token);
             Router.go("/");
         } else {
             response = await response.json();
@@ -29,8 +27,6 @@ const Auth = {
     logout: async () => {
         //TODO: delete JWT or anything that keep user authToke
 
-        // const user = null;
-        localStorage.removeItem("token");
         Router.go("/login");
     },
 
@@ -60,6 +56,15 @@ const Auth = {
     },
     loginIntra: async (event) => {
         window.location.href = "http://127.0.0.1:8000/api/oauth/intra/";
+    },
+    isAuth: async (event) => {
+        const response = await API.isLogedIn();
+        console.log(response)
+        if (response.ok) {
+            const { isLoged } = await response.json();
+            return isLoged;
+        }
+        return false;
     },
     init: () => { },
 };

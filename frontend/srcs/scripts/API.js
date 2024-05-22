@@ -1,19 +1,23 @@
 const API = {
     authEndpoint: "http://127.0.0.1:8000/api/auth/",
-    chatEndpoint: "http://127.0.0.1:8000/api/chatrooms/",
+    chatEndpoint: "http://127.0.0.1:8000/api/chat/",
 
 
     // ADD HERE ALL THE OTHER API FUNCTIONS
-    login: async (user) => {
-        return await API.makePostRequest(API.authEndpoint + "login/", user);
+    login: async (userData) => {
+        return await API.makePostRequest(API.authEndpoint + "login/", userData);
     },
 
-    register: async (user) => {
-        return await API.makePostRequest(API.authEndpoint + "register/", user);
+    isLogedIn: async () => {
+        return await API.makeGetRequest(API.authEndpoint);
+    },
+
+    register: async (userData) => {
+        return await API.makePostRequest(API.authEndpoint + "register/", userData);
     },
 
     getUser: async () => {
-        return await API.makeGetRequest(API.authEndpoint + "user/");
+        return await API.makeGetRequest(API.authEndpoint + "userData/");
     },
 
     getConversatons: async () => {
@@ -39,8 +43,6 @@ const API = {
     makeGetRequest: async (url) => {
         const headers = {
             "Content-Type": "application/json",
-            "Cookie": "test=asdfdasf",
-            // "nonono": "tkhawer",
         };
         try {
             const response = await fetch(url, {
@@ -54,10 +56,6 @@ const API = {
             console.log("error", e);
         }
         return null;
-        // const res = await axios.get(url, {
-        //     headers,
-        //     withCredentials: true
-        // })
     },
 };
 

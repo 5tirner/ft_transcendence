@@ -23,34 +23,12 @@ const Router = {
         window.addEventListener("popstate", (event) => {
             Router.go(event.state.route, false);
         });
-        // Process initial URL
-        const token = localStorage.getItem("token");
 
-
-
-        //NOTE: check the user is logged in 
-        // Ex: Auth.isAuth()
-        // if yes:
-        //    Router.go(location.pathname)
-        // else:
-        //    Router.go("/login")
-
-        Router.go(location.pathname)
-        // Example usage
-        // const jwtToken = getCookieByName('jwt_token');
-        // if (jwtToken) {
-        //     Router.go(location.pathname);
-        //     // const respons = await API.getUser();
-        //     // if (respons.ok) {
-        //     //     const { username } = await respons.json();
-        //     //     Auth.user = username;
-        //     //     Router.go(location.pathname);
-        //     // } else {
-        //     //     Router.go("/login");
-        //     // }
-        // } else {
-        //     Router.go("/login");
-        // }
+        if (await Auth.isAuth())
+            Router.go(location.pathname);
+        else {
+            Router.go("/login");
+        }
     },
     go: (route, addToHistory = true) => {
         if (addToHistory) {
