@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "corsheaders",
     # local apps
     "chat",
+    "restuserm",
 ]
 
 # channels settings

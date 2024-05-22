@@ -3,6 +3,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView
 
 from .serializers import ConversationsSerializer, MessageSerializer
 from .models import ChatRoom, Message
+from restuserm.models import Player
 from rest_framework.permissions import AllowAny
 
 
@@ -19,9 +20,9 @@ class GetAllConversations(ListAPIView):
         for cookie, value in self.request.COOKIES.items():
             print(f"{cookie}: {value}")
 
-        print("HEADERS ===> ")
-        for cookie, value in self.request.headers.items():
-            print(f"{cookie}: {value}")
+        player = Player.objects.all()
+        for p in player:
+            print(p)
         return ChatRoom.objects.filter(members=user)
 
 
