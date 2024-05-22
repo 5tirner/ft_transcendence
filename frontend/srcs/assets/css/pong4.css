@@ -1,0 +1,14 @@
+#canvasp4 {
+    background-color: #ddc853;
+    margin-top: 7%;
+    margin-bottom: 5%;
+    margin-left: 10%;
+    margin-right: 10%;
+    max-width: 70vw;
+    min-width: 20vw;
+    max-height: 70vh;
+    min-height: 20vw;
+    width: auto;
+    height: auto;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}

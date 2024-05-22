@@ -1,142 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pong</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css">
-    <script src="scripts/app.js" type="module" defer></script>
+    <link rel="icon" href="./src/favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="stylesheet" href="./css/Chat.css" />
+    <link rel="stylesheet" href="./css/footer.css" />
+    <link rel="stylesheet" href="./css/AboutUs.css" />
+    <link rel="stylesheet" href="./css/Home.css" />
+    <link rel="stylesheet" href="./css/alltournaments.css" />
+    <link rel="stylesheet" href="./css/Leaderboard.css" />
+    <link rel="stylesheet" href="./css/Login.css" />
+    <link rel="stylesheet" href="./css/Privacy.css" />
+    <link rel="stylesheet" href="./css/Profile.css" />
+    <link rel="stylesheet" href="./css/ViewProfile.css" />
+    <link rel="stylesheet" href="./css/PongGame.css" />
+    <link rel="stylesheet" href="./css/PongEhab.css" />
+    <link rel="stylesheet" href="./css/PlayersRemote2.css" />
+    <link rel="stylesheet" href="./css/playerai1.css" />
+    <link rel="stylesheet" href="./css/pong3.css" />
+    <link rel="stylesheet" href="./css/pong4.css" />
+    <link rel="stylesheet" href="./css/tournament.css" />
+    <link rel="stylesheet" href="./css/tic1.css" />
+    <link rel="stylesheet" href="./css/tic2.css" />
+    <link rel="stylesheet" href="./css/tournament2.css" />
+    <link rel="stylesheet" href="./css/Register.css" />
+    <link rel="stylesheet" href="./css/Navbar.css" />
+    <link rel="stylesheet" href="./css/player3d1.css" />
+    <link rel="stylesheet" href="./css/rps.css" />
+    <!-- Include Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
 
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+      integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+      crossorigin="anonymous"
+    ></script>
 
-</head>
+    <!-- Include Bootstrap Icons CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
 
-<body>
-    <div class="container">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  </head>
+  <body>
+    <header>
+      <h1 class="logo">
+        <a onclick="route()" class="nav-item" href="/">Pong.me</a>
+      </h1>
+      <!-- <input type="checkbox" id="nav-toggle" class="nav-toggle" /> -->
+      <nav>
+        <ul id="nav-menu">
+          <li>
+            <a onclick="route()" href="/" class="nav-item" id="hometitle">Home</a>
+          </li>
+          <li>
+            <a
+              onclick="route()"
+              href="/login"
+              class="nav-item"
+              id="logintitle"
+              >Login</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
 
-        <div id="nav_bar" class="sidebar" style="display: none;">
-            <ul class="nav-list">
-                <li>
-                    <a href="/account" class="navlink">
-                        <i class='bx bx-user'></i>
-                    </a>
-                    <span class="tooltip">account</span>
-                </li>
-                <li>
-                    <a href="/" class="navlink">
-                        <i class='bx bx-home'></i>
-                    </a>
-                    <span class="tooltip">Home</span>
-                </li>
-                <li>
-                    <a href="/game" class="navlink">
-                        <i class='bx bx-dice-5'></i>
-                    </a>
-                    <span class="tooltip">Home</span>
-                </li>
-                <li>
-                    <a href="/chat" class="navlink">
-                        <i class='bx bx-chat'></i>
-                    </a>
-                    <span class="tooltip">Messages</span>
-                </li>
-                <li>
-                    <a href="/settings" class="navlink">
-                        <i class='bx bx-cog'></i>
-                    </a>
-                    <span class="tooltip">Messages</span>
-                </li>
-            </ul>
-        </div>
-        <main>
-            <section class="page" id="home" style="display: none;">
-                <header>
-                    <h2>Welcome!<h2>
-                </header>
-                <main>
+    <div class="app" id="app"></div>
 
-                </main>
-            </section>
-
-            <section class="page" id="register" style="display: none;">
-                <h2>Register</h2>
-                <div>
-
-                    <form id="formRegister" onsubmit="Auth.register(event)">
-                        <label for="register_name">Your Name</label>
-                        <input id="register_name" required autocomplete="name">
-                        <label for="register_email">Your Email</label>
-                        <input id="register_email" required type="email" autocomplete="username">
-
-                        <label for="register_password">Your Password</label>
-                        <input type="password" id="register_password" required autocomplete="new-password">
-
-                        <button>Register Account</button>
-                        <button><a href="/login" class="navlink">Log In</a></button>
-                    </form>
-                </div>
-            </section>
-
-            <section class="page" id="login" style="display: none;">
-                <h2>Log In</h2>
-
-                <div>
-
-                    <form id="formLogin" onsubmit="Auth.login(event)">
-                        <label for="login_email">Your email</label>
-                        <input placeholder="email" id="login_email" required autocomplete="username">
-                        <label for="login_password">Password</label>
-                        <input type="password" id="login_password" autocomplete="current-password">
-
-                        <button>Log In</button>
-                        <button>
-                            <a href="/register" class="navlink">Register</a>
-                        </button>
-                        <button onclick="Auth.loginIntra(event)">Login with 42</button>
-                    </form>
-                </div>
-            </section>
-
-            <section class="page" id="account" style="display: none;">
-                <h2>My Account</h2>
-                <dl>
-                    <dt>Name</dt>
-                    <dd class="account_name"></dd>
-                    <dt>Email</dt>
-                    <dd class="account_username"></dd>
-                </dl>
-
-                <button onclick="Auth.logout()">Log out</button>
-            </section>
-
-            <section class="page" id="chat" style="display: none;">
-                <div class="wrapper">
-                    <div class="chat-con">
-
-                        <div class="left">
-                            <ul class="people">
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <div class="top"><span>Chat with: <span class="name"></span></span></div>
-                            <div class="write">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="page" id="game" style="display: none;">
-                <h2>Game</h2>
-                <a href="/settings" class="navlink">settings</a>
-            </section>
-
-            <section class="page" id="settings" style="display: none;">
-                <h2>settings</h2>
-            </section>
-
-        </main>
-</body>
-
+    <script src="./js/router.js" defer></script>
+  </body>
 </html>
