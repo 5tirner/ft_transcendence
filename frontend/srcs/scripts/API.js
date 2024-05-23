@@ -8,9 +8,9 @@ const API = {
         return await API.makePostRequest(API.authEndpoint + "login/", userData);
     },
 
-    isLogedIn: async () => {
-        return await API.makeGetRequest(API.authEndpoint);
-    },
+    // isLogedIn: async () => {
+    //     return await API.makeGetRequest(API.authEndpoint);
+    // },
 
     register: async (userData) => {
         return await API.makePostRequest(API.authEndpoint + "register/", userData);

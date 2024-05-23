@@ -17,6 +17,8 @@ services:
         POSTGRES_USER: ${POSTGRES_USER}
         POSTGRES_DB: ${POSTGRES_DB}
     image: postgres_db:1
+    ports:
+      - "5432:5432"
     env_file:
       - .env
     networks:
@@ -61,7 +63,7 @@ services:
     build:
       context: ./backend/chat
       dockerfile: Dockerfile
-    command: sh -c "python3 manage.py makemigrations --noinput  && python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "sleep 5 && python3 manage.py makemigrations --noinput  && python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
     image: chat:1337
     env_file:
       - .env
@@ -70,19 +72,18 @@ services:
     depends_on:
       - postgres_db
     restart: always
-
-volumes:
-  postgres_db:
-    driver: local
-    name: postgres_db
-    driver_opts:
-      type: none
-      device: /home/belkarto/data/postgres_db
-      o: bind
-  www:
-    name: front_end
-    driver: local
-    driver_opts:
-      type: none
-      device: /home/belkarto/data/www
-      o: bind
+# volumes:
+#   postgres_db:
+#     driver: local
+#     name: postgres_db
+#     driver_opts:
+#       type: none
+#       device: /home/belkarto/data/postgres_db
+#       o: bind
+#   www:
+#     name: front_end
+#     driver: local
+#     driver_opts:
+#       type: none
+#       device: /home/belkarto/data/www
+#       o: bind

@@ -24,11 +24,11 @@ const Router = {
             Router.go(event.state.route, false);
         });
 
-        if (await Auth.isAuth())
-            Router.go(location.pathname);
-        else {
-            Router.go("/login");
-        }
+        Router.go(location.pathname);
+        // if (await Auth.isAuth())
+        // else {
+        //     Router.go("/login");
+        // }
     },
     go: (route, addToHistory = true) => {
         if (addToHistory) {

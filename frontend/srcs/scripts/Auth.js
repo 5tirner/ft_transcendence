@@ -57,15 +57,15 @@ const Auth = {
     loginIntra: async (event) => {
         window.location.href = "http://127.0.0.1:8000/api/oauth/intra/";
     },
-    isAuth: async (event) => {
-        const response = await API.isLogedIn();
-        console.log(response)
-        if (response.ok) {
-            const { isLoged } = await response.json();
-            return isLoged;
-        }
-        return false;
-    },
+    // isAuth: async (event) => {
+    //     const response = await API.isLogedIn();
+    //     console.log(response)
+    //     if (response.ok) {
+    //         const { isLoged } = await response.json();
+    //         return isLoged;
+    //     }
+    //     return false;
+    // },
     init: () => { },
 };
 
