@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title></title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+      defer
+    ></script>
+    <link href="style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container right-window">
+      <div class="chat-head d-flex flex-column">
+        <div>
+          <div class="mt-2">Chats</div>
+          <div></div>
+        </div>
+        <div class="search-con d-flex mx-3 border-0 rounded-1">
+          <input type="" name="" value="" class="" />
+          <div>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 14 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 9.875L12.8161 12.5151"
+                stroke="black"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M10.8563 6.05765C10.8563 8.60929 8.64991 10.6778 5.92816 10.6778C3.20641 10.6778 1 8.60929 1 6.05765C1 3.50601 3.20641 1.4375 5.92816 1.4375C8.64991 1.4375 10.8563 3.50601 10.8563 6.05765Z"
+                stroke="black"
+                stroke-width="2"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <ul class="list-group rounded-0">
+        <li
+          class="list-group-item d-flex align-items-center justify-content-between px-1"
+        >
+          <div class="d-flex align-items-center">
+            <div class="profile-container">
+              <img src="avatar1.jpg" alt="Profile" class="profile-pic" />
+              <span class="status-dot online"></span>
+            </div>
+            <div class="mx-2">
+              <div class="username">Player1#0001</div>
+              <div class="message">GG! I will win next time</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center flex-column">
+            <div class="time">13:37PM</div>
+            <div class="notif mx-1 mt-2 visible">+9</div>
+          </div>
+        </li>
+
+        <li
+          class="list-group-item d-flex align-items-center justify-content-between px-1"
+        >
+          <div class="d-flex align-items-center">
+            <div class="profile-container">
+              <img src="avatar2.jpg" alt="Profile" class="profile-pic" />
+              <span class="status-dot offline"></span>
+            </div>
+            <div class="mx-2">
+              <div class="username">Player2#0002</div>
+              <div class="message">GG lets play again later</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center flex-column">
+            <div class="time">13:37PM</div>
+            <div class="notif mx-1 mt-2 invisible">1</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </body>
+</html>
