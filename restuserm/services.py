@@ -66,8 +66,8 @@ def jwt_required_cookie(view_func):
         try:
             request.token = token_jwt
             token_decoded = jwt.decode(token_jwt, settings.SECRET_KEY, algorithms=['HS256'])
-            if (token_decoded['2fa']):
-                return Response({'error' : '2FA is required', 'statusCode' : 401})
+            # if (token_decoded['2fa']):
+            #     return Response({'error' : '2FA is required', 'statusCode' : 401})
             request.decoded_token = token_decoded
             return view_func(request, *args, **kwargs)
         except jwt.ExpiredSignatureError:

@@ -568,3 +568,12 @@ def user_logout(request):
             return Response({'message': 'Successfully logged out.'}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+#added for the Chat authentication test
+@api_view(['GET'])
+@authentication_classes([])  # Remove all authentication classes
+@permission_classes([AllowAny])
+@jwt_required_cookie
+def check_user(request):
+    return Response({'message' : 'User is authenticated', 'status' : 200, 'id' : request.decoded_token})
