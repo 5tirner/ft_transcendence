@@ -142,29 +142,42 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # }
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
 
 
 #jwt-simple-token
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIM': timedelta(days=1),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
     'SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER': timedelta(days=1),
     'SLIDING_TOKEN_LIFETIME_LATE_USER': timedelta(days=30),
+
 }
 
 
 # Add this line to specify the directory containing static files
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# MEDIA_URL is the URL that handles the media served from MEDIA_ROOT
+MEDIA_URL = '/media/'
+
+PUBLIC_PLAYER_URL = 'http://localhost:8000/static/media/zakaria.jpg'
+
+
+# 42/Google authentication variables
 
 FORTYTWO_CLIENT_ID = 'u-s4t2ud-276587daed10a1e33fcfbc113f9d4e97933508f4d8bb753cd1e7b49a31a00cb9'
 FORTYTWO_CLIENT_SECRET = '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'
@@ -175,3 +188,13 @@ FORTYTWO_REDIRECT_URI = 'http://127.0.0.1:8000/api/oauth/callback/'
 GOOGLE_CLIENT_ID = '1006058625597-bhtls9amhrpcuu5ltdungv65kehm56ch.apps.googleusercontent.com'
 GOOGLE_CLIENT_SECRET = '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'
 GOOGLE_REDIRECT_URI = 'http://127.0.0.1:8000/api/google/callback/'
+
+TRANSCE_HOST = '127.0.0.1:8000/api'
+
+
+#For temporary Users Creation
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    # Add any additional authentication backends if needed
+]

@@ -36,13 +36,16 @@ class Player(AbstractBaseUser):
 
 
 class Friendships(AbstractBaseUser):
+
     class Status(Enum):
         PENDING = 'PEN'
         ACCEPTED = 'ACP'
+
     STATUS_AVAILABLE = [
         (Status.PENDING.value, 'PENDING'),
         (Status.ACCEPTED.value, 'ACCEPTED'),
     ]
+    
     id = models.AutoField(primary_key=True)
     status = models.CharField(max_length=3, choices=STATUS_AVAILABLE, default=Status.PENDING.value)
     sender = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='friend_request_sent')
@@ -52,6 +55,7 @@ class Friendships(AbstractBaseUser):
         return f'{self.sender.username} ---> {self.receiver.username}'
 
 class PlayerGameMatch(AbstractBaseUser):
+
     id = models.AutoField(primary_key=True)
     id_player = models.ForeignKey(Player, on_delete=models.CASCADE, null=False, blank=False)
     id_match = models.ForeignKey('Match', on_delete=models.CASCADE, null=False, blank=False)
@@ -64,9 +68,34 @@ class PlayerGameMatch(AbstractBaseUser):
 
 
 class Match(AbstractBaseUser):
+
     class State(Enum):
         PLAYED = "PLYD"
         UNPLAYED = "UPLY"
+
+        @classmethod
+        def cases(cls):
+            return [(case.value, case.name) for case in cls]
+
+    class Game(Enum):
+        PONG = 'PON'
+        TICTACTOE = 'TIC'
+
+        @classmethod
+        def cases(cls):
+            return [(case.value, case.name) for case in cls]
+    
+    id = models.AutoField(primary_key=True)
+    state = models.CharField(max_length=4, choices=State.cases(), null=False, blank=False, default=State.UNPLAYED.value)
+    round = models.IntegerField(default=1)
+    game = models.CharField(max_length=3, choices=Game.cases(), null=False, blank=False, default=Game.PONG.value)
+    #<-------------- ziko add tournament models.ForeignKey here -------------->
+
+
+
+
+
+
 
 # from django.contrib.auth.models import User
 # from django.db import models

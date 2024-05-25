@@ -9,10 +9,9 @@ from .serializers import UserSerializer
 from django.shortcuts import redirect, render
 from django.conf import settings
 from rest_framework.views import APIView
-from rest_framework.response import Response
 from .services import create_player, jwt_generation, decode_google_id_token, jwt_required_cookie, tfa_code_check, tfa_qr_code
 from django.utils.http import urlencode
-from .models import Player
+from .models import Player, PlayerGameMatch, Match, Friendships
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from requests_oauthlib import OAuth2Session
 from rest_framework.permissions import AllowAny
@@ -22,11 +21,14 @@ from qr_code.qrcode.utils import QRCodeOptions
 from django.utils.decorators import method_decorator
 from django.core.files.storage import default_storage
 from .serializers import PlayerSerializerInfo
+from django.core.files.base import ContentFile
 from django.db.models import Q
-import jwt
+import jwt, os
 import json
 import requests
 import urllib.parse
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 
 # from rest_framework.permissions import IsAuthenticated
 # from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -37,24 +39,13 @@ import urllib.parse
 
 def home(request):
     username = request.GET.get('username')
-    # player = request.user
-    # print(request.user, flush=True) #Check the request content
-    # print('aaaa')
 
     return render(request, 'index.html', {"username" : username})
 
-# def login42(request):
-#     oauth = OAuth2Session(settings.FORTYTWO_CLIENT_ID, redirect_uri=settings.FORTYTWO_REDIRECT_URI, scope='public')
-#     authorization_url = oauth.authorization_url("https://api.intra.42.fr/oauth/authorize")
-
-#     return redirect(authorization_url)
-
-# @api_view(['GET'])
 @api_view(['GET'])
 @authentication_classes([])  # Remove all authentication classes
 @permission_classes([AllowAny])  # Allow any permission
 def login42(request):
-    print(request.method)
     redirect_uri = urlencode({"redirect_uri": settings.FORTYTWO_REDIRECT_URI})
     authorization_url = f"https://api.intra.42.fr/oauth/authorize?client_id={settings.FORTYTWO_CLIENT_ID}&{redirect_uri}&response_type=code&scope=public"
     return redirect(authorization_url)
@@ -99,9 +90,10 @@ def callback42(request):
             }
             player = create_player(user_data)
             if player is None:
-                return redirect("https://127.0.0.1:8000/api/login/", permanent=True)
+                return redirect(f"http://{settings.TRANSCE_HOST}/login/", permanent=True)
             jwt_token = jwt_generation(player.id, player.two_factor)
-            response = redirect("http://127.0.0.1:8000/api/home/", permanent=True)
+            response = redirect(f"http://{settings.TRANSCE_HOST}/home", permanent=True) # Should add the 2FA in this redirection
+            #  response = redirect(f"http://{settings.TRANSCE_HOST}/{'2fa' if player.two_factor else 'home'}/", permanent=True)
             response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
             return response
         else:
@@ -109,7 +101,7 @@ def callback42(request):
     else:
         return Response({'error': 'Authorization code missing'}, status=status.HTTP_400_BAD_REQUEST)
 
-# @api_view(['GET'])
+
 @api_view(['GET'])
 @authentication_classes([])  # Remove all authentication classes
 @permission_classes([AllowAny])
@@ -133,7 +125,7 @@ def login_google(request):
     google_authorization_url = f"{GOOGLE_AUTH_URL}?{query_params}"
     return redirect(google_authorization_url)
 
-# @api_view(['GET'])
+
 @api_view(['GET'])
 @authentication_classes([])  # Remove all authentication classes
 @permission_classes([AllowAny])
@@ -145,7 +137,7 @@ def callback_google(request):
     if code is None:
         return Response({"error": "code is required", "statusCode": 401})
     
-    # Exchange the authorization code for an access token
+
     token_url = 'https://oauth2.googleapis.com/token'
     payload = {
         'code': code,
@@ -158,7 +150,7 @@ def callback_google(request):
     
     if response.status_code == 200:
         token_data = response.json()
-        access_token = token_data.get('access_token')  # Check if 'access_token' exists
+        access_token = token_data.get('access_token') 
         if access_token is None:
             return Response({'error' : "Invalid access token", "StatusCode" : 401})
         
@@ -185,7 +177,7 @@ def callback_google(request):
                 return redirect("http://127.0.0.1:8000/login", permanent=True)
             
             jwt_token = jwt_generation(player.id, player.two_factor)
-            response = redirect(f"http://127.0.0.1:8000/{'2fa' if player.two_factor else 'api/home'}/", permanent=True)
+            response = redirect(f"http://127.0.0.1:8000/{'tfa' if player.two_factor else 'api/home'}/", permanent=True)
             response.set_cookie("jwt_token", value=jwt_token, httponly=True, secure=True)
             return response
         else:
@@ -206,8 +198,11 @@ class UserLogin(APIView):
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 @api_view(['GET'])
+@authentication_classes([])  # Remove all authentication classes
+@permission_classes([AllowAny])
 @jwt_required_cookie
 def logout(request):
+    print(dir(request))
     if request.token is None:
         return Response({'error' : 'Access token not found', 'statusCode' : 400})
     cache.set(request.token, True, timeout=None)
@@ -216,6 +211,9 @@ def logout(request):
     return response
 
 @api_view(['POST'])
+@authentication_classes([])  # Remove all authentication classes
+@permission_classes([AllowAny])
+@jwt_required_cookie
 def tfa_verification(request):
     code = request.data.get("code")
     try:
@@ -242,6 +240,7 @@ def tfa_verification(request):
 
 class UserSignup(APIView):
     def post(self, request):
+        print("SIGN UP ------------------------")
         username = request.data.get('username')
         password = request.data.get('password')
         email = request.data.get('email')
@@ -261,6 +260,8 @@ class UserSignup(APIView):
             return Response({'error': 'Failed to create user'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
+@authentication_classes([])  # Remove all authentication classes
+@permission_classes([AllowAny])
 @jwt_required_cookie
 def tfa_qrcode(request):
     token_jwt = request.COOKIES.get("jwt_token")
@@ -268,13 +269,302 @@ def tfa_qrcode(request):
     id_player = token_decode['id']
     code_qr = tfa_qr_code(id_player)
     qr_image = make_qr_code_image(code_qr, QRCodeOptions(), True);
-    return HttpResponse(qr_image, content='image/svg+xml')
+    return HttpResponse(qr_image, content_type='image/svg+xml')
+
+@authentication_classes([])  # Remove all authentication classes
+@permission_classes([AllowAny])
+class PlayerUploadAvatar(APIView):
+    @method_decorator(jwt_required_cookie, name='post')
+    def post(self, request):
+        try:
+            tokenid = request.COOKIES.get("jwt_token")
+            if not tokenid:
+                return Response({"error": "No token provided", "statusCode": 401})
+            id = jwt.decode(tokenid, settings.SECRET_KEY, algorithms=["HS256"])['id']
+            avatar_file = request.FILES.get('avatar')
+            if not avatar_file:
+                return Response({"error": "No file provided", "statusCode": 400})
+            filePath = os.path.join(settings.MEDIA_ROOT, avatar_file.name)
+            default_storage.save(filePath, ContentFile(avatar_file.read()))
+            url_file = urllib.parse.urljoin(settings.PUBLIC_PLAYER_URL, os.path.join(settings.MEDIA_URL, avatar_file.name))
+            player = Player.objects.get(id=id)
+            player.avatar = url_file
+            player.save()            
+            return Response({"message": "Avatar has been updated successfully", "statusCode": 200})
+        except Player.DoesNotExist:
+            return Response({"error": "User doesn't exist", "statusCode": 404})
+        except Exception as e:
+            return Response({"error": str(e), "statusCode": 500})
 
 
-class PlayerAvatarUpload(APIView):
+@authentication_classes([])  # Remove all authentication classes
+@permission_classes([AllowAny])
+class PlayerInfos(APIView):
+
     @method_decorator(jwt_required_cookie)
-    def post (self, request):
-        # try:
-            id = request.decoded_token['id']
-            avatar_file = request.FILES['avatar']
-        # except:
+    def get(self, request):
+        try:
+            username = request.query_params.get('username')
+            if username:
+                player = Player.objects.filter(username=username)
+                if not player.exists():
+                    raise Player.DoesNotExist
+                serializer = PlayerSerializerInfo(player, many=True)
+                return Response({'player' : serializer.data ,'message' : 'User has been found successfully', 'status' : 200})
+            token = request.token
+            player = Player.objects.get(id=jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])['id'])
+            serializer = PlayerSerializerInfo(player)
+            return Response({'player' : serializer.data, 'status' : 200})
+        except Player.DoesNotExist:
+            return Response({
+                "message": "User not found",
+                "status": 404,
+            })
+        except Exception as e:
+            return Response({
+                "message": str(e),
+                "status": 500,
+            })
+
+    @method_decorator(jwt_required_cookie)
+    def post(self, request):
+        try:
+            change_check = False
+            id = jwt.decode(request.token, settings.SECRET_KEY, algorithms=["HS256"])['id']
+            player_data = request.data.get('player')
+            player_id = Player.objects.get(id=id)
+
+            if "username" in player_data:
+                username = player_data["username"].strip()
+                if not username or len(username) > 8:
+                    return Response({'error' : 'Invalid username', 'status' : 400})
+                player_id.username = username
+                change_check = True
+            
+            if "first_name" in player_data:
+                first_name = player_data["first_name"].strip()
+                if not first_name or len(first_name) > 8:
+                    return Response({'error' : 'Invalid first name', 'status' : 400})
+                player_id.first_name = first_name
+                change_check = True
+
+            if "last_name" in player_data:
+                last_name = player_data["last_name"].strip()
+                if not last_name or len(last_name) > 8:
+                    return Response({'error' : 'Invalid last name', 'status' : 400})
+                player_id.last_name = last_name
+                change_check = True
+            
+            if "two_factor" in player_data and player_data["two_factor"] is False:
+                player_id.two_factor = player_data["two_factor"]
+                change_check = True
+            
+            player_id.save()
+            print(player_id.two_factor)
+            return Response({'message' : 'User updated successfully', 'status' : 200})
+        
+        except Player.DoesNotExist:
+            return Response({'message' : 'User not found', 'status' : 404})
+        except KeyError:
+            return Response({'error' : 'Invalid request data', 'status' : 400})
+        except Exception as e:
+            return Response({'error' : str(e), 'status' : 500})
+
+
+@authentication_classes([])  # Remove all authentication classes
+@permission_classes([AllowAny])        
+class MatchesHistory(APIView):
+    @method_decorator(jwt_required_cookie)
+    def get(self, request):
+        try:
+            player = Player.objects.get(id=jwt.decode(request.token, settings.SECRET_KEY, algorithms=["HS256"])['id'])
+            matches = PlayerGameMatch.objects.filter(id_player=player, id_match__state='PLY').order_by('-id_match__id')[:8]
+            data_matches = []
+            for match in matches:
+                players_match = []
+                for player_match in match.id_match.playergamematch_set.all():
+                    players_match.append({
+                        'id': player_match.id_player.id,
+                        'username': player_match.id_player.username,
+                        "avatar": player_match.id_player.avatar,
+                        "score": player_match.score,
+                        "won": player_match.won,
+                    })
+
+                data_matches.append({
+                    'id': match.id_match.id,
+                    'game': match.id_match.game,
+                    'players': players_match
+                })
+            
+            return Response({'matches': data_matches, 'status': 200})
+        except Player.DoesNotExist:
+            return Response({'message': 'User not found', 'status': 404})
+        except Exception as e:
+            return({'error' : str(e), 'status' : 500})
+
+
+@authentication_classes([])  # Remove all authentication classes
+@permission_classes([AllowAny])
+class FriendshipRelation(APIView):
+
+    @method_decorator(jwt_required_cookie)
+    def get(self, request):
+        id = jwt.decode(request.token, settings.SECRET_KEY, algorithms=["HS256"])['id']
+        try:
+            get_type = request.query_params.get('type') #query parameter to verfiy which type of frienships is it
+            if get_type == 'invites':
+                friendships = Friendships.objects.filter(receiver=id, status='PEN')
+                friendship_data = []
+                for friendship in friendships:
+                    friend = friendship.sender
+                    friend_data = PlayerSerializerInfo(friend).data
+                    friendship_data.append(friend_data)
+                
+                return Response({'friendships' : friendship_data})
+            
+            elif get_type == 'friends':
+                friendships = Friendships.objects.filter(Q(sender=id) | Q(receiver=id), status='ACP')
+                friendship_data = []
+                for friendship in friendships:
+                    friend = friendship.sender if friendship.sender.id != id else friendship.receiver
+                    friend_data = PlayerSerializerInfo(friend).data
+                    friendship_data.append(friend_data)
+
+                return Response({'friendships' : friendship_data})
+            
+            elif get_type == 'requests':
+                friendships = Friendships.objects.filter(sender=id, status='PEN')
+                friendship_data = []
+                for friendship in friendships:
+                    friend = friendship.receiver
+                    friend_data = PlayerSerializerInfo(friend).data
+                    friendship_data.append(friend_data)
+                
+                return Response({'friendships' : friendship_data})
+            
+            else:
+                return Response({'error' : 'Invalid request', 'status' : 400})
+        
+        except Exception as e:
+            return Response({'error' : str(e), 'status' : 500})
+        
+    @method_decorator(jwt_required_cookie)
+    def post(self, request):
+        id = jwt.decode(request.token, settings.SECRET_KEY, algorithms=["HS256"])['id']
+        try:
+            id_sender = Player.objects.get(id=id)
+            id_receiver = request.data.get('id_target') # add id_target of the receiver player in the body
+            if id_receiver == id:
+                return Response({
+                    'error' : 'You cannot send a friend request to yourself',
+                    'status' : 400
+                    })
+            
+            receiver = Player.objects.get(id=id_receiver)
+            if Friendships.objects.filter(sender=id_sender, receiver=receiver).exists():
+                return Response({
+                    'message' : 'Friend request already sent',
+                    'status' : 400
+                })
+            
+            elif Friendships.objects.filter(sender=receiver, receiver=id_sender).exists():
+                friendships = Friendships.objects.filter(sender=receiver, receiver=id_sender)
+                friendships.update(status='ACP')
+                return Response({
+                    'message' : 'Friend request accepted successfully',
+                    'status' : 200
+                })
+            
+            else:
+                friendship = Friendships.objects.create(sender=id_sender, receiver=receiver, status='PEN')
+                friendship.save()
+                return Response({
+                    'message' : 'Friend request has been sented successfully',
+                    'status' : 200
+                })
+
+        except Player.DoesNotExist:
+            return Response({'error' : 'User not found', 'status' : 404})
+        except Exception as e:
+            return Response({'error' : str(e), 'status' : 500})
+        
+    @method_decorator(jwt_required_cookie)
+    def delete(self, request):
+        try:
+            id_sender = jwt.decode(request.token, settings.SECRET_KEY, algorithms=["HS256"])['id']
+            id_receiver = request.data.get('id_target') # add id_target of the receiver player in the body
+            receiver = Player.objects.get(id=id_receiver)
+            sender = Player.objects.get(id=id_sender)
+            # to check bidirectionary friendship request send between both players
+            try:
+                friendship = Friendships.objects.get(sender=sender, receiver=receiver)
+            except Friendships.DoesNotExist:
+                friendship = Friendships.objects.get(sender=receiver, receiver=sender)
+            
+            if friendship:
+                friendship.delete()
+                return Response({
+                    'message' : 'Friendship relation has been deleted successfully',
+                    'status' : 204
+                })
+            else:
+                return Response({'message' : 'Friendship not found', 'status' : 404})
+        
+        except Exception as e:
+            return Response({'error' : str(e), 'status' : 500})
+
+
+#Temporary SignUp/Login/Logout methods for Chat testing
+
+from .serializers import UserSerializer
+
+
+@api_view(['POST'])
+@authentication_classes([])  # Remove all authentication classes
+@permission_classes([AllowAny])
+def register_user(request):
+    if request.method == 'POST':
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+@authentication_classes([])  # Remove all authentication classes
+@permission_classes([AllowAny])
+def user_login(request):
+    if request.method == 'POST':
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        user = None
+        if '@' in username:
+            try:
+                user = Player.objects.get(email=username)
+            except Player.DoesNotExist:
+                pass
+
+        if not user:
+            user = authenticate(username=username, password=password)
+            print(f'User {user} and User : {username}')
+        if user:
+            token, _ = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key}, status=status.HTTP_200_OK)
+
+        return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['POST'])
+@authentication_classes([])  # Remove all authentication classes
+@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
+def user_logout(request):
+    if request.method == 'POST':
+        try:
+            # Delete the user's token to logout
+            request.user.auth_token.delete()
+            return Response({'message': 'Successfully logged out.'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
