@@ -1,0 +1,51 @@
+body{
+    background-color: #1D203E !important;
+}
+nav {
+  padding: 10px 200px 10px 200px !important;
+}
+
+a {
+  color: #fff !important;
+  display: block;
+}
+
+.home-buttons{
+  padding: 6px 20px 6px 20px;
+  border-radius: 6px;
+  outline: none;
+  border: none;
+  color: #fff;
+  font-size: 12px;
+  background: rgb(190, 60, 237) !important;
+  background: linear-gradient(
+    90deg,
+    rgba(190, 60, 237, 1) 43%,
+    rgb(158, 165, 179) 100%
+  ) !important;
+}
+
+.discover-btn {
+  padding: 15px 80px !important;
+}
+
+.home
+{
+  width: 50%;
+  height: calc(100vh - 100px);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  row-gap: 5rem;
+  justify-content: center;
+  padding-left: 200px;
+}
+
+.discover-btn{
+  padding: 10px 30px;
+}
+
+#card-hold .login-form
+{
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 3px 8px;
+}

@@ -1,25 +1,20 @@
 name: ft_transcendence
 
-networks:
-  Net:
-    name: Network
-
 services:
   server:
-    container_name: server
-    build:
-      context: ./frontend/docker
-      dockerfile: Dockerfile
-    image: server:v1
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./frontend/srcs:/var/www/transcendence
     networks:
       - Net
-    # depends_on:
-    #   - postgres_db
-    restart: always
+    ports:
+      - "8000:80"
+    volumes:
+      - ./frontend:/var/www/transcendence
+    build: frontend/server/
+    container_name: server
+    image: server:v1
+
+networks:
+  Net:
+    name: Net
 
   # postgres_db:
   #   container_name: postgres_db

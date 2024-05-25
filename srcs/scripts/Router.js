@@ -10,7 +10,7 @@ import { settings_page } from "./components/settins.js";
 
 const Router = {
     init: async () => {
-        // loop trough all links with class navlink and prevent default bahaviour when
+        // loop trough all links with class navlink and prevent default behavior when
         // clicking so it doesn't take us to new page
         document.querySelectorAll("a.navlink").forEach((a) => {
             a.addEventListener("click", (event) => {
