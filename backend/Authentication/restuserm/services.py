@@ -54,24 +54,28 @@ def decode_google_id_token(token_id: str) -> Dict[str, str]:
     decoded_token = jwt.decode(token_id, options={"verify_signature" : False})
     return decoded_token
 
+
+from functools import wraps
+
 def jwt_required_cookie(view_func):
-    def view_wrapped(request):
+    @wraps(view_func)
+    def view_wrapped(request, *args, **kwargs):
         if "jwt_token" not in request.COOKIES:
             return Response({'error' : 'jwt token cookie is missing', 'statusCode' : 401})
         token_jwt = request.COOKIES.get("jwt_token")
         try:
             request.token = token_jwt
             token_decoded = jwt.decode(token_jwt, settings.SECRET_KEY, algorithms=['HS256'])
-            if (token_decoded['2fa']):
-                return Response({'error' : '2FA is required', 'statusCode' : 401})
+            # if (token_decoded['2fa']):
+            #     return Response({'error' : '2FA is required', 'statusCode' : 401})
             request.decoded_token = token_decoded
-            return view_func(request)
+            return view_func(request, *args, **kwargs)
         except jwt.ExpiredSignatureError:
             return Response({'erro' : 'Token has been expired', 'statusCode' : 401})
         except jwt.InvalidTokenError:
             return Response({'error' : 'Invalid Token', 'statusCode' : 401})
         except Exception as e :
-            return Response({'error' : str(e), 'statusCode' : 500})
+            return Response({'errors' : str(e), 'statusCode' : 500})
     return view_wrapped
 
 def tfa_code_check(id_player: int, code: int) -> bool:
