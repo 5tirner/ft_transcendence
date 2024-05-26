@@ -1,0 +1,28 @@
+body {
+    margin: 0;
+    line-height: normal;
+}
+
+
+:root {
+
+    /* fonts */
+    --font-lato: Lato;
+
+    /* font sizes */
+    --font-size-base: 16px;
+
+    /* Colors */
+    --color-white: #fff;
+    --color-slateblue: #7d60d4;
+
+    /* Gaps */
+    --gap-3xs: 10px;
+
+    /* Paddings */
+    --padding-3xs: 10px;
+
+    /* Border radiuses */
+    --br-8xs: 5px;
+
+}
