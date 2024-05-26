@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    input[type=text], select {
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+
+    input[type=submit] {
+      width: 100%;
+      background-color: #343d34;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    input[type=submit]:hover {
+      background-color: #192419;
+    }
+
+    div {
+      border-radius: 5px;
+      background-color: #e6dada;
+      padding: 20px;
+    }
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WELCOME</title>
+    <div>
+        <form method="post">
+          {%csrf_token%}
+            <label>User Name</label>
+            <input type="text" name="username" placeholder="Your Username">
+            <label>Room Code</label>
+            <input type="text" name="room_id" name placeholder="Room Code">
+            <label>Do Youn Want To Create A Room Or Join To It?</label>
+            <select name="option">
+              <option>Choose</option>
+              <option value="1">Use Room Code</option>
+              <option value="2">Create New Room</option>
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+      </div>
+</head>
+<body>
+</html>
