@@ -5,10 +5,16 @@ from .models import tttgame
 
 def welcome(req):
     if req.method == "POST":
+        print("Information Posted:")
         username = req.POST.get('username')
+        print(f"username: {username}")
         option = req.POST.get('option')
+        print(f"choose: {option}")
+        print(type(option))
         room_id = req.POST.get('room_id')
-        if option == 1:
+        print(f"room id: {room_id}")
+        if option == "1":
+            print(f"{username} wants to join to a room")
             aGame = tttgame.object.filter(room_id=room_id).first()
             if aGame is None:
                 error = loader.get_template('404.html')
@@ -18,7 +24,8 @@ def welcome(req):
                 return HttpResponse(loader.render())
             aGame.game_oppenent = username
             aGame.save()
-        elif option == 2:
+        elif option == "2":
+            print(f"{username} wants to craete a room")
             aGame = Game(game_creator = username, room_id = room_id)
             aGame.save()
             return redirect('tictactoe/' + room_id + '?usernsme='+username)
@@ -31,4 +38,4 @@ def game(req, room_id):
     context = {
         'room_id': room_id, 'username': username,
     }
-    return HttpResponse(tmp.render())
+    return HttpResponse(tmp.render(context, req))
