@@ -1,40 +1,23 @@
-.add-message-1-icon {
-    position: absolute;
-    top: 0px;
-    left: 210px;
-    width: 20px;
+.add-message-parent {
     height: 20px;
-    overflow: hidden;
-}
-
-.chats {
-    position: absolute;
-    top: -1px;
-    left: 100px;
-    display: inline-block;
-    width: 51px;
-    height: 20px;
-}
-
-.add-message-1-parent {
-    width: 250px;
-    position: relative;
-    height: 20px;
-    overflow: hidden;
-    flex-shrink: 0;
     font-size: 20px;
 }
 
-.search {
-    position: absolute;
+.add-message-icon {
     top: 0px;
-    left: 10px;
+    left: 90%;
+    width: 20px;
+    height: 20px;
+}
+
+.search-bar {
+    height: 20px;
 }
 
 .search-wrapper {
     position: absolute;
     top: 0px;
-    left: 10px;
+    left: 3%;
     border-radius: var(--br-8xs) 0px 0px var(--br-8xs);
     background-color: #757575;
     width: 200px;
@@ -42,10 +25,17 @@
     overflow: hidden;
 }
 
+.search {
+    position: absolute;
+    top: 0px;
+    left: 5%;
+}
+
+
 .search-bar-child {
     position: absolute;
     top: 0px;
-    left: 210px;
+    left: 85%;
     border-radius: 0px var(--br-8xs) var(--br-8xs) 0px;
     width: 30px;
     height: 20px;
@@ -53,13 +43,6 @@
     background-color: #757575;
 }
 
-.search-bar {
-    width: 250px;
-    position: relative;
-    height: 20px;
-    overflow: hidden;
-    flex-shrink: 0;
-}
 
 .group-child {
     position: absolute;
@@ -107,25 +90,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    padding: var(--padding-3xs);
+    padding: 10px;
     box-sizing: border-box;
-    gap: var(--gap-3xs);
-}
-
-.frame-parent {
-    width: 250px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: var(--padding-3xs) 0px;
-    box-sizing: border-box;
-    gap: var(--gap-3xs);
-    text-align: center;
-    font-size: var(--font-size-base);
-    color: var(--color-white);
-    font-family: var(--font-lato);
-    background-color: #1D203E;
-    margin: 0 auto;
+    gap: 10px;
 }

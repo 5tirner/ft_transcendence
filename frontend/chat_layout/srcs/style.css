@@ -1,22 +1,32 @@
-.right-window {
-    padding: 0;
-    max-width: 250px;
-    background-color: #1D203E;
-    color: white;
-    font-family: Arial, sans-serif;
+:root {
+    --font-lato: Lato;
+    --font-size-base: 16px;
+    --color-white: #ffffff;
+    --color-slateblue: #7d60d4;
+    --br-8xs: 5px;
 }
 
-.chat-head {
-    height: 100px;
-    gap: 10px;
+body {
+    margin: 0;
+    line-height: normal;
 }
 
 /* INFO: */
-/* search container style */
+/* all right window */
 
-.search-con {
-    background-color: #ff00ff;
+.right-window {
+    padding: 0;
+    width: 250px;
+    max-width: 250px;
+    background-color: #1D203E;
+    color: white;
+    font-family: var(--font-lato);
+    height: 100vh;
 }
+
+/* INFO: */
+/* chat head */
+
 
 /* INFO:  */
 /* list of conversations style */
