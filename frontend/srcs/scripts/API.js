@@ -1,5 +1,5 @@
 const API = {
-    authEndpoint: "http://127.0.0.1:8000/api/auth/",
+    authEndpoint: "http://127.0.0.1:8000/api/",
     chatEndpoint: "http://127.0.0.1:8000/api/chat/",
 
 
@@ -8,9 +8,9 @@ const API = {
         return await API.makePostRequest(API.authEndpoint + "login/", userData);
     },
 
-    // isLogedIn: async () => {
-    //     return await API.makeGetRequest(API.authEndpoint);
-    // },
+    isLogedIn: async () => {
+        return await API.makeGetRequest(API.authEndpoint + "usercheck/");
+    },
 
     register: async (userData) => {
         return await API.makePostRequest(API.authEndpoint + "register/", userData);
