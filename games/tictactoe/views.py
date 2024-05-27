@@ -15,25 +15,32 @@ def welcome(req):
         print(f"room id: {room_id}")
         if option == "1":
             print(f"{username} wants to join to a room")
-            aGame = tttgame.object.filter(room_id=room_id).first()
+            aGame = tttgame.objects.filter(room_id=room_id).first()
             if aGame is None:
+                print("!!Game Is None!!")
                 error = loader.get_template('404.html')
                 return HttpResponse(error.render())
-            if aGame.game_over:
+            elif aGame.game_over:
+                print("!!Game Is Over!!")
                 over = loader.get_template('gameOver.html')
-                return HttpResponse(loader.render())
+                return HttpResponse(over.render())
             aGame.game_oppenent = username
             aGame.save()
+            return redirect('tictactoe/' + room_id + '?username='+username)
         elif option == "2":
-            print(f"{username} wants to craete a room")
-            aGame = Game(game_creator = username, room_id = room_id)
+            print(f"{username} wants to create a room")
+            aGame = tttgame(game_creator = username, room_id = room_id)
             aGame.save()
-            return redirect('tictactoe/' + room_id + '?usernsme='+username)
+            return redirect('tictactoe/' + room_id + '?username='+username)
+        else :
+            return render(req, "404.html")
+    print("Welcome There")
     tmp = loader.get_template('welcome.html')
     return HttpResponse(tmp.render())
 
 def game(req, room_id):
     username = req.GET.get('username')
+    print(f"username: {username}")
     tmp = loader.get_template('game.html')
     context = {
         'room_id': room_id, 'username': username,
