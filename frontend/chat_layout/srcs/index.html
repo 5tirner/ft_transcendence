@@ -26,7 +26,7 @@
       <div
         class="d-flex flex-column align-items-center justify-content-start text-center text-white p-1 mx-auto gap-2"
       >
-        <div class="add-message-parent position-relative w-100">
+        <div class="add-message-parent position-relative">
           <b>Chats</b>
           <img
             class="add-message-icon position-absolute"
@@ -34,24 +34,31 @@
             src="./add-message 1.svg"
           />
         </div>
-        <div class="search-bar w-100 position-relative">
-          <div class="search-wrapper">
-            <div class="search">Search....</div>
-          </div>
-          <img class="search-bar-child" alt="" src="./Search.svg" />
+        <div class="search-bar position-relative">
+          <input
+            type="text"
+            class="search position-absolute p-2"
+            placeholder="Search...."
+          />
+          <button>
+            <img
+              class="search-bar-child position-absolute p-1"
+              alt=""
+              src="./Search.svg"
+            />
+          </button>
         </div>
-        <div class="group-parent">
-          <div class="rectangle-parent">
-            <div class="group-child"></div>
-            <div class="all">All</div>
+        <div
+          class="d-flex gap-2 align-items-center justify-content-between p-3 group-parent"
+        >
+          <div class="rectangle-parent mx-auto">
+            <div>All</div>
           </div>
-          <div class="rectangle-parent">
-            <div class="group-item"></div>
-            <div class="unread">Unread</div>
+          <div class="rectangle-parent mx-auto">
+            <div>Unread</div>
           </div>
-          <div class="rectangle-parent">
-            <div class="group-item"></div>
-            <div class="search">Groups</div>
+          <div class="rectangle-parent mx-auto">
+            <div>Groups</div>
           </div>
         </div>
       </div>

@@ -23,8 +23,8 @@ services:
       - .env
     networks:
       - myNetwork
-    # volumes:
-    #   - postgres_db:/var/lib/postgresql/data
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
     restart: always
 
   myServer:
@@ -72,14 +72,14 @@ services:
     depends_on:
       - postgres_db
     restart: always
-# volumes:
-#   postgres_db:
-#     driver: local
-#     name: postgres_db
-#     driver_opts:
-#       type: none
-#       device: /home/belkarto/data/postgres_db
-#       o: bind
+volumes:
+  postgres_db:
+    driver: local
+    name: postgres_db
+    driver_opts:
+      type: none
+      device: /home/belkarto/data/postgres_db
+      o: bind
 #   www:
 #     name: front_end
 #     driver: local

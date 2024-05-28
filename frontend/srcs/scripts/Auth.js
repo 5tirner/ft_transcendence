@@ -59,10 +59,8 @@ const Auth = {
     },
     isAuth: async (event) => {
         const response = await API.isLogedIn();
-        console.log(response)
         if (response.ok) {
             const { isLoged } = await response.json();
-            console.log(isLoged);
             return isLoged;
         }
         return false;
