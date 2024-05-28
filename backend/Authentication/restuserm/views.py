@@ -700,17 +700,21 @@ def user_logout(request):
             )
 
 
+from .serializers import PlayerSerializerInfoVer
+
+
 # added for the Chat authentication test
 @api_view(["GET"])
 @authentication_classes([])  # Remove all authentication classes
 @permission_classes([AllowAny])
 @jwt_required_cookie
 def check_user(request):
+    player = Player.objects.get(pk=request.decoded_token["id"])
+    serialized = PlayerSerializerInfoVer(player)
     return Response(
         {
             "message": "User is authenticated",
-            "status": 200,
             "isLoged": True,
-            "id": request.decoded_token,
+            "data": serialized.data,
         }
     )
