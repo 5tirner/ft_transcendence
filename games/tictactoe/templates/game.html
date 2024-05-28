@@ -6,6 +6,18 @@
     <title>TicTacToe</title>
 </head>
 <body>
-    <h1>HI {{username}}</h1>
+    <h1>HI {{username}} To The Room `{{room_id}}`</h1>
+    <script>
+        console.log("Try To Connect");
+        const ws = new WebSocket('ws://localhost:8000/ws/game/<room_id>');
+        ws.onopen = function(){
+            console.log(typeof(ws));
+            console.log("Connection Estableished Succefully");
+            ws.close();
+        }
+        ws.onclose = function(){
+            console.log("Connection Closed");
+        }
+    </script>
 </body>
 </html>
