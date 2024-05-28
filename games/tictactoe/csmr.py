@@ -9,5 +9,7 @@ class play(AsyncWebsocketConsumer):
         # self.room_name = self.scope['ulr_route']['kwargs']['room_id']
         # self.room_group_name = 'room_%s' % self.room_name
         # print(self.room_name, '---', self.room_group_name)
+    async def receive(self, text_data=None, bytes_data=None):
+        print("Data Reciving From Client")
     async def disconnect(self, close_code):
         print("Disconnected")

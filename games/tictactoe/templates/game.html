@@ -1,5 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+    h1 {
+        text-align: center;
+    }
+    td {
+      width: 100px;
+      height: 100px;
+    }
+    table {
+      margin: 5px auto;
+    }
+    .vert {
+      border-left: 2px solid black;
+      border-right: 2px solid black;
+    }
+    .hori {
+      border-top: 2px solid black;
+      border-bottom: 2px solid black;
+    }
+</style>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,5 +39,23 @@
             console.log("Connection Closed");
         }
     </script>
+    <h1>Tic Tac Toe</h1>
+    <table>
+      <tr>
+        <td></td>
+        <td class="vert"></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="hori"></td>
+        <td class="vert hori"></td>
+        <td class="hori"></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td class="vert"></td>
+        <td></td>
+      </tr>
+    </table>
 </body>
 </html>
