@@ -5,7 +5,7 @@ const API = {
 
     // ADD HERE ALL THE OTHER API FUNCTIONS
     login: async (userData) => {
-        return await API.makePostRequest(API.authEndpoint + "login/", userData);
+        return await API.makePostRequest(API.authEndpoint + "logins/", userData);
     },
 
     isLogedIn: async () => {
@@ -13,7 +13,11 @@ const API = {
     },
 
     register: async (userData) => {
-        return await API.makePostRequest(API.authEndpoint + "register/", userData);
+        return await API.makePostRequest(API.authEndpoint + "signups/", userData);
+    },
+
+    logout: async () => {
+        return await API.makeGetRequest(API.authEndpoint + "logouts/")
     },
 
     getUser: async () => {

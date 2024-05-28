@@ -26,7 +26,8 @@ const Auth = {
 
     logout: async () => {
         //TODO: delete JWT or anything that keep user authToke
-
+        const response = await API.logout();
+        console.log(response);
         Router.go("/login");
     },
 
@@ -59,8 +60,12 @@ const Auth = {
     },
     isAuth: async (event) => {
         const response = await API.isLogedIn();
+        console.log(response);
         if (response.ok) {
-            const { isLoged } = await response.json();
+            const res = await response.json();
+            const { isLoged } = res;
+            console.log(res);
+            Auth.user = res.data.username;
             return isLoged;
         }
         return false;

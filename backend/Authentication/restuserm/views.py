@@ -663,6 +663,9 @@ def user_login(request):
         username = request.data.get("username")
         password = request.data.get("password")
 
+        print("-----------------------------------------")
+        print(username, password)
+        print("-----------------------------------------")
         user = None
         if "@" in username:
             try:
@@ -670,12 +673,23 @@ def user_login(request):
             except Player.DoesNotExist:
                 pass
 
+        print("-----------------------------------------")
+        print(user)
+        print("-----------------------------------------")
         if not user:
             user = authenticate(username=username, password=password)
             print(f"User {user} and User : {username}")
         if user:
+            # NOTE:
+            # the cookie must be set in response cookie
+            # can't be set as httponly from javascript
             token, _ = Token.objects.get_or_create(user=user)
-            return Response({"token": token.key}, status=status.HTTP_200_OK)
+            # response = Response({"token": token.key}, status=status.HTTP_200_OK)
+            response = Response(
+                {"message": "Login successful"}, status=status.HTTP_200_OK
+            )
+            response.set_cookie("jwt_token", value=token, httponly=True, secure=True)
+            return response
 
         return Response(
             {"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED
@@ -687,10 +701,10 @@ def user_login(request):
 @permission_classes([AllowAny])
 @permission_classes([IsAuthenticated])
 def user_logout(request):
-    if request.method == "POST":
+    if request.method == "GET":
         try:
             # Delete the user's token to logout
-            request.user.auth_token.delete()
+            # request.user.auth_token.delete()
             return Response(
                 {"message": "Successfully logged out."}, status=status.HTTP_200_OK
             )
