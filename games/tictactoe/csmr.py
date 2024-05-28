@@ -1,5 +1,6 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
+from .models import *
 
 class play(AsyncWebsocketConsumer):
     async def connect(self):
