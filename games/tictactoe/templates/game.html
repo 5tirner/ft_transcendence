@@ -31,11 +31,11 @@
         console.log("Try To Connect");
         const ws = new WebSocket('ws://localhost:8000/ws/game/<room_id>');
         ws.onopen = function(){
-            console.log(typeof(ws));
+            ws.send('{{username}}');
             console.log("Connection Estableished Succefully");
-            ws.close();
         }
-        ws.onclose = function(){
+        ws.onclose = function()
+        {
             console.log("Connection Closed");
         }
     </script>

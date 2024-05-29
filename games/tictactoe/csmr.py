@@ -10,6 +10,8 @@ class play(AsyncWebsocketConsumer):
         # self.room_group_name = 'room_%s' % self.room_name
         # print(self.room_name, '---', self.room_group_name)
     async def receive(self, text_data=None, bytes_data=None):
+        print(f"text data = {text_data}")
+        #print(f"bytes data = {bytes_data}")
         print("Data Reciving From Client")
     async def disconnect(self, close_code):
         print("Disconnected")
