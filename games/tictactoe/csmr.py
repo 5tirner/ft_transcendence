@@ -6,12 +6,9 @@ class play(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
         print("Connection Accepted Succefully")
-        # self.room_name = self.scope['ulr_route']['kwargs']['room_id']
-        # self.room_group_name = 'room_%s' % self.room_name
-        # print(self.room_name, '---', self.room_group_name)
     async def receive(self, text_data=None, bytes_data=None):
+        print("---------------------------------")
         print(f"text data = {text_data}")
-        #print(f"bytes data = {bytes_data}")
-        print("Data Reciving From Client")
+        print("---------------------------------")
     async def disconnect(self, close_code):
         print("Disconnected")
