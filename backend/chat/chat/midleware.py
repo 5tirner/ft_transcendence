@@ -18,9 +18,9 @@ class JwtAuthenticationMiddleWare(BaseMiddleware):
         cookies = dict(
             cookies.split("=") for cookie in cookies.split("; ") if "=" in cookie
         )
-        print("=======================================")
+        print("==================== Middleware IN  ===================")
         print(cookies)
-        print("=======================================")
+        print("==================== Middleware OUT ===================")
         return cookies.get("jwt_token", None)
 
     @database_sync_to_async

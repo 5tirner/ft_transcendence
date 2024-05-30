@@ -4,8 +4,10 @@ import json
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-        self.room_group_name = f"chat_{self.room_name}"
+        print("=================================")
+        print(self.scope)
+        self.room_name = "test"  # self.scope["url_route"]["kwargs"]["room_name"]
+        self.room_group_name = "chat_testf"  # chat_{self.room_name}"
 
         # Join room group
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -13,6 +15,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         # Leave room group
+        print("=================================")
+        print(self.scope)
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
     async def receive(self, text_data):
@@ -24,9 +28,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_send(
             self.room_group_name,
             {
-                "type": "chat.message",
+                # "type": "chat.message",
                 "message": message,
-                "user": self.scope["user"].username,
+                # "user": self.scope["user"].username,
             },
         )
 

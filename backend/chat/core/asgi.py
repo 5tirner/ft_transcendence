@@ -19,11 +19,19 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 from chat.routing import websocket_urlpatterns
 from chat.midleware import JwtAuthenticationMiddleWare
 
+# application = ProtocolTypeRouter(
+#     {
+#         "http": get_asgi_application(),
+#         "websocket": AllowedHostsOriginValidator(
+#             JwtAuthenticationMiddleWare(URLRouter(websocket_urlpatterns))
+#         ),
+#     }
+# )
+
+
 application = ProtocolTypeRouter(
     {
         "http": get_asgi_application(),
-        "websocket": AllowedHostsOriginValidator(
-            JwtAuthenticationMiddleWare(URLRouter(websocket_urlpatterns))
-        ),
+        "websocket": JwtAuthenticationMiddleWare(URLRouter(websocket_urlpatterns)),
     }
 )
