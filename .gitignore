@@ -3,8 +3,6 @@ package-lock.json
 
 # env folder for python virtual env
 env
-# env file
-.env
 # python cach
 __pycache__
 *.pyc
