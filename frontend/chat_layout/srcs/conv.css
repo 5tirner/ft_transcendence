@@ -1,0 +1,289 @@
+body {
+    margin: 0;
+    line-height: normal;
+}
+
+
+:root {
+
+    /* fonts */
+    --font-almarai: Almarai;
+    --font-lato: Lato;
+
+    /* font sizes */
+    --font-size-3xs: 10px;
+    --font-size-xs: 12px;
+
+    /* Colors */
+    --color-gray-100: #797c7b;
+    --color-white: #fff;
+
+    /* Gaps */
+    --gap-9xs: 4px;
+
+    /* Paddings */
+    --padding-9xs: 4px;
+
+    /* Border radiuses */
+    --br-8xs: 5px;
+
+}
+
+.conve-header-child {
+    position: absolute;
+    top: calc(50% - 20px);
+    left: calc(50% - 115px);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.player10001 {
+    position: absolute;
+    top: calc(50% - 20px);
+    left: calc(50% - 70px);
+    text-decoration: underline;
+}
+
+.online {
+    position: absolute;
+    top: 27px;
+    left: 55px;
+    font-size: 8px;
+    font-weight: 300;
+    color: #b1b1b1;
+}
+
+.game {
+    position: absolute;
+    top: 7px;
+    left: 206px;
+    border-radius: var(--br-8xs);
+    width: 36px;
+    height: 36px;
+}
+
+.online1 {
+    position: absolute;
+    top: 35px;
+    left: 40px;
+    border-radius: 50%;
+    background: radial-gradient(50% 50% at 50% 50%, #0bef06 22.19%, #01b052);
+    width: 8px;
+    height: 8px;
+}
+
+.game-control-2-svgrepo-com-1-icon {
+    position: absolute;
+    top: 5px;
+    left: 204px;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.conve-header {
+    width: 250px;
+    position: relative;
+    background-color: #262b5f;
+    height: 50px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.type-your-message {
+    position: absolute;
+    top: 5px;
+    left: 10px;
+}
+
+.type-your-message-wrapper {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border-radius: var(--br-8xs) 0px 0px var(--br-8xs);
+    background-color: #7d60d4;
+    width: 200px;
+    height: 30px;
+    overflow: hidden;
+}
+
+.message-input-child {
+    position: absolute;
+    top: 10px;
+    left: 210px;
+    border-radius: 0px var(--br-8xs) var(--br-8xs) 0px;
+    width: 30px;
+    height: 30px;
+    overflow: hidden;
+}
+
+.message-input {
+    position: absolute;
+    top: calc(50% + 347px);
+    left: calc(50% - 125px);
+    width: 250px;
+    height: 50px;
+    overflow: hidden;
+}
+
+.group-child {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 102px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.hello-brahim {
+    position: absolute;
+    top: 5px;
+    left: 17px;
+    letter-spacing: 0.01em;
+    line-height: 12px;
+    display: inline-block;
+    width: 69px;
+    height: 10px;
+}
+
+.vector-parent {
+    width: 102px;
+    position: relative;
+    height: 20px;
+}
+
+.am {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    line-height: 10px;
+    display: inline-block;
+    width: 61.6px;
+    height: 6.5px;
+}
+
+.am-wrapper {
+    width: 61.6px;
+    position: relative;
+    height: 6.5px;
+    font-size: var(--font-size-3xs);
+    color: var(--color-gray-100);
+}
+
+.group-parent {
+    width: 250px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 5px var(--padding-9xs);
+    box-sizing: border-box;
+    gap: var(--gap-9xs);
+}
+
+.group-item {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 163px;
+    height: 20px;
+}
+
+.hello-there-how {
+    position: absolute;
+    top: 5px;
+    left: 16px;
+    letter-spacing: 0.01em;
+    line-height: 12px;
+    display: inline-block;
+    width: 130px;
+    height: 10px;
+}
+
+.vector-group {
+    width: 163px;
+    position: relative;
+    height: 20px;
+}
+
+.am1 {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    line-height: 10px;
+}
+
+.am-container {
+    width: 39px;
+    position: relative;
+    height: 10px;
+    font-size: var(--font-size-3xs);
+    color: var(--color-gray-100);
+}
+
+.recived-message {
+    width: 183px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 0px var(--padding-9xs);
+    box-sizing: border-box;
+    gap: var(--gap-9xs);
+    text-align: left;
+    color: #000;
+}
+
+.frame-parent {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 5px;
+    text-align: right;
+    font-size: var(--font-size-xs);
+    font-family: var(--font-almarai);
+}
+
+.message-input-parent {
+    width: 250px;
+    position: relative;
+    background-color: #0c0e26;
+    height: 794px;
+    overflow: hidden;
+    flex-shrink: 0;
+    text-align: center;
+    font-size: 16px;
+}
+
+.conve-header-parent {
+    position: absolute;
+    top: calc(50% - 422px);
+    left: calc(50% - 125px);
+    box-shadow: 1px 0px 0px rgba(255, 255, 255, 0.1) inset;
+    background-color: #1d203e;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.inspactor {
+    width: 100%;
+    position: relative;
+    height: 844px;
+    overflow: hidden;
+    text-align: left;
+    font-size: var(--font-size-xs);
+    color: var(--color-white);
+    font-family: var(--font-lato);
+}
