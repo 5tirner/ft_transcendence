@@ -32,6 +32,8 @@ from chat.midleware import JwtAuthenticationMiddleWare
 application = ProtocolTypeRouter(
     {
         "http": get_asgi_application(),
-        "websocket": JwtAuthenticationMiddleWare(URLRouter(websocket_urlpatterns)),
+        "websocket": AllowedHostsOriginValidator(
+            JwtAuthenticationMiddleWare(URLRouter(websocket_urlpatterns))
+        ),
     }
 )

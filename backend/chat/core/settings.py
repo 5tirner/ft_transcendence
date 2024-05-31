@@ -185,3 +185,5 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_METHODS = list(default_methods)
 CORS_ALLOW_HEADERS = list(default_headers)
+
+AUTH_URI = "http://auth:8000/api/usercheck/"
