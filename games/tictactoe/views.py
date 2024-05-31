@@ -29,7 +29,7 @@ def welcome(req):
         print("-----------------------------------")
 
         if option == "1":
-            if tttgame.objects.filter(game_oppenent=username).first() is not None:
+            if tttgame.objects.filter(game_oppenent=username).first() is not None or tttgame.objects.filter(game_creator=username).first() is not None:
                 print("----------------------------")
                 print(f"{username} Alraedy Here")
                 print("----------------------------")
@@ -56,7 +56,7 @@ def welcome(req):
             print("-----------------------------------")
             print(f"{username} wants to create a room")
             print("-----------------------------------")
-            if tttgame.objects.filter(game_creator=username).first() is not None:
+            if tttgame.objects.filter(game_creator=username).first() is not None or tttgame.objects.filter(game_oppenent=username).first() is not None:
                 return HttpResponse("The Name That You Use Already Used By Someone Else, Try Other UserName")
 
             if tttgame.objects.filter(room_id=room_id).first() is not None:
