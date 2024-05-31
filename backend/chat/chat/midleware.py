@@ -19,8 +19,8 @@ class JwtAuthenticationMiddleWare(BaseMiddleware):
         if not user_data:
             await self.close_connection(send)
             return
-        # scope["user"] = user.username
-        print(user_data)
+        scope["user"] = user_data["username"]
+        scope["user_id"] = user_data["id"]
         return await super().__call__(scope, receive, send)
 
     async def authenticate(self, cookies: dict):
@@ -51,11 +51,8 @@ class JwtAuthenticationMiddleWare(BaseMiddleware):
         """
         conver cookie string to dictionary
         """
-        cookies = {}
-        for cookie in cookie_str.split(";"):
-            key, value = cookie.strip().split("=", 1)
-            cookies[key] = value
-        return cookies
+        cookie = SimpleCookie(cookie_str)
+        return {key: morsel.value for key, morsel in cookie.items()}
 
     async def close_connection(self, send):
         await send({"type": "websocket.close", "code": 401})
