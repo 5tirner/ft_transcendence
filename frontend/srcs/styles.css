@@ -13,20 +13,27 @@
     --light: #e6e6e6;
     --wrapper: 1000px;
     --blue: #00b0ff;
+
+    /* chat style */
+    --font-lato: Lato;
+    --font-size-base: 16px;
+    --color-white: #ffffff;
+    --color-slateblue: #7d60d4;
+    --br-8xs: 5px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* * { */
+/*     margin: 0; */
+/*     padding: 0; */
+/*     box-sizing: border-box; */
+/* } */
 
 body {
     background: var(--color5);
     height: 100vh;
 }
 
-.container {
+.myContainer {
     display: flex;
 }
 

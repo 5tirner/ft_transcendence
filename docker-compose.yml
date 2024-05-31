@@ -35,8 +35,8 @@ services:
     image: my_server:1337
     ports:
       - "8000:8000"
-    # volumes:
-    #   - www:/var/www
+    volumes:
+      - www:/var/www
     networks:
       - myNetwork
     depends_on:
@@ -80,10 +80,10 @@ volumes:
       type: none
       device: /home/belkarto/data/postgres_db
       o: bind
-#   www:
-#     name: front_end
-#     driver: local
-#     driver_opts:
-#       type: none
-#       device: /home/belkarto/data/www
-#       o: bind
+  www:
+    name: front_end
+    driver: local
+    driver_opts:
+      type: none
+      device: ${HOME}/data/www
+      o: bind

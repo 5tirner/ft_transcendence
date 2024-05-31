@@ -1,5 +1,9 @@
 FROM alpine:3.18
 
+# ARG UID=1000
+# ARG GID=1000
+# ARG SOURCE
+
 RUN apk update && apk add --no-cache nginx openssl
 
 WORKDIR /etc/nginx

@@ -1,17 +1,3 @@
-:root {
-    --font-lato: Lato;
-    --font-size-base: 16px;
-    --color-white: #ffffff;
-    --color-slateblue: #7d60d4;
-    --br-8xs: 5px;
-}
-
-body {
-    margin: 0;
-    padding: 0;
-    /* line-height: normal; */
-}
-
 /* INFO: */
 /* all right window */
 
