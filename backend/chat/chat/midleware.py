@@ -2,30 +2,53 @@ from channels.middleware import BaseMiddleware
 
 from restuserm.models import Player
 from channels.db import database_sync_to_async
+import requests
 
 
 class JwtAuthenticationMiddleWare(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         # the auth logic here to validate user
-        jwt_token = self.get_jwt_token(scope)
-        print(jwt_token)
-        scope["user"] = "taratara"
+        url = "http://auth:8000/api/usercheck/"
+        cookies = self.get_cookies(scope)
+        cookies_dict = self.cookies_to_dict(cookies)
+
+        resp = requests.get(url, cookies=cookies_dict)
+        if resp.status_code != 200:
+            await self.close_connection(send)
+            return
+        try:
+            resp_data = resp.json()
+        except:
+            await self.close_connection(send)
+            return
+
+        user_data = resp_data.get("data", {})
+        user_id = user_data.get("id", None)
+        if not user_id:
+            await self.close_connection(send)
+            return
+        user = await self.get_user_by_id(user_id)
+        scope["user"] = user.username
         return await super().__call__(scope, receive, send)
 
-    def get_jwt_token(self, scope):
+    def get_cookies(self, scope):
         headers = dict(scope["headers"])
         cookies = headers.get(b"cookie", b"").decode()
-        cookies = dict(
-            cookies.split("=") for cookie in cookies.split("; ") if "=" in cookie
-        )
-        print("==================== Middleware IN  ===================")
-        print(cookies)
-        print("==================== Middleware OUT ===================")
-        return cookies.get("jwt_token", None)
+        return cookies
+
+    def cookies_to_dict(self, cookie_str):
+        cookies = {}
+        for cookie in cookie_str.split(";"):
+            key, value = cookie.strip().split("=", 1)
+            cookies[key] = value
+        return cookies
+
+    async def close_connection(self, send):
+        await send({"type": "websocket.close", "code": 401})
 
     @database_sync_to_async
-    def get_user_by_id(self, token: str) -> Player:
-        pass
+    def get_user_by_id(self, user_id: int) -> Player:
+        return Player.objects.get(id=user_id)
 
 
 # from django.core.cache import cache

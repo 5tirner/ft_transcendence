@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.cache import cache
 from rest_framework.response import Response
+from rest_framework.views import status
 from pyotp.totp import TOTP
 from base64 import b32encode
 from typing import Dict
@@ -66,7 +67,10 @@ def jwt_required_cookie(view_func):
     @wraps(view_func)
     def view_wrapped(request, *args, **kwargs):
         if "jwt_token" not in request.COOKIES:
-            return Response({"error": "jwt token cookie is missing"}, status=401)
+            return Response(
+                {"error": "jwt token cookie is missing"},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
         token_jwt = request.COOKIES.get("jwt_token")
         try:
             request.token = token_jwt
@@ -79,12 +83,16 @@ def jwt_required_cookie(view_func):
             return view_func(request, *args, **kwargs)
         except jwt.ExpiredSignatureError:
             return Response(
-                {"erro": "Token has been expired", "statusCode": 401}, status=401
+                {"erro": "Token has been expired"}, status=status.HTTP_401_UNAUTHORIZED
             )
         except jwt.InvalidTokenError:
-            return Response({"error": "Invalid Token", "statusCode": 401})
+            return Response(
+                {"error": "Invalid Token"}, status=status.HTTP_401_UNAUTHORIZED
+            )
         except Exception as e:
-            return Response({"errors": str(e), "statusCode": 500})
+            return Response(
+                {"errors": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
     return view_wrapped
 

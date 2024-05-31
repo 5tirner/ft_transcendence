@@ -35,7 +35,6 @@ class GetAllConversations(ListAPIView):
         if not user_id:
             return ChatRoom.objects.none()
         us = Player.objects.filter(pk=user_id)
-        print(us)
         # print("cookies ===> ")
         # for cookie, value in self.request.COOKIES.items():
         #     print(f"{cookie}: {value}")
