@@ -19,47 +19,42 @@
       crossorigin="anonymous"
       defer
     ></script>
+
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="chat_styles.css">
-
+    <link rel="stylesheet" href="nav_bar.css">
 </head>
 
 <body>
     <div class="myContainer">
-        <div id="nav_bar" class="sidebar" style="display: none;">
-            <ul class="nav-list">
-                <li>
-                    <a href="/account" class="navlink">
-                        <i class='bx bx-user'></i>
-                    </a>
-                    <span class="tooltip">account</span>
-                </li>
-                <li>
-                    <a href="/" class="navlink">
+        <nav id="nav_bar" class="sidebar nav flex-column" style="display: block;">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a href="/" class="navlink nav-link">
                         <i class='bx bx-home'></i>
                     </a>
                     <span class="tooltip">Home</span>
                 </li>
-                <li>
-                    <a href="/game" class="navlink">
+                <li class="nav-item">
+                    <a href="/account" class="navlink nav-link">
+                        <i class='bx bx-user'></i>
+                    </a>
+                    <span class="tooltip">account</span>
+                </li>
+                <li class="nav-item">
+                    <a href="/game" class="navlink nav-link">
                         <i class='bx bx-dice-5'></i>
                     </a>
                     <span class="tooltip">Home</span>
                 </li>
-                <li>
-                    <a href="/chat" class="navlink">
-                        <i class='bx bx-chat'></i>
-                    </a>
-                    <span class="tooltip">Messages</span>
-                </li>
-                <li>
-                    <a href="/settings" class="navlink">
+                <li class="nav-item">
+                    <a href="/settings" class="navlink nav-link">
                         <i class='bx bx-cog'></i>
                     </a>
                     <span class="tooltip">Messages</span>
                 </li>
             </ul>
-        </div>
+        </nav>
         <main>
             <section class="page" id="home" style="display: none;">
                 <header>
@@ -121,23 +116,6 @@
                 <button onclick="Auth.logout()">Log out</button>
             </section>
 
-            <section class="page" id="chat" style="display: none;">
-                <div class="wrapper">
-                    <div class="chat-con">
-
-                        <div class="left">
-                            <ul class="people">
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <div class="top"><span>Chat with: <span class="name"></span></span></div>
-                            <div class="write">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <section class="page" id="game" style="display: none;">
                 <h2>Game</h2>
                 <a href="/settings" class="navlink">settings</a>
@@ -148,87 +126,88 @@
             </section>
 
         </main>
-    <div class="container right-window">
-      <!-- INFO: Head of Chat-->
-      <div
-        class="d-flex flex-column align-items-center justify-content-start text-center text-white p-1 mx-auto gap-2"
-      >
-        <div class="add-message-head position-relative">
-          <b>Chats</b>
-          <img
-            class="add-message-icon position-absolute"
-            alt=""
-            src="./add-message 1.svg"
-          />
-        </div>
-        <div class="search-bar position-relative">
-          <input
-            type="text"
-            class="search position-absolute p-2"
-            placeholder="Search...."
-          />
-          <button>
-            <img
-              class="search-bar-child position-absolute p-1"
-              alt=""
-              src="./Search.svg"
-            />
-          </button>
-        </div>
-        <div
-          class="d-flex gap-2 align-items-center justify-content-between p-3 conv-display-con"
-        >
-          <div class="display-mod mx-auto">
-            <div>All</div>
-          </div>
-          <div class="display-mod mx-auto">
-            <div>Unread</div>
-          </div>
-          <div class="display-mod mx-auto">
-            <div>Groups</div>
-          </div>
-        </div>
-      </div>
-      <!-- INFO:list of friends -->
-      <ul class="list-group rounded-0">
-        <li
-          class="list-group-item d-flex align-items-center justify-content-between px-1"
-        >
-          <div class="d-flex align-items-center">
-            <div class="profile-container">
-              <img src="avatar1.jpg" alt="Profile" class="profile-pic" />
-              <span class="status-dot online"></span>
+        <div class="container right-window" style="display: none;" id="chat">
+          <!-- INFO: Head of Chat-->
+          <div
+            class="d-flex flex-column align-items-center justify-content-start text-center text-white p-1 mx-auto gap-2"
+          >
+            <div class="add-message-head position-relative">
+              <b>Chats</b>
+              <img
+                class="add-message-icon position-absolute"
+                alt=""
+                src="./svg_dir/add-message 1.svg"
+              />
             </div>
-            <div class="mx-2">
-              <div class="username">Player1#0001</div>
-              <div class="message">GG! I will win next time</div>
+            <div class="search-bar position-relative">
+              <input
+                type="text"
+                class="search position-absolute p-2"
+                placeholder="Search...."
+              />
+              <img
+                class="search-bar-child position-absolute p-1"
+                alt=""
+                src="./svg_dir/Search.svg"
+              />
             </div>
+            <!---
+            <div
+              class="d-flex gap-2 align-items-center justify-content-between p-3 conv-display-con"
+            >
+              <div class="display-mod mx-auto">
+                <div>All</div>
+              </div>
+              <div class="display-mod mx-auto">
+                <div>Unread</div>
+              </div>
+              <div class="display-mod mx-auto">
+                <div>Groups</div>
+              </div>
+            </div>
+            -->
           </div>
-          <div class="d-flex align-items-center flex-column">
-            <div class="time">13:37PM</div>
-            <div class="notif mx-1 mt-2 visible">+9</div>
-          </div>
-        </li>
+          <!-- INFO:list of friends -->
+          <ul class="list-group rounded-0">
+            <li
+              class="list-group-item d-flex align-items-center justify-content-between px-1"
+            >
+              <div class="d-flex align-items-center">
+                <div class="profile-container">
+                  <img src="https://cdn.intra.42.fr/users/7e57e4d04af367214c4a7e33fa9aa6bc/belkarto.JPG" alt="Profile" class="profile-pic" />
+                  <span class="status-dot online"></span>
+                </div>
+                <div class="mx-2">
+                  <div class="username">Player1#0001</div>
+                  <div class="message">GG! I will win next time</div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center flex-column">
+                <div class="time">13:37PM</div>
+                <div class="notif mx-1 mt-2 visible">+9</div>
+              </div>
+            </li>
 
-        <li
-          class="list-group-item d-flex align-items-center justify-content-between px-1"
-        >
-          <div class="d-flex align-items-center">
-            <div class="profile-container">
-              <img src="avatar2.jpg" alt="Profile" class="profile-pic" />
-              <span class="status-dot offline"></span>
-            </div>
-            <div class="mx-2">
-              <div class="username">Player2#0002</div>
-              <div class="message">GG lets play again later</div>
-            </div>
-          </div>
-          <div class="d-flex align-items-center flex-column">
-            <div class="time">13:37PM</div>
-            <div class="notif mx-1 mt-2 invisible">1</div>
-          </div>
-        </li>
-      </ul>
+            <li
+              class="list-group-item d-flex align-items-center justify-content-between px-1"
+            >
+              <div class="d-flex align-items-center">
+                <div class="profile-container">
+                  <img src="https://cdn.intra.42.fr/users/7e57e4d04af367214c4a7e33fa9aa6bc/belkarto.JPG" alt="Profile" class="profile-pic" />
+                  <span class="status-dot offline"></span>
+                </div>
+                <div class="mx-2">
+                  <div class="username">Player2#0002</div>
+                  <div class="message">GG lets play again later</div>
+                </div>
+              </div>
+              <div class="d-flex align-items-center flex-column">
+                <div class="time">13:37PM</div>
+                <div class="notif mx-1 mt-2 invisible">1</div>
+              </div>
+            </li>
+          </ul>
+        </div>
     </div>
 </body>
 

@@ -28,6 +28,8 @@ const Auth = {
         //TODO: delete JWT or anything that keep user authToke
         const response = await API.logout();
         console.log(response);
+
+        document.querySelector("#chat").style.display = "none";
         Router.go("/login");
     },
 

@@ -50,9 +50,6 @@ const Router = {
             case "/account":
                 account_page();
                 break;
-            case "/chat":
-                chat_page();
-                break;
             case "/game":
                 game_page();
                 break;
