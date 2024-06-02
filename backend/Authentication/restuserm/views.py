@@ -676,19 +676,21 @@ def user_login(request):
         print("-----------------------------------------")
         print(user)
         print("-----------------------------------------")
-        if not user:
-            user = authenticate(username=username, password=password)
-            print(f"User {user} and User : {username}")
+        # if not user:
+        #     user = authenticate(username=username, password=password)
+        #     print(f"User {user} and User : {username}")
         if user:
             # NOTE:
             # the cookie must be set in response cookie
             # can't be set as httponly from javascript
-            token, _ = Token.objects.get_or_create(user=user)
+            jwt_token = jwt_generation(user.id, user.two_factor)
             # response = Response({"token": token.key}, status=status.HTTP_200_OK)
             response = Response(
                 {"message": "Login successful"}, status=status.HTTP_200_OK
             )
-            response.set_cookie("jwt_token", value=token, httponly=True, secure=True)
+            response.set_cookie(
+                "jwt_token", value=jwt_token, httponly=True, secure=True
+            )
             return response
 
         return Response(
@@ -696,22 +698,18 @@ def user_login(request):
         )
 
 
-@api_view(["POST"])
+from datetime import datetime
+
+
 @authentication_classes([])  # Remove all authentication classes
 @permission_classes([AllowAny])
 @permission_classes([IsAuthenticated])
 def user_logout(request):
-    if request.method == "GET":
-        try:
-            # Delete the user's token to logout
-            # request.user.auth_token.delete()
-            return Response(
-                {"message": "Successfully logged out."}, status=status.HTTP_200_OK
-            )
-        except Exception as e:
-            return Response(
-                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
+    response = Response({"message": "Login successful"}, status=status.HTTP_200_OK)
+    response.set_cookie(
+        "jwt_token", value="", httponly=True, secure=True, expires=datetime(1970, 1, 1)
+    )
+    return response
 
 
 from .serializers import PlayerSerializerInfoVer

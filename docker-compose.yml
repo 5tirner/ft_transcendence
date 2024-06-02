@@ -78,7 +78,7 @@ volumes:
     name: postgres_db
     driver_opts:
       type: none
-      device: /home/belkarto/data/postgres_db
+      device: ${HOME}/data/postgres_db
       o: bind
   www:
     name: front_end
