@@ -64,4 +64,5 @@ const Router = {
     },
 };
 window.Router = Router; // make it "public"
+window.api = API;
 export default Router;
