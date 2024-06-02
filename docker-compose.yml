@@ -23,8 +23,8 @@ services:
       - .env
     networks:
       - myNetwork
-    # volumes:
-    #   - postgres_db:/var/lib/postgresql/data
+    volumes:
+      - postgres_db:/var/lib/postgresql/data
     restart: always
 
   myServer:
@@ -35,8 +35,8 @@ services:
     image: my_server:1337
     ports:
       - "8000:8000"
-    volumes:
-      - www:/var/www
+    # volumes:
+    #   - www:/var/www
     networks:
       - myNetwork
     depends_on:

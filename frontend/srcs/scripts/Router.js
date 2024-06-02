@@ -63,31 +63,5 @@ const Router = {
         window.scrollY = 0;
     },
 };
-
-
-function getCookieByName(name) {
-    // Get all cookies as a single string
-    const cookies = document.cookie;
-
-    // Construct the search string
-    const nameEQ = name + "=";
-
-    // Split the cookie string into individual cookies
-    const cookieArray = cookies.split(';');
-
-    // Iterate over the array to find the cookie
-    for (let cookie of cookieArray) {
-        // Trim any leading whitespace and check if the cookie starts with the name
-        while (cookie.charAt(0) === ' ') {
-            cookie = cookie.substring(1);
-        }
-        if (cookie.indexOf(nameEQ) === 0) {
-            return decodeURIComponent(cookie.substring(nameEQ.length));
-        }
-    }
-
-    // Return null if the cookie was not found
-    return null;
-}
 window.Router = Router; // make it "public"
 export default Router;
