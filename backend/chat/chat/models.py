@@ -11,7 +11,8 @@ from restuserm.models import Player
 # Create your models here.
 class ChatRoom(models.Model):
     name = models.CharField(max_length=100, unique=True, default=uuid.uuid4)
-    members = models.ManyToManyField(Player, related_name="chatrooms")
+    user_a = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="user_a")
+    user_b = models.ForeignKey(Player, on_delete=models.CASCADE, related_name="user_b")
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

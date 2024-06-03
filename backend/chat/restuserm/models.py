@@ -24,7 +24,11 @@ class Player(AbstractBaseUser):
     first_name = models.CharField(max_length=20, blank=False, null=False)
     last_name = models.CharField(max_length=20, blank=False, null=False)
     alias_name = models.CharField(max_length=20, blank=False, null=True)
-    avatar = models.URLField(blank=False, null=False)
+    avatar = models.URLField(
+        default="https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg",
+        blank=False,
+        null=False,
+    )
     champions = models.IntegerField(blank=False, null=False, default=0)
     wins = models.IntegerField(blank=False, null=False, default=0)
     losses = models.IntegerField(blank=False, null=False, default=0)

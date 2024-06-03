@@ -6,6 +6,7 @@ from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
 from .serializers import ConversationsSerializer, MessageSerializer, ChatRoomSerializer
 from .models import ChatRoom, Message
 from chat import serializers
+from django.db.models import Q
 
 
 # Create your views here.
@@ -14,7 +15,7 @@ class GetAllConversations(ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return ChatRoom.objects.filter(members=user.id)
+        return ChatRoom.objects.filter(Q(user_a=user.id) | Q(user_b=user.id))
 
 
 class GetRoomMessages(ListAPIView):
@@ -30,22 +31,30 @@ class CreateConversation(CreateAPIView):
     serializer_class = ChatRoomSerializer
 
     def perform_create(self, serializer):
-        try:
-            chatroom = serializer.save()
-            chatroom.members.add(self.request.user)
-        except serializers.ValidationError as e:
-            existing_chatroom = e.detail.get("chatroom")
-            if existing_chatroom:
-                self.existing_instance = existing_chatroom
-                return
-            raise e
+        serializer.save(user_a=self.request.user)
 
-    def create(self, request, *args, **kwargs):
-        self.existing_instance = None
-        response = super().create(request, *args, **kwargs)
-        if self.existing_instance:
-            return Response(
-                ChatRoomSerializer(self.existing_instance).data,
-                status=status.HTTP_200_OK,
-            )
-        return response
+
+# class CreateConversation(CreateAPIView):
+#     queryset = ChatRoom.objects.all()
+#     serializer_class = ChatRoomSerializer
+#
+#     def perform_create(self, serializer):
+#         try:
+#             chatroom = serializer.save()
+#             chatroom.members.add(self.request.user)
+#         except serializers.ValidationError as e:
+#             existing_chatroom = e.detail.get("chatroom")
+#             if existing_chatroom:
+#                 self.existing_instance = existing_chatroom
+#                 return
+#             raise e
+#
+#     def create(self, request, *args, **kwargs):
+#         self.existing_instance = None
+#         response = super().create(request, *args, **kwargs)
+#         if self.existing_instance:
+#             return Response(
+#                 ChatRoomSerializer(self.existing_instance).data,
+#                 status=status.HTTP_200_OK,
+#             )
+#         return response
