@@ -3,7 +3,7 @@ import API from "./API.js"
 import { renderHome } from "./components/Home.js";
 import { login_page } from "./components/Login.js";
 import { account_page } from "./components/account.js";
-import { chat_page } from "./components/chat.js";
+import { render_chat } from "./components/chat.js";
 import { game_page } from "./components/game.js";
 import { register_page } from "./components/register.js";
 import { settings_page } from "./components/settins.js";
@@ -24,8 +24,13 @@ const Router = {
             Router.go(event.state.route, false);
         });
 
-        if (await Auth.isAuth())
-            Router.go(location.pathname);
+        if (await Auth.isAuth()) {
+            render_chat();
+            if (location.pathname == "/login" || location.pathname == "/register")
+                Router.go("/")
+            else
+                Router.go(location.pathname);
+        }
         else {
             Router.go("/login");
         }
@@ -64,5 +69,5 @@ const Router = {
     },
 };
 window.Router = Router; // make it "public"
-window.api = API;
+window.API = API;
 export default Router;
