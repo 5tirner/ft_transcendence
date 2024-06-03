@@ -14,7 +14,13 @@ def fetch(user):
 class play(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
+        print("---------------------------------")
+        print(f'path:\n{self.scope["path"]}')
+        print(f'Headers:\n{self.scope["headers"]}')
+        # print(self.scope["method"])
         print("Connection Accepted Succefully")
+        print("---------------------------------")
+
     async def receive(self, text_data=None, bytes_data=None):
         print("---------------------------------")
         print(f"text data = {text_data}")
