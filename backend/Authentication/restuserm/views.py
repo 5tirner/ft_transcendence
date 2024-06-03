@@ -701,6 +701,7 @@ def user_login(request):
 from datetime import datetime
 
 
+@api_view(["GET"])
 @authentication_classes([])  # Remove all authentication classes
 @permission_classes([AllowAny])
 @permission_classes([IsAuthenticated])
