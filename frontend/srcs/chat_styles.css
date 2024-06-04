@@ -2,6 +2,7 @@
 /* all right window */
 
 .right-window {
+    position: relative;
     padding: 0;
     width: 250px;
     max-width: 250px;
@@ -9,6 +10,10 @@
     color: white;
     font-family: var(--font-lato);
     height: 100vh;
+}
+
+.right-window>div {
+    position: absolute;
 }
 
 /* INFO: */
@@ -153,4 +158,160 @@ li.list-group-item:last-child {
     justify-content: center;
     align-items: center;
     font-size: 8px;
+}
+
+.chat-conv {
+    width: 250px;
+    height: 100vh;
+    overflow: hidden;
+    font-size: 15px;
+    color: var(--color-white);
+    font-family: var(--font-lato);
+    background-color: #0c0e26;
+}
+
+.chat-conv-wrapper {
+    display: none;
+}
+
+/*
+* NOTE:
+*   chat header
+* */
+
+.user-avatar {
+    position: absolute;
+    margin: 5px 5px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
+.frame-icon {
+    width: 10px;
+    position: relative;
+    background: #7d60d4;
+    overflow: hidden;
+    padding: 1px;
+    height: 50px;
+    cursor: pointer
+}
+
+.username-conv {
+    position: absolute;
+    top: 5px;
+    left: 60px;
+    text-decoration: underline;
+}
+
+.status {
+    position: absolute;
+    top: 30px;
+    left: 60px;
+    font-size: 8px;
+    font-weight: 300;
+    color: #b1b1b1;
+}
+
+.game {
+    position: absolute;
+    top: 7px;
+    left: 206px;
+    border-radius: var(--br-8xs);
+    width: 36px;
+    height: 36px;
+}
+
+.status-dot {
+    position: absolute;
+    top: 35px;
+    left: 40px;
+    border-radius: 50%;
+    background: #b1b1b1;
+    width: 8px;
+    height: 8px;
+}
+
+.online {
+    background: radial-gradient(50% 50% at 50% 50%, #0bef06 22.19%, #01b052);
+}
+
+
+.controler-icon {
+    position: absolute;
+    top: 5px;
+    left: 204px;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+}
+
+.conve-header {
+    width: 250px;
+    position: relative;
+    background-color: #262b5f;
+    height: 50px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+/*
+* NOTE:
+*   chat messages style
+* */
+
+.messages {
+    position: relative;
+    flex: 1;
+    overflow: hidden;
+    font-size: var(--font-size-xs);
+    font-family: var(--font-almarai);
+}
+
+
+.sent-message-con {
+    /* position: absolute; */
+    letter-spacing: 0.01em;
+    line-height: 15px;
+    width: 100%;
+    text-align: right;
+    align-items: flex-end;
+}
+
+
+.sent-message {
+    border-radius: 10px 0px 10px 10px;
+    background: #20A090;
+    color: black;
+    max-width: 150px;
+    word-wrap: break-word;
+}
+
+.sent-message-time {
+    font-size: var(--font-size-3xs);
+    color: #797C7B;
+}
+
+.recv-message-con {
+    /* position: absolute; */
+    letter-spacing: 0.01em;
+    line-height: 15px;
+    width: 100%;
+    /* text-align: right; */
+    align-items: flex-start;
+}
+
+
+.recv-message {
+    border-radius: 0px 10px 10px 10px;
+    background: #F2F7FB;
+    color: black;
+    max-width: 150px;
+    word-wrap: break-word;
+}
+
+.recv-message-time {
+    font-size: var(--font-size-3xs);
+    color: #797C7B;
 }

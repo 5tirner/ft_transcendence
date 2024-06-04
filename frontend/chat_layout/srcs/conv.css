@@ -1,55 +1,61 @@
-body {
-    margin: 0;
-    line-height: normal;
-}
-
-
 :root {
-
-    /* fonts */
     --font-almarai: Almarai;
     --font-lato: Lato;
-
-    /* font sizes */
     --font-size-3xs: 10px;
     --font-size-xs: 12px;
-
-    /* Colors */
     --color-gray-100: #797c7b;
     --color-white: #fff;
-
-    /* Gaps */
     --gap-9xs: 4px;
-
-    /* Paddings */
     --padding-9xs: 4px;
-
-    /* Border radiuses */
     --br-8xs: 5px;
-
 }
 
-.conve-header-child {
+.chat-conv {
+    position: relative;
+    width: 250px;
+    height: 100vh;
+    overflow: hidden;
+    font-size: 15px;
+    color: var(--color-white);
+    font-family: var(--font-lato);
+    background-color: #0c0e26;
+}
+
+/*
+* NOTE:
+*   chat header
+* */
+
+.user-avatar {
     position: absolute;
-    top: calc(50% - 20px);
-    left: calc(50% - 115px);
+    margin: 5px 5px;
     border-radius: 50%;
     width: 40px;
     height: 40px;
     object-fit: cover;
 }
 
-.player10001 {
+.frame-icon {
+    width: 10px;
+    position: relative;
+    background: #7d60d4;
+    overflow: hidden;
+    padding: 1px;
+    height: 50px;
+    cursor: pointer
+}
+
+.username {
     position: absolute;
-    top: calc(50% - 20px);
-    left: calc(50% - 70px);
+    top: 5px;
+    left: 60px;
     text-decoration: underline;
 }
 
-.online {
+.status {
     position: absolute;
-    top: 27px;
-    left: 55px;
+    top: 30px;
+    left: 60px;
     font-size: 8px;
     font-weight: 300;
     color: #b1b1b1;
@@ -64,17 +70,22 @@ body {
     height: 36px;
 }
 
-.online1 {
+.status-dot {
     position: absolute;
     top: 35px;
     left: 40px;
     border-radius: 50%;
-    background: radial-gradient(50% 50% at 50% 50%, #0bef06 22.19%, #01b052);
+    background: #b1b1b1;
     width: 8px;
     height: 8px;
 }
 
-.game-control-2-svgrepo-com-1-icon {
+.online {
+    background: radial-gradient(50% 50% at 50% 50%, #0bef06 22.19%, #01b052);
+}
+
+
+.controler-icon {
     position: absolute;
     top: 5px;
     left: 204px;
@@ -92,198 +103,62 @@ body {
     flex-shrink: 0;
 }
 
-.type-your-message {
-    position: absolute;
-    top: 5px;
-    left: 10px;
-}
+/*
+* NOTE:
+*   chat messages style
+* */
 
-.type-your-message-wrapper {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    border-radius: var(--br-8xs) 0px 0px var(--br-8xs);
-    background-color: #7d60d4;
-    width: 200px;
-    height: 30px;
-    overflow: hidden;
-}
-
-.message-input-child {
-    position: absolute;
-    top: 10px;
-    left: 210px;
-    border-radius: 0px var(--br-8xs) var(--br-8xs) 0px;
-    width: 30px;
-    height: 30px;
-    overflow: hidden;
-}
-
-.message-input {
-    position: absolute;
-    top: calc(50% + 347px);
-    left: calc(50% - 125px);
-    width: 250px;
-    height: 50px;
-    overflow: hidden;
-}
-
-.group-child {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 102px;
-    height: 20px;
-    object-fit: contain;
-}
-
-.hello-brahim {
-    position: absolute;
-    top: 5px;
-    left: 17px;
-    letter-spacing: 0.01em;
-    line-height: 12px;
-    display: inline-block;
-    width: 69px;
-    height: 10px;
-}
-
-.vector-parent {
-    width: 102px;
+.messages {
     position: relative;
-    height: 20px;
-}
-
-.am {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    line-height: 10px;
-    display: inline-block;
-    width: 61.6px;
-    height: 6.5px;
-}
-
-.am-wrapper {
-    width: 61.6px;
-    position: relative;
-    height: 6.5px;
-    font-size: var(--font-size-3xs);
-    color: var(--color-gray-100);
-}
-
-.group-parent {
-    width: 250px;
+    flex: 1;
     overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 5px var(--padding-9xs);
-    box-sizing: border-box;
-    gap: var(--gap-9xs);
-}
-
-.group-item {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    width: 163px;
-    height: 20px;
-}
-
-.hello-there-how {
-    position: absolute;
-    top: 5px;
-    left: 16px;
-    letter-spacing: 0.01em;
-    line-height: 12px;
-    display: inline-block;
-    width: 130px;
-    height: 10px;
-}
-
-.vector-group {
-    width: 163px;
-    position: relative;
-    height: 20px;
-}
-
-.am1 {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    line-height: 10px;
-}
-
-.am-container {
-    width: 39px;
-    position: relative;
-    height: 10px;
-    font-size: var(--font-size-3xs);
-    color: var(--color-gray-100);
-}
-
-.recived-message {
-    width: 183px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    padding: 0px var(--padding-9xs);
-    box-sizing: border-box;
-    gap: var(--gap-9xs);
-    text-align: left;
-    color: #000;
-}
-
-.frame-parent {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 5px;
-    text-align: right;
     font-size: var(--font-size-xs);
     font-family: var(--font-almarai);
 }
 
-.message-input-parent {
-    width: 250px;
-    position: relative;
-    background-color: #0c0e26;
-    height: 794px;
-    overflow: hidden;
-    flex-shrink: 0;
-    text-align: center;
-    font-size: 16px;
-}
 
-.conve-header-parent {
-    position: absolute;
-    top: calc(50% - 422px);
-    left: calc(50% - 125px);
-    box-shadow: 1px 0px 0px rgba(255, 255, 255, 0.1) inset;
-    background-color: #1d203e;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.inspactor {
+.sent-message-con {
+    /* position: absolute; */
+    letter-spacing: 0.01em;
+    line-height: 15px;
     width: 100%;
-    position: relative;
-    height: 844px;
-    overflow: hidden;
-    text-align: left;
-    font-size: var(--font-size-xs);
-    color: var(--color-white);
-    font-family: var(--font-lato);
+    text-align: right;
+    align-items: flex-end;
+}
+
+
+.sent-message {
+    border-radius: 10px 0px 10px 10px;
+    background: #20A090;
+    color: black;
+    max-width: 150px;
+    word-wrap: break-word;
+}
+
+.sent-message-time {
+    font-size: var(--font-size-3xs);
+    color: #797C7B;
+}
+
+.recv-message-con {
+    /* position: absolute; */
+    letter-spacing: 0.01em;
+    line-height: 15px;
+    width: 100%;
+    /* text-align: right; */
+    align-items: flex-start;
+}
+
+
+.recv-message {
+    border-radius: 0px 10px 10px 10px;
+    background: #F2F7FB;
+    color: black;
+    max-width: 150px;
+    word-wrap: break-word;
+}
+
+.recv-message-time {
+    font-size: var(--font-size-3xs);
+    color: #797C7B;
 }

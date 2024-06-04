@@ -20,6 +20,16 @@
     --color-white: #ffffff;
     --color-slateblue: #7d60d4;
     --br-8xs: 5px;
+
+    --font-almarai: Almarai;
+    --font-lato: Lato;
+    --font-size-3xs: 10px;
+    --font-size-xs: 12px;
+    --color-gray-100: #797c7b;
+    --color-white: #fff;
+    --gap-9xs: 4px;
+    --padding-9xs: 4px;
+    --br-8xs: 5px;
 }
 
 * {

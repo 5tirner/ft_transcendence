@@ -1,15 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
     <title>Pong</title>
-    <link rel="stylesheet" href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="./favicon/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./favicon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./favicon/favicon-16x16.png">
-    <link rel="manifest" href="./favicon/site.webmanifest">
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="./favicon/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./favicon/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="./favicon/favicon-16x16.png"
+    />
+    <link rel="manifest" href="./favicon/site.webmanifest" />
     <script src="scripts/app.js" type="module" defer></script>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -24,113 +43,125 @@
       defer
     ></script>
 
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="chat_styles.css">
-    <link rel="stylesheet" href="nav_bar.css">
-</head>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="chat_styles.css" />
+    <link rel="stylesheet" href="nav_bar.css" />
+  </head>
 
-<body>
+  <body>
     <div class="myContainer">
-        <nav id="nav_bar" class="sidebar nav flex-column" style="display: block;">
-            <ul class="nav nav-pills">
-                <li class="nav-item">
-                    <a href="/" class="navlink nav-link">
-                        <i class='bx bx-home'></i>
-                    </a>
-                    <span class="tooltip">Home</span>
-                </li>
-                <li class="nav-item">
-                    <a href="/account" class="navlink nav-link">
-                        <i class='bx bx-user'></i>
-                    </a>
-                    <span class="tooltip">account</span>
-                </li>
-                <li class="nav-item">
-                    <a href="/game" class="navlink nav-link">
-                        <i class='bx bx-dice-5'></i>
-                    </a>
-                    <span class="tooltip">Home</span>
-                </li>
-                <li class="nav-item">
-                    <a href="/settings" class="navlink nav-link">
-                        <i class='bx bx-cog'></i>
-                    </a>
-                    <span class="tooltip">Messages</span>
-                </li>
-            </ul>
-        </nav>
-        <main>
-            <section class="page" id="home" style="display: none;">
-                <header>
-                    <h2>Welcome!<h2>
-                </header>
-                <main>
+      <nav id="nav_bar" class="sidebar nav flex-column" style="display: block">
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a href="/" class="navlink nav-link">
+              <i class="bx bx-home"></i>
+            </a>
+            <span class="tooltip">Home</span>
+          </li>
+          <li class="nav-item">
+            <a href="/account" class="navlink nav-link">
+              <i class="bx bx-user"></i>
+            </a>
+            <span class="tooltip">account</span>
+          </li>
+          <li class="nav-item">
+            <a href="/game" class="navlink nav-link">
+              <i class="bx bx-dice-5"></i>
+            </a>
+            <span class="tooltip">Home</span>
+          </li>
+          <li class="nav-item">
+            <a href="/settings" class="navlink nav-link">
+              <i class="bx bx-cog"></i>
+            </a>
+            <span class="tooltip">Messages</span>
+          </li>
+        </ul>
+      </nav>
+      <main>
+        <section class="page" id="home" style="display: none">
+          <main></main>
+        </section>
 
-                </main>
-            </section>
+        <section class="page" id="register" style="display: none">
+          <h2>Register</h2>
+          <div>
+            <form id="formRegister" onsubmit="Auth.register(event)">
+              <label for="register_name">Your Name</label>
+              <input id="register_name" required autocomplete="name" />
+              <label for="register_email">Your Email</label>
+              <input
+                id="register_email"
+                required
+                type="email"
+                autocomplete="username"
+              />
 
-            <section class="page" id="register" style="display: none;">
-                <h2>Register</h2>
-                <div>
+              <label for="register_password">Your Password</label>
+              <input
+                type="password"
+                id="register_password"
+                required
+                autocomplete="new-password"
+              />
 
-                    <form id="formRegister" onsubmit="Auth.register(event)">
-                        <label for="register_name">Your Name</label>
-                        <input id="register_name" required autocomplete="name">
-                        <label for="register_email">Your Email</label>
-                        <input id="register_email" required type="email" autocomplete="username">
+              <button>Register Account</button>
+              <button><a href="/login" class="navlink">Log In</a></button>
+            </form>
+          </div>
+        </section>
 
-                        <label for="register_password">Your Password</label>
-                        <input type="password" id="register_password" required autocomplete="new-password">
+        <section class="page" id="login" style="display: none">
+          <h2>Log In</h2>
 
-                        <button>Register Account</button>
-                        <button><a href="/login" class="navlink">Log In</a></button>
-                    </form>
-                </div>
-            </section>
+          <div>
+            <form id="formLogin" onsubmit="Auth.login(event)">
+              <label for="login_email">Your email</label>
+              <input
+                placeholder="email"
+                id="login_email"
+                required
+                autocomplete="username"
+              />
+              <label for="login_password">Password</label>
+              <input
+                type="password"
+                id="login_password"
+                autocomplete="current-password"
+              />
 
-            <section class="page" id="login" style="display: none;">
-                <h2>Log In</h2>
+              <button>Log In</button>
+              <button>
+                <a href="/register" class="navlink">Register</a>
+              </button>
+              <button onclick="Auth.loginIntra(event)">Login with 42</button>
+            </form>
+          </div>
+        </section>
 
-                <div>
+        <section class="page" id="account" style="display: none">
+          <h2>My Account</h2>
+          <dl>
+            <dt>Name</dt>
+            <dd class="account_name"></dd>
+            <dt>Email</dt>
+            <dd class="account_username"></dd>
+          </dl>
 
-                    <form id="formLogin" onsubmit="Auth.login(event)">
-                        <label for="login_email">Your email</label>
-                        <input placeholder="email" id="login_email" required autocomplete="username">
-                        <label for="login_password">Password</label>
-                        <input type="password" id="login_password" autocomplete="current-password">
+          <button onclick="Auth.logout()">Log out</button>
+        </section>
 
-                        <button>Log In</button>
-                        <button>
-                            <a href="/register" class="navlink">Register</a>
-                        </button>
-                        <button onclick="Auth.loginIntra(event)">Login with 42</button>
-                    </form>
-                </div>
-            </section>
+        <section class="page" id="game" style="display: none">
+          <h2>Game</h2>
+          <a href="/settings" class="navlink">settings</a>
+        </section>
 
-            <section class="page" id="account" style="display: none;">
-                <h2>My Account</h2>
-                <dl>
-                    <dt>Name</dt>
-                    <dd class="account_name"></dd>
-                    <dt>Email</dt>
-                    <dd class="account_username"></dd>
-                </dl>
-
-                <button onclick="Auth.logout()">Log out</button>
-            </section>
-
-            <section class="page" id="game" style="display: none;">
-                <h2>Game</h2>
-                <a href="/settings" class="navlink">settings</a>
-            </section>
-
-            <section class="page" id="settings" style="display: none;">
-                <h2>settings</h2>
-            </section>
-
-        </main>
-        <div class="container right-window" style="display: none;" id="chat">
+        <section class="page" id="settings" style="display: none">
+          <h2>settings</h2>
+        </section>
+      </main>
+      <div class="container right-window" style="display: none" id="chat">
+        <div class="nav-convs">
           <!-- INFO: Head of Chat-->
           <div
             class="d-flex flex-column align-items-center justify-content-start text-center text-white p-1 mx-auto gap-2"
@@ -157,45 +188,61 @@
             </div>
             <!---
             <div
-              class="d-flex gap-2 align-items-center justify-content-between p-3 conv-display-con"
+            class="d-flex gap-2 align-items-center justify-content-between p-3 conv-display-con"
             >
-              <div class="display-mod mx-auto">
-                <div>All</div>
-              </div>
-              <div class="display-mod mx-auto">
-                <div>Unread</div>
-              </div>
-              <div class="display-mod mx-auto">
-                <div>Groups</div>
-              </div>
+            <div class="display-mod mx-auto">
+            <div>All</div>
+            </div>
+            <div class="display-mod mx-auto">
+            <div>Unread</div>
+            </div>
+            <div class="display-mod mx-auto">
+            <div>Groups</div>
+            </div>
             </div>
             -->
           </div>
           <!-- INFO:list of friends -->
-          <ul class="list-group rounded-0">
-          <!--
-            <li
-              class="list-group-item d-flex align-items-center justify-content-between px-1"
-            >
-              <div class="d-flex align-items-center">
-                <div class="profile-container">
-                  <img src="https://cdn.intra.42.fr/users/7e57e4d04af367214c4a7e33fa9aa6bc/belkarto.JPG" alt="Profile" class="profile-pic" />
-                  <span class="status-dot online"></span>
-                </div>
-                <div class="mx-2">
-                  <div class="username">Player1#0001</div>
-                  <div class="message">GG! I will win next time</div>
-                </div>
-              </div>
-              <div class="d-flex align-items-center flex-column">
-                <div class="time">13:37PM</div>
-                <div class="notif mx-1 mt-2 visible">+9</div>
-              </div>
-            </li>
-          -->
-          </ul>
+          <ul class="list-group rounded-0"></ul>
         </div>
+        <div class="chat-conv-wrapper">
+          <div class="chat-conv d-flex flex-column">
+            <div class="conve-header">
+              <img class="frame-icon" alt="" src="./svg_dir/arrow.svg" />
+              <img
+                class="user-avatar"
+                alt="user"
+                src="https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"
+              />
+              <div class="username-conv">Player1#0001</div>
+              <div class="status">Online</div>
+              <div class="status-dot online"></div>
+              <img
+                class="controler-icon"
+                alt=""
+                src="./svg_dir/GameController.svg"
+              />
+            </div>
+            <!--
+            INFO: 
+            this is the message section where the conv is diplayed            
+            -->
+            <div class="messages d-flex flex-column">
+              <div class="sent-message-con d-flex flex-column">
+                <p class="sent-message p-2 m-1">Hello! brahim</p>
+                <div class="sent-message-time mx-1">09:25 AM</div>
+              </div>
+              <div class="recv-message-con d-flex flex-column">
+                <p class="recv-message p-2 m-1">Hello! me</p>
+                <div class="recv-message-time mx-1">09:25 AM</div>
+              </div>
+            </div>
+            <div>
+              <input type="text" name="" value="" />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</body>
-
+  </body>
 </html>

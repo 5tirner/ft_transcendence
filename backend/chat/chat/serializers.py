@@ -14,7 +14,7 @@ class ConversationsSerializer(serializers.ModelSerializer):
         model = ChatRoom
         fields = ("id", "name", "user")
 
-    def get_other_user(self, obj):
+    def get_user(self, obj):
         request_user = self.context["request"].user
         user = obj.user_b if obj.user_a == request_user else obj.user_a
         return {
