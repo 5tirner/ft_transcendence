@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from .pars import checkInput, isTheAliasOrTheRoomCodeAlreadyUsed
+from .models import players
 
 def home(req):
     if req.method == "POST":
@@ -17,13 +18,22 @@ def home(req):
         if isAlredyUsed == -1:
             print(f"This Alias {alias} Used Before")
             return HttpResponse(f"This Alias `{alias}` Already Used By Other Player.")
-        if isAlredyUsed == -2:
-            print(f"This RoomCode {roomcode} Used Bedore")
-            return HttpResponse(f"This RoomCode `{roomcode}` Already Used By Other Player.")
         if role == 1:
+            if isAlredyUsed == -2:
+                print(f"This RoomCode {roomcode} Used Bedore")
+                return HttpResponse(f"This RoomCode `{roomcode}` Already Used By Other Player.")
             print("\n**********************************")
             print(f"{alias} Is A Game Creator")
-            
+            tmp = players(gcreator=alias, roomcode=roomcode)
+            # tmp.save()
+            print(f"{alias} Infos: {tmp}")
+            print("**********************************\n")
+        elif role == 2:
+            print("\n**********************************")
+            print(f"{alias} Want To Join Game")
+            if isAlredyUsed != -2:
+                print(f"This RoomCode {roomcode} Did Not Match Any Game")
+                return HttpResponse(f"No Room Matched With This Code`{roomcode}`.")
     return render(req, 'home.html')
 def game(req):
     return JsonResponse({'message': "Hello"})
