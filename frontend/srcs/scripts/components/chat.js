@@ -1,5 +1,27 @@
 import API from "../API.js";
 
+function createReceivedMessage(parrentDiv, msgData) {
+    // Create the main container element
+    const messageContainer = document.createElement('div');
+    messageContainer.className = 'recv-message-con d-flex flex-column';
+
+    // Create the message paragraph element
+    const messageParagraph = document.createElement('p');
+    messageParagraph.className = 'recv-message p-2 m-1';
+    messageParagraph.textContent = msgData.message;
+
+    // Create the message time element
+    const messageTime = document.createElement('div');
+    messageTime.className = 'recv-message-time mx-1';
+    messageTime.textContent = msgData.date;
+
+    // Append message and time elements to the container
+    messageContainer.appendChild(messageParagraph);
+    messageContainer.appendChild(messageTime);
+
+    return messageContainer;
+}
+
 function createListItem(parentElement, user) {
     // Create the main <li> element
     const listItem = document.createElement('li');
@@ -67,7 +89,14 @@ function createListItem(parentElement, user) {
 
     // Append the <li> element to the provided parent element
     parentElement.appendChild(listItem);
+    listItem.addEventListener("click", event => {
+        console.log(event.currentTarget)
+        const conv = document.querySelector(".chat-conv-wrapper");
+        conv.style.display = "block";
+    })
 }
+
+window.addList = createListItem;
 
 async function getConversations() {
     const ulElement = document.querySelector("#chat ul");
@@ -84,4 +113,10 @@ async function getConversations() {
 export async function render_chat() {
     document.querySelector("#chat").style.display = "block";
     await getConversations();
+    const backButton = document.querySelector(".frame-icon");
+    backButton.addEventListener("click", event => {
+        const conv = document.querySelector(".chat-conv-wrapper");
+        console.log(conv);
+        conv.style.display = "none";
+    })
 }

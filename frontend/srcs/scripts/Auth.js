@@ -12,7 +12,7 @@ const Auth = {
             // save username and authToke to make feuture requests
             user = username;
 
-            Router.go("/");
+            Router.init();
         } else {
             response = await response.json();
             console.info(response);
