@@ -28,7 +28,6 @@ ls :
 create_data_dir:
 	[ -d ${HOME}/data/www ] || mkdir -p ${HOME}/data/www
 	[ -d ${HOME}/data/postgres_db ] || mkdir -p ${HOME}/data/mariadb
-	[ -d ${HOME}/data/test ] || mkdir -p ${HOME}/data/test
 
 clean : down
 	docker container prune --force
