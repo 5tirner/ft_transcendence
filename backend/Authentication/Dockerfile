@@ -7,7 +7,7 @@ WORKDIR /app
 
 RUN apt-get update && \
     apt-get install -y build-essential libpq-dev \
-    libdbus-1-dev libdbus-glib-1-dev pkg-config libcairo2-dev && \
+    libdbus-1-dev libdbus-glib-1-dev pkg-config libcairo2-dev vim && \
     apt-get clean
 
 COPY ./requirments.txt /app/

@@ -4,7 +4,7 @@ FROM alpine:3.18
 # ARG GID=1000
 # ARG SOURCE
 
-RUN apk update && apk add --no-cache nginx openssl
+RUN apk update && apk add --no-cache nginx openssl vim
 
 WORKDIR /etc/nginx
 
