@@ -650,8 +650,13 @@ def register_user(request):
     if request.method == "POST":
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            user = serializer.save()
+            jwt_token = jwt_generation(user.id, user.two_factor)
+            response = Response(serializer.data, status=status.HTTP_201_CREATED)
+            response.set_cookie(
+                "jwt_token", value=jwt_token, httponly=True, secure=True
+            )
+            return response
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

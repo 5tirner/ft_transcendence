@@ -3,7 +3,12 @@ from rest_framework.mixins import status
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
 
-from .serializers import ConversationsSerializer, MessageSerializer, ChatRoomSerializer
+from .serializers import (
+    ConversationsSerializer,
+    MessageSerializer,
+    ChatRoomSerializer,
+    SubmitMessageSerializer,
+)
 from .models import ChatRoom, Message
 from chat import serializers
 from django.db.models import Q
@@ -27,34 +32,11 @@ class GetRoomMessages(ListAPIView):
 
 
 class CreateConversation(CreateAPIView):
-    queryset = ChatRoom.objects.all()
     serializer_class = ChatRoomSerializer
 
     def perform_create(self, serializer):
         serializer.save(user_a=self.request.user)
 
 
-# class CreateConversation(CreateAPIView):
-#     queryset = ChatRoom.objects.all()
-#     serializer_class = ChatRoomSerializer
-#
-#     def perform_create(self, serializer):
-#         try:
-#             chatroom = serializer.save()
-#             chatroom.members.add(self.request.user)
-#         except serializers.ValidationError as e:
-#             existing_chatroom = e.detail.get("chatroom")
-#             if existing_chatroom:
-#                 self.existing_instance = existing_chatroom
-#                 return
-#             raise e
-#
-#     def create(self, request, *args, **kwargs):
-#         self.existing_instance = None
-#         response = super().create(request, *args, **kwargs)
-#         if self.existing_instance:
-#             return Response(
-#                 ChatRoomSerializer(self.existing_instance).data,
-#                 status=status.HTTP_200_OK,
-#             )
-#         return response
+class SubmitMessage(CreateAPIView):
+    serializer_class = SubmitMessageSerializer
