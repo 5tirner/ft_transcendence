@@ -1,5 +1,5 @@
-import API from "../API.js";
-import { getConversations } from "./chatList.js";
+import API from '../API.js';
+import { getConversations } from './chatList.js';
 
 function createMessageBuble(parrentDiv, msgData) {
     // Create the main container element
@@ -24,12 +24,6 @@ function createMessageBuble(parrentDiv, msgData) {
 }
 
 export async function render_chat() {
-    document.querySelector("#chat").style.display = "block";
+    document.querySelector('#chat').style.display = 'block';
     await getConversations();
-    // const backButton = document.querySelector(".frame-icon");
-    // backButton.addEventListener("click", event => {
-    //     const conv = document.querySelector(".chat-conv-wrapper");
-    //     console.log(conv);
-    //     conv.style.display = "none";
-    // })
 }

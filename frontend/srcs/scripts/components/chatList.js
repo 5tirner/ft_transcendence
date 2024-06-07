@@ -87,6 +87,7 @@ function createListItem(parentElement, user, roomid) {
 export async function getConversations() {
     const ulElement = document.querySelector("#chat ul");
     let response = await API.getConversatons();
+    console.log("conversations");
     console.log(response);
     if (response.ok) {
         response = await response.json()
