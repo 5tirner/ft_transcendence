@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAME</title>
+</head>
+<body>
+    <script>
+        const ws = new WebSocket('ws://127.0.0.1:8000/gaming/<roomcode>');
+        ws.onopen = function()
+        {
+            console.log("Connection Establieshed");
+            ws.send("Wolvarin");
+        }
+    </script>
+</body>
+</html>

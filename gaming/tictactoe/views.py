@@ -28,6 +28,7 @@ def home(req):
             tmp.save()
             print(f"{alias} Craetor Infos-> GC: {tmp.gcreator}, RC: {tmp.roomcode}, GO: {tmp.oppenent}, GS:{tmp.gamestat}")
             print("**********************************\n")
+            return redirect('gaming/' + roomcode + '?player=' + alias)
         elif role == "2":
             print("\n**********************************")
             print(f"{alias} Want To Join Game")
@@ -35,10 +36,15 @@ def home(req):
                 print(f"This RoomCode {roomcode} Did Not Match Any Game")
                 return HttpResponse(f"No Room Matched With This Code`{roomcode}`.")
             tmp = players.objects.filter(roomcode=roomcode).first()
+            if tmp.roomcode == True:
+                print(f"The Room Of The RoomCode {roomcode} Is Full")
+                return HttpResponse(f"Room Is Full")
             tmp.oppenent = alias
+            tmp.roomcode = True
             tmp.save()
             print(f"{alias} Oppenets Infos->  GC: {tmp.gcreator}, RC: {tmp.roomcode}, GO: {tmp.oppenent}, GS:{tmp.gamestat}")
+            # return render(req, 'play.html')
     return render(req, 'home.html')
 
-def game(req):
-    return JsonResponse({'message': "Hello"})
+def game(req, roomcode):
+    return render(req, 'play.html')
