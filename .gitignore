@@ -1,5 +1,7 @@
 node_modules
 package-lock.json
+backend/chat/static
+backend/ws_chat/static
 
 # env folder for python virtual env
 env

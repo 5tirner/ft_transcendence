@@ -1,6 +1,4 @@
 from channels.middleware import BaseMiddleware
-from restuserm.models import Player
-from channels.db import database_sync_to_async
 from django.conf import settings
 import httpx
 from http.cookies import SimpleCookie

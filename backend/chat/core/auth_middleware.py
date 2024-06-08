@@ -32,6 +32,3 @@ class JwtAuth(BaseAuthentication):
         except Player.DoesNotExist:
             raise AuthenticationFailed("Player not found")
         return (player, None)
-
-    # def authenticate_header(self, request):
-    #     return "Bearer"

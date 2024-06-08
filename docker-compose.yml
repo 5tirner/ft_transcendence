@@ -3,87 +3,115 @@ version: "3.8"
 name: ft_transcendence
 
 networks:
-  myNetwork:
-    name: ft_transcendence
+    myNetwork:
+        name: ft_transcendence
 
 services:
-  postgres_db:
-    container_name: postgres_db
-    build:
-      context: ./backend/postgresql
-      dockerfile: Dockerfile
-      args:
-        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-        POSTGRES_USER: ${POSTGRES_USER}
-        POSTGRES_DB: ${POSTGRES_DB}
-    image: postgres_db:1
-    ports:
-      - "5432:5432"
-    env_file:
-      - .env
-    networks:
-      - myNetwork
-    volumes:
-      - postgres_db:/var/lib/postgresql/data
-    restart: always
+    postgres_db:
+        container_name: postgres_db
+        build:
+            context: ./backend/postgresql
+            dockerfile: Dockerfile
+            args:
+                POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+                POSTGRES_USER: ${POSTGRES_USER}
+                POSTGRES_DB: ${POSTGRES_DB}
+        image: postgres_db:1
+        ports:
+            - "5432:5432"
+        env_file:
+            - .env
+        networks:
+            - myNetwork
+        volumes:
+            - postgres_db:/var/lib/postgresql/data
+        restart: always
 
-  myServer:
-    container_name: myServer
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image: my_server:1337
-    ports:
-      - "8000:8000"
-    # volumes:
-    #   - www:/var/www
-    networks:
-      - myNetwork
-    depends_on:
-      - postgres_db
-    restart: always
+    myServer:
+        container_name: myServer
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        image: my_server:12.5
+        ports:
+            - "8000:8000"
+        volumes:
+            - ./frontend/srcs:/var/www
+        networks:
+            - myNetwork
+        depends_on:
+            - postgres_db
+        restart: always
 
-  auth:
-    container_name: auth
-    build:
-      context: ./backend/Authentication
-      dockerfile: Dockerfile
-    command: sh -c "python3 manage.py makemigrations --noinput  && python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
-    image: auth:1337
-    env_file:
-      - .env
-    networks:
-      - myNetwork
-    depends_on:
-      - postgres_db
-    restart: always
+    auth:
+        container_name: auth
+        build:
+            context: ./backend/Authentication
+            dockerfile: Dockerfile
+        command:
+            sh -c "python3 manage.py makemigrations --noinput  && python3
+            manage.py migrate --noinput && python3 manage.py collectstatic
+            --noinput && python manage.py runserver 0.0.0.0:8000"
+        image: auth:12.5
+        env_file:
+            - .env
+        networks:
+            - myNetwork
+        depends_on:
+            - postgres_db
+        restart: always
 
-  chat:
-    container_name: chat
-    build:
-      context: ./backend/chat
-      dockerfile: Dockerfile
-    command: sh -c "sleep 5 && python3 manage.py makemigrations --noinput  && python3 manage.py migrate --noinput && python3 manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
-    image: chat:1337
-    env_file:
-      - .env
-    networks:
-      - myNetwork
-    depends_on:
-      - postgres_db
-    restart: always
+    chat:
+        container_name: chat
+        build:
+            context: ./backend/chat
+            dockerfile: Dockerfile
+        command:
+            sh -c "python3 manage.py makemigrations --noinput  && python3
+            manage.py migrate --noinput && python3 manage.py collectstatic
+            --noinput && python manage.py runserver 0.0.0.0:8000"
+        image: chat:12.5
+        env_file:
+            - .env
+        networks:
+            - myNetwork
+        volumes:
+            - ./backend/chat:/app
+        depends_on:
+            - postgres_db
+            - auth
+        restart: always
+    ws_chat:
+        container_name: ws_chat
+        build:
+            context: ./backend/ws_chat
+            dockerfile: Dockerfile
+        command:
+            sh -c "python3 manage.py makemigrations --noinput  && python3
+            manage.py migrate --noinput && python3 manage.py collectstatic
+            --noinput && python manage.py runserver 0.0.0.0:8000"
+        image: ws_chat:12.5
+        env_file:
+            - .env
+        networks:
+            - myNetwork
+        volumes:
+            - ./backend/ws_chat:/app
+        depends_on:
+            - auth
+        restart: always
 volumes:
-  postgres_db:
-    driver: local
-    name: postgres_db
-    driver_opts:
-      type: none
-      device: ${HOME}/data/postgres_db
-      o: bind
-  www:
-    name: front_end
-    driver: local
-    driver_opts:
-      type: none
-      device: ${HOME}/data/www
-      o: bind
+    postgres_db:
+        driver: local
+        name: postgres_db
+        driver_opts:
+            type: none
+            device: ${HOME}/data/postgres_db
+            o: bind
+    # www:
+    #     name: front_end
+    #     driver: local
+    #     driver_opts:
+    #         type: none
+    #         device: ${HOME}/data/www
+    #         o: bind
