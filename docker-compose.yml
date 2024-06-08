@@ -41,6 +41,9 @@ services:
             - myNetwork
         depends_on:
             - postgres_db
+            - auth
+            - chat
+            - ws_chat
         restart: always
 
     auth:
