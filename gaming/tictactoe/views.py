@@ -5,6 +5,7 @@ from .models import players
 
 def home(req):
     if req.method == "POST":
+        print("\n\n===============> Start: User Fill His Info:\n")
         print("\n**********************************")
         print("Method Informations:")
         print(f"Method = {req.method}")
@@ -28,7 +29,7 @@ def home(req):
             tmp.save()
             print(f"{alias} Craetor Infos-> GC: {tmp.gcreator}, RC: {tmp.roomcode}, GO: {tmp.oppenent}, GS:{tmp.gamestat}")
             print("**********************************\n")
-            return redirect('gaming/' + roomcode + '?player=' + alias)
+            return redirect('/gaming/' + roomcode + '?player=' + alias)
         elif role == "2":
             print("\n**********************************")
             print(f"{alias} Want To Join Game")
@@ -43,8 +44,18 @@ def home(req):
             tmp.roomcode = True
             tmp.save()
             print(f"{alias} Oppenets Infos->  GC: {tmp.gcreator}, RC: {tmp.roomcode}, GO: {tmp.oppenent}, GS:{tmp.gamestat}")
-            # return render(req, 'play.html')
+            print("\n**********************************\n")
     return render(req, 'home.html')
 
 def game(req, roomcode):
-    return render(req, 'play.html')
+    print("\n**********************************\n")
+    print(f'On Game Data ==> {req.GET}')
+    alias = req.GET.get('player')
+    if players.objects.filter(gcreator=alias).first() is None and players.objects.filter(gcreator=alias).first() is None:
+        return HttpResponse("USER NOT FOUND")
+    context = {
+        'roomcode': roomcode,
+        'alias' : alias,
+    }
+    print("\n**********************************\n")
+    return render(req, 'play.html', context)
