@@ -31,10 +31,11 @@ class myServer(AsyncWebsocketConsumer):
     
     async def run_game(self, event):
         data = event['payload']
-        # data = json.loads(data)
-        # await self.send(text_data = json.dumps({
-        #     'payload': data['data']
-        # }))
+        print(f"DATA: {data}")
+        data = json.loads(data)
+        await self.send(text_data = json.dumps({
+            'payload': data['data']
+        }))
     async def disconnect(self, code_status):
         print(f"Client Of ChannelLayer {self.channel_name} Close Connection")
         await self.channel_layer.group_discard(self.roomcode_group, self.channel_name)

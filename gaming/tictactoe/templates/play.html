@@ -1,11 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<style>
+    body {  
+        font-family: 'Poppins', sans-serif;
+        color: rgb(95, 127, 233);
+        background-color: #95bddfbd;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    #board {
+        margin-left: auto;
+        margin-right: auto;
+        width: 375px;
+        height: 375px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 5px;
+    }
+
+    .square {
+        width: 120px;
+        height: 120px;
+        border: 1px solid #0d857f;
+        background-color: #c2f8ef;
+        font-size: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .square:hover {
+        background-color: #41427a;
+    }
+
+    #restartButton {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        height: 40px;
+        width: 150px;
+        background-color: #3e5d66;
+        border: 1px solid #181717;
+        border-radius: 40px;
+        font-size: 18px;
+        margin-top: 10px;
+        color: #95bddfbd;
+    }
+
+    #restartButton:hover {
+        background-color: #41427a;
+        color: #FFFFFF;
+    }
+</style>
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GAME</title>
 </head>
 <body>
+    <div id="title">
+        <h1>Tic Tac Toe</h1>
+    </div>
+    <div id="board">
+        <div class="square" id="square0"></div>
+        <div class="square" id="square1"></div>
+        <div class="square" id="square2"></div>
+        <div class="square" id="square3"></div>
+        <div class="square" id="square4"></div>
+        <div class="square" id="square5"></div>
+        <div class="square" id="square6"></div>
+        <div class="square" id="square7"></div>
+        <div class="square" id="square8"></div>
+    </div>  
+    <div id="endGame">
+        <input type="button" value="Restart" id="restartButton" onclick="console.log('Click')"/>
+    </div>
     <script>
         const roomcode = '{{roomcode}}';
         const player = '{{alias}}';
@@ -13,7 +87,6 @@
         ws.onopen = function()
         {
             console.log("Connection Establieshed");
-            ws.send("Wolvarin");
         }
         ws.onmessage = function(e)
         {
