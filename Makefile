@@ -3,7 +3,7 @@ all : up
 
 # creat dokcer images and run them in detached mode
 up : create_data_dir
-	docker compose -f docker-compose.yml up --build --force-recreate
+	docker compose -f docker-compose.yml up #--build --force-recreate
 
 # take down all the containers runing that defined in the docker-compose file
 # and remove them
