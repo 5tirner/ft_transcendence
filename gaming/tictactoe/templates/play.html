@@ -67,23 +67,39 @@
         <h1>Tic Tac Toe</h1>
     </div>
     <div id="board">
-        <div class="square" id="square0"></div>
-        <div class="square" id="square1"></div>
-        <div class="square" id="square2"></div>
-        <div class="square" id="square3"></div>
-        <div class="square" id="square4"></div>
-        <div class="square" id="square5"></div>
-        <div class="square" id="square6"></div>
-        <div class="square" id="square7"></div>
-        <div class="square" id="square8"></div>
+        <div data-cell-index="0" class="square"></div>
+        <div data-cell-index="1" class="square"></div>
+        <div data-cell-index="2" class="square"></div>
+        <div data-cell-index="3" class="square"></div>
+        <div data-cell-index="4" class="square"></div>
+        <div data-cell-index="5" class="square"></div>
+        <div data-cell-index="6" class="square"></div>
+        <div data-cell-index="7" class="square"></div>
+        <div data-cell-index="8" class="square"></div>
     </div>  
     <div id="endGame">
-        <input type="button" value="Restart" id="restartButton" onclick="console.log('Click')"/>
+        <input type="button" value="QUITE" id="restartButton" onclick="endGame()"/>
     </div>
     <script>
+        function send_data(n){ws.send(n);}
         const roomcode = '{{roomcode}}';
         const player = '{{alias}}';
         const ws = new WebSocket('ws://127.0.0.1:8000/gaming/' + roomcode);
+        let board = ["", "", "", "", "", "", "", "", "", "", ""];
+        let Elements = document.querySelectorAll(".square")
+        Elements.forEach(function(element)
+                        {
+                            element.addEventListener("click", function(event){
+                                    console.log(element);
+                                    console.log(event, player);
+                                    console.log("------Element Clicked----");
+                                                    })
+                        })
+        function fillBoard(place, xo)
+        {
+            board[parseInt(place)] = xo;
+            Elements[parseInt(place)].innerHTML = xo;
+        }
         ws.onopen = function()
         {
             console.log("Connection Establieshed");
@@ -91,6 +107,10 @@
         ws.onmessage = function(e)
         {
             console.log("Message" + e);
+        }
+        function endGame()
+        {
+            window.alert("Are You Sure That You Want To Leave!");
         }
     </script>
 </body>
