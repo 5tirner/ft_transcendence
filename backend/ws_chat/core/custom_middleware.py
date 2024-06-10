@@ -19,6 +19,7 @@ class JwtAuthenticationMiddleWare(BaseMiddleware):
             return
         scope["user"] = user_data["username"]
         scope["user_id"] = user_data["id"]
+        scope["cookie"] = cookies_dict
         return await super().__call__(scope, receive, send)
 
     async def authenticate(self, cookies: dict):

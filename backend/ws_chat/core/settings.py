@@ -144,3 +144,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_URI = "http://auth:8000/api/usercheck/"
+CHAT_URI = "http://chat:8000/api/chat/"
