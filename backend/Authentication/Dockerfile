@@ -16,7 +16,6 @@ RUN pip install -r requirments.txt
 
 COPY . /app/
 
-# RUN python manage.py migrate
-# RUN python manage.py collectstatic --noinput
-#
-# CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN chmod 744 /app/start.sh
+
+CMD [ "/app/start.sh" ]

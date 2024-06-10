@@ -51,10 +51,6 @@ services:
         build:
             context: ./backend/Authentication
             dockerfile: Dockerfile
-        command:
-            sh -c "python3 manage.py makemigrations --noinput  && python3
-            manage.py migrate --noinput && python3 manage.py collectstatic
-            --noinput && python manage.py runserver 0.0.0.0:8000"
         image: auth:12.5
         env_file:
             - .env
@@ -69,10 +65,6 @@ services:
         build:
             context: ./backend/chat
             dockerfile: Dockerfile
-        command:
-            sh -c "python3 manage.py makemigrations --noinput  && python3
-            manage.py migrate --noinput && python3 manage.py collectstatic
-            --noinput && python manage.py runserver 0.0.0.0:8000"
         image: chat:12.5
         env_file:
             - .env
