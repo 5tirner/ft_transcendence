@@ -45,17 +45,27 @@ def home(req):
             tmp.save()
             print(f"{alias} Oppenets Infos->  GC: {tmp.gcreator}, RC: {tmp.roomcode}, GO: {tmp.oppenent}, GS:{tmp.gamestat}")
             print("\n**********************************\n")
+            return redirect('/gaming/' + roomcode + '?player=' + alias)
     return render(req, 'home.html')
 
 def game(req, roomcode):
     print("\n**********************************\n")
     print(f'On Game Data ==> {req.GET}')
     alias = req.GET.get('player')
-    if players.objects.filter(gcreator=alias).first() is None and players.objects.filter(gcreator=alias).first() is None:
+    if players.objects.filter(gcreator=alias).first() is None and players.objects.filter(oppenent=alias).first() is None:
         return HttpResponse("USER NOT FOUND")
+    player1, player2 = "", ""
+    if players.objects.filter(gcreator=alias).first() is not None:
+        player1 = players.objects.filter(gcreator=alias).first().gcreator
+        player2 = players.objects.filter(gcreator=alias).first().oppenent
+    else:
+        player2 = players.objects.filter(oppenent=alias).first().gcreator
+        player1 = players.objects.filter(oppenent=alias).first().oppenent
     context = {
         'roomcode': roomcode,
         'alias' : alias,
+        'p1': player1,
+        'p2': player2,
     }
     print("\n**********************************\n")
     return render(req, 'play.html', context)

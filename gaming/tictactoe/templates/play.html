@@ -65,17 +65,18 @@
 <body>
     <div id="title">
         <h1>Tic Tac Toe</h1>
+        <h1>You: {{p1}} vs Oppenent: {{p2}}</h1>
     </div>
     <div id="board">
-        <div data-cell-index="0" class="square"></div>
-        <div data-cell-index="1" class="square"></div>
-        <div data-cell-index="2" class="square"></div>
-        <div data-cell-index="3" class="square"></div>
-        <div data-cell-index="4" class="square"></div>
-        <div data-cell-index="5" class="square"></div>
-        <div data-cell-index="6" class="square"></div>
-        <div data-cell-index="7" class="square"></div>
-        <div data-cell-index="8" class="square"></div>
+        <div onclick="send_data(0)" class="square"></div>
+        <div onclick="send_data(1)" class="square"></div>
+        <div onclick="send_data(2)" class="square"></div>
+        <div onclick="send_data(3)" class="square"></div>
+        <div onclick="send_data(4)" class="square"></div>
+        <div onclick="send_data(5)" class="square"></div>
+        <div onclick="send_data(6)" class="square"></div>
+        <div onclick="send_data(7)" class="square"></div>
+        <div onclick="send_data(8)" class="square"></div>
     </div>  
     <div id="endGame">
         <input type="button" value="QUITE" id="restartButton" onclick="endGame()"/>
@@ -85,21 +86,6 @@
         const roomcode = '{{roomcode}}';
         const player = '{{alias}}';
         const ws = new WebSocket('ws://127.0.0.1:8000/gaming/' + roomcode);
-        let board = ["", "", "", "", "", "", "", "", "", "", ""];
-        let Elements = document.querySelectorAll(".square")
-        Elements.forEach(function(element)
-                        {
-                            element.addEventListener("click", function(event){
-                                    console.log(element);
-                                    console.log(event, player);
-                                    console.log("------Element Clicked----");
-                                                    })
-                        })
-        function fillBoard(place, xo)
-        {
-            board[parseInt(place)] = xo;
-            Elements[parseInt(place)].innerHTML = xo;
-        }
         ws.onopen = function()
         {
             console.log("Connection Establieshed");
