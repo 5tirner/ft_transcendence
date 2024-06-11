@@ -8,9 +8,13 @@ export function init_socket() {
 		const data = JSON.parse(e.data);
 		const msgdata = {};
 		const mesgsElem = document.querySelector(".messages");
-		msgdata.content = data.message;
-		msgdata.timestamp = new Date().toJSON();
-		createMessageBuble(mesgsElem, msgdata, data.sent);
+		if (data.msg_type) {
+			msgdata.content = data.message;
+			msgdata.timestamp = new Date().toJSON();
+			createMessageBuble(mesgsElem, msgdata, data.sent);
+		} else {
+			console.log(data);
+		}
 	};
 	chatSocket.onclose = function (e) {
 		console.error("chat socket closed", e.reason);
