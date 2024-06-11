@@ -46,11 +46,8 @@ function createListItem(parentElement, user, roomid) {
 		const messages = conv.querySelector(".messages");
 		const convHeadParent = conv.querySelector(".chat-conv");
 		const convHead = conv.querySelector(".conve-header");
-		// convHead.setAttribute("data-room-id", roomid);
 
-		// listItem.setAttribute("data-room-id", roomid);
 		conv.style.display = "block";
-		messages.innerHTML = "";
 
 		convHeadParent.removeChild(convHead);
 		convHeadParent.insertBefore(
@@ -64,7 +61,6 @@ function createListItem(parentElement, user, roomid) {
 export async function getConversations() {
 	const ulElement = document.querySelector("#chat ul");
 	let response = await API.getConversatons();
-	console.log(response);
 	if (response.ok) {
 		response = await response.json();
 		response.forEach((chatConv) => {

@@ -9,6 +9,7 @@ export function convHeader(userData, roomId) {
 	arrowIcon.addEventListener("click", (event) => {
 		const conv = document.querySelector(".chat-conv-wrapper");
 		conv.style.display = "none";
+		document.querySelector(".messages").innerHTML = "";
 	});
 	arrowIcon.classList.add("frame-icon");
 	arrowIcon.alt = "";
@@ -34,7 +35,6 @@ export function convHeader(userData, roomId) {
 	controllerIcon.alt = "";
 	controllerIcon.src = "./svg_dir/GameController.svg";
 	conversationHeader.appendChild(controllerIcon);
-	console.log(roomId);
 
 	return conversationHeader;
 }

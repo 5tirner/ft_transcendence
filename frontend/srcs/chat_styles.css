@@ -264,7 +264,7 @@ li.list-group-item:last-child {
 .messages {
     position: relative;
     flex: 1;
-    overflow: hidden;
+    overflow: scroll;
     font-size: var(--font-size-xs);
     font-family: var(--font-almarai);
 }
