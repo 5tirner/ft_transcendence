@@ -26,6 +26,7 @@ class Message(models.Model):
     )
     sender = models.ForeignKey(Player, on_delete=models.CASCADE)
     content = models.TextField()
+    readed = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
