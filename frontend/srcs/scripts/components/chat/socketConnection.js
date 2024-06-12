@@ -1,3 +1,4 @@
+import { formatListDate } from "./chatList.js";
 import { createMessageBuble } from "./messages_loader.js";
 
 export function init_socket() {
@@ -8,10 +9,15 @@ export function init_socket() {
 		const data = JSON.parse(e.data);
 		const msgdata = {};
 		const mesgsElem = document.querySelector(".messages");
+		const chatUser = document.querySelector(".username-conv");
 		if (data.msg_type) {
-			msgdata.content = data.message;
-			msgdata.timestamp = new Date().toJSON();
-			createMessageBuble(mesgsElem, msgdata, data.sent);
+			if (data.user == chatUser.textContent || data.sent) {
+				msgdata.content = data.message;
+				msgdata.timestamp = new Date().toJSON();
+				createMessageBuble(mesgsElem, msgdata, data.sent);
+			} else {
+				changeLastDisplayedMessage(data);
+			}
 		} else {
 			console.log(data);
 		}
@@ -40,4 +46,19 @@ export function init_socket() {
 			}
 		}
 	});
+}
+
+function changeLastDisplayedMessage(data) {
+	const listItems = document.querySelectorAll(".list-group-item");
+
+	// Loop through each list item
+	for (const li of listItems) {
+		const user = li.querySelector(".username");
+		if (user.textContent == data.user) {
+			console.log(user.textContent);
+			li.querySelector(".message").textContent = data.message;
+			li.querySelector(".time").textContent = formatListDate(new Date());
+			break;
+		}
+	}
 }

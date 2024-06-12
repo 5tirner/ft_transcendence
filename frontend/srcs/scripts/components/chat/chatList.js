@@ -1,12 +1,11 @@
 import { convHeader } from "./conv_head.js";
-import { loadMessages } from "./messages_loader.js";
+import { formatTime, loadMessages } from "./messages_loader.js";
 
-function createListItem(parentElement, user, roomid) {
+function createListItem(parentElement, convInfo, roomid) {
 	// Create the main <li> element
 	const listItem = document.createElement("li");
 	listItem.className =
 		"list-group-item d-flex align-items-center justify-content-between px-1";
-	// listItem.setAttribute("data-room-id", roomid);
 
 	// Create the left part of the list item (profile and message)
 	const leftDiv = document.createElement("div");
@@ -18,8 +17,8 @@ function createListItem(parentElement, user, roomid) {
 
 	// user profile image
 	const profilePic = document.createElement("img");
-	profilePic.src = user.avatar;
-	profilePic.alt = user.username;
+	profilePic.src = convInfo.user.avatar;
+	profilePic.alt = convInfo.user.username;
 	profilePic.className = "profile-pic";
 
 	profileContainer.appendChild(profilePic);
@@ -29,17 +28,39 @@ function createListItem(parentElement, user, roomid) {
 
 	const usernameDiv = document.createElement("div");
 	usernameDiv.className = "username";
-	usernameDiv.textContent = user.username;
-
+	usernameDiv.textContent = convInfo.user.username;
 	textContainer.appendChild(usernameDiv);
+
+	const messageDiv = document.createElement("div");
+	messageDiv.className = "message";
+	messageDiv.textContent = convInfo.last_message.content;
+	textContainer.appendChild(messageDiv);
 
 	leftDiv.appendChild(profileContainer);
 	leftDiv.appendChild(textContainer);
 
+	const rightDiv = document.createElement("div");
+	rightDiv.className = "d-flex align-items-center flex-column";
+	const timeDiv = document.createElement("div");
+	timeDiv.className = "time";
+	if (convInfo.last_message.timestamp == null) timeDiv.textContent = "";
+	else {
+		const date = new Date(convInfo.last_message.timestamp);
+		timeDiv.textContent = formatListDate(date);
+	}
+	rightDiv.appendChild(timeDiv);
+
+	// TODO: add unreaded notify
+	// const notifDiv = document.createElement('div');
+	// notifDiv.className = 'notif mx-1 mt-2 visible';
+	// notifDiv.textContent = '+9';
+	// rightDiv.appendChild(notifDiv);
+
 	// Append both left and right parts to the main <li> element
 	listItem.appendChild(leftDiv);
+	listItem.appendChild(rightDiv);
 
-	// Append the <li> element to the provided parent element
+	// Append the <li> element to the <ul> parent element
 	parentElement.appendChild(listItem);
 	listItem.addEventListener("click", (event) => {
 		const conv = document.querySelector(".chat-conv-wrapper");
@@ -51,11 +72,27 @@ function createListItem(parentElement, user, roomid) {
 
 		convHeadParent.removeChild(convHead);
 		convHeadParent.insertBefore(
-			convHeader(user, roomid),
+			convHeader(convInfo.user, roomid),
 			convHeadParent.firstChild
 		);
 		loadMessages(messages, roomid);
 	});
+}
+
+export function formatListDate(date) {
+	const today = new Date();
+
+	const isToday = date.toDateString() === today.toDateString();
+	if (isToday) {
+		return `${formatTime(date)}`;
+	} else {
+		const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
+		const day = String(date.getDate()).padStart(2, "0");
+		const year = date.getFullYear();
+
+		// Format the date and time as mm/dd/yyyy HH:MM am/pm
+		return `${month}/${day}/${year}`;
+	}
 }
 
 export async function getConversations() {
@@ -64,7 +101,8 @@ export async function getConversations() {
 	if (response.ok) {
 		response = await response.json();
 		response.forEach((chatConv) => {
-			createListItem(ulElement, chatConv.user, chatConv.id);
+			console.log(chatConv);
+			createListItem(ulElement, chatConv, chatConv.id);
 		});
 	}
 }

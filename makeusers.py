@@ -25,8 +25,8 @@ def create_users():
     print(2 * "\t", "=======================================================", 2 * "\n")
 
 
-def get_auth_cookie():
-    login_data = {"username": "user@user.com", "password": "1234"}
+def get_auth_cookie(user):
+    login_data = {"username": user, "password": "1234"}
     res = requests.post(loginAPI, data=login_data)
     jwt_token = res.cookies["jwt_token"]
     cooki = {"jwt_token": jwt_token}
@@ -36,7 +36,21 @@ def get_auth_cookie():
 def create_chatrooms():
     print(2 * "\t", "================= create chatrooms ====================")
     user = {"username": ""}
-    cookie = get_auth_cookie()
+    cookie = get_auth_cookie("user@user.com")
+    for i in range(5):
+        user["username"] = f"user{i}"
+        res = requests.post(creatChatroomAPI, data=user, cookies=cookie)
+        print(f"user{i} respons ==>", res.json(), res.status_code)
+
+    print(2 * "\t", "=======================================================")
+    cookie = get_auth_cookie("user0@user.com")
+    for i in range(5):
+        user["username"] = f"user{i}"
+        res = requests.post(creatChatroomAPI, data=user, cookies=cookie)
+        print(f"user{i} respons ==>", res.json(), res.status_code)
+    print(2 * "\t", "=======================================================")
+
+    cookie = get_auth_cookie("user1@user.com")
     for i in range(5):
         user["username"] = f"user{i}"
         res = requests.post(creatChatroomAPI, data=user, cookies=cookie)

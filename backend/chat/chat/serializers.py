@@ -9,10 +9,11 @@ from django.db.models import Q
 # from api.serializers import UserSerializer
 class ConversationsSerializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    last_message = serializers.SerializerMethodField()
 
     class Meta:
         model = ChatRoom
-        fields = ("id", "name", "user")
+        fields = ["id", "name", "user", "last_message"]
 
     def get_user(self, obj):
         request_user = self.context["request"].user
@@ -22,6 +23,19 @@ class ConversationsSerializer(serializers.ModelSerializer):
             "username": user.username,
             "avatar": user.avatar,
         }
+
+    def get_last_message(self, obj):
+        last_message = obj.messages.order_by("-timestamp").first()
+        if last_message:
+            return {
+                "content": last_message.content,
+                "timestamp": last_message.timestamp,
+            }
+        return {
+            "content": None,
+            "timestamp": None,
+        }
+        # pass
 
 
 class MessageSerializer(serializers.ModelSerializer):

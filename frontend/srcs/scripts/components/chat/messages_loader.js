@@ -1,6 +1,6 @@
 import API from "../../API.js";
 
-function formatTime(date) {
+export function formatTime(date) {
 	let hours = date.getHours();
 	const minutes = String(date.getMinutes()).padStart(2, "0");
 	const ampm = hours >= 12 ? "PM" : "AM";
