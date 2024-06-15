@@ -26,14 +26,18 @@ class ConversationsSerializer(serializers.ModelSerializer):
 
     def get_last_message(self, obj):
         last_message = obj.messages.order_by("-timestamp").first()
-        unread_count = obj.messages.filter(readed=False).count()
+        request_user = self.context["request"].user
+        unread_count = (
+            obj.messages.filter(readed=False).exclude(sender=request_user).count()
+        )
+
         if last_message:
             return {
                 "content": last_message.content,
                 "timestamp": last_message.timestamp,
                 "unreaded": unread_count,
             }
-        return {"content": None, "timestamp": None, "unreaded": None}
+        return {"content": None, "timestamp": obj.created_at, "unreaded": None}
 
 
 class MessageSerializer(serializers.ModelSerializer):

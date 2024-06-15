@@ -37,6 +37,13 @@ const API = {
 		return await API.makeGetRequest(API.chatEndpoint + room_id);
 	},
 
+	markMessagesAsRead: async (room_id) => {
+		const res = await API.makeGetRequest(
+			API.chatEndpoint + "read/" + room_id + "/"
+		);
+		return;
+	},
+
 	makePostRequest: async (url, data) => {
 		const headers = {
 			"Content-Type": "application/json"

@@ -1,5 +1,21 @@
-import { formatListDate } from "./chatList.js";
+import API from "../../API.js";
+import { formatListDate, updateNotif } from "./chatList.js";
 import { createMessageBuble } from "./messages_loader.js";
+
+function moveConvListTop(username) {
+	const listItems = document.querySelectorAll(".list-group-item");
+
+	// Loop through each list item
+	for (const li of listItems) {
+		const user = li.querySelector(".username");
+		if (user.textContent == username) {
+			console.log(li);
+			const ul = li.parentNode;
+			ul.prepend(li);
+			break;
+		}
+	}
+}
 
 export function init_socket() {
 	const chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/chat/");
@@ -15,11 +31,19 @@ export function init_socket() {
 				msgdata.content = data.message;
 				msgdata.timestamp = new Date().toJSON();
 				createMessageBuble(mesgsElem, msgdata, data.sent);
+				changeLastDisplayedMessage(data, chatUser.textContent);
+				moveConvListTop(chatUser.textContent);
+				const roomid = document
+					.querySelector(".conve-header")
+					.getAttribute("data-room-id");
+				API.markMessagesAsRead(roomid);
 			} else {
-				changeLastDisplayedMessage(data);
+				changeLastDisplayedMessage(data, data.user);
+				moveConvListTop(data.user);
+				updateNotif(data.user);
 			}
 		} else {
-			console.log(data);
+			// console.log(data);
 		}
 	};
 	chatSocket.onclose = function (e) {
@@ -48,14 +72,13 @@ export function init_socket() {
 	});
 }
 
-function changeLastDisplayedMessage(data) {
+function changeLastDisplayedMessage(data, username) {
 	const listItems = document.querySelectorAll(".list-group-item");
 
 	// Loop through each list item
 	for (const li of listItems) {
 		const user = li.querySelector(".username");
-		if (user.textContent == data.user) {
-			console.log(user.textContent);
+		if (user.textContent == username) {
 			li.querySelector(".message").textContent = data.message;
 			li.querySelector(".time").textContent = formatListDate(new Date());
 			break;

@@ -35,13 +35,12 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             user = content["user"]
             room_id = content["room_id"]
 
-            # send message to the specified user channel
-            await self.send_message_to_user(user, message, False)
-            # await self.send_message_to_user(user,message, False)
-            # send message to message sender
-            await self.send_message_to_user(user, message, True)
             # submit message to database
             await self.submit_message(message, room_id)
+            # send message to the specified user channel
+            await self.send_message_to_user(user, message, False)
+            # send message to message sender
+            await self.send_message_to_user(user, message, True)
         except Exception as e:
             pass
 

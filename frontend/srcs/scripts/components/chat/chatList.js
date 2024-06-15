@@ -1,3 +1,4 @@
+import API from "../../API.js";
 import { convHeader } from "./conv_head.js";
 import { formatTime, loadMessages } from "./messages_loader.js";
 
@@ -51,10 +52,19 @@ function createListItem(parentElement, convInfo, roomid) {
 	rightDiv.appendChild(timeDiv);
 
 	// TODO: add unreaded notify
-	// const notifDiv = document.createElement('div');
-	// notifDiv.className = 'notif mx-1 mt-2 visible';
-	// notifDiv.textContent = '+9';
-	// rightDiv.appendChild(notifDiv);
+	const notifDiv = document.createElement("div");
+	if (
+		convInfo.last_message.unreaded != null &&
+		convInfo.last_message.unreaded != 0
+	) {
+		notifDiv.className = "notif mx-1 mt-2 visible";
+		if (convInfo.last_message.unreaded <= 9)
+			notifDiv.textContent = convInfo.last_message.unreaded;
+		else notifDiv.textContent = "+9";
+	} else {
+		notifDiv.className = "notif mx-1 mt-2 invisible";
+	}
+	rightDiv.appendChild(notifDiv);
 
 	// Append both left and right parts to the main <li> element
 	listItem.appendChild(leftDiv);
@@ -76,7 +86,41 @@ function createListItem(parentElement, convInfo, roomid) {
 			convHeadParent.firstChild
 		);
 		loadMessages(messages, roomid);
+		API.markMessagesAsRead(roomid);
+		updateNotif(convInfo.user.username, true);
 	});
+}
+
+export function updateNotif(username, toRemove = false) {
+	const listItems = document.querySelectorAll(".list-group-item");
+
+	// Loop through each list item
+	for (const li of listItems) {
+		const user = li.querySelector(".username");
+		if (user.textContent == username) {
+			const notif = li.querySelector(".notif");
+			if (toRemove) {
+				notif.classList.remove("visible");
+				notif.classList.add("invisible");
+				notif.textContent = "";
+			} else {
+				notif.classList.remove("invisible");
+				notif.classList.add("visible");
+				updateCounter(notif);
+			}
+			break;
+		}
+	}
+}
+
+function updateCounter(elem) {
+	if (!elem.textContent) elem.textContent = "1";
+	else {
+		let mesgNumber = new Number(elem.textContent);
+		mesgNumber++;
+		if (mesgNumber > 9) elem.textContent = "+9";
+		else elem.textContent = mesgNumber;
+	}
 }
 
 export function formatListDate(date) {
@@ -101,7 +145,6 @@ export async function getConversations() {
 	if (response.ok) {
 		response = await response.json();
 		response.forEach((chatConv) => {
-			console.log(chatConv);
 			createListItem(ulElement, chatConv, chatConv.id);
 		});
 	}

@@ -63,7 +63,6 @@ export function createMessageBuble(parrentDiv, msgData, sent = true) {
 export async function loadMessages(messagesElem, roomId) {
 	let messages = await API.getConvMessages(roomId);
 	if (messages.ok) {
-		// messagesElem.innerHTML = "";
 		messages = await messages.json();
 		messages.forEach((msg) => {
 			if (msg.username === window.Auth.user) {
