@@ -80,14 +80,20 @@ WSGI_APPLICATION = "restauthe.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+DB_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+DB_USER = os.getenv("POSTGRES_USER")
+DB_NAME = os.getenv("POSTGRES_DB")
+DB_HOST = os.getenv("POSTGRES_HOST")
+DB_PORT = os.getenv("POSTGRES_PORT")
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "postgres",
-        "USER": "admin",
-        "PASSWORD": "12345678",
-        "HOST": "postgres_db",
-        "PORT": "5432",  # default PostgreSQL port
+        "NAME": DB_NAME,
+        "USER": DB_USER,
+        "PASSWORD": DB_PASSWORD,
+        "HOST": DB_HOST,
+        "PORT": DB_PORT,  # default PostgreSQL port
     }
 }
 
@@ -190,7 +196,9 @@ GOOGLE_CLIENT_ID = (
 GOOGLE_CLIENT_SECRET = "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"
 GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/api/google/callback/"
 
-TRANSCE_HOST = "127.0.0.1:8000/api"
+HOST = os.getenv("HOST")
+PORT = os.getenv("PORT")
+TRANSCE_HOST = f"{HOST}:{PORT}/api"
 
 
 # For temporary Users Creation
