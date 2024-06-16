@@ -32,6 +32,9 @@ services:
         build:
             context: ./frontend
             dockerfile: Dockerfile
+            args:
+                HOST: ${HOST}
+                PORT: ${PORT}
         image: my_server:12.5
         ports:
             - "8000:8000"

@@ -18,6 +18,12 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 
 COPY ./tools/spa.conf http.d/
 
+ARG HOST
+ARG PORT
+
+RUN sed -i "s/localhost/${HOST}/g" http.d/spa.conf
+RUN sed -i "s/port/${PORT}/g" http.d/spa.conf
+
 RUN apk cache clean
 
 WORKDIR /var/www
