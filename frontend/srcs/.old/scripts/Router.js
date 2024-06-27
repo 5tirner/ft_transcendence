@@ -3,7 +3,7 @@ import API from "./API.js";
 import { renderHome } from "./components/Home.js";
 import { login_page } from "./components/Login.js";
 import { account_page } from "./components/account.js";
-import { render_chat } from "./components/chat/chat.js";
+// import { render_chat } from "./components/chat/chat.js";
 import { game_page } from "./components/game.js";
 import { register_page } from "./components/register.js";
 import { settings_page } from "./components/settins.js";
