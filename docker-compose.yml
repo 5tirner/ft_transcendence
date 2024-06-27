@@ -1,0 +1,15 @@
+services:
+  server:
+    ports:
+      - "3000:80"
+    networks:
+      - Net
+    build: server/
+    volumes:
+      - ./public:/var/www/transcendence
+    container_name: server
+    image: server
+
+networks:
+  Net:
+    name: Net
