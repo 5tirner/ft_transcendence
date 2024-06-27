@@ -1,254 +1,260 @@
 <!doctype html>
 <html lang="en">
 	<head>
-		<meta charset="utf-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1, maximum-scale=1"
-		/>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Pong</title>
+		<link rel="stylesheet" href="css/main.css" />
+		<script src="js/index.js" type="module" defer></script>
+		<!-- <link rel="icon" href="./src/favicon.ico" /> -->
 		<link
+			href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
 			rel="stylesheet"
-			href="https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css"
 		/>
+		<!-- Include Bootstrap CSS -->
 		<link
-			rel="apple-touch-icon"
-			sizes="180x180"
-			href="./favicon/apple-touch-icon.png"
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+			crossorigin="anonymous"
 		/>
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="32x32"
-			href="./favicon/favicon-32x32.png"
-		/>
-		<link
-			rel="icon"
-			type="image/png"
-			sizes="16x16"
-			href="./favicon/favicon-16x16.png"
-		/>
-		<link href="./styles/bootstrap.min.css" rel="stylesheet" />
-		<script src="./scripts/bootstrap.bundle.min.js" defer></script>
-		<link rel="manifest" href="./favicon/site.webmanifest" />
-		<script src="scripts/app.js" type="module" defer></script>
 
-		<link rel="stylesheet" href="styles.css" />
-		<link rel="stylesheet" href="chat_styles.css" />
-		<link rel="stylesheet" href="nav_bar.css" />
+		<script
+			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+			integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+			crossorigin="anonymous"
+		></script>
+
+		<!-- Include Bootstrap Icons CSS -->
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+			rel="stylesheet"
+		/>
+
+		<link
+			href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
+			rel="stylesheet"
+		/>
 	</head>
 
 	<body>
-		<div class="myContainer">
-			<nav
-				id="nav_bar"
-				class="sidebar nav flex-column"
-				style="display: block"
-			>
-				<ul class="nav nav-pills">
-					<li class="nav-item">
-						<a href="/" class="navlink nav-link">
-							<i class="bx bx-home"></i>
-						</a>
-						<span class="tooltip">Home</span>
-					</li>
-					<li class="nav-item">
-						<a href="/account" class="navlink nav-link">
-							<i class="bx bx-user"></i>
-						</a>
-						<span class="tooltip">account</span>
-					</li>
-					<li class="nav-item">
-						<a href="/game" class="navlink nav-link">
-							<i class="bx bx-dice-5"></i>
-						</a>
-						<span class="tooltip">Home</span>
-					</li>
-					<li class="nav-item">
-						<a href="/settings" class="navlink nav-link">
-							<i class="bx bx-cog"></i>
-						</a>
-						<span class="tooltip">Messages</span>
-					</li>
-				</ul>
+		<div id="root"></div>
+		<!-- Home Template -->
+		<template id="home-page">
+			<nav class="d-flex navbar justify-content-between">
+				<a class="navbar-brand">Pong.me</a>
+				<a class="home-buttons navbar-btn" href="/login">Login</a>
 			</nav>
-			<main>
-				<section class="page" id="home" style="display: none">
-					<main></main>
-				</section>
-
-				<section class="page" id="register" style="display: none">
-					<h2>Register</h2>
-					<div>
-						<form id="formRegister" onsubmit="Auth.register(event)">
-							<label for="register_name">Your Name</label>
-							<input
-								id="register_name"
-								required
-								autocomplete="name"
-							/>
-							<label for="register_email">Your Email</label>
-							<input
-								id="register_email"
-								required
-								type="email"
-								autocomplete="username"
-							/>
-
-							<label for="register_password">Your Password</label>
-							<input
-								type="password"
-								id="register_password"
-								required
-								autocomplete="new-password"
-							/>
-
-							<button>Register Account</button>
-							<button>
-								<a href="/login" class="navlink">Log In</a>
-							</button>
-						</form>
-					</div>
-				</section>
-
-				<section class="page" id="login" style="display: none">
-					<h2>Log In</h2>
-
-					<div>
-						<form id="formLogin" onsubmit="Auth.login(event)">
-							<label for="login_email">Your email</label>
-							<input
-								placeholder="email"
-								id="login_email"
-								required
-								autocomplete="username"
-							/>
-							<label for="login_password">Password</label>
-							<input
-								type="password"
-								id="login_password"
-								autocomplete="current-password"
-							/>
-
-							<button>Log In</button>
-							<button>
-								<a href="/register" class="navlink">Register</a>
-							</button>
-							<button onclick="Auth.loginIntra(event)">
-								Login with 42
-							</button>
-						</form>
-					</div>
-				</section>
-
-				<section class="page" id="account" style="display: none">
-					<h2>My Account</h2>
-					<dl>
-						<dt>Name</dt>
-						<dd class="account_name"></dd>
-						<dt>Email</dt>
-						<dd class="account_username"></dd>
-					</dl>
-
-					<button onclick="Auth.logout()">Log out</button>
-				</section>
-
-				<section class="page" id="game" style="display: none">
-					<h2>Game</h2>
-					<a href="/settings" class="navlink">settings</a>
-				</section>
-
-				<section class="page" id="settings" style="display: none">
-					<h2>settings</h2>
-				</section>
+			<div id="card-hold"></div>
+			<main class="home">
+				<h1>Discover, Play & Challenge Your Friends</h1>
+				<p>
+					Pong.me support realtime game, chat, group chat channel,
+					ranking system and tournament.
+				</p>
+				<a class="navbar-btn" href="#"
+					><main-button name="Discover Now"></main-button
+				></a>
 			</main>
-			<div class="container right-window" style="display: none" id="chat">
-				<div class="nav-convs">
-					<!-- INFO: Head of Chat-->
-					<div
-						class="d-flex flex-column align-items-center justify-content-start text-center text-white p-1 mx-auto gap-2"
-					>
-						<div class="add-message-head position-relative">
-							<b>Chats</b>
-							<img
-								class="add-message-icon position-absolute"
-								alt=""
-								src="./svg_dir/add-message 1.svg"
-							/>
-						</div>
-						<div class="search-bar position-relative">
-							<input
-								type="text"
-								class="search position-absolute p-2"
-								placeholder="Search...."
-							/>
-							<img
-								class="search-bar-child position-absolute p-1"
-								alt=""
-								src="./svg_dir/Search.svg"
-							/>
-						</div>
-						<!---
-            <div
-            class="d-flex gap-2 align-items-center justify-content-between p-3 conv-display-con"
-            >
-            <div class="display-mod mx-auto">
-            <div>All</div>
-            </div>
-            <div class="display-mod mx-auto">
-            <div>Unread</div>
-            </div>
-            <div class="display-mod mx-auto">
-            <div>Groups</div>
-            </div>
-            </div>
-            -->
-					</div>
-					<!-- INFO:list of friends -->
-					<ul class="list-group rounded-0"></ul>
-				</div>
-				<div class="chat-conv-wrapper">
-					<div class="chat-conv d-flex flex-column">
-						<div class="conve-header">
-							<img
-								class="frame-icon"
-								alt=""
-								src="./svg_dir/arrow.svg"
-							/>
-							<img
-								class="user-avatar"
-								alt="user"
-								src="https://static.vecteezy.com/system/resources/thumbnails/005/544/718/small_2x/profile-icon-design-free-vector.jpg"
-							/>
-							<div class="username-conv">Player1#0001</div>
-							<div class="status">Online</div>
-							<div class="status-dot online"></div>
-							<img
-								class="controler-icon"
-								alt=""
-								src="./svg_dir/GameController.svg"
-							/>
-						</div>
-						<!--
-            INFO: 
-            this is the message section where the conv is diplayed            
-            -->
-						<div class="messages d-flex flex-column"></div>
-						<div class="input-bar position-relative mb-3">
-							<input
-								class="message-input position-absolute p-2"
-								type="text"
-								placeholder="Type your message"
-							/>
-							<img
-								class="send-message-icon position-absolute p-1"
-								alt=""
-								src="./svg_dir/Send.svg"
-							/>
-						</div>
+		</template>
+
+		<template id="login-page">
+			<filter class="bluer"></filter>
+			<div class="login-form">
+				<div class="sub-login-form">
+					<div class="logo">Pong.me</div>
+					<div class="google-intra-login">
+						<a href="/login" class="google-btn" name="google">
+							<button
+								type="button"
+								role="button"
+								class="button-23"
+								onclick="Auth.loginGoogle(event)"
+							>
+								<span class="G">G </span>Login with google<span>
+									>
+								</span>
+							</button>
+						</a>
+						<a href="/login" class="intra-btn" name="intra">
+							<button
+								type="button"
+								role="button"
+								class="button-23 intra-42"
+								onclick="Auth.loginIntra(event)"
+							>
+								<span class="42">42 </span>Login with Intra<span>
+									>
+								</span>
+							</button>
+						</a>
 					</div>
 				</div>
 			</div>
-		</div>
+		</template>
+
+		<template id="side-bar">
+			<!-- <link rel="icon" href="./src/favicon.ico" /> -->
+			<link
+				href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+				rel="stylesheet"
+			/>
+			<!-- Include Bootstrap CSS -->
+			<link
+				href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+				rel="stylesheet"
+				integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+				crossorigin="anonymous"
+			/>
+
+			<script
+				src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+				integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+				crossorigin="anonymous"
+			></script>
+
+			<!-- Include Bootstrap Icons CSS -->
+			<link
+				href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+				rel="stylesheet"
+			/>
+
+			<link
+				href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
+				rel="stylesheet"
+			/>
+			<div class="l-navbar" id="nav-bar">
+				<nav class="nav">
+					<div>
+						<a href="#" class="nav_logo">
+							<i class="bx bxs-tennis-ball nav_logo-icon"></i>
+						</a>
+						<div class="nav_list">
+							<a href="#" class="nav_link active">
+								<i class="bx bx-grid-alt nav_icon"></i>
+							</a>
+							<a href="#" class="nav_link">
+								<i class="bx bx-group nav_icon"></i>
+							</a>
+							<a href="#" class="nav_link">
+								<i
+									class="bx bx-message-square-detail nav_icon"
+								></i>
+							</a>
+							<a href="#" class="nav_link">
+								<i class="bx bx-bookmark nav_icon"></i>
+							</a>
+							<a href="#" class="nav_link">
+								<i class="bx bx-folder nav_icon"></i>
+							</a>
+							<a href="#" class="nav_link">
+								<i class="bx bx-bar-chart-alt-2 nav_icon"></i>
+							</a>
+						</div>
+					</div>
+					<a href="#" class="nav_link">
+						<i class="bx bx-user nav_icon"></i>
+						<span class="green_dot"></span>
+					</a>
+				</nav>
+			</div>
+		</template>
+
+		<template id="start-game">
+			<img src="" alt="" />
+			<a href="#">
+				<main-button name="Play Now"></main-button>
+			</a>
+		</template>
+
+		<template id="player-rank-component">
+			<div class="container">
+				<div class="avatar">
+					<!-- <img src="" alt="avatar"> -->
+				</div>
+				<div class="name"></div>
+				<div class="points"></div>
+			</div>
+		</template>
+
+		<template id="platform-page">
+			<div id="sidebar">
+				<!-- sidebar -->
+				<side-bar-comp></side-bar-comp>
+			</div>
+			<div id="middle">
+				<!-- play now -->
+			</div>
+			<div id="chat">
+				<!-- chat -->
+				<chat-comp></chat-comp>
+			</div>
+		</template>
+
+		<template id="profile-page-template">
+			<div id="first">
+				<div class="win common"></div>
+				<div class="user common">
+					<div class="avatar">
+						<img src="" alt="" />
+					</div>
+					<div class="info">fullname</div>
+					<div class="info">@username</div>
+				</div>
+				<div class="loss common"></div>
+			</div>
+			<div id="second">
+				<div class="wrapper">
+					<p>Friends List</p>
+					<ul class="responsive-table">
+						<li class="table-row">
+							<div class="col col-2" data-label="Customer Name">
+								John Doe
+							</div>
+							<div class="col col-4" data-label="Payment Status">
+								Active
+							</div>
+						</li>
+						<li class="table-row">
+							<div class="col col-2" data-label="Customer Name">
+								Jennifer Smith
+							</div>
+							<div class="col col-4" data-label="Payment Status">
+								Active
+							</div>
+						</li>
+						<li class="table-row">
+							<div class="col col-2" data-label="Customer Name">
+								John Smith
+							</div>
+							<div class="col col-4" data-label="Payment Status">
+								Active
+							</div>
+						</li>
+						<li class="table-row">
+							<div class="col col-2" data-label="Customer Name">
+								John Carpenter
+							</div>
+							<div class="col col-4" data-label="Payment Status">
+								Active
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</template>
+
+		<template id="game-page-template">
+			<div id="game-section"></div>
+			<div id="game-mode-section">
+				<div class="game-mode-title">Game Mode</div>
+				<div class="components"></div>
+			</div>
+		</template>
+
+		<template id="game-mode-comp">
+			<div class="container"></div>
+		</template>
 	</body>
 </html>
