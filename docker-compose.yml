@@ -23,8 +23,8 @@ services:
             - .env
         networks:
             - myNetwork
-        volumes:
-            - postgres_db:/var/lib/postgresql/data
+        # volumes:
+        #     - postgres_db:/var/lib/postgresql/data
         restart: always
 
     myServer:
@@ -98,14 +98,14 @@ services:
         depends_on:
             - auth
         restart: always
-volumes:
-    postgres_db:
-        driver: local
-        name: postgres_db
-        driver_opts:
-            type: none
-            device: ${HOME}/data/postgres_db
-            o: bind
+# volumes:
+#     postgres_db:
+#         driver: local
+#         name: postgres_db
+#         driver_opts:
+#             type: none
+#             device: ${HOME}/data/postgres_db
+#             o: bind
     # www:
     #     name: front_end
     #     driver: local

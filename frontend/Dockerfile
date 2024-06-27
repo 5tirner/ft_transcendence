@@ -16,18 +16,16 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -subj "/C=MO/L=Bengurire/O=1337/OU=Student/CN=ft_trance.1337.fr"
 
 
-COPY ./tools/spa.conf http.d/
+COPY ./tools/spa.conf ./nginx.conf
 
 ARG HOST
 ARG PORT
 
-RUN sed -i "s/localhost/${HOST}/g" http.d/spa.conf
-RUN sed -i "s/port/${PORT}/g" http.d/spa.conf
+RUN sed -i "s/localhost/${HOST}/g" ./nginx.conf
+RUN sed -i "s/port/${PORT}/g" ./nginx.conf
 
 RUN apk cache clean
 
 WORKDIR /var/www
-
-COPY ./srcs/ .
 
 CMD ["nginx", "-g", "daemon off;"]
