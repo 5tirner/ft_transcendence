@@ -32,21 +32,19 @@ export class Router {
 
 	async init() {
 		window.addEventListener("popstate", (e) => {
-			this.navigateTo(e.state.path, "root", false);
+			this.navigateTo(e.state.path, "root");
 		});
 
 		if (await Auth.isAuth()) {
 			// render_chat();
 			if (
 				location.pathname == "/login" ||
-				location.pathname == "/register"
+				location.pathname == "/"
 			)
-				this.navigateTo("/chat", "root");
+				this.navigateTo("/platform", "root");
 			else this.navigateTo(location.pathname, "root");
 		} else {
-			// Router.go("/login");
-			this.navigateTo("/login", "root");
+			this.navigateTo("/", "root");
 		}
-		this.navigateTo(location.pathname, "root");
 	}
 }

@@ -210,8 +210,9 @@ def callback_google(request):
 
             jwt_token = jwt_generation(player.id, player.two_factor)
             response = redirect(
-                f"http://127.0.0.1:8000/{'tfa' if player.two_factor else 'api/home'}/",
-                permanent=True,
+                f"http://127.0.0.1:8000/", permanent=True,
+                #f"http://127.0.0.1:8000/{'tfa' if player.two_factor else 'api/home'}/",
+                #permanent=True,
             )
             response.set_cookie(
                 "jwt_token", value=jwt_token, httponly=True, secure=True
