@@ -1,7 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import ChatRoom, Message
-from django.db.models import Count
 from restuserm.models import Player
 from django.db.models import Q
 
@@ -85,8 +84,6 @@ class ChatRoomSerializer(serializers.ModelSerializer):
 
 
 class SubmitMessageSerializer(serializers.ModelSerializer):
-    # username = serializers.CharField(write_only=True)
-
     class Meta:
         model = Message
         fields = ["chatroom", "sender", "content"]
