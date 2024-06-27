@@ -25,6 +25,8 @@ const Auth = {
 			console.log(res);
 			Auth.user = res.data.username;
 			Auth.avatar = res.data.avatar;
+			Auth.loses = res.data.losses;
+			Auth.wins = res.data.wins;
 			return isLoged;
 		}
 		return false;

@@ -61,4 +61,6 @@ class PlayerSerializerInfoVer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "avatar",
+            "losses",
+            "wins",
         ]

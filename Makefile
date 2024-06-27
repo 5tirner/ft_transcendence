@@ -1,22 +1,29 @@
+DC = docker compose -f docker-compose.yml
+
 IMG = $(shell docker images -a -q)
+
 all : up
 
 # creat dokcer images and run them in detached mode
+
+upd:
+	$(DC) up -d
+
 up : create_data_dir
-	docker compose -f docker-compose.yml up --build --force-recreate
+	$(DC) up --build --force-recreate
 
 # take down all the containers runing that defined in the docker-compose file
 # and remove them
-down : 
-	docker compose -f docker-compose.yml down
+down : stop
+	$(DC) down
 
 # stop the containers
 stop : 
-	docker compose -f docker-compose.yml stop
+	$(DC) stop
 
 # start the containers
 start : 
-	docker compose -f docker-compose.yml start
+	$(DC) start
 
 # display the runing containers
 ps : 
@@ -24,6 +31,8 @@ ps :
 
 ls :
 	docker images
+
+re: down up
 
 create_data_dir:
 	[ -d ${HOME}/data/www ] || mkdir -p ${HOME}/data/www

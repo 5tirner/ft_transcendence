@@ -40,6 +40,7 @@ div img {
     border: solid 2px rgb(200 200 200 / .75)!important;
     border-radius: 50%;
     background: rgb(100 100 100 / .75);
+    object-fit: cover;
 }
 .info {
     width: 100%;
