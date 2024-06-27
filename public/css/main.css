@@ -1,0 +1,44 @@
+@import url("https://fonts.googleapis.com/css?family=Work+Sans:300,600");
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-color: #1d203e !important;
+  font-family: "Press Start 2P" !important;
+  height: 100vh;
+  width: 100vw;
+  right: 0;
+}
+
+#root {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #1d203e !important;
+  color: antiquewhite;
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+header {
+  background-color: rgba(33, 37, 41, 0.4);
+  text-align: center;
+  position: sticky;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 999;
+  height: 60px;
+}
