@@ -149,32 +149,3 @@ export async function getConversations() {
 		});
 	}
 }
-
-// TODO: add does to the conv list
-//
-// TODO: status dot
-// const statusDot = document.createElement("span");
-// statusDot.className = "status-dot online";
-// profileContainer.appendChild(statusDot);
-//
-// TODO: last message sent displayed
-// display last message sent in chat
-// const messageDiv = document.createElement('div');
-// messageDiv.className = 'message';
-// messageDiv.textContent = 'GG! I will win next time';
-// textContainer.appendChild(messageDiv);
-//
-// TODO: to add
-// time and unreaded messages count
-// Create the right part of the list item (time and notification)
-// const rightDiv = document.createElement('div');
-// rightDiv.className = 'd-flex align-items-center flex-column';
-// const timeDiv = document.createElement('div');
-// timeDiv.className = 'time';
-// timeDiv.textContent = '13:37PM';
-// const notifDiv = document.createElement('div');
-// notifDiv.className = 'notif mx-1 mt-2 visible';
-// notifDiv.textContent = '+9';
-// rightDiv.appendChild(timeDiv);
-// rightDiv.appendChild(notifDiv);
-// listItem.appendChild(rightDiv);
