@@ -42,6 +42,8 @@ def create_chatrooms():
         res = requests.post(creatChatroomAPI, data=user, cookies=cookie)
         print(f"user{i} respons ==>", res.json(), res.status_code)
 
+    user["username"] = f"belkarto"
+    res = requests.post(creatChatroomAPI, data=user, cookies=cookie)
     print(2 * "\t", "=======================================================")
     cookie = get_auth_cookie("user0@user.com")
     for i in range(5):
@@ -50,11 +52,16 @@ def create_chatrooms():
         print(f"user{i} respons ==>", res.json(), res.status_code)
     print(2 * "\t", "=======================================================")
 
+    user["username"] = f"belkarto"
+    res = requests.post(creatChatroomAPI, data=user, cookies=cookie)
     cookie = get_auth_cookie("user1@user.com")
     for i in range(5):
         user["username"] = f"user{i}"
         res = requests.post(creatChatroomAPI, data=user, cookies=cookie)
         print(f"user{i} respons ==>", res.json(), res.status_code)
+
+    user["username"] = f"belkarto"
+    res = requests.post(creatChatroomAPI, data=user, cookies=cookie)
     print(2 * "\t", "=======================================================")
 
 
