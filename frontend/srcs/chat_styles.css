@@ -114,24 +114,6 @@ li.list-group-item:last-child {
     object-fit: cover;
 }
 
-.status-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-}
-
-.online {
-    background-color: #43B581;
-    border: 2px solid #0c0e26;
-}
-
-.offline {
-    background-color: #cccccc;
-    border: 2px solid #0c0e26;
-}
 
 .username {
     font-weight: bold;
@@ -171,7 +153,7 @@ li.list-group-item:last-child {
 }
 
 .chat-conv-wrapper {
-    display: none;
+    display: block;
 }
 
 /*
@@ -189,11 +171,11 @@ li.list-group-item:last-child {
 }
 
 .frame-icon {
-    width: 10px;
+    width: 20px;
     position: relative;
-    background: #7d60d4;
+    /* background: #7d60d4; */
     overflow: hidden;
-    padding: 1px;
+    /* padding: 1px; */
     height: 50px;
     cursor: pointer
 }
@@ -205,14 +187,6 @@ li.list-group-item:last-child {
     text-decoration: underline;
 }
 
-.status {
-    position: absolute;
-    top: 30px;
-    left: 60px;
-    font-size: 8px;
-    font-weight: 300;
-    color: #b1b1b1;
-}
 
 .game {
     position: absolute;
@@ -223,27 +197,16 @@ li.list-group-item:last-child {
     height: 36px;
 }
 
-.status-dot {
-    position: absolute;
-    top: 35px;
-    left: 40px;
-    border-radius: 50%;
-    background: #b1b1b1;
-    width: 8px;
-    height: 8px;
-}
 
-.online {
-    background: radial-gradient(50% 50% at 50% 50%, #0bef06 22.19%, #01b052);
-}
+
 
 
 .controler-icon {
     position: absolute;
     top: 5px;
     left: 204px;
-    width: 40px;
-    height: 40px;
+    width: 20px;
+    height: 20px;
     overflow: hidden;
 }
 
