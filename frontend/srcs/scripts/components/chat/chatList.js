@@ -140,7 +140,7 @@ export function formatListDate(date) {
 }
 
 export async function getConversations() {
-	const ulElement = document.querySelector("#chat ul");
+	const ulElement = document.querySelector(".list-group");
 	let response = await API.getConversatons();
 	if (response.ok) {
 		response = await response.json();
