@@ -19,7 +19,7 @@ function moveConvListTop(username) {
 
 export function init_socket() {
 	const chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/chat/");
-	const inputField = document.querySelector(".message-input");
+	const inputField = document.querySelector(".message-input input");
 
 	chatSocket.onmessage = function (e) {
 		const data = JSON.parse(e.data);
