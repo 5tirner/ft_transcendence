@@ -561,9 +561,7 @@ class FriendshipRelation(APIView):
         id = jwt.decode(request.token, settings.SECRET_KEY, algorithms=["HS256"])["id"]
         try:
             id_sender = Player.objects.get(id=id)
-            id_receiver = request.data.get(
-                "id_target"
-            )  # add id_target of the receiver player in the body
+            id_receiver = int(request.data.get("id_target"))
             if id_receiver == id:
                 return Response(
                     {
