@@ -32,13 +32,11 @@ class myServer(AsyncWebsocketConsumer):
     
     async def run_game(self, event):
         print(f"Event Content: {event}")
-        data = event['payload']
-        print(f"Square Number {data} Clicked")
+        data = json.loads(event['payload'])
+        print(f"Type Of Data {type(data)}")
+        print(f"DATA => {data}.")
+        print(f"Player {data.get('player')} Click On Square {data.get('element')} Using {data.get('symbol')}")
         await self.send("GAME IS GOING PERFECTLLY")
-        # data = json.loads(data)
-        # await self.send(text_data = json.dumps({
-        #     'payload': data['data']
-        # }))
     async def disconnect(self, code_status):
         print(f"Client Of ChannelLayer {self.channel_name} Close Connection")
         await self.channel_layer.group_discard(self.roomcode_group, self.channel_name)

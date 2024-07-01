@@ -109,7 +109,9 @@
             const domElem = document.getElementById(`square-${n}`);
             if (domElem)
                 domElem.classList.add(symbole);
-            ws.send(n);
+            const toBackEnd = {"element": n, "player": player, "symbol": 'X'};
+            const myJSON = JSON.stringify(toBackEnd)
+            ws.send(myJSON);
         }
 
         const ws = new WebSocket('ws://127.0.0.1:8000/gaming/' + roomcode);
