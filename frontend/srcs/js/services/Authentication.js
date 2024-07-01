@@ -27,6 +27,7 @@ const Auth = {
 			Auth.avatar = res.data.avatar;
 			Auth.loses = res.data.losses;
 			Auth.wins = res.data.wins;
+			Auth.fullname = res.data.first_name + " " + res.data.last_name;
 			return isLoged;
 		}
 		return false;

@@ -5,9 +5,9 @@ import StartGame from "../components/StartGame.js";
 import TopPlayers from "../components/topPlayers.js";
 
 export function loadStartGameAndPlayerRankComponents(container) {
-	Api.fetchPlayers().then((result) => {
-		ProxiedPlayers.playersList = result;
-	});
+	// Api.fetchPlayers().then((result) => {
+	// 	ProxiedPlayers.playersList = result;
+	// });
 
 	const startGameComp = document.createElement("start-game-comp");
 	container.appendChild(startGameComp);
@@ -44,7 +44,11 @@ export function loadStartGameAndPlayerRankComponents(container) {
 		}
 	});
 	container.appendChild(middlePlayerRank);
-	customElements.define("start-game-comp", StartGame);
-	customElements.define("player-rank-component", TopPlayers);
+	if (!customElements.get('start-game-comp')) {
+		customElements.define('start-game-comp', StartGame);
+	}
+	if (!customElements.get('player-rank-component')) {
+		customElements.define('player-rank-component', TopPlayers);
+	}
 }
 

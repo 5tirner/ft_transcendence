@@ -1,4 +1,4 @@
-import Sidebar from "../components/Sidebar.js"
+import Sidebar from "./SidebarView.js"
 import { gameModeImg } from "../assets/srcs.js";
 
 import { loadStartGameAndPlayerRankComponents } from "../assets/startGameAndPlayerRank.js"
@@ -6,6 +6,7 @@ import { loadUserProfileView } from "../assets/loadUserProfileView.js"
 import { loadGameView } from "../assets/loadGameView.js"
 
 import { stylesheet } from "../theme/platformTheme.js"
+import { loadProfileSettings } from "../assets/loadProfileSettings.js";
 
 export default class Platform extends HTMLElement {
   constructor() {
@@ -24,7 +25,6 @@ export default class Platform extends HTMLElement {
 
     const middleSection = this.querySelector("#middle");
     
-    customElements.define("side-bar-comp", Sidebar);
     
     switch (window.location.pathname)
     {
@@ -36,6 +36,9 @@ export default class Platform extends HTMLElement {
         break;
       case "/game":
         loadGameView(middleSection, gameModeImg);
+        break;
+      case "/setting":
+        loadProfileSettings(middleSection);
         break;
       default:
         break;

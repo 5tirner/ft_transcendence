@@ -1,12 +1,10 @@
-import { stylesheet } from "./theme/sidebarTheme.js";
+import { stylesheet } from "../theme/sidebarTheme.js";
 
 export default class Sidebar extends HTMLElement
 {
     constructor()
     {
         super();
-        this.attachShadow({mode: "open"});
-        this.shadowRoot.adoptedStyleSheets = [stylesheet];
     }
     
     connectedCallback()
@@ -14,11 +12,9 @@ export default class Sidebar extends HTMLElement
         const template = document.getElementById("side-bar");
         const sidebarComp = template.content.cloneNode(true);
 
-
-
-        // const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(link => link.cloneNode());
-        // styles.forEach(style => this.shadowRoot.appendChild(style));
-
+        const style = document.createElement("style");
+        style.textContent = stylesheet;
+        this.appendChild(style);
 
         const arr = sidebarComp.querySelectorAll("a");
         arr.forEach(elem => {
@@ -28,7 +24,7 @@ export default class Sidebar extends HTMLElement
                 global.router.navigateTo(href, "root");
             });
         });
-        this.shadowRoot.appendChild( sidebarComp );
+        this.appendChild( sidebarComp );
     }
 }
 if (!customElements.get('side-bar-comp')) {

@@ -4,5 +4,6 @@ export function loadUserProfileView(container)
 {
     const elem = document.createElement("profile-page");
     container.appendChild(elem);
-    customElements.define("profile-page", Profile);
+    if ( !customElements.get("profile-page") )
+        customElements.define("profile-page", Profile);
 }

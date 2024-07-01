@@ -16,4 +16,5 @@ export default class GameMode extends HTMLElement
         this.shadowRoot.appendChild( activateTempl );
     }
 }
-customElements.define('game-mode', GameMode);
+if (!customElements.get('game-mode'))
+    customElements.define('game-mode', GameMode);

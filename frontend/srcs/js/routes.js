@@ -19,6 +19,7 @@ export const routes = [
 	{ path: "/platform", view: viewCallback },
 	{ path: "/profile", view: viewPlatform },
 	{ path: "/game", view: viewPlatform },
+	{ path: "/setting", view: viewPlatform },
 	{ path: "*", view: notFound }
 ];
 

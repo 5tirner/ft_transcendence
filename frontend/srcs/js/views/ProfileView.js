@@ -14,6 +14,7 @@ export default class Profile extends HTMLElement {
     this.appendChild(style);
     this.setAttribute("id", "profile-page");
     this.appendChild(templateContent);
+    
     const win = this.querySelector(".win");
     win.textContent = `Win Count: ${Auth.wins}`;
 
@@ -22,6 +23,12 @@ export default class Profile extends HTMLElement {
 
     const avatar = this.querySelector(".avatar img");
     avatar.src = Auth.avatar;
-    console.log(Auth.avatar);
+
+    const fullname = this.querySelector(".fullname");
+    fullname.textContent = `${Auth.fullname}`;
+
+    const username = this.querySelector(".username");
+    username.textContent = `@${Auth.user}`;
+    
   }
 }

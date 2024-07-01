@@ -5,7 +5,8 @@ export function loadGameView(container, path)
 {
     const elem = document.createElement("game-page");
     container.appendChild(elem);
-    customElements.define("game-page", Game);
+    if ( !customElements.get("game-page"))
+        customElements.define("game-page", Game);
 
     const componentSection = document.querySelector(".components");
 

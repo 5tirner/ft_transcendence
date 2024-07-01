@@ -1,260 +1,223 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Pong</title>
-		<link rel="stylesheet" href="css/main.css" />
-		<script src="js/index.js" type="module" defer></script>
-		<!-- <link rel="icon" href="./src/favicon.ico" /> -->
-		<link
-			href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
-			rel="stylesheet"
-		/>
-		<!-- Include Bootstrap CSS -->
-		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-			rel="stylesheet"
-			integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-			crossorigin="anonymous"
-		/>
 
-		<script
-			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-			integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-			crossorigin="anonymous"
-		></script>
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Pong</title>
+	<link rel="stylesheet" href="css/main.css" />
+	<script src="js/index.js" type="module" defer></script>
+	<!-- <link rel="icon" href="./src/favicon.ico" /> -->
+	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+	<!-- Include Bootstrap CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
 
-		<!-- Include Bootstrap Icons CSS -->
-		<link
-			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
-			rel="stylesheet"
-		/>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+		integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
+		crossorigin="anonymous"></script>
 
-		<link
-			href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
-			rel="stylesheet"
-		/>
-	</head>
+	<!-- Include Bootstrap Icons CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
 
-	<body>
-		<div id="root"></div>
-		<!-- Home Template -->
-		<template id="home-page">
-			<nav class="d-flex navbar justify-content-between">
-				<a class="navbar-brand">Pong.me</a>
-				<a class="home-buttons navbar-btn" href="/login">Login</a>
-			</nav>
-			<div id="card-hold"></div>
-			<main class="home">
-				<h1>Discover, Play & Challenge Your Friends</h1>
-				<p>
-					Pong.me support realtime game, chat, group chat channel,
-					ranking system and tournament.
-				</p>
-				<a class="navbar-btn" href="#"
-					><main-button name="Discover Now"></main-button
-				></a>
-			</main>
-		</template>
+	<link href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css" rel="stylesheet" />
+</head>
 
-		<template id="login-page">
-			<filter class="bluer"></filter>
-			<div class="login-form">
-				<div class="sub-login-form">
-					<div class="logo">Pong.me</div>
-					<div class="google-intra-login">
-						<a href="/login" class="google-btn" name="google">
-							<button
-								type="button"
-								role="button"
-								class="button-23"
-								onclick="Auth.loginGoogle(event)"
-							>
-								<span class="G">G </span>Login with google<span>
-									>
-								</span>
-							</button>
-						</a>
-						<a href="/login" class="intra-btn" name="intra">
-							<button
-								type="button"
-								role="button"
-								class="button-23 intra-42"
-								onclick="Auth.loginIntra(event)"
-							>
-								<span class="42">42 </span>Login with Intra<span>
-									>
-								</span>
-							</button>
-						</a>
-					</div>
-				</div>
-			</div>
-		</template>
+<body>
+	<div id="root"></div>
+	<!-- Home Template -->
+	<template id="home-page">
+		<nav class="d-flex navbar justify-content-between">
+			<a class="navbar-brand">Pong.me</a>
+			<a class="home-buttons navbar-btn" href="/login">Login</a>
+		</nav>
+		<div id="card-hold"></div>
+		<main class="home">
+			<h1>Discover, Play & Challenge Your Friends</h1>
+			<p>
+				Pong.me support realtime game, chat, group chat channel,
+				ranking system and tournament.
+			</p>
+			<a class="navbar-btn" href="#"><main-button name="Discover Now"></main-button></a>
+		</main>
+	</template>
 
-		<template id="side-bar">
-			<!-- <link rel="icon" href="./src/favicon.ico" /> -->
-			<link
-				href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
-				rel="stylesheet"
-			/>
-			<!-- Include Bootstrap CSS -->
-			<link
-				href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-				rel="stylesheet"
-				integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-				crossorigin="anonymous"
-			/>
-
-			<script
-				src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-				integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-				crossorigin="anonymous"
-			></script>
-
-			<!-- Include Bootstrap Icons CSS -->
-			<link
-				href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
-				rel="stylesheet"
-			/>
-
-			<link
-				href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css"
-				rel="stylesheet"
-			/>
-			<div class="l-navbar" id="nav-bar">
-				<nav class="nav">
-					<div>
-						<a href="#" class="nav_logo">
-							<i class="bx bxs-tennis-ball nav_logo-icon"></i>
-						</a>
-						<div class="nav_list">
-							<a href="#" class="nav_link active">
-								<i class="bx bx-grid-alt nav_icon"></i>
-							</a>
-							<a href="#" class="nav_link">
-								<i class="bx bx-group nav_icon"></i>
-							</a>
-							<a href="#" class="nav_link">
-								<i
-									class="bx bx-message-square-detail nav_icon"
-								></i>
-							</a>
-							<a href="#" class="nav_link">
-								<i class="bx bx-bookmark nav_icon"></i>
-							</a>
-							<a href="#" class="nav_link">
-								<i class="bx bx-folder nav_icon"></i>
-							</a>
-							<a href="#" class="nav_link">
-								<i class="bx bx-bar-chart-alt-2 nav_icon"></i>
-							</a>
-						</div>
-					</div>
-					<a href="#" class="nav_link">
-						<i class="bx bx-user nav_icon"></i>
-						<span class="green_dot"></span>
+	<template id="login-page">
+		<filter class="bluer"></filter>
+		<div class="login-form">
+			<div class="sub-login-form">
+				<div class="logo">Pong.me</div>
+				<div class="google-intra-login">
+					<a href="/login" class="google-btn" name="google">
+						<button type="button" role="button" class="button-23" onclick="Auth.loginGoogle(event)">
+							<span class="G">G </span>Login with google<span>
+								>
+							</span>
+						</button>
 					</a>
-				</nav>
-			</div>
-		</template>
-
-		<template id="start-game">
-			<img src="" alt="" />
-			<a href="#">
-				<main-button name="Play Now"></main-button>
-			</a>
-		</template>
-
-		<template id="player-rank-component">
-			<div class="container">
-				<div class="avatar">
-					<!-- <img src="" alt="avatar"> -->
+					<a href="/login" class="intra-btn" name="intra">
+						<button type="button" role="button" class="button-23 intra-42" onclick="Auth.loginIntra(event)">
+							<span class="42">42 </span>Login with Intra<span>
+								>
+							</span>
+						</button>
+					</a>
 				</div>
-				<div class="name"></div>
-				<div class="points"></div>
 			</div>
-		</template>
+		</div>
+	</template>
 
-		<template id="platform-page">
-			<div id="sidebar">
-				<!-- sidebar -->
-				<side-bar-comp></side-bar-comp>
-			</div>
-			<div id="middle">
-				<!-- play now -->
-			</div>
-			<div id="chat">
-				<!-- chat -->
-				<chat-comp></chat-comp>
-			</div>
-		</template>
-
-		<template id="profile-page-template">
-			<div id="first">
-				<div class="win common"></div>
-				<div class="user common">
-					<div class="avatar">
-						<img src="" alt="" />
+	<template id="side-bar">
+			<nav class="nav">
+				<div>
+					<a href="/platform" class="nav_logo">
+						<i class="bx bxs-tennis-ball nav_logo-icon"></i>
+					</a>
+					<div class="nav_list">
+						<a href="/platform" class="nav_link active">
+							<i class="bx bx-grid-alt nav_icon"></i>
+						</a>
+						<a href="/game" class="nav_link">
+							<i class='bx bxs-invader nav_icon'></i>
+						</a>
+						<a href="/setting" class="nav_link">
+							<i class='bx bxs-cog nav_icon'></i>
+						</a>
 					</div>
-					<div class="info">fullname</div>
-					<div class="info">@username</div>
 				</div>
-				<div class="loss common"></div>
+				<a href="/profile" class="nav_link">
+					<i class="bx bx-user nav_icon"></i>
+					<span class="green_dot"></span>
+				</a>
+			</nav>
+		</div>
+	</template>
+
+	<template id="start-game">
+		<img src="" alt="" />
+		<a href="#">
+			<main-button name="Play Now"></main-button>
+		</a>
+	</template>
+
+	<template id="player-rank-component">
+		<div class="container">
+			<div class="avatar">
+				<!-- <img src="" alt="avatar"> -->
 			</div>
-			<div id="second">
-				<div class="wrapper">
-					<p>Friends List</p>
-					<ul class="responsive-table">
-						<li class="table-row">
-							<div class="col col-2" data-label="Customer Name">
-								John Doe
-							</div>
-							<div class="col col-4" data-label="Payment Status">
-								Active
-							</div>
-						</li>
-						<li class="table-row">
-							<div class="col col-2" data-label="Customer Name">
-								Jennifer Smith
-							</div>
-							<div class="col col-4" data-label="Payment Status">
-								Active
-							</div>
-						</li>
-						<li class="table-row">
-							<div class="col col-2" data-label="Customer Name">
-								John Smith
-							</div>
-							<div class="col col-4" data-label="Payment Status">
-								Active
-							</div>
-						</li>
-						<li class="table-row">
-							<div class="col col-2" data-label="Customer Name">
-								John Carpenter
-							</div>
-							<div class="col col-4" data-label="Payment Status">
-								Active
-							</div>
-						</li>
-					</ul>
+			<div class="name"></div>
+			<div class="points"></div>
+		</div>
+	</template>
+
+	<template id="platform-page">
+		<div id="sidebar">
+			<!-- sidebar -->
+			<side-bar-comp></side-bar-comp>
+		</div>
+		<div id="middle">
+			<!-- play now -->
+		</div>
+		<div id="chat">
+			<!-- chat -->
+			<chat-comp></chat-comp>
+		</div>
+	</template>
+
+	<template id="profile-page-template">
+		<div id="first">
+			<div class="win common"></div>
+			<div class="user common">
+				<div class="avatar">
+					<img src="" alt="" />
 				</div>
+				<div class="fullname info">fullname</div>
+				<div class="username info">@username</div>
 			</div>
-		</template>
-
-		<template id="game-page-template">
-			<div id="game-section"></div>
-			<div id="game-mode-section">
-				<div class="game-mode-title">Game Mode</div>
-				<div class="components"></div>
+			<div class="loss common"></div>
+		</div>
+		<div id="second">
+			<div class="wrapper">
+				<p>Friends List</p>
+				<ul class="responsive-table">
+					<li class="table-row">
+						<div class="col col-2" data-label="Customer Name">
+							John Doe
+						</div>
+						<div class="col col-4" data-label="Payment Status">
+							Active
+						</div>
+					</li>
+					<li class="table-row">
+						<div class="col col-2" data-label="Customer Name">
+							Jennifer Smith
+						</div>
+						<div class="col col-4" data-label="Payment Status">
+							Active
+						</div>
+					</li>
+					<li class="table-row">
+						<div class="col col-2" data-label="Customer Name">
+							John Smith
+						</div>
+						<div class="col col-4" data-label="Payment Status">
+							Active
+						</div>
+					</li>
+					<li class="table-row">
+						<div class="col col-2" data-label="Customer Name">
+							John Carpenter
+						</div>
+						<div class="col col-4" data-label="Payment Status">
+							Active
+						</div>
+					</li>
+				</ul>
 			</div>
-		</template>
+		</div>
+	</template>
 
-		<template id="game-mode-comp">
-			<div class="container"></div>
-		</template>
-	</body>
+	<template id="game-page-template">
+		<div id="game-section"></div>
+		<div id="game-mode-section">
+			<div class="game-mode-title">Game Mode</div>
+			<div class="components"></div>
+		</div>
+	</template>
+
+	<template id="game-mode-comp">
+		<div class="container"></div>
+	</template>
+
+	<template id="setting">
+		<div class="profile-card">
+			<img src="https://via.placeholder.com/100" alt="Profile Picture" id="profileImage">
+			<button class="edit-image" onclick="document.getElementById('fileInput').click();">✏️</button>
+			<input type="file" id="fileInput" style="display:none" accept="image/*"
+				onchange="changeProfileImage(event)">
+			<h2>Olivia Wilfson</h2>
+			<p>@Oliviawilfson</p>
+			<div class="badge">LVL 8</div>
+			<div class="info">
+				<div>
+					<p>Name</p>
+					<p>Olivia Wilfson</p>
+				</div>
+				<button class="edit-btn">Edit</button>
+			</div>
+		<script>
+			function changeProfileImage(event) {
+				const reader = new FileReader();
+				reader.onload = function () {
+					const output = document.getElementById('profileImage');
+					output.src = reader.result;
+				}
+				reader.readAsDataURL(event.target.files[0]);
+			}
+		</script>
+	</template>
+
+</body>
+
 </html>

@@ -2,37 +2,32 @@ DC = docker compose -f docker-compose.yml
 
 IMG = $(shell docker images -a -q)
 
-all : up
-
-# creat dokcer images and run them in detached mode
+.PHONY:  up upd start down stop re  ps clean fclean
 
 upd:
-	$(DC) up -d
+	@$(DC) up -d
 
 up : create_data_dir
-	$(DC) up --build --force-recreate
+	@$(DC) up --build --force-recreate
 
-# take down all the containers runing that defined in the docker-compose file
-# and remove them
+
 down : stop
-	$(DC) down
+	@$(DC) down --remove-orphans -v
 
-# stop the containers
 stop : 
-	$(DC) stop
+	@$(DC) stop
 
-# start the containers
 start : 
-	$(DC) start
+	@$(DC) start
 
-# display the runing containers
 ps : 
-	docker ps
+	@docker ps
 
 ls :
-	docker images
+	@docker images
 
-re: down up
+re: down
+	@$(DC) up --build -d
 
 create_data_dir:
 	[ -d ${HOME}/data/www ] || mkdir -p ${HOME}/data/www
@@ -41,3 +36,7 @@ create_data_dir:
 clean : down
 	docker container prune --force
 	docker rmi $(IMG)
+
+fclean: down clean
+	docker system prune -af
+

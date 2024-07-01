@@ -8,6 +8,7 @@ networks:
 
 services:
     postgres_db:
+        init: true
         container_name: postgres_db
         build:
             context: ./backend/postgresql
@@ -27,15 +28,16 @@ services:
         #     - postgres_db:/var/lib/postgresql/data
         restart: always
 
-    myServer:
-        container_name: myServer
+    server:
+        init: true
+        container_name: server
         build:
-            context: ./frontend
+            context: ./frontend/server
             dockerfile: Dockerfile
-            args:
-                HOST: ${HOST}
-                PORT: ${PORT}
-        image: my_server:12.5
+            # args:
+            #     HOST: ${HOST}
+            #     PORT: ${PORT}
+        image: server:12.5
         ports:
             - "8000:8000"
         volumes:
@@ -50,6 +52,7 @@ services:
         restart: always
 
     auth:
+        init: true
         container_name: auth
         build:
             context: ./backend/Authentication
