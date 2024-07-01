@@ -82,7 +82,10 @@
         <input type="button" value="QUITE" id="restartButton" onclick="endGame()"/>
     </div>
     <script>
-        function send_data(n){ws.send(n);}
+        function send_data(n)
+        {
+            ws.send(n);
+        }
         const roomcode = '{{roomcode}}';
         const player = '{{alias}}';
         const ws = new WebSocket('ws://127.0.0.1:8000/gaming/' + roomcode);

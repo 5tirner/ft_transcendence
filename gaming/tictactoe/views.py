@@ -41,7 +41,7 @@ def home(req):
                 print(f"The Room Of The RoomCode {roomcode} Is Full")
                 return HttpResponse(f"Room Is Full")
             tmp.oppenent = alias
-            tmp.roomcode = True
+            tmp.gamestat = True
             tmp.save()
             print(f"{alias} Oppenets Infos->  GC: {tmp.gcreator}, RC: {tmp.roomcode}, GO: {tmp.oppenent}, GS:{tmp.gamestat}")
             print("\n**********************************\n")
