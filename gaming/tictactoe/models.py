@@ -5,3 +5,4 @@ class players(models.Model):
     oppenent = models.CharField(max_length=100)
     roomcode = models.CharField(max_length=100)
     gamestat = models.BooleanField(default=False)
+    board = models.CharField(max_length=8, default=".........")

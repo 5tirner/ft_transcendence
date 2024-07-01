@@ -37,7 +37,7 @@ def home(req):
                 print(f"This RoomCode {roomcode} Did Not Match Any Game")
                 return HttpResponse(f"No Room Matched With This Code`{roomcode}`.")
             tmp = players.objects.filter(roomcode=roomcode).first()
-            if tmp.roomcode == True:
+            if tmp.gamestat == True:
                 print(f"The Room Of The RoomCode {roomcode} Is Full")
                 return HttpResponse(f"Room Is Full")
             tmp.oppenent = alias
@@ -54,18 +54,21 @@ def game(req, roomcode):
     alias = req.GET.get('player')
     if players.objects.filter(gcreator=alias).first() is None and players.objects.filter(oppenent=alias).first() is None:
         return HttpResponse("USER NOT FOUND")
-    player1, player2 = "", ""
+    player1, player2, role = "", "", 0
     if players.objects.filter(gcreator=alias).first() is not None:
         player1 = players.objects.filter(gcreator=alias).first().gcreator
         player2 = players.objects.filter(gcreator=alias).first().oppenent
+        role = 1
     else:
         player2 = players.objects.filter(oppenent=alias).first().gcreator
         player1 = players.objects.filter(oppenent=alias).first().oppenent
+        role = 2
     context = {
         'roomcode': roomcode,
         'alias' : alias,
         'p1': player1,
         'p2': player2,
+        'role': role,
     }
     print("\n**********************************\n")
     return render(req, 'play.html', context)

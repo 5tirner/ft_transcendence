@@ -33,6 +33,18 @@
         align-items: center;
     }
 
+    .squareX {
+        background-image: url("https://w7.pngwing.com/pngs/255/685/png-transparent-tic-tac-toe-computer-icons-others-miscellaneous-angle-monochrome.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    .squareO {
+        background-image: url("https://w7.pngwing.com/pngs/219/364/png-transparent-letter-case-o-alphabet-o-miscellaneous-monochrome-black.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
     .square:hover {
         background-color: #41427a;
     }
@@ -68,37 +80,51 @@
         <h1>You: {{p1}} vs Oppenent: {{p2}}</h1>
     </div>
     <div id="board">
-        <div onclick="send_data(0)" class="square"></div>
-        <div onclick="send_data(1)" class="square"></div>
-        <div onclick="send_data(2)" class="square"></div>
-        <div onclick="send_data(3)" class="square"></div>
-        <div onclick="send_data(4)" class="square"></div>
-        <div onclick="send_data(5)" class="square"></div>
-        <div onclick="send_data(6)" class="square"></div>
-        <div onclick="send_data(7)" class="square"></div>
-        <div onclick="send_data(8)" class="square"></div>
-    </div>  
+        <div onclick="send_data(0)" id="square-0" class="square"></div>
+        <div onclick="send_data(1)" id="square-1" class="square"></div>
+        <div onclick="send_data(2)" id="square-2" class="square"></div>
+        <div onclick="send_data(3)" id="square-3" class="square"></div>
+        <div onclick="send_data(4)" id="square-4" class="square"></div>
+        <div onclick="send_data(5)" id="square-5" class="square"></div>
+        <div onclick="send_data(6)" id="square-6" class="square"></div>
+        <div onclick="send_data(7)" id="square-7" class="square"></div>
+        <div onclick="send_data(8)" id="square-8" class="square"></div>
+    </div>
     <div id="endGame">
         <input type="button" value="QUITE" id="restartButton" onclick="endGame()"/>
     </div>
     <script>
-        function send_data(n)
-        {
-            ws.send(n);
-        }
         const roomcode = '{{roomcode}}';
         const player = '{{alias}}';
+        const oppenent = '{{p2}}'
+        const role = '{{role}}'
+        let symbole;
+        if (role == 1)
+            symbole = "squareX";
+        else
+            symbole = "squareO";
+
+        function send_data(n)
+        {
+            const domElem = document.getElementById(`square-${n}`);
+            if (domElem)
+                domElem.classList.add(symbole);
+            ws.send(n);
+        }
+
         const ws = new WebSocket('ws://127.0.0.1:8000/gaming/' + roomcode);
         ws.onopen = function()
         {
             console.log("Connection Establieshed");
             console.log("Room Code: " + roomcode);
             console.log("Player Name: " + player);
+            console.log("Oppenent Name: " + oppenent);
+            console.log(player + " role: " + role);
         }
         ws.onmessage = function(e)
         {
-            console.log("Message" + e);
-            window.alert("Message Recieved");
+            console.log(e);
+            //window.alert("Message Recieved");
         }
         function endGame()
         {
