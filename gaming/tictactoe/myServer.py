@@ -33,7 +33,8 @@ class myServer(AsyncWebsocketConsumer):
     async def run_game(self, event):
         print(f"Event Content: {event}")
         data = event['payload']
-        print(f"Square Number 0 Clicked: {data}")
+        print(f"Square Number {data} Clicked")
+        await self.send("GAME IS GOING PERFECTLLY")
         # data = json.loads(data)
         # await self.send(text_data = json.dumps({
         #     'payload': data['data']

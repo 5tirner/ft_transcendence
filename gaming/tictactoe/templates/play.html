@@ -89,10 +89,13 @@
         ws.onopen = function()
         {
             console.log("Connection Establieshed");
+            console.log("Room Code: " + roomcode);
+            console.log("Player Name: " + player);
         }
         ws.onmessage = function(e)
         {
             console.log("Message" + e);
+            window.alert("Message Recieved");
         }
         function endGame()
         {
