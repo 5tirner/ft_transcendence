@@ -98,18 +98,18 @@
         const player = '{{alias}}';
         const oppenent = '{{p2}}'
         const role = '{{role}}'
-        let symbole;
-        if (role == 1)
-            symbole = "squareX";
-        else
-            symbole = "squareO";
+        // let symbole;
+        // if (role == 1)
+        //     symbole = "squareX";
+        // else
+        //     symbole = "squareO";
 
         function send_data(n)
         {
-            const domElem = document.getElementById(`square-${n}`);
-            if (domElem)
-                domElem.classList.add(symbole);
-            const toBackEnd = {"element": n, "player": player, "symbol": 'X'};
+            // const domElem = document.getElementById(`square-${n}`);
+            // if (domElem)
+            //     domElem.classList.add(symbole);
+            const toBackEnd = {"element": n, "player": player, "symbol": Number(role)};
             const myJSON = JSON.stringify(toBackEnd)
             ws.send(myJSON);
         }

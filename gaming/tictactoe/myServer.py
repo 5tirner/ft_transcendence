@@ -3,6 +3,8 @@ import random
 import string
 import json
 from django.shortcuts import render, redirect
+from .pars import isGoodClick
+import threading
 
 class myServer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -36,7 +38,10 @@ class myServer(AsyncWebsocketConsumer):
         print(f"Type Of Data {type(data)}")
         print(f"DATA => {data}.")
         print(f"Player {data.get('player')} Click On Square {data.get('element')} Using {data.get('symbol')}")
-        await self.send("GAME IS GOING PERFECTLLY")
+        if (isGoodClick(data.get('element'), data.get('player'), data.get('symbol')) == False):
+            await self.send("BAD")
+        else:
+            await self.send("GAME IS GOING PERFECTLLY")
     async def disconnect(self, code_status):
         print(f"Client Of ChannelLayer {self.channel_name} Close Connection")
         await self.channel_layer.group_discard(self.roomcode_group, self.channel_name)
