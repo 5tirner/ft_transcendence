@@ -17,19 +17,24 @@ def isTheAliasOrTheRoomCodeAlreadyUsed(alias, roomcode):
 
 async def isGoodClick(pos, player, role):
     print(f"pos: {type(pos)} | player: {type(player)} | role: {type(role)}")
-    x_o, tmp = "", ""
+    tmp = ""
     if (role == 1):
         print("Looking For `X` Valid Click")
         tmp = players.objects.filter(gcreator=player).first()
-        x_o = 'X'
+        print(f"Turn Of {tmp.channel}")
+        if tmp.channel == 'O':
+            return False
+        tmp.channel = 'O'
+        print(f"tmp.channel coneverted to {tmp.channel}")
     elif (role == 2):
         print("Looking For `O` Valid Click")
         tmp = players.objects.filter(oppenent=player).first()
-        x_o = 'O'
-    if (tmp.board[pos] != '.'):
-        print(f"The Pos Already Used by {x_o}")
-        return False
-    tmp.board = tmp.board[:pos] + x_o + tmp.board[pos + 1:]
+        print(f"Turn Of {tmp.channel}")
+        if tmp.channel == 'X':
+            return False
+        tmp.channel = 'X'
+        print(f"tmp.channel coneverted to {tmp.channel}")
+    tmp.board = tmp.board[:pos] + tmp.channel + tmp.board[pos + 1:]
     tmp.save()
     print(f"The Board After -> {tmp.board}")
     return True

@@ -77,7 +77,6 @@
 <body>
     <div id="title">
         <h1>Tic Tac Toe</h1>
-        <h1>You: {{p1}} vs Oppenent: {{p2}}</h1>
     </div>
     <div id="board">
         <div onclick="send_data(0)" id="square-0" class="square"></div>
@@ -101,9 +100,14 @@
 
         function send_data(n)
         {
-            const toBackEnd = {"element": n, "player": player, "symbol": Number(role)};
-            const myJSON = JSON.stringify(toBackEnd)
-            ws.send(myJSON);
+            if (oppenent.length == 0)
+                console.log("Game Not Start Yet")
+            else
+            {
+                const toBackEnd = {"element": n, "player": player, "symbol": Number(role)};
+                const myJSON = JSON.stringify(toBackEnd)
+                ws.send(myJSON);
+            }
         }
         
         const ws = new WebSocket('ws://127.0.0.1:8000/gaming/' + roomcode);
@@ -119,13 +123,18 @@
         {
             console.log(e.data);
             console.log(typeof(e.data))
-            const fromBack = JSON.parse(e.data)
-            console.log(fromBack);
-            console.log(typeof(fromBack))
-            n = fromBack.pos, symbol = fromBack.Image;
-            const domElem = document.getElementById(`square-${n}`);
-            if (domElem)
-                domElem.classList.add(symbol);
+            if (e.data == "BAD")
+                console.log("BAD CHOOSE");
+            else
+            {
+                const fromBack = JSON.parse(e.data)
+                console.log(fromBack);
+                console.log(typeof(fromBack))
+                n = fromBack.pos, symbol = fromBack.Image;
+                const domElem = document.getElementById(`square-${n}`);
+                if (domElem)
+                    domElem.classList.add(symbol);
+            }
             // window.alert(e.target.value);
         }
         function endGame()

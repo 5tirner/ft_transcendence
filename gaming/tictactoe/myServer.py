@@ -5,6 +5,7 @@ import json
 from django.shortcuts import render, redirect
 from .pars import isGoodClick
 import os
+from .models import players
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 class myServer(AsyncWebsocketConsumer):
@@ -19,6 +20,10 @@ class myServer(AsyncWebsocketConsumer):
         print(f"RoomPrivateCode: {self.roomcode_group}")
         await self.channel_layer.group_add(self.roomcode_group, self.channel_name)
         print(f"Channel Name Of This Client: {self.channel_name}")
+        tmp = players.objects.filter(roomcode=self.roomcode_group).first()
+        if tmp is not None:
+            tmp.channel = 'X'
+            tmp.save()
         await self.accept()
         print("Client Accepted Succefully")
         print("******************************************\n")
@@ -34,22 +39,23 @@ class myServer(AsyncWebsocketConsumer):
             )
     
     async def run_game(self, event):
-        print(f"Event Content: {event}")
+        # print(f"Event Content: {event}")
         data = json.loads(event['payload'])
-        print(f"Type Of Data {type(data)}")
-        print(f"DATA => {data}.")
-        print(f"Player {data.get('player')} Click On Square {data.get('element')} Using {data.get('symbol')}")
-        # if (await isGoodClick(data.get('element'), data.get('player'), data.get('symbol')) == False):
-        #     await self.send("BAD")
-        # else:
-        #     await self.send("GAME IS GOING PERFECTLLY")
-        symbol = ""
-        if (data.get('symbol') == 1):
-            symbol = "squareX"
-        elif data.get('symbol') == 2:
-            symbol = "squareO"
-        toFronEnd = json.dumps({'Player': data.get('player'), 'Image': symbol, 'pos': data.get('element')})
-        await self.send(toFronEnd)
+        # print(f"Type Of Data {type(data)}")
+        # print(f"DATA => {data}.")
+        # print(f"Player {data.get('player')} Click On Square {data.get('element')} Using {data.get('symbol')}")
+        print(f"heeeeer {data.get('player')}" )
+        checker = isGoodClick(data.get('element'), data.get('player'), data.get('symbol'))
+        if (await  checker == False):
+            await self.send("BAD")
+        else :
+            symbol = ""
+            if (data.get('symbol') == 1):
+                symbol = "squareX"
+            elif data.get('symbol') == 2:
+                symbol = "squareO"
+            toFronEnd = json.dumps({'Player': data.get('player'), 'Image': symbol, 'pos': data.get('element')})
+            await self.send(toFronEnd)
     async def disconnect(self, code_status):
         print(f"Client Of ChannelLayer {self.channel_name} Close Connection")
         await self.channel_layer.group_discard(self.roomcode_group, self.channel_name)
