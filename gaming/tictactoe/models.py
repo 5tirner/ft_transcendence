@@ -6,3 +6,4 @@ class players(models.Model):
     roomcode = models.CharField(max_length=100)
     gamestat = models.BooleanField(default=False)
     board = models.CharField(max_length=8, default=".........")
+    channel = models.CharField(max_length=100)

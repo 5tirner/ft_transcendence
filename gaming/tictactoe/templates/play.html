@@ -98,22 +98,14 @@
         const player = '{{alias}}';
         const oppenent = '{{p2}}'
         const role = '{{role}}'
-        // let symbole;
-        // if (role == 1)
-        //     symbole = "squareX";
-        // else
-        //     symbole = "squareO";
 
         function send_data(n)
         {
-            // const domElem = document.getElementById(`square-${n}`);
-            // if (domElem)
-            //     domElem.classList.add(symbole);
             const toBackEnd = {"element": n, "player": player, "symbol": Number(role)};
             const myJSON = JSON.stringify(toBackEnd)
             ws.send(myJSON);
         }
-
+        
         const ws = new WebSocket('ws://127.0.0.1:8000/gaming/' + roomcode);
         ws.onopen = function()
         {
@@ -126,7 +118,15 @@
         ws.onmessage = function(e)
         {
             console.log(e.data);
-            //window.alert(e.target.value);
+            console.log(typeof(e.data))
+            const fromBack = JSON.parse(e.data)
+            console.log(fromBack);
+            console.log(typeof(fromBack))
+            n = fromBack.pos, symbol = fromBack.Image;
+            const domElem = document.getElementById(`square-${n}`);
+            if (domElem)
+                domElem.classList.add(symbol);
+            // window.alert(e.target.value);
         }
         function endGame()
         {

@@ -4,6 +4,8 @@ import string
 import json
 from django.shortcuts import render, redirect
 from .pars import isGoodClick
+import os
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 class myServer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -37,10 +39,17 @@ class myServer(AsyncWebsocketConsumer):
         print(f"Type Of Data {type(data)}")
         print(f"DATA => {data}.")
         print(f"Player {data.get('player')} Click On Square {data.get('element')} Using {data.get('symbol')}")
-        if (isGoodClick(data.get('element'), data.get('player'), data.get('symbol')) == False):
-            await self.send("BAD")
-        else:
-            await self.send("GAME IS GOING PERFECTLLY")
+        # if (await isGoodClick(data.get('element'), data.get('player'), data.get('symbol')) == False):
+        #     await self.send("BAD")
+        # else:
+        #     await self.send("GAME IS GOING PERFECTLLY")
+        symbol = ""
+        if (data.get('symbol') == 1):
+            symbol = "squareX"
+        elif data.get('symbol') == 2:
+            symbol = "squareO"
+        toFronEnd = json.dumps({'Player': data.get('player'), 'Image': symbol, 'pos': data.get('element')})
+        await self.send(toFronEnd)
     async def disconnect(self, code_status):
         print(f"Client Of ChannelLayer {self.channel_name} Close Connection")
         await self.channel_layer.group_discard(self.roomcode_group, self.channel_name)
