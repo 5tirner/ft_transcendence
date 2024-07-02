@@ -4,7 +4,6 @@ import string
 import json
 from django.shortcuts import render, redirect
 from .pars import isGoodClick
-import threading
 
 class myServer(AsyncWebsocketConsumer):
     async def connect(self):

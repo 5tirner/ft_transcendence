@@ -1,4 +1,7 @@
 from .models import players
+import os
+
+os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 def checkInput(alias, roomcode, role):
     if len(alias) == 0 or len(roomcode) == 0 or role == "0":
@@ -14,19 +17,20 @@ def isTheAliasOrTheRoomCodeAlreadyUsed(alias, roomcode):
 
 def isGoodClick(pos, player, role):
     print(f"pos: {type(pos)} | player: {type(player)} | role: {type(role)}")
-    theBoard, x_o = "", ""
+    x_o, tmp = "", ""
     if (role == 1):
-        print("Looking For Creator Valid Click")
-        theBoard = players.objects.filter(gcreator=player).first().board
-        x_o == 'X'
+        print("Looking For `X` Valid Click")
+        tmp = players.objects.filter(gcreator=player).first()
+        x_o = 'X'
     elif (role == 2):
-        print("Looking For Oppenent Valid Click")
-        theBoard = players.objects.filter(oppenent=player).first().board
+        print("Looking For `O` Valid Click")
+        tmp = players.objects.filter(oppenent=player).first()
         x_o = 'O'
-    for i in theBoard:
-        print(i, ' ', end='')
-    # if theBoard[pos] == '.':
-    #     return False
-    #theBoard = theBoard[:pos] + x_o + theBoard[pos+1:]
-    print(f"The New Board -> {theBoard}")
+    if (tmp.board[pos] != '.'):
+        print(f"The Pos Already Used by {x_o}")
+        return False
+    print(f"The Board Befor -> {tmp.board}")
+    tmp.board = tmp.board[:pos] + x_o + tmp.board[pos + 1:]
+    tmp.save()
+    print(f"The Board After -> {tmp.board}")
     return True
