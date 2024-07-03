@@ -34,7 +34,7 @@ export class Router {
 		window.addEventListener("popstate", (e) => {
 			this.navigateTo(e.state.path, "root");
 		});
-
+		this.navigateTo("/", "root");
 		if (await Auth.isAuth()) {
 			// render_chat();
 			if (

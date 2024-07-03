@@ -8,14 +8,17 @@ export default class MainButton extends HTMLElement
         this.attachShadow({mode: "open"});
         this.shadowRoot.adoptedStyleSheets = [stylesheet];
     }
-    
+        
     connectedCallback()
     {
         const button = document.createElement("button");
-
-        button.className = "home-buttons discover-btn";
+        const attrb = this.getAttribute("class");
+        button.className = attrb;
         button.textContent = this.getAttribute("name");
         this.shadowRoot.appendChild( button );
+
+        console.log("attr: ", attrb);
     }
 }
-customElements.define('main-button', MainButton);
+if ( !customElements.get('main-button') )
+    customElements.define('main-button', MainButton);

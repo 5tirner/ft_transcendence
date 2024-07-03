@@ -1,22 +1,19 @@
 export const stylesheet = new CSSStyleSheet();
 stylesheet.replaceSync(`
-    :host {
+    .profile-card {
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100%;
         margin: 0;
-        // font-family: 'Roboto', sans-serif;
-        // background: linear-gradient(135deg, #ffafbd, #ffc3a0);
+        position: relative;
     }
-    .profile-card {
-        // background: white;
+    .profile-card .section {
         border-radius: 20px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         padding: 20px;
         width: 500px;
         text-align: center;
-        position: relative;
     }
     .profile-card img {
         border-radius: 50%;
@@ -64,15 +61,59 @@ stylesheet.replaceSync(`
     }
     .profile-card .info div {
         text-align: left;
+        padding-top: 20px;
     }
     .profile-card .info div p {
         margin: 3px 0;
         font-size: 14px;
     }
-    .profile-card .edit-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: #007bff;
+    .blur
+    {
+        -webkit-filter: blur(10px); 
+        -moz-filter: blur(10px);
+        -o-filter: blur(10px);
+        -ms-filter: blur(10px); 
     }
+    .profile-card #float
+    {
+        border-radius: 18px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 102;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, .15);
+    }
+    .profile-card #float form
+    {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .profile-card #float form input
+    {
+        color: white;
+        border: 2px solid #8707ff;
+        border-radius: 10px;
+        padding: 10px 25px;
+        background: transparent;
+        max-width: 190px;
+    }
+
+    .input:active {
+        border: none;
+        box-shadow: 2px 2px 15px #8707ff inset;
+    }
+
+    .profile-card .section .edit-btn
+    {
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
+    }
+
 `);

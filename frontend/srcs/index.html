@@ -39,7 +39,8 @@
 				Pong.me support realtime game, chat, group chat channel,
 				ranking system and tournament.
 			</p>
-			<a class="navbar-btn" href="#"><main-button name="Discover Now"></main-button></a>
+			<a class="navbar-btn" href="#"><main-button name="Discover Now"
+					class="home-buttons discover-btn"></main-button></a>
 		</main>
 	</template>
 
@@ -69,35 +70,35 @@
 	</template>
 
 	<template id="side-bar">
-			<nav class="nav">
-				<div>
-					<a href="/platform" class="nav_logo">
-						<i class="bx bxs-tennis-ball nav_logo-icon"></i>
-					</a>
-					<div class="nav_list">
-						<a href="/platform" class="nav_link active">
-							<i class="bx bx-grid-alt nav_icon"></i>
-						</a>
-						<a href="/game" class="nav_link">
-							<i class='bx bxs-invader nav_icon'></i>
-						</a>
-						<a href="/setting" class="nav_link">
-							<i class='bx bxs-cog nav_icon'></i>
-						</a>
-					</div>
-				</div>
-				<a href="/profile" class="nav_link">
-					<i class="bx bx-user nav_icon"></i>
-					<span class="green_dot"></span>
+		<nav class="nav">
+			<div>
+				<a href="/platform" class="nav_logo">
+					<i class="bx bxs-tennis-ball nav_logo-icon"></i>
 				</a>
-			</nav>
+				<div class="nav_list">
+					<a href="/platform" class="nav_link active">
+						<i class="bx bx-grid-alt nav_icon"></i>
+					</a>
+					<a href="/game" class="nav_link">
+						<i class='bx bxs-invader nav_icon'></i>
+					</a>
+					<a href="/setting" class="nav_link">
+						<i class='bx bxs-cog nav_icon'></i>
+					</a>
+				</div>
+			</div>
+			<a href="/profile" class="nav_link">
+				<i class="bx bx-user nav_icon"></i>
+				<span class="green_dot"></span>
+			</a>
+		</nav>
 		</div>
 	</template>
 
 	<template id="start-game">
 		<img src="" alt="" />
 		<a href="#">
-			<main-button name="Play Now"></main-button>
+			<main-button class="home-buttons discover-btn" name="Play Now"></main-button>
 		</a>
 	</template>
 
@@ -192,20 +193,30 @@
 
 	<template id="setting">
 		<div class="profile-card">
-			<img src="https://via.placeholder.com/100" alt="Profile Picture" id="profileImage">
-			<button class="edit-image" onclick="document.getElementById('fileInput').click();">✏️</button>
-			<input type="file" id="fileInput" style="display:none" accept="image/*"
-				onchange="changeProfileImage(event)">
-			<h2>Olivia Wilfson</h2>
-			<p>@Oliviawilfson</p>
-			<div class="badge">LVL 8</div>
-			<div class="info">
-				<div>
-					<p>Name</p>
-					<p>Olivia Wilfson</p>
+			<div class="section">
+				<img src="https://via.placeholder.com/100" alt="Profile Picture" id="profileImage">
+				<button class="edit-image" onclick="document.getElementById('fileInput').click();">✏️</button>
+				<input type="file" id="fileInput" style="display:none" accept="image/*"
+					onchange="changeProfileImage(event)">
+				<h2>Olivia Wilfson</h2>
+				<p>@Oliviawilfson</p>
+				<div class="badge">LVL 8</div>
+				<div class="info">
+					<div>
+						<p>Name</p>
+						<p>Olivia Wilfson</p>
+					</div>
+					<main-button name="Edit" class="edit-btn"></main-button>
 				</div>
-				<button class="edit-btn">Edit</button>
 			</div>
+			<div id="float" style="display: none">
+				<form action="#" method="post">
+					<input type="text" name="fullname" id="fullname" placeholder="Edit your name..">
+					<main-button name="Save" class="edit-btn"></main-button>
+				</form>
+			</div>
+		</div>
+		<!-- style="display: none" -->
 		<script>
 			function changeProfileImage(event) {
 				const reader = new FileReader();
