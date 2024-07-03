@@ -6,27 +6,10 @@ import httpx
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         # Join channel group
-        await self.channel_layer.group_add("online", self.channel_name)
         await self.channel_layer.group_add(self.scope["user"], self.channel_name)
-        await self.channel_layer.group_send(
-            "online",
-            {
-                "type": "chat.status",
-                "online": True,
-                "user": self.scope["user"],
-            },
-        )
         await self.accept()
 
     async def disconnect(self, close_code):
-        await self.channel_layer.group_send(
-            "online",
-            {
-                "type": "chat.status",
-                "online": False,
-                "user": self.scope["user"],
-            },
-        )
         await self.channel_layer.group_discard(self.scope["user"], self.channel_name)
 
     async def receive_json(self, content):
@@ -78,8 +61,4 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             "msg_type": True,
         }
         # Send message to WebSocket along with user info
-        await self.send_json(data)
-
-    async def chat_status(self, event):
-        data = {"online": event["online"], "user": event["user"]}
         await self.send_json(data)

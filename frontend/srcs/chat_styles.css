@@ -44,6 +44,7 @@
     width: 250px;
     margin: 0;
     padding: 0;
+    z-index: 1;
 }
 
 .dropdown-content {
@@ -62,7 +63,7 @@
 .dropdown-content div {
     color: #fff;
     text-decoration: none;
-    display: block;
+    cursor: pointer;
 }
 
 .dropdown-content div:hover {

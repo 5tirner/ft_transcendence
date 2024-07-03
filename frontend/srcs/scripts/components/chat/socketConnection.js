@@ -42,8 +42,6 @@ export function init_socket() {
 				moveConvListTop(data.user);
 				updateNotif(data.user);
 			}
-		} else {
-			// console.log(data);
 		}
 	};
 	chatSocket.onclose = function (e) {

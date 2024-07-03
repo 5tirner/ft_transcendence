@@ -1,6 +1,7 @@
 const API = {
 	authEndpoint: "http://127.0.0.1:8000/api/",
 	chatEndpoint: "http://127.0.0.1:8000/api/chat/",
+	friendshipEndpoint: "http://127.0.0.1:8000/api/friendship",
 
 	// ADD HERE ALL THE OTHER API FUNCTIONS
 	login: async (userData) => {
@@ -27,6 +28,12 @@ const API = {
 
 	getUser: async () => {
 		return await API.makeGetRequest(API.authEndpoint + "userData/");
+	},
+
+	getFriends: async () => {
+		return await API.makeGetRequest(
+			API.friendshipEndpoint + "?type=friends"
+		);
 	},
 
 	getConversatons: async () => {
