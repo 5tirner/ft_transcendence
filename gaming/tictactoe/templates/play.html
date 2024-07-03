@@ -136,18 +136,18 @@
                 if (domElem)
                     domElem.classList.add(symbol);
                 console.log(fromBack.gameStatus);
-                if (fromBack.gameStatus)
+                if (fromBack.gameStatus == 1)
                     window.alert("Winner Is: " + fromBack.Player)
-                    ws.close();
+                    //ws.close();
                     //TEST
             }
             // window.alert(e.target.value);
         }
-        ws.onclose = function()
-        {
-            console.log("Game Is End");
-            // window.alert("Are You Sure That You Want To Leave!");
-        }
+        // ws.onclose = function()
+        // {
+        //     console.log("Game Is End");
+        //     // window.alert("Are You Sure That You Want To Leave!");
+        // }
     </script>
 </body>
 </html>

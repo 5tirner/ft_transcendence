@@ -31,7 +31,7 @@ async def isGoodClick(pos, player, role):
         print("Looking For `X` Valid Click")
         tmp = players.objects.filter(gcreator=player).first()
         print(f"Turn Of {tmp.channel}")
-        if tmp.channel == 'O' or tmp.board[pos] != '.':
+        if tmp.channel == 'O' or tmp.board[pos] != '.' or tmp.gamestat == False:
             return -1
         tmp.board = tmp.board[:pos] + tmp.channel + tmp.board[pos + 1:]
         tmp.channel = 'O'
@@ -39,7 +39,7 @@ async def isGoodClick(pos, player, role):
         print("Looking For `O` Valid Click")
         tmp = players.objects.filter(oppenent=player).first()
         print(f"Turn Of {tmp.channel}")
-        if tmp.channel == 'X' or tmp.board[pos] != '.':
+        if tmp.channel == 'X' or tmp.board[pos] != '.' or tmp.gamestat == False:
             return -1
         tmp.board = tmp.board[:pos] + tmp.channel + tmp.board[pos + 1:]
         tmp.channel = 'X'
@@ -56,4 +56,5 @@ async def setEndGame(player, role):
     elif (role == 2):
         print("O IS Winner")
         tmp = players.objects.filter(oppenent=player).first()
-    tmp.gamestat = True
+    tmp.gamestat = False
+    tmp.save()
