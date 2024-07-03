@@ -15,6 +15,15 @@ def isTheAliasOrTheRoomCodeAlreadyUsed(alias, roomcode):
         return -2
     return 0
 
+async def isWinner(board, c):
+    if board[0]==c and board[1]==c and board[2]==c or board[3]==c and board[4] == c and board[4]==c or board[6]==c and board[7]==c and board[8]==c:
+        return True
+    if board[0]==c and board[3]==c and board[6]==c or board[1]==c and board[4] == c and board[7]==c or board[2]==c and board[5]==c and board[8]==c:
+        return True
+    if board[0]==c and board[4]==c and board[8]==c or board[2]==c and board[4]==c and board[6]==c:
+        return True
+    return False
+
 async def isGoodClick(pos, player, role):
     print(f"pos: {type(pos)} | player: {type(player)} | role: {type(role)}")
     tmp = ""
@@ -22,19 +31,29 @@ async def isGoodClick(pos, player, role):
         print("Looking For `X` Valid Click")
         tmp = players.objects.filter(gcreator=player).first()
         print(f"Turn Of {tmp.channel}")
-        if tmp.channel == 'O':
-            return False
+        if tmp.channel == 'O' or tmp.board[pos] != '.':
+            return -1
+        tmp.board = tmp.board[:pos] + tmp.channel + tmp.board[pos + 1:]
         tmp.channel = 'O'
-        print(f"tmp.channel coneverted to {tmp.channel}")
     elif (role == 2):
         print("Looking For `O` Valid Click")
         tmp = players.objects.filter(oppenent=player).first()
         print(f"Turn Of {tmp.channel}")
-        if tmp.channel == 'X':
-            return False
+        if tmp.channel == 'X' or tmp.board[pos] != '.':
+            return -1
+        tmp.board = tmp.board[:pos] + tmp.channel + tmp.board[pos + 1:]
         tmp.channel = 'X'
-        print(f"tmp.channel coneverted to {tmp.channel}")
-    tmp.board = tmp.board[:pos] + tmp.channel + tmp.board[pos + 1:]
     tmp.save()
+    if await isWinner(tmp.board, 'X') == True:
+        return 1
     print(f"The Board After -> {tmp.board}")
-    return True
+    return 0
+
+async def setEndGame(player, role):
+    if (role == 1):
+        print("X Is Winner")
+        tmp = players.objects.filter(gcreator=player).first()
+    elif (role == 2):
+        print("O IS Winner")
+        tmp = players.objects.filter(oppenent=player).first()
+    tmp.gamestat = True

@@ -113,6 +113,7 @@
         const ws = new WebSocket('ws://127.0.0.1:8000/gaming/' + roomcode);
         ws.onopen = function()
         {
+            // ws.send('')
             console.log("Connection Establieshed");
             console.log("Room Code: " + roomcode);
             console.log("Player Name: " + player);
@@ -134,12 +135,17 @@
                 const domElem = document.getElementById(`square-${n}`);
                 if (domElem)
                     domElem.classList.add(symbol);
+                console.log(fromBack.gameStatus);
+                if (fromBack.gameStatus)
+                    window.alert("Winner Is: " + fromBack.Player)
+                    ws.close();
             }
             // window.alert(e.target.value);
         }
-        function endGame()
+        ws.onclose = function()
         {
-            window.alert("Are You Sure That You Want To Leave!");
+            console.log("Game Is End");
+            // window.alert("Are You Sure That You Want To Leave!");
         }
     </script>
 </body>
