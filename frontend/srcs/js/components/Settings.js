@@ -16,6 +16,14 @@ export default class ProfileSetting extends HTMLElement
         const profileSetting = template.content.cloneNode(true);
         this.shadowRoot.appendChild( profileSetting );
 
+
+        const fullname = this.shadowRoot.querySelectorAll(".fullname");
+        const avatar = this.shadowRoot.getElementById("profileImage");
+        avatar.setAttribute("src", window.Auth.avatar);
+        fullname.forEach( elem => {
+            elem.textContent = window.Auth.fullname;
+        });
+
         this.render();
     }
     render()
@@ -24,6 +32,8 @@ export default class ProfileSetting extends HTMLElement
         const editBtn = this.shadowRoot.querySelector(".edit-btn");
         const btn = editBtn.shadowRoot.querySelector(".edit-btn");
         const profileCard = this.shadowRoot.querySelector(".profile-card .section");
+        const input = this.shadowRoot.getElementById("input-fullname");
+
         btn.addEventListener( "click", (e) => {
             profileCard.className += " blur";
             float.setAttribute("style", "display: flex");
@@ -36,7 +46,18 @@ export default class ProfileSetting extends HTMLElement
             });
             float.addEventListener("click", (e) => {
                 if ( e.target.getAttribute("name") === "Save" )
-                    console.log(e.target)
+                    {
+                        if ( input.value.length == 0 )
+                        {
+                            console.log("Please enter some shit");
+                        }
+                        else
+                        {
+                            float.setAttribute("style", "display: none");
+                            profileCard.classList.remove("blur");
+                        }
+                        // post data to the backend for changing the user fullname
+                    }
             });
         })
         

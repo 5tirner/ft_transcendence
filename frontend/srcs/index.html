@@ -198,20 +198,20 @@
 				<button class="edit-image" onclick="document.getElementById('fileInput').click();">✏️</button>
 				<input type="file" id="fileInput" style="display:none" accept="image/*"
 					onchange="changeProfileImage(event)">
-				<h2>Olivia Wilfson</h2>
-				<p>@Oliviawilfson</p>
+				<h2 class="fullname"></h2>
+				<p username="username"></p>
 				<div class="badge">LVL 8</div>
 				<div class="info">
 					<div>
 						<p>Name</p>
-						<p>Olivia Wilfson</p>
+						<p class="fullname"></p>
 					</div>
 					<main-button name="Edit" class="edit-btn"></main-button>
 				</div>
 			</div>
 			<div id="float" style="display: none">
-				<form action="#" method="post">
-					<input type="text" name="fullname" id="fullname" placeholder="Edit your name..">
+				<form action="" method="post">
+					<input type="text" name="fullname" id="input-fullname" placeholder="Edit your name.." required>
 					<main-button name="Save" class="edit-btn"></main-button>
 				</form>
 			</div>

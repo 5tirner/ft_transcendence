@@ -16,8 +16,6 @@ export default class MainButton extends HTMLElement
         button.className = attrb;
         button.textContent = this.getAttribute("name");
         this.shadowRoot.appendChild( button );
-
-        console.log("attr: ", attrb);
     }
 }
 if ( !customElements.get('main-button') )
