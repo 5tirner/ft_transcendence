@@ -44,17 +44,19 @@ async def isGoodClick(pos, player, role):
         tmp.board = tmp.board[:pos] + tmp.channel + tmp.board[pos + 1:]
         tmp.channel = 'X'
     tmp.save()
+    print(f"The Board After -> {tmp.board}")
     if await isWinner(tmp.board, tmp.board[pos]) == True:
         return 1
-    print(f"The Board After -> {tmp.board}")
+    if tmp.board.find('.') == -1:
+        return 2
     return 0
 
 async def setEndGame(player, role):
     if (role == 1):
-        print("X Is Winner")
+        print("X Is Winner Or Draw")
         tmp = players.objects.filter(gcreator=player).first()
     elif (role == 2):
-        print("O IS Winner")
+        print("O IS Winner Or Draw")
         tmp = players.objects.filter(oppenent=player).first()
     tmp.gamestat = False
     tmp.save()

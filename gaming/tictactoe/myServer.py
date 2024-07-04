@@ -39,9 +39,11 @@ class myServer(AsyncWebsocketConsumer):
             if checker == -1:
                 await self.channel_layer.group_send(self.roomcode_group, {'type': "BadClick", 'error': "BAD"})
             elif checker == 0:
-                await self.channel_layer.group_send(self.roomcode_group, {'type': "run_game", 'payload': data,})
-            else:
-                await self.channel_layer.group_send(self.roomcode_group, {'type': "GameOver", 'payload': data,})
+                await self.channel_layer.group_send(self.roomcode_group, {'type': "run_game", 'payload': data})
+            elif checker == 1:
+                await self.channel_layer.group_send(self.roomcode_group, {'type': "GameOver", 'payload': data})
+            elif checker == 2:
+                await self.channel_layer.group_send(self.roomcode_group, {'type': "Draw", 'payload': data})
     
     async def startGame(self, event):
         await self.send(event['start'])
@@ -60,7 +62,6 @@ class myServer(AsyncWebsocketConsumer):
     async def GameOver(self, event):
         print(f"ENDING...")
         data = event['payload']
-        data['gameStatus'] = int(1)
         await setEndGame(data.get('player'), data.get('symbol'))
         symbol = ""
         if (data.get('symbol') == 1):
@@ -68,6 +69,18 @@ class myServer(AsyncWebsocketConsumer):
         elif data.get('symbol') == 2:
             symbol = "squareO"
         toFronEnd = json.dumps({'Player': data.get('player'), 'Image': symbol, 'pos': data.get('element'), 'gameStatus': 1})
+        await self.send(toFronEnd)
+
+    async def Draw(self, event):
+        print(f"DRAAAW...")
+        data = event['payload']
+        await setEndGame(data.get('player'), data.get('symbol'))
+        symbol = ""
+        if (data.get('symbol') == 1):
+            symbol = "squareX"
+        elif data.get('symbol') == 2:
+            symbol = "squareO"
+        toFronEnd = json.dumps({'Player': "DRAW!", 'Image': symbol, 'pos': data.get('element'), 'gameStatus': 2})
         await self.send(toFronEnd)
 
     async def BadClick(self, event):

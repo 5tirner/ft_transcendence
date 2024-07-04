@@ -132,15 +132,18 @@
                 console.log(typeof(fromBack))
                 n = fromBack.pos, symbol = fromBack.Image;
                 const domElem = document.getElementById(`square-${n}`);
-                if (domElem)
-                    domElem.classList.add(symbol);
+                domElem.classList.add(symbol);
                 console.log(fromBack.gameStatus);
                 if (fromBack.gameStatus == 1)
                 {
                     window.alert("Winner Is: " + fromBack.Player)
                     ws.close();
                 }
-                    //TEST
+                else if (fromBack.gameStatus == 2)
+                {
+                    window.alert(fromBack.Player)
+                    ws.close();
+                }
             }
         }
         ws.onclose = function()
