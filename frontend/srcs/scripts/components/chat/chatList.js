@@ -1,6 +1,7 @@
 import API from "../../API.js";
 import { convHeader } from "./conv_head.js";
 import { formatTime, loadMessages } from "./messages_loader.js";
+import { ConvElement } from "./convComponent.js";
 
 function createListItem(parentElement, convInfo, roomid) {
 	// Create the main <li> element
@@ -144,6 +145,9 @@ export async function getConversations() {
 		response = await response.json();
 		response.forEach((chatConv) => {
 			createListItem(ulElement, chatConv, chatConv.id);
+			let conv = new ConvElement();
+			conv.data = chatConv;
+			ulElement.appendChild(conv);
 		});
 	}
 }
