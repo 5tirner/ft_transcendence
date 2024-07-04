@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'channels',
     'django.contrib.staticfiles',
     'tictactoe',
+    'pingpong',
 ]
 
 MIDDLEWARE = [

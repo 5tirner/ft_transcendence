@@ -2,7 +2,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import random
 import string
 import json
-from django.shortcuts import render, redirect
 from .pars import isGoodClick, setEndGame
 from .models import players
 

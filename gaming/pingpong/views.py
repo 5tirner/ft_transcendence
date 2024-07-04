@@ -3,7 +3,7 @@ from django.http import JsonResponse, HttpResponse
 from .pars import checkInput, isTheAliasOrTheRoomCodeAlreadyUsed
 from .models import players
 
-def home(req):
+def home1(req):
     if req.method == "POST":
         print("\n\n===============> Start: User Fill His Info:\n")
         print("\n**********************************")
@@ -29,7 +29,7 @@ def home(req):
             tmp.save()
             print(f"{alias} Craetor Infos-> GC: {tmp.gcreator}, RC: {tmp.roomcode}, GO: {tmp.oppenent}, GS:{tmp.gamestat}")
             print("**********************************\n")
-            return redirect('/tictactoe/' + roomcode + '?player=' + alias)
+            return redirect('/pingpong/' + roomcode + '?player=' + alias)
         elif role == "2":
             print("\n**********************************")
             print(f"{alias} Want To Join Game")
@@ -45,10 +45,10 @@ def home(req):
             tmp.save()
             print(f"{alias} Oppenets Infos->  GC: {tmp.gcreator}, RC: {tmp.roomcode}, GO: {tmp.oppenent}, GS:{tmp.gamestat}")
             print("\n**********************************\n")
-            return redirect('/tictactoe/' + roomcode + '?player=' + alias)
-    return render(req, 'home.html')
+            return redirect('/pingpong/' + roomcode + '?player=' + alias)
+    return render(req, 'home1.html')
 
-def game(req, roomcode):
+def game1(req, roomcode):
     print("\n**********************************\n")
     print(f'On Game Data ==> {req.GET}')
     alias = req.GET.get('player')
@@ -71,4 +71,4 @@ def game(req, roomcode):
         'role': role,
     }
     print("\n**********************************\n")
-    return render(req, 'play.html', context)
+    return render(req, 'play1.html', context)

@@ -72,11 +72,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TICTACTOE GAME</title>
+    <title>PINGPONG GAME</title>
 </head>
 <body>
     <div id="title">
-        <h1>Tic Tac Toe</h1>
+        <h1>PINGPONG</h1>
     </div>
     <div id="board">
         <div onclick="send_data(0)" id="square-0" class="square"></div>
@@ -105,9 +105,10 @@
             ws.send(myJSON);
         }
         
-        const ws = new WebSocket('ws://127.0.0.1:8000/tictactoe/' + roomcode);
+        const ws = new WebSocket('ws://127.0.0.1:8000/pingpong/' + roomcode);
         ws.onopen = function()
         {
+            // ws.send('')
             console.log("Connection Establieshed");
             console.log("Room Code: " + roomcode);
             console.log("Player Name: " + player);
@@ -148,6 +149,7 @@
         ws.onclose = function()
         {
             console.log("Game Is End");
+            // window.alert("Are You Sure That You Want To Leave!");
         }
     </script>
 </body>
