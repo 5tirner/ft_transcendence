@@ -14,12 +14,6 @@ export default class Sidebar extends HTMLElement
         const template = document.getElementById("side-bar");
         const sidebarComp = template.content.cloneNode(true);
 
-
-
-        // const styles = Array.from(document.querySelectorAll('link[rel="stylesheet"]')).map(link => link.cloneNode());
-        // styles.forEach(style => this.shadowRoot.appendChild(style));
-
-
         const arr = sidebarComp.querySelectorAll("a");
         arr.forEach(elem => {
             elem.addEventListener("click", (e) => {

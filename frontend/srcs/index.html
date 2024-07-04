@@ -85,6 +85,9 @@
 					<a href="/setting" class="nav_link">
 						<i class='bx bxs-cog nav_icon'></i>
 					</a>
+					<a href="#" class="nav_link">
+						<i class='bx bx-log-out nav_icon'></i>
+					</a>
 				</div>
 			</div>
 			<a href="/profile" class="nav_link">
@@ -195,9 +198,9 @@
 		<div class="profile-card">
 			<div class="section">
 				<img src="https://via.placeholder.com/100" alt="Profile Picture" id="profileImage">
-				<button class="edit-image" onclick="document.getElementById('fileInput').click();">✏️</button>
 				<input type="file" id="fileInput" style="display:none" accept="image/*"
-					onchange="changeProfileImage(event)">
+				onchange="changeProfileImage(event)">
+				<button class="edit-image" onclick="document.getElementById('fileInput').click();">✏️</button>
 				<h2 class="fullname"></h2>
 				<p username="username"></p>
 				<div class="badge">LVL 8</div>
