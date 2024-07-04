@@ -16,7 +16,7 @@ def isTheAliasOrTheRoomCodeAlreadyUsed(alias, roomcode):
     return 0
 
 async def isWinner(board, c):
-    if board[0]==c and board[1]==c and board[2]==c or board[3]==c and board[4] == c and board[4]==c or board[6]==c and board[7]==c and board[8]==c:
+    if board[0]==c and board[1]==c and board[2]==c or board[3]==c and board[4] == c and board[5]==c or board[6]==c and board[7]==c and board[8]==c:
         return True
     if board[0]==c and board[3]==c and board[6]==c or board[1]==c and board[4] == c and board[7]==c or board[2]==c and board[5]==c and board[8]==c:
         return True
@@ -31,7 +31,7 @@ async def isGoodClick(pos, player, role):
         print("Looking For `X` Valid Click")
         tmp = players.objects.filter(gcreator=player).first()
         print(f"Turn Of {tmp.channel}")
-        if tmp.channel == 'O' or tmp.board[pos] != '.' or tmp.gamestat == False:
+        if tmp.channel == 'O' or tmp.board[pos] != '.' or tmp.gamestat == False or len(tmp.oppenent) == 0:
             return -1
         tmp.board = tmp.board[:pos] + tmp.channel + tmp.board[pos + 1:]
         tmp.channel = 'O'
@@ -44,7 +44,7 @@ async def isGoodClick(pos, player, role):
         tmp.board = tmp.board[:pos] + tmp.channel + tmp.board[pos + 1:]
         tmp.channel = 'X'
     tmp.save()
-    if await isWinner(tmp.board, 'X') == True:
+    if await isWinner(tmp.board, tmp.board[pos]) == True:
         return 1
     print(f"The Board After -> {tmp.board}")
     return 0

@@ -100,14 +100,9 @@
 
         function send_data(n)
         {
-            if (oppenent.length == 0)
-                console.log("Game Not Start Yet")
-            else
-            {
-                const toBackEnd = {"element": n, "player": player, "symbol": Number(role)};
-                const myJSON = JSON.stringify(toBackEnd)
-                ws.send(myJSON);
-            }
+            const toBackEnd = {"element": n, "player": player, "symbol": Number(role)};
+            const myJSON = JSON.stringify(toBackEnd)
+            ws.send(myJSON);
         }
         
         const ws = new WebSocket('ws://127.0.0.1:8000/gaming/' + roomcode);
@@ -141,13 +136,12 @@
                     //ws.close();
                     //TEST
             }
-            // window.alert(e.target.value);
         }
-        // ws.onclose = function()
-        // {
-        //     console.log("Game Is End");
-        //     // window.alert("Are You Sure That You Want To Leave!");
-        // }
+        ws.onclose = function()
+        {
+            console.log("Game Is End");
+            // window.alert("Are You Sure That You Want To Leave!");
+        }
     </script>
 </body>
 </html>
