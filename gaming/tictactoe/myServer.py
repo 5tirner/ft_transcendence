@@ -7,6 +7,7 @@ from .pars import isGoodClick, setEndGame
 from .models import players
 
 class myServer(AsyncWebsocketConsumer):
+    
     async def connect(self):
         print('\n****************************************\n')
         print("On Connecting:\n")
@@ -28,35 +29,23 @@ class myServer(AsyncWebsocketConsumer):
     
     async def receive(self, text_data, bytes_data=None):
         print(f"Data Come :{text_data} Type: {type(text_data)}")
-        data = json.loads(text_data)
-        print(f"Player {data.get('player')} Click On Square {data.get('element')} Using {data.get('symbol')}")
-        checker = await isGoodClick(data.get('element'), data.get('player'), data.get('symbol'))
-        print(f"The Checker = {checker}")
-        if checker == -1:
-            await self.channel_layer.group_send(
-            self.roomcode_group,
-            {
-                'type': "BadClick",
-                'error': "BAD",
-            },
-            )
-        elif checker == 0:
-            await self.channel_layer.group_send(
-                self.roomcode_group,
-                {
-                    'type': "run_game",
-                    'payload': data,
-                },
-                )
+        if text_data == "START":
+            await self.channel_layer.group_send(self.roomcode_group, {'type': 'startGame', 'start': "START"})
         else:
-            await self.channel_layer.group_send(
-            self.roomcode_group,
-            {
-                'type': "GameOver",
-                'payload': data,
-            },
-            )
+            data = json.loads(text_data)
+            print(f"Player {data.get('player')} Click On Square {data.get('element')} Using {data.get('symbol')}")
+            checker = await isGoodClick(data.get('element'), data.get('player'), data.get('symbol'))
+            print(f"The Checker = {checker}")
+            if checker == -1:
+                await self.channel_layer.group_send(self.roomcode_group, {'type': "BadClick", 'error': "BAD"})
+            elif checker == 0:
+                await self.channel_layer.group_send(self.roomcode_group, {'type': "run_game", 'payload': data,})
+            else:
+                await self.channel_layer.group_send(self.roomcode_group, {'type': "GameOver", 'payload': data,})
     
+    async def startGame(self, event):
+        await self.send(event['start'])
+
     async def run_game(self, event):
         print(f"Event Content: {event}")
         data = event['payload']
@@ -67,9 +56,6 @@ class myServer(AsyncWebsocketConsumer):
             symbol = "squareO"
         toFronEnd = json.dumps({'Player': data.get('player'), 'Image': symbol, 'pos': data.get('element'), 'gameStatus': 0})
         await self.send(toFronEnd)
-
-    async def BadClick(self, event):
-        await self.send(event['error'])
 
     async def GameOver(self, event):
         print(f"ENDING...")
@@ -83,6 +69,9 @@ class myServer(AsyncWebsocketConsumer):
             symbol = "squareO"
         toFronEnd = json.dumps({'Player': data.get('player'), 'Image': symbol, 'pos': data.get('element'), 'gameStatus': 1})
         await self.send(toFronEnd)
+
+    async def BadClick(self, event):
+        await self.send(event['error'])
 
     async def disconnect(self, code_status):
         print(f"Client Of ChannelLayer {self.channel_name} Close Connection")
