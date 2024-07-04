@@ -133,8 +133,6 @@ export function formatListDate(date) {
 		const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
 		const day = String(date.getDate()).padStart(2, "0");
 		const year = date.getFullYear();
-
-		// Format the date and time as mm/dd/yyyy HH:MM am/pm
 		return `${month}/${day}/${year}`;
 	}
 }
