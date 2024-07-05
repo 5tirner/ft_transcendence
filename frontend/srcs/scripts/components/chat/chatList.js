@@ -93,7 +93,8 @@ function createListItem(parentElement, convInfo, roomid) {
 }
 
 export function updateNotif(username, toRemove = false) {
-	const listItems = document.querySelectorAll(".list-group-item");
+	const listItems = document.querySelectorAll("cp-conv");
+	console.log("heeere");
 
 	// Loop through each list item
 	for (const li of listItems) {
@@ -144,7 +145,7 @@ export async function getConversations() {
 	if (response.ok) {
 		response = await response.json();
 		response.forEach((chatConv) => {
-			createListItem(ulElement, chatConv, chatConv.id);
+			// createListItem(ulElement, chatConv, chatConv.id);
 			let conv = new ConvElement();
 			conv.data = chatConv;
 			ulElement.appendChild(conv);

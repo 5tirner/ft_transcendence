@@ -1,3 +1,8 @@
+import { formatListDate } from "./chatList.js";
+import { convHeader } from "./conv_head.js";
+import { updateNotif } from "./chatList.js";
+
+import { loadMessages } from "./messages_loader.js";
 class convTimeAndNotifElem extends HTMLElement {
 	constructor() {
 		super();
@@ -108,18 +113,49 @@ export class ConvElement extends HTMLElement {
 			this.userData.userLastMsg.textContent =
 				this._data.last_message.content;
 
-			// this.userData.userAvatar.image.src = this._data.user.avatar;
+			if (this._data.last_message.timestamp == null)
+				this.dateAndNotif.date.textContent = "";
+			else {
+				const date = new Date(this._data.last_message.timestamp);
+				this.dateAndNotif.date.textContent = formatListDate(date);
+			}
 
-			// this.title.textContent = this._data.title || "Default Title";
-			// this.content.textContent = this._data.content || "Default Content";
+			if (
+				this._data.last_message.unreaded != null &&
+				this._data.last_message.unreaded != 0
+			) {
+				this.dateAndNotif.notif.className = "notif mx-1 mt-2 visible";
+				if (this._data.last_message.unreaded <= 9)
+					this.dateAndNotif.notif.textContent =
+						this._data.last_message.unreaded;
+				else this.dateAndNotif.notif.textContent = "+9";
+			} else {
+				this.dateAndNotif.notif.className = "notif mx-1 mt-2 invisible";
+			}
+			this.dateAndNotif.notif;
 		}
 	}
 
 	connectedCallback() {
-		// console.log("Custom element added to the page.");
-		// add event listner to handle click
-	}
+		this.addEventListener("click", () => {
+			console.log("test");
+			const conv = document.querySelector(".chat-conv-wrapper");
+			const messages = conv.querySelector(".messages");
+			const convHeadParent = conv.querySelector(".chat-conv");
+			const convHead = conv.querySelector(".conve-header");
 
+			conv.style.display = "block";
+
+			convHeadParent.removeChild(convHead);
+			convHeadParent.insertBefore(
+				convHeader(this._data.user, this._data.id),
+				convHeadParent.firstChild
+			);
+			loadMessages(messages, this._data.id);
+			API.markMessagesAsRead(this._data.id);
+			updateNotif(this._data.user.username, true);
+		});
+	}
 	disconnectedCallback() {
 		console.log("Custom element removed from the page.");
 	}
