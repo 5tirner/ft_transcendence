@@ -123,9 +123,45 @@
 		<div id="middle">
 			<!-- play now -->
 		</div>
-		<div id="chat">
-			<!-- chat -->
-			<chat-comp></chat-comp>
+
+		<div class="container right-window" style="display: none" id="chat">
+			<div class="nav-convs">
+				<!-- INFO: Head of Chat-->
+				<div
+					class="d-flex flex-column align-items-center justify-content-start text-center text-white p-1 mx-auto gap-2"
+				>
+					<div class="add-message-head position-relative">
+						<b>Chats</b>
+
+						<div class="add-message-icon position-absolute">
+							<img
+								class=""
+								alt=""
+								src="./svg_dir/add-message 1.svg"
+							/>
+						</div>
+						<div class="dropdown">
+							<div class="dropdown-content"></div>
+						</div>
+					</div>
+				</div>
+				<!-- INFO:list of friends -->
+				<ul class="list-group rounded-0 mt-2"></ul>
+			</div>
+			<div class="chat-conv-wrapper">
+				<div class="chat-conv d-flex flex-column">
+					<div class="conve-header"></div>
+					<div class="messages d-flex flex-column"></div>
+					<div class="input-bar">
+						<div class="message-input">
+							<input
+								type="text"
+								placeholder="Write your message"
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</template>
 
