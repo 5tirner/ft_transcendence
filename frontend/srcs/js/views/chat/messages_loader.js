@@ -1,4 +1,4 @@
-import API from "../../API.js";
+import API from "../../services/API.js";
 
 export function formatTime(date) {
 	let hours = date.getHours();

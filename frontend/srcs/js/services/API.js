@@ -1,15 +1,7 @@
-// const Api = {
-//     url: 'https://jsonplaceholder.typicode.com/users',
-//     fetchPlayers: async () => {
-//         const result = await fetch(Api.url);
-//         return await result.json();
-//     }
-// }
-// export default Api;
-//
 const API = {
 	authEndpoint: "http://127.0.0.1:8000/api/",
 	chatEndpoint: "http://127.0.0.1:8000/api/chat/",
+	friendshipEndpoint: "http://127.0.0.1:8000/api/friendship",
 
 	// ADD HERE ALL THE OTHER API FUNCTIONS
 	login: async (userData) => {
@@ -38,6 +30,12 @@ const API = {
 		return await API.makeGetRequest(API.authEndpoint + "userData/");
 	},
 
+	getFriends: async () => {
+		return await API.makeGetRequest(
+			API.friendshipEndpoint + "?type=friends"
+		);
+	},
+
 	getConversatons: async () => {
 		return await API.makeGetRequest(API.chatEndpoint);
 	},
@@ -53,6 +51,11 @@ const API = {
 		return;
 	},
 
+	createChatRoom: async (username) => {
+		return await API.makePostRequest(API.chatEndpoint + "create/", {
+			username: username
+		});
+	},
 	makePostRequest: async (url, data) => {
 		const headers = {
 			"Content-Type": "application/json"

@@ -1,4 +1,4 @@
-import API from "../../API.js";
+import API from "../../services/API.js";
 import { formatListDate, updateNotif } from "./chatList.js";
 import { createMessageBuble } from "./messages_loader.js";
 
@@ -19,7 +19,7 @@ function moveConvListTop(username) {
 
 export function init_socket() {
 	const chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/chat/");
-	const inputField = document.querySelector(".message-input");
+	const inputField = document.querySelector(".message-input input");
 
 	chatSocket.onmessage = function (e) {
 		const data = JSON.parse(e.data);
@@ -42,8 +42,6 @@ export function init_socket() {
 				moveConvListTop(data.user);
 				updateNotif(data.user);
 			}
-		} else {
-			// console.log(data);
 		}
 	};
 	chatSocket.onclose = function (e) {

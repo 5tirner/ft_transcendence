@@ -24,8 +24,8 @@ services:
             - .env
         networks:
             - myNetwork
-        # volumes:
-        #     - postgres_db:/var/lib/postgresql/data
+        volumes:
+            - postgres_db:/var/lib/postgresql/data
         restart: always
 
     server:
@@ -47,8 +47,8 @@ services:
         depends_on:
             - postgres_db
             - auth
-            # - chat
-            # - ws_chat
+            - chat
+            - ws_chat
         restart: always
 
     auth:
@@ -66,53 +66,53 @@ services:
             - postgres_db
         restart: always
 
-    # chat:
-    #     container_name: chat
-    #     build:
-    #         context: ./backend/chat
-    #         dockerfile: Dockerfile
-    #     image: chat:12.5
-    #     env_file:
-    #         - .env
-    #     networks:
-    #         - myNetwork
-    #     volumes:
-    #         - ./backend/chat:/app
-    #     depends_on:
-    #         - postgres_db
-    #         - auth
-    #     restart: always
-    # ws_chat:
-    #     container_name: ws_chat
-    #     build:
-    #         context: ./backend/ws_chat
-    #         dockerfile: Dockerfile
-    #     command:
-    #         sh -c "python3 manage.py makemigrations --noinput  && python3
-    #         manage.py migrate --noinput && python manage.py runserver
-    #         0.0.0.0:8000"
-    #     image: ws_chat:12.5
-    #     env_file:
-    #         - .env
-    #     networks:
-    #         - myNetwork
-    #     volumes:
-    #         - ./backend/ws_chat:/app
-    #     depends_on:
-    #         - auth
-    #     restart: always
-# volumes:
-#     postgres_db:
-#         driver: local
-#         name: postgres_db
-#         driver_opts:
-#             type: none
-#             device: ${HOME}/data/postgres_db
-#             o: bind
-    # www:
-    #     name: front_end
-    #     driver: local
-    #     driver_opts:
-    #         type: none
-    #         device: ${HOME}/data/www
-    #         o: bind
+    chat:
+        container_name: chat
+        build:
+            context: ./backend/chat
+            dockerfile: Dockerfile
+        image: chat:12.5
+        env_file:
+            - .env
+        networks:
+            - myNetwork
+        volumes:
+            - ./backend/chat:/app
+        depends_on:
+            - postgres_db
+            - auth
+        restart: always
+    ws_chat:
+        container_name: ws_chat
+        build:
+            context: ./backend/ws_chat
+            dockerfile: Dockerfile
+        command:
+            sh -c "python3 manage.py makemigrations --noinput  && python3
+            manage.py migrate --noinput && python manage.py runserver
+            0.0.0.0:8000"
+        image: ws_chat:12.5
+        env_file:
+            - .env
+        networks:
+            - myNetwork
+        volumes:
+            - ./backend/ws_chat:/app
+        depends_on:
+            - auth
+        restart: always
+volumes:
+    postgres_db:
+        driver: local
+        name: postgres_db
+        driver_opts:
+            type: none
+            device: ${HOME}/data/postgres_db
+            o: bind
+# www:
+#     name: front_end
+#     driver: local
+#     driver_opts:
+#         type: none
+#         device: ${HOME}/data/www
+#         o: bind
