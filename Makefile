@@ -5,7 +5,7 @@ IMG = $(shell docker images -a -q)
 .PHONY:  up upd start down stop re  ps clean fclean
 
 upd:
-	@$(DC) up -d
+	@$(DC) up --build --force-recreate -d
 
 up : create_data_dir
 	@$(DC) up --build --force-recreate

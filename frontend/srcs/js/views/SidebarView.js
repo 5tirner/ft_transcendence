@@ -21,7 +21,13 @@ export default class Sidebar extends HTMLElement
             elem.addEventListener("click", (e) => {
                 e.preventDefault();
                 const href = e.currentTarget.getAttribute("href");
-                global.router.navigateTo(href, "root");
+                if ( href === "/" )
+                {
+                    // TODO: handle the logout logic
+                    Auth.logout();
+                    
+                }
+                    global.router.navigateTo(href, "root");
             });
         });
         this.appendChild( sidebarComp );

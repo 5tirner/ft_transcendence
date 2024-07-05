@@ -8,7 +8,7 @@ const Auth = {
 	logout: async () => {
 		const response = await API.logout();
 
-		document.querySelector("#chat").style.display = "none";
+		// document.querySelector("#chat").style.display = "none";
 		// Router.go("/login");
 	},
 	loginIntra: async (event) => {
