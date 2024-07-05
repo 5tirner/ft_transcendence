@@ -29,7 +29,7 @@ def home(req):
             tmp.save()
             print(f"{alias} Craetor Infos-> GC: {tmp.gcreator}, RC: {tmp.roomcode}, GO: {tmp.oppenent}, GS:{tmp.gamestat}")
             print("**********************************\n")
-            return redirect('/gaming/' + roomcode + '?player=' + alias)
+            return redirect('/ttt/' + roomcode + '?player=' + alias)
         elif role == "2":
             print("\n**********************************")
             print(f"{alias} Want To Join Game")
@@ -45,7 +45,7 @@ def home(req):
             tmp.save()
             print(f"{alias} Oppenets Infos->  GC: {tmp.gcreator}, RC: {tmp.roomcode}, GO: {tmp.oppenent}, GS:{tmp.gamestat}")
             print("\n**********************************\n")
-            return redirect('/gaming/' + roomcode + '?player=' + alias)
+            return redirect('/ttt/' + roomcode + '?player=' + alias)
     return render(req, 'home.html')
 
 def game(req, roomcode):

@@ -3,5 +3,5 @@ from .views import game, home
 
 urlpatterns = [
     path('', home, name="homePage"),
-    path('gaming/<roomcode>', game, name="tictactoe")
+    path('ttt/<roomcode>', game, name="tictactoe")
 ]

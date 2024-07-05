@@ -9,23 +9,26 @@ from .models import players
 class myServer(AsyncWebsocketConsumer):
     
     async def connect(self):
-        print('\n****************************************\n')
-        print("On Connecting:\n")
-        print("Client Just Appearing Here")
-        print(f"URLROUTE = {self.scope['url_route']}")
-        # self.roomcode_group = str(''.join(random.choices(string.ascii_uppercase + string.digits, k = 30)))
-        # self.roomcode = self.scope['url_route']['kwargs'].get('roomcode')
-        self.roomcode_group = self.scope['url_route']['kwargs'].get('roomcode')
-        print(f"RoomPrivateCode: {self.roomcode_group}")
-        await self.channel_layer.group_add(self.roomcode_group, self.channel_name)
-        print(f"Channel Name Of This Client: {self.channel_name}")
-        tmp = players.objects.filter(roomcode=self.roomcode_group).first()
-        if tmp is not None:
-            tmp.channel = 'X'
-            tmp.save()
-        await self.accept()
-        print("Client Accepted Succefully")
-        print("******************************************\n")
+        try:
+            print('\n****************************************\n')
+            print("On Connecting:\n")
+            print("Client Just Appearing Here")
+            print(f"URLROUTE = {self.scope['url_route']}")
+            # self.roomcode_group = str(''.join(random.choices(string.ascii_uppercase + string.digits, k = 30)))
+            # self.roomcode = self.scope['url_route']['kwargs'].get('roomcode')
+            self.roomcode_group = self.scope['url_route']['kwargs'].get('roomcode')
+            print(f"RoomPrivateCode: {self.roomcode_group}")
+            await self.channel_layer.group_add(self.roomcode_group, self.channel_name)
+            print(f"Channel Name Of This Client: {self.channel_name}")
+            tmp = players.objects.filter(roomcode=self.roomcode_group).first()
+            if tmp is not None:
+                tmp.channel = 'X'
+                tmp.save()
+            await self.accept()
+            print("Client Accepted Succefully")
+            print("******************************************\n")
+        except:
+            pass
     
     async def receive(self, text_data, bytes_data=None):
         print(f"Data Come :{text_data} Type: {type(text_data)}")
