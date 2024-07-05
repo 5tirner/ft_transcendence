@@ -128,7 +128,6 @@ export class ConvElement extends HTMLLIElement {
 
 	connectedCallback() {
 		this.addEventListener("click", () => {
-			console.log("test");
 			const conv = document.querySelector(".chat-conv-wrapper");
 			const messages = conv.querySelector(".messages");
 			const convHeadParent = conv.querySelector(".chat-conv");
