@@ -72,9 +72,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAME</title>
+    <title>TICTACTOE-GAME</title>
+    <link rel="icon" type="image/x-icon" href="https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fbucketeer-e05bbc84-baa3-437e-9518-adb32be77984.s3.amazonaws.com%2Fpublic%2Fimages%2F0dc9df6b-620e-4421-bbec-fe995d7e9abe_640x638.png">
 </head>
 <body>
+    <h2 id="Test"></h2>
     <div id="title">
         <h1>Tic Tac Toe</h1>
     </div>
@@ -89,8 +91,9 @@
         <div onclick="send_data(7)" id="square-7" class="square"></div>
         <div onclick="send_data(8)" id="square-8" class="square"></div>
     </div>
-    <div id="endGame">
-        <input type="button" value="QUITE" id="restartButton" onclick="endGame()"/>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 id="playerName1"></h2>
+        <h2 id="playerName2"></h2>
     </div>
     <script>
         const roomcode = '{{roomcode}}';
@@ -115,7 +118,20 @@
             console.log("Oppenent Name: " + oppenent);
             console.log(player + " role: " + role);
             if (oppenent.length > 0)
+            {
                 ws.send("START");
+                let p1 = document.getElementById("playerName1");
+                p1.innerHTML = player;
+                let p2 = document.getElementById("playerName2");
+                p2.innerHTML = oppenent;
+            }
+            else if (oppenent.length == 0)
+            {
+                let p1 = document.getElementById("playerName1");
+                p1.innerHTML = player;
+                let p2 = document.getElementById("playerName2");
+                p2.innerHTML = "Waiting...";
+            }
         }
         ws.onmessage = function(e)
         {
@@ -125,6 +141,11 @@
                 console.log("BAD CHOOSE");
             else if (e.data == "START")
                 window.alert("GAME START NOW");
+            else if (e.data == "LEFT")
+            {
+                window.alert("YOU WIN BECAUSE YOUR OPPENENT LEFT");
+                ws.close();
+            }
             else
             {
                 const fromBack = JSON.parse(e.data)
@@ -146,10 +167,15 @@
                 }
             }
         }
+        
+        onbeforeunload = function()
+        {
+            ws.send("CLOSE");
+        }
+
         ws.onclose = function()
         {
             console.log("Game Is End");
-            // window.alert("Are You Sure That You Want To Leave!");
         }
     </script>
 </body>

@@ -54,9 +54,8 @@ async def isGoodClick(pos, player, role):
 async def setEndGame(player, role):
     if (role == 1):
         print("X Is Winner Or Draw")
-        tmp = players.objects.filter(gcreator=player).first()
+        tmp = players.objects.filter(gcreator=player)
     elif (role == 2):
         print("O IS Winner Or Draw")
-        tmp = players.objects.filter(oppenent=player).first()
-    tmp.gamestat = False
-    tmp.save()
+        tmp = players.objects.filter(oppenent=player)
+    tmp.delete()

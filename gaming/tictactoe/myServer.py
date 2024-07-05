@@ -31,6 +31,9 @@ class myServer(AsyncWebsocketConsumer):
         print(f"Data Come :{text_data} Type: {type(text_data)}")
         if text_data == "START":
             await self.channel_layer.group_send(self.roomcode_group, {'type': 'startGame', 'start': "START"})
+        elif text_data == "CLOSE":
+            await self.channel_layer.group_discard(self.roomcode_group, self.channel_name)
+            await self.channel_layer.group_send(self.roomcode_group, {'type': 'onlyOne', 'payload': "LEFT"})
         else:
             data = json.loads(text_data)
             print(f"Player {data.get('player')} Click On Square {data.get('element')} Using {data.get('symbol')}")
@@ -85,6 +88,9 @@ class myServer(AsyncWebsocketConsumer):
 
     async def BadClick(self, event):
         await self.send(event['error'])
+
+    async def onlyOne(self, event):
+        await self.send(event['payload'])
 
     async def disconnect(self, code_status):
         print(f"Client Of ChannelLayer {self.channel_name} Close Connection")
