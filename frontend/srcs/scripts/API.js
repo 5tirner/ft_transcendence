@@ -44,6 +44,12 @@ const API = {
 		return await API.makeGetRequest(API.chatEndpoint + room_id);
 	},
 
+	createChatRoom: async (username) => {
+		return await API.makePostRequest(API.chatEndpoint + "create/", {
+			username: username
+		});
+	},
+
 	markMessagesAsRead: async (room_id) => {
 		const res = await API.makeGetRequest(
 			API.chatEndpoint + "read/" + room_id + "/"

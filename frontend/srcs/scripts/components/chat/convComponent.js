@@ -1,8 +1,8 @@
 import { formatListDate } from "./chatList.js";
 import { convHeader } from "./conv_head.js";
 import { updateNotif } from "./chatList.js";
-
 import { loadMessages } from "./messages_loader.js";
+
 class convTimeAndNotifElem extends HTMLElement {
 	constructor() {
 		super();
@@ -26,13 +26,9 @@ class convTimeAndNotifElem extends HTMLElement {
 
 	updateDOM() {}
 
-	connectedCallback() {
-		// console.log("Custom element added to the page.");
-	}
+	connectedCallback() {}
 
-	disconnectedCallback() {
-		console.log("Custom element removed from the page.");
-	}
+	disconnectedCallback() {}
 }
 
 customElements.define("cp-conv-time-notif", convTimeAndNotifElem);
@@ -71,29 +67,23 @@ class convUserElem extends HTMLElement {
 
 	updateDOM() {}
 
-	connectedCallback() {
-		// console.log("Custom element added to the page.");
-	}
+	connectedCallback() {}
 
-	disconnectedCallback() {
-		console.log("Custom element removed from the page.");
-	}
+	disconnectedCallback() {}
 }
 
 customElements.define("cp-conv-user", convUserElem);
 
-export class ConvElement extends HTMLElement {
+export class ConvElement extends HTMLLIElement {
 	constructor() {
 		super();
-		this._data = null; // Private property to hold the data object
-		this.wrapper = document.createElement("li");
-		this.wrapper.className =
+		this._data = null;
+		this.className =
 			"list-group-item d-flex align-items-center justify-content-between px-1";
 		this.userData = new convUserElem();
 		this.dateAndNotif = new convTimeAndNotifElem();
-		this.wrapper.appendChild(this.userData);
-		this.wrapper.appendChild(this.dateAndNotif);
-		this.appendChild(this.wrapper);
+		this.appendChild(this.userData);
+		this.appendChild(this.dateAndNotif);
 	}
 
 	set data(value) {
@@ -156,9 +146,7 @@ export class ConvElement extends HTMLElement {
 			updateNotif(this._data.user.username, true);
 		});
 	}
-	disconnectedCallback() {
-		console.log("Custom element removed from the page.");
-	}
+	disconnectedCallback() {}
 }
 
-customElements.define("cp-conv", ConvElement);
+customElements.define("cp-conv", ConvElement, { extends: "li" });

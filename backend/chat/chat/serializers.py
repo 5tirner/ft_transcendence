@@ -12,7 +12,7 @@ class ConversationsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChatRoom
-        fields = ["id", "name", "user", "last_message"]
+        fields = ["id", "user", "last_message"]
 
     def get_user(self, obj):
         request_user = self.context["request"].user
@@ -52,10 +52,12 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class ChatRoomSerializer(serializers.ModelSerializer):
     username = serializers.CharField(write_only=True)
+    user = serializers.SerializerMethodField()
+    last_message = serializers.SerializerMethodField()
 
     class Meta:
         model = ChatRoom
-        fields = ["user_a", "user_b", "created_at", "username"]
+        fields = ["id", "username", "user", "last_message"]
         read_only_fields = ["user_a", "user_b", "created_at"]
 
     def create(self, validated_data):
@@ -81,6 +83,30 @@ class ChatRoomSerializer(serializers.ModelSerializer):
             name=f"{user_a.username}&{user_b.username}", user_a=user_a, user_b=user_b
         )
         return chat_room
+
+    def get_user(self, obj):
+        request_user = self.context["request"].user
+        user = obj.user_b if obj.user_a == request_user else obj.user_a
+        return {
+            "id": user.id,
+            "username": user.username,
+            "avatar": user.avatar,
+        }
+
+    def get_last_message(self, obj):
+        last_message = obj.messages.order_by("-timestamp").first()
+        request_user = self.context["request"].user
+        unread_count = (
+            obj.messages.filter(readed=False).exclude(sender=request_user).count()
+        )
+
+        if last_message:
+            return {
+                "content": last_message.content,
+                "timestamp": last_message.timestamp,
+                "unreaded": unread_count,
+            }
+        return {"content": None, "timestamp": obj.created_at, "unreaded": None}
 
 
 class SubmitMessageSerializer(serializers.ModelSerializer):
