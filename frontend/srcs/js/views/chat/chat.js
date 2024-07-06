@@ -3,8 +3,8 @@ import API from "../../services/API.js";
 // import { init_socket } from "./socketConnection.js";
 
 export async function render_chat() {
-	document.querySelector("#chat").style.display = "block";
-	console.log("teeeeeeeeeeeee");
-	// await getConversations();
-	// init_socket();
+	const chatContainer = document.querySelector("#chat")
+	chatContainer.style.display = "block";
+	await getConversations();
+	init_socket();slock
 }

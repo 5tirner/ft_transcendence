@@ -7,6 +7,7 @@ import { loadGameView } from "../assets/loadGameView.js"
 
 import { stylesheet } from "../theme/platformTheme.js"
 import { loadProfileSettings } from "../assets/loadProfileSettings.js";
+import { render_chat } from "./chat/chat.js";
 
 export default class Platform extends HTMLElement {
   constructor() {
@@ -25,7 +26,8 @@ export default class Platform extends HTMLElement {
 
     const middleSection = this.querySelector("#middle");
     
-    
+    render_chat();
+
     switch (window.location.pathname)
     {
       case "/platform":

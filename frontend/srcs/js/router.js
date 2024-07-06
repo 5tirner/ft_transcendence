@@ -37,7 +37,6 @@ export class Router {
 			this.navigateTo(e.state.path, "root");
 		});
 		if (await Auth.isAuth()) {
-			render_chat();
 			if (location.pathname == "/login" || location.pathname == "/") {
 				this.navigateTo("/platform", "root");
 			} else this.navigateTo(location.pathname, "root");
