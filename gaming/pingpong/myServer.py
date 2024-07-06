@@ -1,15 +1,8 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
-import random
-import string
-import json
 
-class myServer(AsyncWebsocketConsumer):
-
-    async def connect(self):
-        pass
-
-    async def receive(self, text_data, bytes_data=None):
-        pass
-
-    async def disconnect(self, code):
-        pass
+class PingPongServer(AsyncWebsocketConsumer):
+    # async def connect(self):
+    #     self.accept()
+    #     for i in range(15):
+    #         self.send(i)
+    pass

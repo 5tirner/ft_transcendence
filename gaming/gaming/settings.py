@@ -20,12 +20,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-g=vyq7d1^5hrc6*406gi@=#rn7&7vn@a7y5=vj&hrf5!ld2qou'
+SECRET_KEY = 'django-insecure-#v@k_r&11-9_3qr5shc-u9&!93yp6)u9_f$4a2-!!brt2v40*5'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -36,10 +36,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'daphne',
     'channels',
+    'daphne',
     'django.contrib.staticfiles',
-    'tictactoe',
     'pingpong',
 ]
 
@@ -71,7 +70,6 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'gaming.wsgi.application'
 ASGI_APPLICATION = 'gaming.asgi.application'
 
 
@@ -126,18 +124,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels.layers.InMemoryChannelLayer",
-    }
-}
-
-# CHANNEL_LAYERS = {
-#     "default": {
-#         "BACKEND": "channels_redis.core.RedisChannelLayer",
-#         "CONFIG": {
-#             "hosts": [("127.0.0.1", 6379)],
-#         },
-#     },
-# }

@@ -1,7 +1,6 @@
 from django.urls import path
-from .views import home1, game1
-
+from .views import home, play
 urlpatterns = [
-    path('pingpong', home1, name="homePage"),
-    path('pingpong/<roomcode>', game1, name="pingpong")
+    path('', home, name="LunchPage"),
+    path('pingpong/<roomcode>', play, name="PingPong"),
 ]
