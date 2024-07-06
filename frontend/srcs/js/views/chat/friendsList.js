@@ -19,6 +19,7 @@ export async function fillFriensList(params) {
 	dropDown.innerHTML = "";
 	if (response.ok) {
 		response = await response.json();
+		console.log(response);
 		const { friendships } = response;
 		friendships.forEach((elem) => {
 			const userElem = document.createElement("div");
