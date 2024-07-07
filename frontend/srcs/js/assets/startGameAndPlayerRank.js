@@ -3,13 +3,14 @@ import ProxiedPlayers from "../prox/players.js";
 
 import StartGame from "../components/StartGame.js";
 import TopPlayers from "../components/topPlayers.js";
+import MainButton from "../components/MainButton.js";
 
 export function loadStartGameAndPlayerRankComponents(container) {
 	// Api.fetchPlayers().then((result) => {
 	// 	ProxiedPlayers.playersList = result;
 	// });
-
 	const startGameComp = document.createElement("start-game-comp");
+	// startGameComp.appendChild( document.createElement("main-button"));
 	container.appendChild(startGameComp);
 
 	const middlePlayerRank = document.createElement("div");

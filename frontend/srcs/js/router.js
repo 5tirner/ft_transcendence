@@ -1,5 +1,3 @@
-import { render_chat } from "./views/chat/chat.js";
-
 export class Router {
 	constructor() {
 		this.routes = [];

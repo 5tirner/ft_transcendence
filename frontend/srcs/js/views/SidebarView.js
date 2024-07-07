@@ -27,7 +27,7 @@ export default class Sidebar extends HTMLElement
                     Auth.logout();
                     
                 }
-                    global.router.navigateTo(href, "root");
+                global.router.navigateTo(href, "root");
             });
         });
         this.appendChild( sidebarComp );
