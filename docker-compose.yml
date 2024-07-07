@@ -7,4 +7,4 @@ services:
     container_name: tttcntr
     command: python manage.py runserver 0.0.0.0:9000
     ports:
-      - "8000:9000"
+      - "29099:9000"

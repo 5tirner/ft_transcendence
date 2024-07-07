@@ -1,8 +1,5 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
-import random
-import string
 import json
-from django.shortcuts import render, redirect
 from .pars import isGoodClick, setEndGame
 from .models import players
 
@@ -31,25 +28,28 @@ class myServer(AsyncWebsocketConsumer):
             pass
     
     async def receive(self, text_data, bytes_data=None):
-        print(f"Data Come :{text_data} Type: {type(text_data)}")
-        if text_data == "START":
-            await self.channel_layer.group_send(self.roomcode_group, {'type': 'startGame', 'start': "START"})
-        elif text_data == "CLOSE":
-            await self.channel_layer.group_discard(self.roomcode_group, self.channel_name)
-            await self.channel_layer.group_send(self.roomcode_group, {'type': 'onlyOne', 'payload': "LEFT"})
-        else:
-            data = json.loads(text_data)
-            print(f"Player {data.get('player')} Click On Square {data.get('element')} Using {data.get('symbol')}")
-            checker = await isGoodClick(data.get('element'), data.get('player'), data.get('symbol'))
-            print(f"The Checker = {checker}")
-            if checker == -1:
-                await self.channel_layer.group_send(self.roomcode_group, {'type': "BadClick", 'error': "BAD"})
-            elif checker == 0:
-                await self.channel_layer.group_send(self.roomcode_group, {'type': "run_game", 'payload': data})
-            elif checker == 1:
-                await self.channel_layer.group_send(self.roomcode_group, {'type': "GameOver", 'payload': data})
-            elif checker == 2:
-                await self.channel_layer.group_send(self.roomcode_group, {'type': "Draw", 'payload': data})
+        try:
+            print(f"Data Come :{text_data} Type: {type(text_data)}")
+            if text_data == "START":
+                await self.channel_layer.group_send(self.roomcode_group, {'type': 'startGame', 'start': "START"})
+            elif text_data == "CLOSE":
+                await self.channel_layer.group_discard(self.roomcode_group, self.channel_name)
+                await self.channel_layer.group_send(self.roomcode_group, {'type': 'onlyOne', 'payload': "LEFT"})
+            else:
+                data = json.loads(text_data)
+                print(f"Player {data.get('player')} Click On Square {data.get('element')} Using {data.get('symbol')}")
+                checker = await isGoodClick(data.get('element'), data.get('player'), data.get('symbol'))
+                print(f"The Checker = {checker}")
+                if checker == -1:
+                    await self.channel_layer.group_send(self.roomcode_group, {'type': "BadClick", 'error': "BAD"})
+                elif checker == 0:
+                    await self.channel_layer.group_send(self.roomcode_group, {'type': "run_game", 'payload': data})
+                elif checker == 1:
+                    await self.channel_layer.group_send(self.roomcode_group, {'type': "GameOver", 'payload': data})
+                elif checker == 2:
+                    await self.channel_layer.group_send(self.roomcode_group, {'type': "Draw", 'payload': data})
+        except:
+            pass
     
     async def startGame(self, event):
         await self.send(event['start'])

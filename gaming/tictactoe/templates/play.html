@@ -34,13 +34,13 @@
     }
 
     .squareX {
-        background-image: url("https://w7.pngwing.com/pngs/255/685/png-transparent-tic-tac-toe-computer-icons-others-miscellaneous-angle-monochrome.png");
+        background-image: url("https://images.vexels.com/media/users/3/155474/isolated/preview/4e12cd94f7591c3c851fce62fdc3d463-x-cross-doodle-icon.png");
         background-repeat: no-repeat;
         background-size: cover;
     }
 
     .squareO {
-        background-image: url("https://w7.pngwing.com/pngs/219/364/png-transparent-letter-case-o-alphabet-o-miscellaneous-monochrome-black.png");
+        background-image: url("https://www.freeiconspng.com/thumbs/letter-o-icon-png/letter-o-icon-png-8.png");
         background-repeat: no-repeat;
         background-size: cover;
     }
@@ -111,7 +111,6 @@
         const ws = new WebSocket('ws://' + location.host + '/ttt/' + roomcode);
         ws.onopen = function()
         {
-            // ws.send('')
             console.log("Connection Establieshed");
             console.log("Room Code: " + roomcode);
             console.log("Player Name: " + player);
