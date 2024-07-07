@@ -8,7 +8,7 @@ class PingPongServer(AsyncWebsocketConsumer):
         print(f"Room Code For This Channel Is: {roomcode}")
     async def receive(self, text_data, bytes_data=None):
         save = int(text_data) + 1
-        await self.send(str(save))
-        time.sleep(2)
+        #await self.send(str(save))
+        #time.sleep(2)
     async def disconnect(self, code):
         print(f"Clinet Of Channel  Disconnected")
