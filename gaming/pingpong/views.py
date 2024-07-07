@@ -7,4 +7,8 @@ def home(req):
     return render(req, 'home.html')
 
 def play(req, roomcode):
-    return HttpResponse("Welcome To The Game")
+
+    context = {
+        'roomcode': roomcode,
+    }
+    return render(req, 'play.html', context)

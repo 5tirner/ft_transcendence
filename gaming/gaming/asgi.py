@@ -17,6 +17,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'gaming.settings')
 application = ProtocolTypeRouter(
     {
         'http': get_asgi_application(),
-        #'websocket': URLRouter(wsPattern),
+        'websocket': URLRouter(wsPattern),
     }
 )
