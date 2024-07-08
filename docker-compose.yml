@@ -7,6 +7,24 @@ networks:
         name: ft_transcendence
 
 services:
+
+    tictactoe:
+        image: tttimage
+        build: ./backend/TicTacToe
+        container_name: tictactoe
+        # ports:
+        #   - "29099:9000"
+        command:
+            sh -c "python3 manage.py makemigrations --noinput  && python3
+            manage.py migrate --noinput && python manage.py runserver
+            0.0.0.0:8000"
+        depends_on:
+            - postgres_db
+            - auth
+        networks:
+            - myNetwork
+        restart: always
+
     postgres_db:
         init: true
         container_name: postgres_db
@@ -18,14 +36,14 @@ services:
                 POSTGRES_USER: ${POSTGRES_USER}
                 POSTGRES_DB: ${POSTGRES_DB}
         image: postgres_db:1
-        ports:
-            - "5432:5432"
+        # ports:
+        #     - "5432:5432"
         env_file:
             - .env
         networks:
             - myNetwork
-        volumes:
-            - postgres_db:/var/lib/postgresql/data
+        # volumes:
+        #     - postgres_db:/var/lib/postgresql/data
         restart: always
 
     server:
@@ -40,8 +58,8 @@ services:
         image: server:12.5
         ports:
             - "8000:8000"
-        volumes:
-            - ./frontend/srcs:/var/www
+        # volumes:
+        #     - ./frontend/srcs:/var/www
         networks:
             - myNetwork
         depends_on:
@@ -49,6 +67,7 @@ services:
             - auth
             - chat
             - ws_chat
+            - tictactoe
         restart: always
 
     auth:
@@ -76,8 +95,8 @@ services:
             - .env
         networks:
             - myNetwork
-        volumes:
-            - ./backend/chat:/app
+        # volumes:
+        #     - ./backend/chat:/app
         depends_on:
             - postgres_db
             - auth
@@ -96,19 +115,19 @@ services:
             - .env
         networks:
             - myNetwork
-        volumes:
-            - ./backend/ws_chat:/app
+        # volumes:
+        #     - ./backend/ws_chat:/app
         depends_on:
             - auth
         restart: always
-volumes:
-    postgres_db:
-        driver: local
-        name: postgres_db
-        driver_opts:
-            type: none
-            device: ${HOME}/data/postgres_db
-            o: bind
+# volumes:
+#     postgres_db:
+#         driver: local
+#         name: postgres_db
+#         driver_opts:
+#             type: none
+#             device: ${HOME}/data/postgres_db
+#             o: bind
 # www:
 #     name: front_end
 #     driver: local

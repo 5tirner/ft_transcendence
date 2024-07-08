@@ -7,7 +7,7 @@ IMG = $(shell docker images -a -q)
 upd:
 	@$(DC) up -d
 
-up : create_data_dir
+up : 
 	@$(DC) up --build --force-recreate
 
 
