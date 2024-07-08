@@ -16,4 +16,3 @@ export default class StartGame extends HTMLElement
         this.shadowRoot.appendChild( startGameComp );
     }
 }
-// customElements.define('start-game-comp', StartGame);
