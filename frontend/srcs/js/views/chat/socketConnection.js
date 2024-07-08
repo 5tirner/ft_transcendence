@@ -26,8 +26,9 @@ export function init_socket() {
 		const msgdata = {};
 		const mesgsElem = document.querySelector(".messages");
 		const chatUser = document.querySelector(".username-conv");
+		console.log(data);
 		if (data.msg_type) {
-			if (data.user == chatUser.textContent || data.sent) {
+			if ((chatUser && data.user == chatUser.textContent) || data.sent) {
 				msgdata.content = data.message;
 				msgdata.timestamp = new Date().toJSON();
 				createMessageBuble(mesgsElem, msgdata, data.sent);

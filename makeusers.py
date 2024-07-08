@@ -30,6 +30,7 @@ def get_auth_cookie(user):
     res = requests.post(loginAPI, data=login_data)
     jwt_token = res.cookies["jwt_token"]
     cooki = {"jwt_token": jwt_token}
+    print(f"{user} ====>\n{jwt_token}")
     return cooki
 
 
@@ -56,7 +57,6 @@ def create_chatrooms():
 
     cookie = get_auth_cookie("user1@user.com")
     user["username"] = f"belkarto"
-    print(cookie)
     res = requests.post(creatChatroomAPI, data=user, cookies=cookie)
     for i in range(5):
         user["username"] = f"user{i}"

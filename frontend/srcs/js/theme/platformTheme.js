@@ -55,14 +55,7 @@ const stylesheet = `
     justify-content: center;
     align-items: center;
 }
-
-#chat {
-    flex-grow: 6;
-    padding: 1rem;
-    min-width: 250px;
-    max-width: 450px;
-    border-left: 1px solid rgba(100, 100, 100, 0.25) !important;
-}
 `;
 
 export { stylesheet };
+
