@@ -3,17 +3,17 @@ import json
 from .pars import isGoodClick, setEndGame
 from .models import players
 
-class myServer(AsyncWebsocketConsumer):
+class myServerOnGame(AsyncWebsocketConsumer):
     
     async def connect(self):
         try:
             print('\n****************************************\n')
+            print(self.scope["user"])
             print("On Connecting:\n")
             print("Client Just Appearing Here")
             print(f"URLROUTE = {self.scope['url_route']}")
-            # self.roomcode_group = str(''.join(random.choices(string.ascii_uppercase + string.digits, k = 30)))
-            # self.roomcode = self.scope['url_route']['kwargs'].get('roomcode')
             self.roomcode_group = self.scope['url_route']['kwargs'].get('roomcode')
+            # print ()
             print(f"RoomPrivateCode: {self.roomcode_group}")
             await self.channel_layer.group_add(self.roomcode_group, self.channel_name)
             print(f"Channel Name Of This Client: {self.channel_name}")
@@ -98,3 +98,12 @@ class myServer(AsyncWebsocketConsumer):
     async def disconnect(self, code_status):
         print(f"Client Of ChannelLayer {self.channel_name} Close Connection")
         await self.channel_layer.group_discard(self.roomcode_group, self.channel_name)
+
+class myServerOnLobby(AsyncWebsocketConsumer):
+    async def connect(self):
+        print(self.scope["user"])
+        await self.accept()
+    async def receive(self, text_data, bytes_data=0):
+        pass
+    async def disconnect(self, code):
+        pass

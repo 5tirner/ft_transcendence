@@ -61,5 +61,12 @@
           <input type="submit" value="PLAY">
         </form>
     </div>
+    <script>
+        const ws = new WebSocket("ws://" + location.host + '/games/');
+        ws.onopen = function()
+        {
+            console.log("On Lobby");
+        }
+    </script>
 </body>
 </html>

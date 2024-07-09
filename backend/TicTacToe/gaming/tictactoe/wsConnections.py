@@ -1,6 +1,7 @@
 from django.urls import path
-from .myServer import myServer
+from .myServer import myServerOnGame, myServerOnLobby
 
 wsurl = [
-    path('games/ttt/<roomcode>', myServer.as_asgi()),
+    path('games/', myServerOnLobby.as_asgi()),
+    path('games/ttt/<roomcode>', myServerOnGame.as_asgi()),
 ]

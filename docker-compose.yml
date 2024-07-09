@@ -7,24 +7,6 @@ networks:
         name: ft_transcendence
 
 services:
-
-    tictactoe:
-        image: tttimage
-        build: ./backend/TicTacToe
-        container_name: tictactoe
-        # ports:
-        #   - "29099:9000"
-        command:
-            sh -c "python3 manage.py makemigrations --noinput  && python3
-            manage.py migrate --noinput && python manage.py runserver
-            0.0.0.0:8000"
-        depends_on:
-            - postgres_db
-            - auth
-        networks:
-            - myNetwork
-        restart: always
-
     postgres_db:
         init: true
         container_name: postgres_db
@@ -36,8 +18,8 @@ services:
                 POSTGRES_USER: ${POSTGRES_USER}
                 POSTGRES_DB: ${POSTGRES_DB}
         image: postgres_db:1
-        # ports:
-        #     - "5432:5432"
+        ports:
+            - "5432:5432"
         env_file:
             - .env
         networks:
@@ -45,6 +27,20 @@ services:
         # volumes:
         #     - postgres_db:/var/lib/postgresql/data
         restart: always
+    
+    tictactoe:
+        image: tttimage
+        container_name: tttcntr
+        build: ./backend/TicTacToe
+        networks:
+            - myNetwork
+        depends_on:
+            - auth
+            - postgres_db
+        command:
+            sh -c "python3 manage.py makemigrations --noinput  && python3
+            manage.py migrate --noinput && python manage.py runserver
+            0.0.0.0:8000"
 
     server:
         init: true
@@ -58,8 +54,8 @@ services:
         image: server:12.5
         ports:
             - "8000:8000"
-        # volumes:
-        #     - ./frontend/srcs:/var/www
+        volumes:
+            - ./frontend/srcs:/var/www
         networks:
             - myNetwork
         depends_on:

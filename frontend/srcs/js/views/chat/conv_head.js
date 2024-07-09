@@ -10,6 +10,7 @@ export function convHeader(userData, roomId) {
 		const conv = document.querySelector(".chat-conv-wrapper");
 		conv.style.display = "none";
 		document.querySelector(".messages").innerHTML = "";
+		document.querySelector(".username-conv").innerHTML = "";
 	});
 	arrowIcon.classList.add("frame-icon");
 	arrowIcon.alt = "";

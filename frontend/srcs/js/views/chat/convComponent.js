@@ -128,7 +128,7 @@ export class ConvElement extends HTMLLIElement {
 	}
 
 	connectedCallback() {
-		this.addEventListener("click", () => {
+		const clickHandler = () => {
 			const conv = document.querySelector(".chat-conv-wrapper");
 			const messages = conv.querySelector(".messages");
 			const convHeadParent = conv.querySelector(".chat-conv");
@@ -144,9 +144,15 @@ export class ConvElement extends HTMLLIElement {
 			loadMessages(messages, this._data.id);
 			API.markMessagesAsRead(this._data.id);
 			updateNotif(this._data.user.username, true);
-		});
+		};
+		this.addEventListener("click", clickHandler);
+		this._clickListener = clickHandler;
 	}
-	disconnectedCallback() {}
+	disconnectedCallback() {
+		if (this._clickListener) {
+			this.removeEventListener("click", this._clickListener);
+		}
+	}
 }
 
 customElements.define("cp-conv", ConvElement, { extends: "li" });

@@ -15,4 +15,8 @@ RUN pip install -r requirements.txt
 
 COPY ./gaming /code/
 
-# CMD [ "python manage.py runserver" ]
+COPY ./script.sh /bin
+
+RUN chmod +x /bin/script.sh
+
+CMD [ "script.sh" ]

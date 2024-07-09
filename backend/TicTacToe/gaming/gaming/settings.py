@@ -141,6 +141,8 @@ CHANNEL_LAYERS = {
     }
 }
 
+AUTH_URI = "http://auth:8000/api/usercheck/"
+
 # CHANNEL_LAYERS = {
 #     "default": {
 #         "BACKEND": "channels_redis.core.RedisChannelLayer",
