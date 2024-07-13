@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import game, home
+from .views import game, statistics
 
 urlpatterns = [
-    path('', home, name="homePage"),
+    path('', statistics, name="homePage"),
     path('ttt/<roomcode>', game, name="tictactoe")
 ]

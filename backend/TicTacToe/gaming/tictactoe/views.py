@@ -7,7 +7,7 @@ from .serializer import gameInfoModelSerializer
 from rest_framework.decorators import api_view
 
 @api_view(['GET'])
-def home(req):
+def statistics(req):
     try:
         cookies = req.COOKIES.get('jwt_token')
         print(f"Found Cookies: {cookies}")
