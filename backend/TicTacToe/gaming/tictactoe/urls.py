@@ -2,6 +2,6 @@ from django.urls import path
 from .views import game, statistics
 
 urlpatterns = [
-    path('', statistics, name="homePage"),
-    path('ttt/<roomcode>', game, name="tictactoe")
+    path('MyStatistics/', statistics, name="homePage"),
+    path('TicTacToe/', game, name="tictactoe")
 ]
