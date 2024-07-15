@@ -5,10 +5,12 @@ from .roomCodes import roomcode
 from .serializer import gameInfoModelSerializer
 from rest_framework.decorators import api_view
 from django.http import HttpResponse
+from django.shortcuts import render
 
 
 @api_view(['GET', "POST"])
-def statistics(req):
+def myProfile(req):
+    print("-------------------------USER PROFILE----------------------------------")
     if req.method == "GET":
         try:
             cookies = req.COOKIES.get('jwt_token')
@@ -60,6 +62,7 @@ def statistics(req):
 
 @api_view(["GET"])
 def userStatistic(req, login):
+    print("-------------------------USER CHECK OTHERS PROFILE----------------------------------")
     print(f"Login={login}")
     try:
         getUserFromDataBase = gameInfo.objects.get(login=login)
@@ -67,5 +70,31 @@ def userStatistic(req, login):
         return response.Response(status=status.HTTP_404_NOT_FOUND)
     serial = gameInfoModelSerializer(getUserFromDataBase)
     return response.Response(serial.data, status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def TicTacToeLobby(req):
+    print("-------------------------USER ON LOBBY----------------------------------")
+    try:
+        cookies = req.COOKIES.get('jwt_token')
+        cookies = {'jwt_token': cookies}
+    except:
+        print("No Cookies Found")
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
+    try:
+        authApiResponse = requests.get('http://auth:8000/api/usercheck', cookies=cookies)
+        if authApiResponse.json().get('message') != "User is authenticated":
+           print(f"{authApiResponse.json().get('message')}")
+           raise Exception("BYE")
+        if authApiResponse.json().get('isLoged') == False:
+            print("No Login")
+            raise Exception("BYE")
+    except:
+        print("Auth API Failed Succesfully")
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
+    user_infos  = authApiResponse.json().get('data')
+    print(user_infos)
+    return render(req, 'lobby.html')
+
 def game(req):
+    print("-------------------------USER ON GAME----------------------------------")
     return HttpResponse("Welcome To The Game")

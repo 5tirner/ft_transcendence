@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TICTACTOE-LOBBY</title>
+    <link rel="icon" type="image/x-icon" href="https://community.o2.co.uk/t5/image/serverpage/image-id/19715i4246FC2CC8DB0E8F?v=v2">
+</head>
+<body>
+    <h1 id="bigLine"></h1>
+    <p id="smallLine"></p>
+    <script>
+        const ws = new WebSocket('ws://' + location.host + '/LobbyWS/');
+        ws.onopen = function()
+        {
+            console.log("Client On Lobby");
+        }
+    </script>
+</body>
+</html>
