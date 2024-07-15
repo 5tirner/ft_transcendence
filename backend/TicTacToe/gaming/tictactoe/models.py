@@ -7,3 +7,6 @@ class gameInfo(models.Model):
     draws = models.IntegerField(default=0)
     gamesPlayed = models.IntegerField(default=0)
     codeToPlay = models.CharField(max_length=20)
+
+class onLobby(models.Model):
+    login = models.CharField(max_length=20)
