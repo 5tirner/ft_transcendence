@@ -4,6 +4,7 @@ from rest_framework import response, status
 from .roomCodes import roomcode
 from .serializer import gameInfoModelSerializer
 from rest_framework.decorators import api_view
+from django.http import HttpResponse
 
 
 @api_view(['GET', "POST"])
@@ -66,5 +67,5 @@ def userStatistic(req, login):
         return response.Response(status=status.HTTP_404_NOT_FOUND)
     serial = gameInfoModelSerializer(getUserFromDataBase)
     return response.Response(serial.data, status=status.HTTP_200_OK)
-def game(req, roomcode):
-    pass
+def game(req):
+    return HttpResponse("Welcome To The Game")
