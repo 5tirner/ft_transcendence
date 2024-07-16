@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PINGPONG-GAME</title>
+    <link rel="icon" type="image/x-icon" href="https://www.clipartmax.com/png/middle/284-2844214_ping-pong-free-icon-pong-video-game-icon.png">
+</head>
+<body>
+    <script>
+        const ws = new WebSocket('ws://' + location.host + '/GameWS/');
+        ws.onopen = function(){
+            console.log("User On Game");
+        }
+    </script>
+    <h1>Welcome To The Game</h1>
+</body>
+</html>
