@@ -10,3 +10,8 @@ class gameInfo(models.Model):
 
 class onLobby(models.Model):
     login = models.CharField(max_length=20)
+
+class history(models.Model):
+    you = models.CharField(max_length=20)
+    oppenent = models.CharField(max_length=20)
+    winner = models.CharField(max_length=20)
