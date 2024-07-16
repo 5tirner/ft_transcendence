@@ -1,7 +1,7 @@
-from .models import gameInfo, onLobby
+from .models import gameInfo, onLobby, history
 from rest_framework import response, status
 from .roomCodes import roomcode
-from .serializer import gameInfoModelSerializer
+from .serializer import gameInfoModelSerializer, historyModelSirializer
 from rest_framework.decorators import api_view
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -85,11 +85,23 @@ def TicTacToeLobby(req):
 
 @api_view(["GET", "POST"])
 def historic(req):
+    print("-------------------------USER HESTORY----------------------------------")
     if req.method == "POST":
-        pass
+        serial = historyModelSirializer(data=req.data)
+        if serial.is_valid():
+            serial.save()
+            return response.Response(status=status.HTTP_201_CREATED)
+        else:
+            return response.Response(status=status.HTTP_204_NO_CONTENT)
     elif req.method == "GET":
+        # authApiResponse = isAuthUser(req)
+        # if authApiResponse is None:
+        #     return response.Response(status=status.HTTP_204_NO_CONTENT)
+        # user_infos  = authApiResponse.json().get('data')
+        # getUserFromHistoricModel = history.objects.filter(user_infos.get('username'))
         pass
 
+@api_view(["GET"])
 def game(req):
     print("-------------------------USER ON GAME----------------------------------")
     authApiResponse = isAuthUser(req)
