@@ -27,7 +27,7 @@ class myServerOnLobby(AsyncWebsocketConsumer):
 class myServerOnGame(AsyncWebsocketConsumer):
     playerWantsToPlay = list()
     async def connect(self):
-        print(f'----------User On Lobby Is: {self.scope["user"]}-------')
+        print(f'----------User On GAME Is: {self.scope["user"]}-------')
         if len(self.playerWantsToPlay) == 0:
             player1, player2 = self.scope['user'], ""
             roomid = gameInfo.objects.get(login=self.scope["user"]).codeToPlay
@@ -42,8 +42,9 @@ class myServerOnGame(AsyncWebsocketConsumer):
             self.playerWantsToPlay.remove(self.playerWantsToPlay[0])
             print(f"Still In Q: {len(self.playerWantsToPlay)}")
         await self.accept()
-        # toFronEnd = {'player1': player1, 'player2': player2}
-        # await self.channel_layer.group_send(roomid, {'type': 'ToFront', 'Data': toFronEnd})
+        toFronEnd = json.dumps({'player1': player1, 'player2': player2})
+        print(f"Player1: {player1}, Player2: {player2}, RoomId: {roomid}")
+        await self.channel_layer.group_send(roomid, {'type': 'ToFront', 'Data': toFronEnd})
     async def receive(self, text_data, bytes_data=0):
         print(f'----------Data Come From User: {self.scope["user"]}-------')
         print(f"Data: {text_data}")
@@ -51,5 +52,6 @@ class myServerOnGame(AsyncWebsocketConsumer):
     async def disconnect(self, code):
         print(f"Connection Of User: {self.scope['user']} Lost")
     
-    async def ToFront(data):
-        pass
+    async def ToFront(self, data):
+        print("Sending Data To Clinet...")
+        await self.send(data['Data'])

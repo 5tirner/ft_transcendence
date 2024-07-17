@@ -12,6 +12,10 @@
         ws.onopen = function(){
             console.log("User On Game");
         }
+        ws.onmessage = function(e)
+        {
+            console.log(e.data);
+        }
     </script>
     <h1>Welcome To The Game</h1>
 </body>
