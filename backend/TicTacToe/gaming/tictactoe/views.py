@@ -8,7 +8,11 @@ from django.shortcuts import render
 from .isAuthUser import isAuthUser
 
 
-@api_view(['GET', "POST"])
+@api_view(["GET"])
+def home(req):
+    return render(req, 'home.html')
+
+@api_view(["GET"])
 def myProfile(req):
     print("-------------------------USER PROFILE----------------------------------")
     if req.method == "GET":

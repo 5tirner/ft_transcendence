@@ -3,10 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PINGPONG-GAME</title>
-    <link rel="icon" type="image/x-icon" href="https://www.clipartmax.com/png/middle/284-2844214_ping-pong-free-icon-pong-video-game-icon.png">
+    <title>TICTACTOE-GAME</title>
+    <link rel="icon" type="image/x-icon" href="https://w7.pngwing.com/pngs/690/29/png-transparent-3d-tic-tac-toe-paper-and-pencil-game-player-others-game-angle-leaf-thumbnail.png">
 </head>
+<style>
+    #board {
+        margin-left: auto;
+        margin-right: auto;
+        width: 375px;
+        height: 375px;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 5px;
+
+    }
+
+    .square {
+        width: 120px;
+        height: 120px;
+        border: 1px solid #ba0ae6;
+        background-color: #8d618f;
+        font-size: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+    }
+
+
+    .square:hover {
+        background-color: #5c5da1;
+    }
+    body{
+        background-color: #cb8be4;
+    }
+    .player1name
+    {
+        position: absolute;
+        left: 0%;
+        top: 20%;
+        color: #c5aace;
+    }
+    .player2name
+    {
+        position: absolute;
+        left: 68%;
+        top: 80%;
+        color: #c5aace;
+    }
+
+</style>
+
 <body>
+    <h1 style="color: #7000b1bb; text-align: center;">TIC-TAC-TOE GAME</h1>
+    <h1 class="player1name" id="p1"></h1>
+    <h1 class="player2name" id="p2"></h1>
     <script>
         const ws = new WebSocket('ws://' + location.host + '/GameWS/');
         ws.onopen = function(){
@@ -14,9 +65,26 @@
         }
         ws.onmessage = function(e)
         {
-            console.log(e.data);
+            const dataPars = JSON.parse(e.data)
+            console.log("Player1" + dataPars.player1);
+            console.log("Player2" + dataPars.player2)
+            console.log("RoomId" + dataPars.roomid)
+            const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
+            domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+            domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
         }
     </script>
-    <h1>Welcome To The Game</h1>
+
+    <div id="board">
+        <div id="square-0" class="square"></div>
+        <div id="square-1" class="square"></div>
+        <div id="square-2" class="square"></div>
+        <div id="square-3" class="square"></div>
+        <div id="square-4" class="square"></div>
+        <div id="square-5" class="square"></div>
+        <div id="square-6" class="square"></div>
+        <div id="square-7" class="square"></div>
+        <div id="square-8" class="square"></div>
+    </div>
 </body>
 </html>
