@@ -41,50 +41,91 @@
     {
         position: absolute;
         left: 0%;
-        top: 20%;
-        color: #c5aace;
+        top: 80%;
+        color: #421152;
     }
     .player2name
     {
         position: absolute;
         left: 68%;
         top: 80%;
-        color: #c5aace;
+        color: #421152;
     }
 
 </style>
 
 <body>
-    <h1 style="color: #7000b1bb; text-align: center;">TIC-TAC-TOE GAME</h1>
+    <h1 style="color: #000000fb; text-align: center;">TIC-TAC-TOE GAME</h1>
     <h1 class="player1name" id="p1"></h1>
     <h1 class="player2name" id="p2"></h1>
     <script>
         const ws = new WebSocket('ws://' + location.host + '/GameWS/');
-        ws.onopen = function(){
+        const board = '.........';
+        const gameStatus  = "onprogress";
+        let isGameStarted = false;
+        ws.onopen = function()
+        {
             console.log("User On Game");
         }
         ws.onmessage = function(e)
         {
             const dataPars = JSON.parse(e.data)
-            console.log("Player1" + dataPars.player1);
-            console.log("Player2" + dataPars.player2)
-            console.log("RoomId" + dataPars.roomid)
-            const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
-            domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-            domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+            if (isGameStarted == false)
+            {
+                if (dataPars.player2.length == 0)
+                {
+                    console.log("Player1: " + dataPars.player1);
+                    console.log("Player2: " + dataPars.player2)
+                    console.log("RoomId: " + dataPars.roomid)
+                    const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
+                    domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+                    domElm2.innerHTML = "PLAYER2: ...";
+                }
+                else if (dataPars.player2.length != 0)
+                {
+                    isGameStarted = true;
+                    console.log("Player1: " + dataPars.player1);
+                    console.log("Player2: " + dataPars.player2)
+                    console.log("RoomId: " + dataPars.roomid)
+                    const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
+                    domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+                    domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+                }
+            }
+            else
+            {
+                console.log('Game Is Started');
+                console.log(e.data);
+            }
+        }
+        function sendDataToServer(squareNbr)
+        {
+            if (isGameStarted == true)
+            {
+                const position = Number(squareNbr);
+                if (board[position] != '.')
+                    console.log('The Square Already Filled By: ', board[position]);
+                else
+                {
+                    const toServer = {'gameStatus': gameStatus, 'position': position, 'board': board};
+                    ws.send(JSON.stringify(toServer));
+                }
+            }
+            else
+                console.log('Game Not Start Yet');
         }
     </script>
 
     <div id="board">
-        <div id="square-0" class="square"></div>
-        <div id="square-1" class="square"></div>
-        <div id="square-2" class="square"></div>
-        <div id="square-3" class="square"></div>
-        <div id="square-4" class="square"></div>
-        <div id="square-5" class="square"></div>
-        <div id="square-6" class="square"></div>
-        <div id="square-7" class="square"></div>
-        <div id="square-8" class="square"></div>
+        <div id="square-0" class="square" onclick="sendDataToServer('0')"></div>
+        <div id="square-1" class="square" onclick="sendDataToServer('1')"></div>
+        <div id="square-2" class="square" onclick="sendDataToServer('2')"></div>
+        <div id="square-3" class="square" onclick="sendDataToServer('3')"></div>
+        <div id="square-4" class="square" onclick="sendDataToServer('4')"></div>
+        <div id="square-5" class="square" onclick="sendDataToServer('5')"></div>
+        <div id="square-6" class="square" onclick="sendDataToServer('6')"></div>
+        <div id="square-7" class="square" onclick="sendDataToServer('7')"></div>
+        <div id="square-8" class="square" onclick="sendDataToServer('8')"></div>
     </div>
 </body>
 </html>
