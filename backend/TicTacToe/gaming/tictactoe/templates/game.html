@@ -60,13 +60,18 @@
     <h1 class="player2name" id="p2"></h1>
     <script>
         const ws = new WebSocket('ws://' + location.host + '/GameWS/');
-        const board = '.........';
-        const gameStatus  = "onprogress";
+        let board = '.........';
         let isGameStarted = false;
+        // function checkEndGame()
+        // {
+        //     if (board[0] == board[1] && board[0] == board[2])
+        //         return true;
+        // }
         ws.onopen = function()
         {
             console.log("User On Game");
         }
+
         ws.onmessage = function(e)
         {
             const dataPars = JSON.parse(e.data)
@@ -79,7 +84,7 @@
                     console.log("RoomId: " + dataPars.roomid)
                     const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
                     domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-                    domElm2.innerHTML = "PLAYER2: ...";
+                    domElm2.innerHTML = "PLAYER2: Wait...";
                 }
                 else if (dataPars.player2.length != 0)
                 {
@@ -96,8 +101,10 @@
             {
                 console.log('Game Is Started');
                 console.log(e.data);
+                board = dataPars.board;
             }
         }
+
         function sendDataToServer(squareNbr)
         {
             if (isGameStarted == true)
@@ -107,12 +114,18 @@
                     console.log('The Square Already Filled By: ', board[position]);
                 else
                 {
-                    const toServer = {'gameStatus': gameStatus, 'position': position, 'board': board};
+                    const toServer = {'gameStatus': "onprogress", 'position': position, 'board': board};
                     ws.send(JSON.stringify(toServer));
                 }
             }
             else
                 console.log('Game Not Start Yet');
+        }
+
+        window.onbeforeunload = function()
+        {
+            const toServer = {'gameStatus': "closed", 'position': -1, 'board': board};
+            ws.send(JSON.stringify(toServer));
         }
     </script>
 
