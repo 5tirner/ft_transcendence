@@ -75,26 +75,36 @@ class myServerOnGame(AsyncWebsocketConsumer):
         dataFromClient = json.loads(text_data)
         try:
             thisUser, hisOppenent = self.scope["user"], self.playersOnMatchAndItsOppenent.get(self.scope["user"])
-            if self.playersOnMatchAndItsRoomId.get(thisUser) == gameInfo.objects.get(login=thisUser).codeToPlay:
-                symbol = 'X'
-            else:
-                symbol = 'O'
-            board = dataFromClient.get('board')
-            isLegalClick(board, symbol, thisUser)
-            pos = dataFromClient.get('position')
-            board = board[:pos] + symbol + board[pos + 1:]
-            roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
-            print(f"Id To Send Data: {roomidForThisUser}")
-            toFrontEnd = json.dumps({
-                'etat': "PLAYING",
-                'user': thisUser,
-                'oppenent': hisOppenent,
-                'position': dataFromClient.get('position'),
-                'x_o': symbol,
-                'board': board
-                })
-            if roomidForThisUser is not None:
-                await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnPlaying', 'Data': toFrontEnd})
+            if dataFromClient.get("gameStatus") == "onprogress":
+                if self.playersOnMatchAndItsRoomId.get(thisUser) == gameInfo.objects.get(login=thisUser).codeToPlay:
+                    symbol = 'X'
+                else:
+                    symbol = 'O'
+                board = dataFromClient.get('board')
+                isLegalClick(board, symbol, thisUser)
+                pos = dataFromClient.get('position')
+                board = board[:pos] + symbol + board[pos + 1:]
+                roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
+                print(f"Id To Send Data: {roomidForThisUser}")
+                toFrontEnd = json.dumps({
+                    'etat': "PLAYING",
+                    'user': thisUser,
+                    'oppenent': hisOppenent,
+                    'position': dataFromClient.get('position'),
+                    'x_o': symbol,
+                    'board': board
+                    })
+                if roomidForThisUser is not None:
+                    await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnPlaying', 'Data': toFrontEnd})
+            elif dataFromClient.get("gameStatus") == "winner":
+                Winner, loser = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)
+                Winner.wins += 1
+                Winner.save()
+                loser.loses += 1
+                loser.save()
+                await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
+            elif dataFromClient.get("gameStatus") == "draw":
+                await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
         except:
             pass
 
@@ -120,3 +130,5 @@ class myServerOnGame(AsyncWebsocketConsumer):
     async def ToFrontOnPlaying(self, data):
         print("Sending Data To Clinet...")
         await self.send(data['Data'])
+    async def endGame(self, data):
+        pass

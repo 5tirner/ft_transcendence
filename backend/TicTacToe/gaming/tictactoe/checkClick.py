@@ -14,5 +14,3 @@ def isLegalClick(board, symbol, user):
     elif symbol == "O" and o == x:
         print(f"Not Turn Of This User {user}")
         raise "BAD CLICK"
-        
-    
