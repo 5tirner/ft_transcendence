@@ -1,3 +1,4 @@
+import { auth } from '../auth/Authentication.js';
 // Login View
 class Login extends HTMLElement {
   constructor() { super('foo'); this.root = this.attachShadow({ mode: 'open' }); }
@@ -370,7 +371,7 @@ export class Profile extends HTMLElement
       this.root = this.attachShadow({mode:"open"})
     }
     // connected call back
-    connectedCallback()
+    async connectedCallback()
     {
       this.setAttribute("id", "profile-view");
       this.setAttribute("hidden", "");
@@ -434,17 +435,18 @@ export class Profile extends HTMLElement
             }
         </style>
         <div class="first">
-          <div class="win common">Win Count: ${window.Auth.wins}</div>
+          <div class="win common">Win Count: ${await auth.wins}</div>
           <div class="user common">
               <div class="avatar">
-                <img src="${window.Auth.avatar}" alt="" />
+                <img src="${auth.avatar}" alt="" />
               </div>
-              <div class="fullname info">${window.Auth.fullname}</div>
-              <div class="username info">@${window.Auth.user}</div>
+              <div class="fullname info">${auth.fullname}</div>
+              <div class="username info">@${auth.user}</div>
           </div>
-          <div class="loss common">Loss Count: ${window.Auth.loss}</div>
+          <div class="loss common">Loss Count: ${auth.loss}</div>
         </div>
       `;
+      console.log("Profile View Connected: ", auth.fullname, auth.user, auth.avatar, auth.wins, auth.loss);
     }
 }
 // Platform View
@@ -646,6 +648,10 @@ export class Platform extends HTMLElement
             </div>
         </div>
         `;
+        // const ticTacToe = this.querySelector("button .local-xo");
+        // ticTacToe.addEventListener("click", () => {
+          
+        // });
     }
 }
 // Main UI View

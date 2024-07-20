@@ -8,9 +8,9 @@ document.addEventListener("DOMContentLoaded", () =>
 {
     customElements.define("main-ui", MainUI);
     customElements.define("sidebar-view", Sidebar);
+    customElements.define("home-view", Home);
     customElements.define("game-view", Game);
     customElements.define("platform-view", Platform);
-    customElements.define("home-view", Home);
     customElements.define("profile-view", Profile);
 
     window.component = {
