@@ -1,6 +1,6 @@
 import { auth } from '../auth/Authentication.js';
 // Login View
-class Login extends HTMLElement {
+export class Login extends HTMLElement {
   constructor() { super('foo'); this.root = this.attachShadow({ mode: 'open' }); }
   connectedCallback() {
     this.setAttribute("id", "login-view");
@@ -118,7 +118,7 @@ class Login extends HTMLElement {
 							type="button"
 							role="button"
 							class="button-23"
-							onclick="window.Auth.loginGoogle()"
+							
 						>
 							<span class="G">G </span>Login with google<span>
 								>
@@ -130,7 +130,7 @@ class Login extends HTMLElement {
 							type="button"
 							role="button"
 							class="button-23 intra-42"
-							onclick="window.Auth.loginIntra()"
+							
 						>
 							<span class="42">42 </span>Login with Intra<span>
 								>
@@ -148,18 +148,21 @@ class Login extends HTMLElement {
     links.forEach((link) => {
       link.addEventListener("click", (e) => {
         e.preventDefault();
+        window.Auth.loginIntra()
       });
     });
   }
+  // onclick="window.Auth.loginIntra()"
+  // onclick="window.Auth.loginGoogle()"
 }
 // Home View
 export class Home extends HTMLElement
 {
-  constructor() { super('foo'); customElements.define("login-view", Login); }
+  constructor() { super('foo') };
   connectedCallback()
   {
     this.setAttribute("id", "home-view");
-    this.setAttribute("hidden", '');
+    this.setAttribute('hidden', '');
     this.innerHTML += `
       <login-view></login-view>
       <nav class="d-flex navbar justify-content-between">
@@ -335,6 +338,8 @@ export class Game extends HTMLElement
                         11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
                     </svg>
                 </button>
+                <ttt-view></ttt-view>
+                <pong-view></pong-view>
 			</div>
         `;
         if ( document.fullscreenEnabled )
@@ -629,7 +634,7 @@ export class Platform extends HTMLElement
                 <div class="xo">
                     <img src="js/view/src/img/xo-teal.gif">
                     <div class="btn-wrapper">
-                      <a href="/TicTacToe/Game" class="xo-btn">
+                      <a href="/TicTacToe" class="xo-btn">
                         <button class="button multi">Multiplayer</button>
                       </a>
                       <button class="button local-xo">Local</button>
@@ -654,9 +659,192 @@ export class Platform extends HTMLElement
         ticTacToe.addEventListener("click", (e) => {
           e.preventDefault();
           const href = ticTacToe.getAttribute("href");
-          console.log("href: ", href);
-          window.router.redirecto(href);
+          if ( href === "/TicTacToe" )
+            window.router.goto("/game", "ttt");
+          else
+            window.router.goto("/game", "pong");
         });
+    }
+}
+// TicTacToe View
+export class TTT extends HTMLElement
+{
+    constructor()
+    {
+      super('foo');
+    }
+    connectedCallback()
+    {
+      this.setAttribute('id', 'ttt-view');
+      this.setAttribute('hidden', '');
+      this.innerHTML += `
+      <style>
+          #board {
+              margin-left: auto;
+              margin-right: auto;
+              width: 375px;
+              height: 375px;
+              display: grid;
+              grid-template-columns: repeat(3, 1fr);
+              grid-gap: 5px;
+      
+          }
+      
+          .square {
+              width: 120px;
+              height: 120px;
+              border: 1px solid #ba0ae6;
+              background-color: #8d618f;
+              font-size: 40px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              border-radius: 10px;
+          }
+      
+      
+          .square:hover {
+              background-color: #5c5da1;
+          }
+          body{
+              background-color: #cb8be4;
+          }
+          .player1name
+          {
+              position: absolute;
+              left: 0%;
+              top: 80%;
+              color: #421152;
+          }
+          .player2name
+          {
+              position: absolute;
+              left: 68%;
+              top: 80%;
+              color: #421152;
+          }
+          .squareX {
+              background-image: url("https://images.vexels.com/media/users/3/155474/isolated/preview/4e12cd94f7591c3c851fce62fdc3d463-x-cross-doodle-icon.png");
+              background-repeat: no-repeat;
+              background-size: cover;
+          }
+      
+          .squareO {
+              background-image: url("https://www.freeiconspng.com/thumbs/letter-o-icon-png/letter-o-icon-png-8.png");
+              background-repeat: no-repeat;
+              background-size: cover;
+          }
+      </style>
+        <h1 style="color: #000000fb; text-align: center;">TIC-TAC-TOE GAME</h1>
+        <h1 class="player1name" id="p1"></h1>
+        <h1 class="player2name" id="p2"></h1>
+       
+        <div id="board">
+            <div id="square0" class="square" onclick="sendDataToServer('0')"></div>
+            <div id="square1" class="square" onclick="sendDataToServer('1')"></div>
+            <div id="square2" class="square" onclick="sendDataToServer('2')"></div>
+            <div id="square3" class="square" onclick="sendDataToServer('3')"></div>
+            <div id="square4" class="square" onclick="sendDataToServer('4')"></div>
+            <div id="square5" class="square" onclick="sendDataToServer('5')"></div>
+            <div id="square6" class="square" onclick="sendDataToServer('6')"></div>
+            <div id="square7" class="square" onclick="sendDataToServer('7')"></div>
+            <div id="square8" class="square" onclick="sendDataToServer('8')"></div>
+        </div>
+      `;
+          // const ws = new WebSocket('ws://' + location.host + '/GameWS/');
+          // let board = '.........';
+          // let isGameStarted = false;
+          // function isGameEnd(x_o, board)
+          // {
+          //     if ((board[0] == x_o && board[1] == x_o && board[2] == x_o)
+          //         || (board[3] == x_o && board[4] == x_o && board[5] == x_o)
+          //         || (board[6] == x_o && board[7] == x_o && board[8] == x_o)
+          //         || (board[0] == x_o && board[3] == x_o && board[6] == x_o)
+          //         || (board[1] == x_o && board[4] == x_o && board[7] == x_o)
+          //         || (board[2] == x_o && board[5] == x_o && board[8] == x_o)
+          //         || (board[0] == x_o && board[4] == x_o && board[8] == x_o)
+          //         || (board[2] == x_o && board[4] == x_o && board[6] == x_o))
+          //         return true;
+          //     return false;
+          // }
+          // ws.onopen = function()
+          // {
+          //     console.log("User On Game");
+          // }
+  
+          // ws.onmessage = function(e)
+          // {
+          //     const dataPars = JSON.parse(e.data)
+          //     if (isGameStarted == false)
+          //     {
+          //         if (dataPars.player2.length == 0)
+          //         {
+          //             console.log("Player1: " + dataPars.player1);
+          //             console.log("Player2: " + dataPars.player2)
+          //             console.log("RoomId: " + dataPars.roomid)
+          //             const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
+          //             domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+          //             domElm2.innerHTML = "PLAYER2: Wait...";
+          //         }
+          //         else if (dataPars.player2.length != 0)
+          //         {
+          //             isGameStarted = true;
+          //             console.log("Player1: " + dataPars.player1);
+          //             console.log("Player2: " + dataPars.player2)
+          //             console.log("RoomId: " + dataPars.roomid)
+          //             const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
+          //             domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+          //             domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+          //         }
+          //     }
+          //     else
+          //     {
+          //         if (dataPars.etat == "PLAYING")
+          //         {
+          //             console.log('Game Is Started');
+          //             console.log(e.data);
+          //             board = dataPars.board;
+          //             const position = dataPars.position;
+          //             const domElem = document.getElementById(square${position});
+          //             if (dataPars.x_o == "X")
+          //                 domElem.classList.add("squareX");
+          //             else if (dataPars.x_o == "O")
+          //                 domElem.classList.add("squareO");
+          //             if (isGameEnd(dataPars.x_o, board) == true)
+          //             {
+          //                 console.log("Setting The Result Of This Game On Data Base");
+          //                 const toServer = {'gameStatus': "winner", 'position': -1, 'board': board};
+          //                 ws.send(JSON.stringify(toServer));
+          //             }
+          //         }
+          //     }
+          // }
+  
+          // function sendDataToServer(squareNbr)
+          // {
+          //     if (isGameStarted == true)
+          //     {
+          //         const position = Number(squareNbr);
+          //         if (board[position] != '.')
+          //             console.log('The Square Already Filled By: ', board[position]);
+          //         else
+          //         {
+          //             const toServer = {'gameStatus': "onprogress", 'position': position, 'board': board};
+          //             ws.send(JSON.stringify(toServer));
+          //         }
+          //     }
+          //     else
+          //         console.log('Game Not Start Yet');
+          // }
+          // ws.onclose  = function()
+          // {
+          //     console.log("BYE FROM SERVER");
+          // }
+          // window.onbeforeunload = function()
+          // {
+          //     const toServer = {'gameStatus': "closed", 'position': -1, 'board': board};
+          //     ws.send(JSON.stringify(toServer));
+          // }
     }
 }
 // Main UI View
@@ -666,10 +854,9 @@ export class MainUI extends HTMLElement
     {
         super('foo');
     }
-    // skipcq: JS-D1001
     connectedCallback()
     {
-        // const home      = document.createElement("home-view");
+        const home      = document.createElement("home-view");
         const left      = document.createElement("div");
         const right     = document.createElement("div");
         const middle    = document.createElement("div");
@@ -679,11 +866,8 @@ export class MainUI extends HTMLElement
         const profile   = document.createElement("profile-view");
         const setting   = document.createElement("setting-view");
         const platform  = document.createElement("platform-view");
-        const home      = document.createElement("home-view");
 
         this.setAttribute("id", "main-ui");
-        home.setAttribute("id", "home-view");
-        home.setAttribute("hidden", '');
         left.setAttribute("id", "left-view");
         left.setAttribute("hidden", '');
         right.setAttribute("id", "right-view");
