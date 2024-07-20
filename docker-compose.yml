@@ -20,7 +20,19 @@ services:
         depends_on:
             - postgres_db
             - auth
-        
+    tictactoe:
+        image: tttimage
+        container_name: tttcntr
+        build: ./backend/TicTacToe
+        networks:
+            - Net
+        depends_on:
+            - auth
+            - postgres_db
+        command:
+            sh -c "python3 manage.py makemigrations --noinput  && python3
+            manage.py migrate --noinput && python manage.py runserver
+            0.0.0.0:8000"
     postgres_db:
         init: true
         container_name: postgres_db
