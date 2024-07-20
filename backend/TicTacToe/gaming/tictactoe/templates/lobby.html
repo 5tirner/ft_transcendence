@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TICTACTOE-LOBBY</title>
+    <link rel="icon" type="image/x-icon" href="https://w7.pngwing.com/pngs/690/29/png-transparent-3d-tic-tac-toe-paper-and-pencil-game-player-others-game-angle-leaf-thumbnail.png">
+</head>
+<style>
+    div
+    {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    }
+    button
+    {
+        border-radius: 20%;
+        background-color: rgb(64, 3, 92);
+        color: rgb(58, 92, 204);
+        text-decoration: wavy;
+    }
+    body
+    {
+        background-color: rgb(116, 84, 167);
+    }
+    h1
+    {
+        position: absolute;
+        top: 30%;
+        left: 40%;
+        color: rgb(25, 3, 46);
+    }
+</style>
+<body>
+    <h1 id="bigLine"></h1>
+    <p id="smallLine"></p>
+    <div class="Play">
+        <button>PLAY</button>
+    </div>
+    <h1 id="Welcome"></h1>
+    <script>
+        const ws = new WebSocket('ws://' + location.host + '/LobbyWS/');
+        ws.onopen = function()
+        {
+            console.log("Client On Lobby");
+            ws.send("SEND ME DATA");
+        }
+        ws.onmessage = function(e)
+        {
+            console.log('Message obo From Server');
+            const welcomeUser = document.getElementById('Welcome');
+            welcomeUser.innerHTML = "WELCOME TO LOBBY " + e.data.toUpperCase();
+        }
+        window.addEventListener('DOMContentLoaded', (event) => 
+        {
+            const divPlayButton = document.querySelector('.Play');
+            if (divPlayButton)
+            {
+                divPlayButton.addEventListener('click', function()
+                {
+                    window.location.href = 'http://127.0.0.1:8000/TicTacToe/Game/';
+                });
+            }
+            else
+                console.log('Problem Happened In Div');
+        });
+    </script>
+</body>
+</html>
