@@ -21,6 +21,7 @@ services:
             - postgres_db
             - auth
     tictactoe:
+        init: true
         image: tttimage
         container_name: tttcntr
         build: ./backend/TicTacToe

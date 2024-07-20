@@ -629,8 +629,10 @@ export class Platform extends HTMLElement
                 <div class="xo">
                     <img src="js/view/src/img/xo-teal.gif">
                     <div class="btn-wrapper">
+                      <a href="/TicTacToe/Game" class="xo-btn">
                         <button class="button multi">Multiplayer</button>
-                        <button class="button local-xo">Local</button>
+                      </a>
+                      <button class="button local-xo">Local</button>
                     </div>
                 </div>
             </div>
@@ -648,10 +650,13 @@ export class Platform extends HTMLElement
             </div>
         </div>
         `;
-        // const ticTacToe = this.querySelector("button .local-xo");
-        // ticTacToe.addEventListener("click", () => {
-          
-        // });
+        const ticTacToe = this.root.querySelector(".xo-btn");
+        ticTacToe.addEventListener("click", (e) => {
+          e.preventDefault();
+          const href = ticTacToe.getAttribute("href");
+          console.log("href: ", href);
+          window.router.redirecto(href);
+        });
     }
 }
 // Main UI View
