@@ -1,11 +1,11 @@
 from django.urls import path
-from .views import game, myProfile, userStatistic, TicTacToeLobby, historic, home
+from .views import game, myProfile, userStatistic
 
 urlpatterns = [
-    path('', home),
+    path('', game),
     path('myProfile/', myProfile, name="homePage"),
     path('UserStat/<login>/', userStatistic),
-    path('Game/', game, name="tictactoe"),
-    path('Lobby/', TicTacToeLobby),
-    path('History/', historic),
+    # path('Game/', game, name="tictactoe"),
+    # path('Lobby/', TicTacToeLobby),
+    # path('History/', historic),
 ]
