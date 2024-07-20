@@ -1,0 +1,17 @@
+Django==5.0.6
+django-cors-headers==4.3.1
+djangorestframework==3.15.1
+pyasn1==0.6.0
+pyasn1_modules==0.4.0
+service-identity==24.1.0
+setuptools==70.0.0
+six==1.16.0
+sqlparse==0.5.0
+Twisted==24.3.0
+txaio==23.1.1
+typing_extensions==4.11.0
+zope.interface==6.4
+psycopg2-binary==2.9.9
+PyJWT==2.3.0
+requests==2.32.3
+httpx==0.27.0

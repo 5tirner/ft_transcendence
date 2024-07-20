@@ -1,0 +1,275 @@
+<template id="home-view">
+    <nav class="d-flex navbar justify-content-between">
+        <a class="navbar-brand" href="/">Pong.me</a>
+        <a class="home-buttons navbar-btn login-btn" href="/login">
+            Login
+        </a>
+    </nav>
+    <div class="card-hold"></div>
+    <main class="home">
+        <h1>Discover, Play & Challenge Your Friends</h1>
+        <p>
+            Pong.me support realtime game, chat, group chat channel,
+            ranking system and tournament.
+        </p>
+        <a class="home-buttons navbar-btn discover-btn" href="/platform">
+            Discover Now
+        </a>
+    </main>
+</template>
+
+<template id="login-view">
+    <!-- <filter class="bluer"></filter> -->
+    <div class="login-form">
+        <div class="sub-login-form">
+            <div class="logo">Pong.me</div>
+            <div class="google-intra-login">
+                <a href="/login" class="google-btn" name="google">
+                    <button
+                        type="button"
+                        role="button"
+                        class="button-23"
+                        onclick="Auth.loginGoogle(event)"
+                    >
+                        <span class="G">G </span>Login with google<span>
+                            >
+                        </span>
+                    </button>
+                </a>
+                <a href="/platform" class="intra-btn" name="intra">
+                    <button
+                        type="button"
+                        role="button"
+                        class="button-23 intra-42"
+                        onclick="Auth.loginIntra(event)"
+                    >
+                        <span class="42">42 </span>Login with Intra<span>
+                            >
+                        </span>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="sidebar-view">
+    <nav class="nav">
+        <div>
+            <a href="/platform" class="nav_logo">
+                <i class="bx bxs-tennis-ball nav_logo-icon"></i>
+            </a>
+            <div class="nav_list">
+                <a href="/platform" class="nav_link active">
+                    <i class="bx bx-grid-alt nav_icon"></i>
+                </a>
+                <a href="/game" class="nav_link">
+                    <i class="bx bxs-invader nav_icon"></i>
+                </a>
+                <a href="/setting" class="nav_link">
+                    <i class="bx bxs-cog nav_icon"></i>
+                </a>
+                <a href="/" class="nav_link">
+                    <i class="bx bx-log-out nav_icon"></i>
+                </a>
+            </div>
+        </div>
+        <a href="/profile" class="nav_link">
+            <i class="bx bx-user nav_icon"></i>
+            <span class="green_dot"></span>
+        </a>
+</template>
+
+<template id="platform-view">
+    <div id="sidebar">
+        <!-- sidebar -->
+        <side-bar-comp></side-bar-comp>
+    </div>
+    
+    <div id="middle">
+        <!-- play now -->
+    </div>
+
+    <div class="right-window" style="display: none" id="chat">
+        <div class="nav-convs">
+            <!-- INFO: Head of Chat-->
+            <div
+                class="d-flex flex-column align-items-center justify-content-start text-center text-white p-1 mx-auto gap-2"
+            >
+                <div class="add-message-head position-relative">
+                    <b>Chats</b>
+
+                    <div class="add-message-icon position-absolute">
+                        <!-- <img -->
+                        <!-- 	class="" -->
+                        <!-- 	alt="" -->
+                        <!-- 	src="./svg_dir/add-message 1.svg" -->
+                        <!-- /> -->
+                        <i class="bi bi-plus-circle-fill"></i>
+                    </div>
+                    <div class="dropdown">
+                        <div class="dropdown-content">
+                            <div>user</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- INFO:list of friends -->
+            <ul class="list-group rounded-0 mt-2"></ul>
+        </div>
+        <div class="chat-conv-wrapper">
+            <div class="chat-conv d-flex flex-column">
+                <div class="conve-header"></div>
+                <div class="messages d-flex flex-column"></div>
+                <div class="input-bar">
+                    <div class="message-input">
+                        <input
+                            type="text"
+                            placeholder="Write your message"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="rank">
+    <div class="container">
+        <div class="avatar">
+            <!-- <img src="" alt="avatar"> -->
+        </div>
+        <div class="name"></div>
+        <div class="points"></div>
+    </div>
+</template>
+
+<template id="start-game">
+    <img src="" alt="" />
+    <a href="#">
+        <main-button class="home-buttons discover-btn" name="Play Now"></main-button>
+    </a>
+</template>
+
+<template id="profile">
+    <div id="first">
+        <div class="win common"></div>
+        <div class="user common">
+            <div class="avatar">
+                <img src="" alt="" />
+            </div>
+            <div class="fullname info">fullname</div>
+            <div class="username info">@username</div>
+        </div>
+        <div class="loss common"></div>
+    </div>
+    <div id="second">
+        <div class="wrapper">
+            <p>Friends List</p>
+            <ul class="responsive-table">
+                <li class="table-row">
+                    <div class="col col-2" data-label="Customer Name">
+                        John Doe
+                    </div>
+                    <div class="col col-4" data-label="Payment Status">
+                        Active
+                    </div>
+                </li>
+                <li class="table-row">
+                    <div class="col col-2" data-label="Customer Name">
+                        Jennifer Smith
+                    </div>
+                    <div class="col col-4" data-label="Payment Status">
+                        Active
+                    </div>
+                </li>
+                <li class="table-row">
+                    <div class="col col-2" data-label="Customer Name">
+                        John Smith
+                    </div>
+                    <div class="col col-4" data-label="Payment Status">
+                        Active
+                    </div>
+                </li>
+                <li class="table-row">
+                    <div class="col col-2" data-label="Customer Name">
+                        John Carpenter
+                    </div>
+                    <div class="col col-4" data-label="Payment Status">
+                        Active
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<template id="game-view">
+    <div id="game-section"></div>
+    <div id="game-mode-section">
+        <div class="game-mode-title">Game Mode</div>
+        <div class="components"></div>
+    </div>
+</template>
+
+<template id="game-mode">
+    <div class="container"></div>
+</template>
+
+<template id="setting">
+    <div class="profile-card">
+        <div class="section">
+            <img
+                src="https://via.placeholder.com/100"
+                alt="Profile Picture"
+                id="profileImage"
+            />
+            <input
+                type="file"
+                id="fileInput"
+                style="display: none"
+                accept="image/*"
+                onchange="changeProfileImage(event)"
+            />
+            <button
+                class="edit-image"
+                onclick="document.getElementById('fileInput').click();"
+            >
+                ✏️
+            </button>
+            <h2 class="fullname"></h2>
+            <p username="username"></p>
+            <div class="badge">LVL 8</div>
+            <div class="info">
+                <div>
+                    <p>Name</p>
+                    <p class="fullname"></p>
+                </div>
+                <main-button name="Edit" class="edit-btn"></main-button>
+            </div>
+        </div>
+        <div id="float" style="display: none">
+            <form action="" method="post">
+                <input
+                    type="text"
+                    name="fullname"
+                    id="input-fullname"
+                    placeholder="Edit your name.."
+                    required
+                />
+                <main-button name="Save" class="edit-btn"></main-button>
+            </form>
+        </div>
+    </div>
+    <!-- style="display: none" -->
+    <script>
+        function changeProfileImage(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                const output = document.getElementById("profileImage");
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+</template>

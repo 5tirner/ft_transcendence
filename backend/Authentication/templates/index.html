@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authentication Example</title>
+</head>
+
+<body>
+
+    <div id="root">
+        <!-- This div will be used to display the content dynamically -->
+    </div>
+
+    <!-- Login template -->
+    <template id="login-template">
+        <div>
+            <h1>Login</h1>
+            <button onclick="loginWith42()">Login with Intra 42</button>
+            <button onclick="loginWithGoogle()">Login with Google</button>
+        </div>
+    </template>
+
+    <!-- Home template -->
+    <template id="home-template">
+        <div>
+            <h1>Welcome, <span id="username"></span>!</h1>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </template>
+
+    <script>
+        // Function to display login template
+        function showLogin() {
+            document.getElementById('root').innerHTML = document.getElementById('login-template').innerHTML;
+        }
+
+        // Function to display home template with username
+        function showHome(username) {
+            document.getElementById('root').innerHTML = document.getElementById('home-template').innerHTML;
+            document.getElementById('username').textContent = username;
+        }
+
+        // Function to redirect to Intra 42 authentication
+        function loginWith42() {
+            window.location.href = "http://127.0.0.1:8000/api/oauth/intra/";
+        }
+
+        // Function to redirect to Google authentication
+        function loginWithGoogle() {
+            window.location.href = "http://127.0.0.1:8000/api/google/";
+        }
+
+        // Initially show login page
+        showLogin();
+    </script>
+
+</body>
+
+</html>
