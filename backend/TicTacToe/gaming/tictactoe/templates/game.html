@@ -155,7 +155,10 @@
             else
                 console.log('Game Not Start Yet');
         }
-
+        ws.onclose  = function()
+        {
+            console.log("BYE FROM SERVER");
+        }
         window.onbeforeunload = function()
         {
             const toServer = {'gameStatus': "closed", 'position': -1, 'board': board};

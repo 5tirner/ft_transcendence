@@ -3,6 +3,7 @@ import json
 from .models import onLobby, gameInfo
 import os
 from .checkClick import isLegalClick
+from .destroyThisGameInfo import destroyThisGameInformations
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 class myServerOnLobby(AsyncWebsocketConsumer):
@@ -63,6 +64,12 @@ class myServerOnGame(AsyncWebsocketConsumer):
                 await self.channel_layer.group_add(roomid, self.channel_name)
                 self.playerWantsToPlay.remove(self.playerWantsToPlay[0])
                 await self.accept()
+                user1 = gameInfo.objects.get(login=player1)
+                user1.gamesPlayed += 1
+                user1.save()
+                user2 = gameInfo.objects.get(login=player2)
+                user2.gamesPlayed += 1
+                user2.save()
                 toFrontEnd = json.dumps({'player1': player1, 'player2': player2, 'roomid': roomid})
                 print(f"Player1: {player1}, Player2: {player2}, RoomId: {roomid}")
                 await self.channel_layer.group_send(roomid, {'type': 'ToFrontOnConnect', 'Data': toFrontEnd})
@@ -97,13 +104,32 @@ class myServerOnGame(AsyncWebsocketConsumer):
                 if roomidForThisUser is not None:
                     await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnPlaying', 'Data': toFrontEnd})
             elif dataFromClient.get("gameStatus") == "winner":
+                roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
                 Winner, loser = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)
                 Winner.wins += 1
                 Winner.save()
                 loser.loses += 1
                 loser.save()
+                try:
+                    destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+                                                self.playersOnMatchAndItsRoomId,
+                                                self.playersOnMatchAndItsRole, thisUser, hisOppenent)
+                except:
+                    print("ERROR HAPPENED WHEN DESTROY GAME")
                 await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
             elif dataFromClient.get("gameStatus") == "draw":
+                roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
+                p1, p2 = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)
+                p1.draws += 1
+                p1.save()
+                p2.draws += 1
+                p2.save()
+                try:
+                    destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+                                                self.playersOnMatchAndItsRoomId,
+                                                self.playersOnMatchAndItsRole, thisUser, hisOppenent)
+                except:
+                    print("ERROR HAPPENED WHEN DESTROY GAME")
                 await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
         except:
             pass
@@ -113,12 +139,9 @@ class myServerOnGame(AsyncWebsocketConsumer):
         try:
             roomidForThisUser = self.playersOnMatchAndItsRoomId.get(self.scope["user"])
             player1, player2 = self.scope['user'], self.playersOnMatchAndItsOppenent.get(self.scope['user'])
-            self.playersOnMatchAndItsOppenent.pop(player1)
-            self.playersOnMatchAndItsOppenent.pop(player2)
-            self.playersOnMatchAndItsRoomId.pop(player1)
-            self.playersOnMatchAndItsRoomId.pop(player2)
-            self.playersOnMatchAndItsRole.pop(player1)
-            self.playersOnMatchAndItsRole.pop(player2)
+            destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+                            self.playersOnMatchAndItsRoomId,
+                            self.playersOnMatchAndItsRole, player1, player2)
             await self.channel_layer.group_discard(roomidForThisUser, self.channel_name)
         except:
             pass
@@ -131,4 +154,5 @@ class myServerOnGame(AsyncWebsocketConsumer):
         print("Sending Data To Clinet...")
         await self.send(data['Data'])
     async def endGame(self, data):
-        pass
+        print("WebSocker Will Be Closed")
+        await self.close()
