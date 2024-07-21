@@ -24,8 +24,11 @@ def myProfile(req):
             print("Glad To See You Here")
             addUser = pongGameInfo(login=userInfo.get('username'), codeToPlay=roomcode(userInfo.get('username')))
             addUser.save()
+        print(f"Extract The User {userInfo.get('username')} From DataBase")
         element = pongGameInfo.objects.get(login=userInfo.get('username'))
+        print(f"User On DataBase: {element}")
         serial = pongGameInfoSerializer(element)
+        print(f"Send Response As: {serial.data}")
         return response.Response(serial.data, status=status.HTTP_200_OK)
     elif req.method == "POST":
         dataToPost = req.data
@@ -38,12 +41,23 @@ def myProfile(req):
 @api_view(['GET'])
 def userInfos(req, login):
     print("-------------------------USER CHECK----------------------------------")
-    pass
+    AuthResponse = isAuthUser(req)
+    if AuthResponse is None:
+        print("This User Does Not Authenticated")
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
+    try:
+        element = pongGameInfo.objects.get(login=login)
+        serial = pongGameInfoSerializer(element)
+        return response.Response(serial.data, status=status.HTTP_200_OK)
+    except:
+        print(f"can't Find {login} In DataBase")
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
+    
 
 @api_view(['GET'])
 def PongGame(req):
     AuthApiRes = isAuthUser(req)
     if req is None:
         print("This User Does Not Authenticated")
-        return response.Response(status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
     return render(req, 'game.html')

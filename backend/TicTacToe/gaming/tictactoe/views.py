@@ -20,20 +20,19 @@ def myProfile(req):
         if authApiResponse is None:
             return response.Response(status=status.HTTP_204_NO_CONTENT)
         user_infos  = authApiResponse.json().get('data')
-        print(user_infos)
-        searchForUserInDataBase = gameInfo.objects.filter(login=user_infos.get('username')).first()
-        if searchForUserInDataBase is None:
-            print("Glad To See You!")
-            user = gameInfo(login=user_infos.get('username'),wins=0,
-            loses=0,draws=0,gamesPlayed=0,codeToPlay=roomcode(user_infos.get('username')))
-            user.save()
-        else:
+        print(f"Data: {user_infos}")
+        try:
+            gameInfo.objects.get(login=user_infos.get('username'))
             print('User Is Already Play Games And Stored In The Database')
-        print("Extract The User From Databases")
+        except:
+            print("Glad To See You!")
+            user = gameInfo(login=user_infos.get('username'),codeToPlay=roomcode(user_infos.get('username')))
+            user.save()
+        print(f"Extract The User {user_infos.get('username')} From Databases")
         element = gameInfo.objects.get(login=user_infos.get('username'))
-        print(element)
+        print(f"element On DataBase {element}")
         serial1 = gameInfoModelSerializer(element)
-        print("Send Response")
+        print(f"Send Response as {serial1.data}")
         return response.Response(serial1.data,status=status.HTTP_200_OK)
     elif req.method == "POST":
         dataToPost = req.data
