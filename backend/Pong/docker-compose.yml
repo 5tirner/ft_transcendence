@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  pong:
+    init : true
+    image: pongimage
+    build: .
+    container_name: pongcntr
+    command: python manage.py runserver 0.0.0.0:9000
+    ports:
+      - "29099:9000"

@@ -29,13 +29,8 @@ def myProfile(req):
             user.save()
         else:
             print('User Is Already Play Games And Stored In The Database')
-            pass
         print("Extract The User From Databases")
-        try:
-            element = gameInfo.objects.get(login=user_infos.get('username'))
-        except:
-            print("Failed To GEt Element From DataBase")
-            return response.Response(status=status.HTTP_204_NO_CONTENT)
+        element = gameInfo.objects.get(login=user_infos.get('username'))
         print(element)
         serial1 = gameInfoModelSerializer(element)
         print("Send Response")

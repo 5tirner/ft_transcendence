@@ -29,9 +29,25 @@ services:
         restart: always
     
     tictactoe:
+        init: true
         image: tttimage
         container_name: tttcntr
         build: ./backend/TicTacToe
+        networks:
+            - myNetwork
+        depends_on:
+            - auth
+            - postgres_db
+        command:
+            sh -c "python3 manage.py makemigrations --noinput  && python3
+            manage.py migrate --noinput && python manage.py runserver
+            0.0.0.0:8000"
+    
+    pong:
+        init: true
+        image: pongimage
+        container_name: pongcntr
+        build: ./backend/Pong
         networks:
             - myNetwork
         depends_on:
@@ -64,6 +80,7 @@ services:
             - chat
             - ws_chat
             - tictactoe
+            - pong
         restart: always
 
     auth:
@@ -82,6 +99,7 @@ services:
         restart: always
 
     chat:
+        init: true
         container_name: chat
         build:
             context: ./backend/chat
@@ -98,6 +116,7 @@ services:
             - auth
         restart: always
     ws_chat:
+        init: true
         container_name: ws_chat
         build:
             context: ./backend/ws_chat
