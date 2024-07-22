@@ -60,4 +60,11 @@ def PongGame(req):
     if req is None:
         print("This User Does Not Authenticated")
         return response.Response(status=status.HTTP_204_NO_CONTENT)
+    userInfo = AuthApiRes.json().get('data')
+    try:
+        pongGameInfo.objects.get(userInfo.get('username'))
+    except:
+        print(f"First Game For {userInfo.get('username')}")
+        userAdd = pongGameInfo(login=userInfo.get('username'), codeToPlay=roomcode(userInfo.get('username')))
+        userAdd.save()
     return render(req, 'game.html')

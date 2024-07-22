@@ -1,6 +1,6 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-from .models import onLobby, gameInfo
+from .models import onLobby, gameInfo, history
 import os
 from .checkClick import isLegalClick
 from .destroyThisGameInfo import destroyThisGameInformations
@@ -106,10 +106,16 @@ class myServerOnGame(AsyncWebsocketConsumer):
             elif dataFromClient.get("gameStatus") == "winner":
                 roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
                 Winner, loser = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)
+                print(f"Winner {Winner.login}: Wins: {Winner.wins} + 1")
+                print(f"Loser {loser.login}: Loses: {loser.loses} + 1")
                 Winner.wins += 1
                 Winner.save()
                 loser.loses += 1
                 loser.save()
+                print(f"Add Historic Of The Match Between {thisUser} and {hisOppenent}")
+                user1,user2 =history(you=thisUser,oppenent=hisOppenent,winner=thisUser),history(you=hisOppenent,oppenent=thisUser,winner=thisUser)
+                user1.save()
+                user2.save()
                 try:
                     destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
                                                 self.playersOnMatchAndItsRoomId,
@@ -124,6 +130,10 @@ class myServerOnGame(AsyncWebsocketConsumer):
                 p1.save()
                 p2.draws += 1
                 p2.save()
+                print(f"Add Historic Of The Match Between {thisUser} and {hisOppenent}")
+                user1,user2 =history(you=thisUser,oppenent=hisOppenent,winner="DRAW"),history(you=hisOppenent,oppenent=thisUser,winner="DRAW")
+                user1.save()
+                user2.save()
                 try:
                     destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
                                                 self.playersOnMatchAndItsRoomId,
@@ -131,6 +141,25 @@ class myServerOnGame(AsyncWebsocketConsumer):
                 except:
                     print("ERROR HAPPENED WHEN DESTROY GAME")
                 await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
+            elif dataFromClient.get("gameStatus") == "closed":
+                roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
+                leftedGame, Win = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)
+                leftedGame.loses += 1
+                leftedGame.save()
+                Win.wins +=1
+                Win.save()
+                print(f"Add Historic Of The Match Between {thisUser} and {hisOppenent}")
+                user1,user2 =history(you=thisUser,oppenent=hisOppenent,winner=hisOppenent),history(you=hisOppenent,oppenent=thisUser,winner=hisOppenent)
+                user1.save()
+                user2.save()
+                try:
+                    destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+                                                self.playersOnMatchAndItsRoomId,
+                                                self.playersOnMatchAndItsRole, thisUser, hisOppenent)
+                except:
+                    print("ERROR HAPPENED WHEN DESTROY GAME")
+                await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
+
         except:
             pass
 

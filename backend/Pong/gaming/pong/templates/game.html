@@ -15,6 +15,11 @@
         {
             console.log("User On Game");
         }
+        ws.onmessage = function(e)
+        {
+            console.log("Data From Server");
+            console.log(e.data);
+        }
     </script>
     
 </body>
