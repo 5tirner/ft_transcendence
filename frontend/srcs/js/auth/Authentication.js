@@ -1,5 +1,5 @@
 import API from "../service/API.js"
-
+import { Profile } from "../view/mainUI.js";
 export const auth = {
 	user: null,
 	avatar: null,
@@ -17,13 +17,13 @@ export const auth = {
 		const response = await API.isLogedIn();
 		if (response.ok) {
 			const res = await response.json();
-			console.log("res: ", res);
 			const { isLoged } = res;
 			auth.user = res.data.username;
 			auth.avatar = res.data.avatar;
 			auth.loses = res.data.losses;
 			auth.wins = res.data.wins;
 			auth.fullname = `${res.data.first_name} ${res.data.last_name}`;
+			customElements.define("profile-view", Profile);
 			return isLoged;
 		}
 		return false;

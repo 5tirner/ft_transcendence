@@ -1,22 +1,25 @@
-export const routes = (path) => {
+export const routes = (previousLocation, currentLocation) => {
     const container = document.createElement("div");
-    switch( path )
+    let previousView = null;
+    switch( currentLocation )
     {
-        case "/":
-        case "/login":
-        case "/platform":
-        case "/profile":
-        case "/setting":
-        case "/game":
-        {
-            let page = path.substring(1);
-            if (!page.length) page = "home";
-            return ( document.createElement(`${page}-view`) );
-        }
-        default:
-        {
-            container.textContent = "404 Not Found";
-            return container;
-        }
+      case "/platform":
+      case "/profile":
+      case "/setting":
+      case "/game":
+      {
+        const currentView   = document.querySelector(`${currentLocation.substring(1)}-view`);
+        if ( previousLocation )
+          previousView  = document.querySelector(`${previousLocation.substring(1)}-view`);
+        if ( previousView )
+            previousView.setAttribute('hidden', '');
+        if ( currentView )
+            currentView.removeAttribute('hidden');
+      }
+      default:
+      {
+          container.textContent = "404 Not Found";
+          return container;
+      }
     }
 };

@@ -373,10 +373,10 @@ export class Profile extends HTMLElement
     constructor()
     {
       super('foo');
-      this.root = this.attachShadow({mode:"open"})
+      this.root = this.attachShadow({ mode: "open" });
     }
     // connected call back
-    async connectedCallback()
+    connectedCallback()
     {
       this.setAttribute("id", "profile-view");
       this.setAttribute("hidden", "");
@@ -440,7 +440,7 @@ export class Profile extends HTMLElement
             }
         </style>
         <div class="first">
-          <div class="win common">Win Count: ${await auth.wins}</div>
+          <div class="win common">Win Count: ${auth.wins}</div>
           <div class="user common">
               <div class="avatar">
                 <img src="${auth.avatar}" alt="" />
@@ -448,10 +448,9 @@ export class Profile extends HTMLElement
               <div class="fullname info">${auth.fullname}</div>
               <div class="username info">@${auth.user}</div>
           </div>
-          <div class="loss common">Loss Count: ${auth.loss}</div>
+          <div class="loss common">Loss Count: ${auth.loses}</div>
         </div>
       `;
-      console.log("Profile View Connected: ", auth.fullname, auth.user, auth.avatar, auth.wins, auth.loss);
     }
 }
 // Platform View

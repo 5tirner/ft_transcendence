@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () =>
     customElements.define("login-view", Login);
     customElements.define("sidebar-view", Sidebar);
     customElements.define("platform-view", Platform);
-    // customElements.define("game-view", Game);
+    customElements.define("game-view", Game);
     // customElements.define("profile-view", Profile);
     // customElements.define("ttt-view", TTT);
 
@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", () =>
         right: document.getElementById("right-view"),
     }
     window.addEventListener("popstate", (e) => {
-      console.log("e.state.path: ", e.state.path);
         if (e.state.path !== '/home' && e.state.path !== '/login')
           router.redirecto( e.state.path );
     });
