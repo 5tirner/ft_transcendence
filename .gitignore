@@ -1,3 +1,6 @@
 .deepsource.toml
 .vscode
 .env
+template.html
+profile.html
+file.html

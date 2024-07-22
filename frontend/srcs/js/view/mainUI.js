@@ -258,19 +258,30 @@ export class Sidebar extends HTMLElement
 export class Game extends HTMLElement
 {
     constructor() { super('foo'); }
-    // connectedCallback
     connectedCallback()
     {
         this.setAttribute("id", "game-view");
         this.setAttribute("hidden", "");
         this.innerHTML += `
             <style>
+                #ttt-view
+                {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 100px;
+                    background-color: var(--light-olive);
+                }
                 ::backdrop
                 {
                     background-color: var(--light-olive);
                 }
                 .game-section
                 {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
                     width: 95%;
                     height: 100%;
                     margin-bottom: 30px;
@@ -324,8 +335,7 @@ export class Game extends HTMLElement
                     height: 230px;
                     width: 90%;
                     align-items: center;
-                }
-                
+                }   
             </style>
             <div class="game-section">
                 <button class="fscreen-btn">
@@ -346,22 +356,19 @@ export class Game extends HTMLElement
         {
             const button = this.querySelector("button");
             button.addEventListener("click", toggleFscreen);
-            // document.addEventListener( "keydown", keyPress );
         }
         function toggleFscreen()
         {
             console.log("clicked: ", document.body.getAttribute("fullscreen"));
             if (document.body.getAttribute("fullscreen") === null) {
-                // document.body.requestFullscreen();
                 document.body.setAttribute("fullscreen","");
                 window.component.left.setAttribute('hidden', '');
-			    window.component.right.setAttribute('hidden', '');
+                window.component.right.setAttribute('hidden', '');
                 window.component.middle.setAttribute('style', "flex-basis: 100%");
             } else {
-                // document.exitFullscreen();
                 document.body.removeAttribute("fullscreen");
                 window.component.left.removeAttribute('hidden');
-			    window.component.right.removeAttribute('hidden');
+                window.component.right.removeAttribute('hidden');
                 window.component.middle.removeAttribute('style');
             }
         }
@@ -633,7 +640,7 @@ export class Platform extends HTMLElement
                 <div class="xo">
                     <img src="js/view/src/img/xo-teal.gif">
                     <div class="btn-wrapper">
-                      <a href="/TicTacToe" class="xo-btn">
+                      <a href="/game" class="xo-btn" game="ttt">
                         <button class="button multi">Multiplayer</button>
                       </a>
                       <button class="button local-xo">Local</button>
@@ -657,11 +664,14 @@ export class Platform extends HTMLElement
         const ticTacToe = this.root.querySelector(".xo-btn");
         ticTacToe.addEventListener("click", (e) => {
           e.preventDefault();
-          const href = ticTacToe.getAttribute("href");
-          if ( href === "/TicTacToe" )
-            window.router.goto("/game", "ttt");
-          else
-            window.router.goto("/game", "pong");
+          const href = ticTacToe.getAttribute("game");
+          if ( href === "ttt" )
+          {
+            window.router.goto("/game");
+            if (!customElements.get("ttt-view"))
+              customElements.define("ttt-view", TTT);
+            document.querySelector("#ttt-view").removeAttribute("hidden");
+          }
         });
     }
 }
@@ -671,179 +681,191 @@ export class TTT extends HTMLElement
     constructor()
     {
       super('foo');
+      this.root = this.attachShadow({mode: 'open'});
     }
     connectedCallback()
     {
       this.setAttribute('id', 'ttt-view');
-      this.setAttribute('hidden', '');
-      this.innerHTML += `
+      // this.setAttribute('hidden', '');
+      this.root.innerHTML += `
       <style>
-          #board {
-              margin-left: auto;
-              margin-right: auto;
-              width: 375px;
-              height: 375px;
-              display: grid;
-              grid-template-columns: repeat(3, 1fr);
-              grid-gap: 5px;
-      
-          }
-      
-          .square {
-              width: 120px;
-              height: 120px;
-              border: 1px solid #ba0ae6;
-              background-color: #8d618f;
-              font-size: 40px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              border-radius: 10px;
-          }
-      
-      
-          .square:hover {
-              background-color: #5c5da1;
-          }
-          body{
-              background-color: #cb8be4;
-          }
-          .player1name
-          {
-              position: absolute;
-              left: 0%;
-              top: 80%;
-              color: #421152;
-          }
-          .player2name
-          {
-              position: absolute;
-              left: 68%;
-              top: 80%;
-              color: #421152;
-          }
-          .squareX {
-              background-image: url("https://images.vexels.com/media/users/3/155474/isolated/preview/4e12cd94f7591c3c851fce62fdc3d463-x-cross-doodle-icon.png");
-              background-repeat: no-repeat;
-              background-size: cover;
-          }
-      
-          .squareO {
-              background-image: url("https://www.freeiconspng.com/thumbs/letter-o-icon-png/letter-o-icon-png-8.png");
-              background-repeat: no-repeat;
-              background-size: cover;
-          }
+        :host {
+          display: block;
+          width: 100%;
+          height: 100%;
+          color: var(--dark-teal);
+          font-family: "Press Start 2P", sans-serif !important;
+        }
+        h1 {
+          text-align: center;
+          color: var(--dark-teal);
+        }
+        .players
+        {
+          width: 100%;
+          display: flex;
+          justify-content: space-around;
+        }
+        .board {
+          justify-content: center;
+          align-items: center;
+          display: grid;
+          grid-template-columns: repeat(3, 100px);
+          grid-template-rows: repeat(3, 100px);
+          gap: 10px;
+        }
+        .square {
+          width: 100px;
+          height: 100px;
+          background-color: #fff;
+          border-radius: 10px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 2rem;
+          font-weight: bold;
+          cursor: pointer;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .square:hover {
+          transform: scale(1.05);
+          box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .squareX {
+          color: #3498db;
+        }
+        .squareO {
+          color: #e74c3c;
+        }
       </style>
-        <h1 style="color: #000000fb; text-align: center;">TIC-TAC-TOE GAME</h1>
-        <h1 class="player1name" id="p1"></h1>
-        <h1 class="player2name" id="p2"></h1>
-       
-        <div id="board">
-            <div id="square0" class="square" onclick="sendDataToServer('0')"></div>
-            <div id="square1" class="square" onclick="sendDataToServer('1')"></div>
-            <div id="square2" class="square" onclick="sendDataToServer('2')"></div>
-            <div id="square3" class="square" onclick="sendDataToServer('3')"></div>
-            <div id="square4" class="square" onclick="sendDataToServer('4')"></div>
-            <div id="square5" class="square" onclick="sendDataToServer('5')"></div>
-            <div id="square6" class="square" onclick="sendDataToServer('6')"></div>
-            <div id="square7" class="square" onclick="sendDataToServer('7')"></div>
-            <div id="square8" class="square" onclick="sendDataToServer('8')"></div>
-        </div>
+      <h1>TIC-TAC-TOE GAME</h1>
+      <div class="board">
+        <div id="square0" class="square" data="0"></div>
+        <div id="square1" class="square" data="1"></div>
+        <div id="square2" class="square" data="2"></div>
+        <div id="square3" class="square" data="3"></div>
+        <div id="square4" class="square" data="4"></div>
+        <div id="square5" class="square" data="5"></div>
+        <div id="square6" class="square" data="6"></div>
+        <div id="square7" class="square" data="7"></div>
+        <div id="square8" class="square" data="8"></div>
+      </div>
+      <div class="players">
+        <p class="player1name" id="p1"></p>
+        <p class="player2name" id="p2"></p>
+      </div>
       `;
-          // const ws = new WebSocket('ws://' + location.host + '/GameWS/');
-          // let board = '.........';
-          // let isGameStarted = false;
-          // function isGameEnd(x_o, board)
-          // {
-          //     if ((board[0] == x_o && board[1] == x_o && board[2] == x_o)
-          //         || (board[3] == x_o && board[4] == x_o && board[5] == x_o)
-          //         || (board[6] == x_o && board[7] == x_o && board[8] == x_o)
-          //         || (board[0] == x_o && board[3] == x_o && board[6] == x_o)
-          //         || (board[1] == x_o && board[4] == x_o && board[7] == x_o)
-          //         || (board[2] == x_o && board[5] == x_o && board[8] == x_o)
-          //         || (board[0] == x_o && board[4] == x_o && board[8] == x_o)
-          //         || (board[2] == x_o && board[4] == x_o && board[6] == x_o))
-          //         return true;
-          //     return false;
-          // }
-          // ws.onopen = function()
-          // {
-          //     console.log("User On Game");
-          // }
-  
-          // ws.onmessage = function(e)
-          // {
-          //     const dataPars = JSON.parse(e.data)
-          //     if (isGameStarted == false)
-          //     {
-          //         if (dataPars.player2.length == 0)
-          //         {
-          //             console.log("Player1: " + dataPars.player1);
-          //             console.log("Player2: " + dataPars.player2)
-          //             console.log("RoomId: " + dataPars.roomid)
-          //             const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
-          //             domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-          //             domElm2.innerHTML = "PLAYER2: Wait...";
-          //         }
-          //         else if (dataPars.player2.length != 0)
-          //         {
-          //             isGameStarted = true;
-          //             console.log("Player1: " + dataPars.player1);
-          //             console.log("Player2: " + dataPars.player2)
-          //             console.log("RoomId: " + dataPars.roomid)
-          //             const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
-          //             domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-          //             domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-          //         }
-          //     }
-          //     else
-          //     {
-          //         if (dataPars.etat == "PLAYING")
-          //         {
-          //             console.log('Game Is Started');
-          //             console.log(e.data);
-          //             board = dataPars.board;
-          //             const position = dataPars.position;
-          //             const domElem = document.getElementById(square${position});
-          //             if (dataPars.x_o == "X")
-          //                 domElem.classList.add("squareX");
-          //             else if (dataPars.x_o == "O")
-          //                 domElem.classList.add("squareO");
-          //             if (isGameEnd(dataPars.x_o, board) == true)
-          //             {
-          //                 console.log("Setting The Result Of This Game On Data Base");
-          //                 const toServer = {'gameStatus': "winner", 'position': -1, 'board': board};
-          //                 ws.send(JSON.stringify(toServer));
-          //             }
-          //         }
-          //     }
-          // }
-  
-          // function sendDataToServer(squareNbr)
-          // {
-          //     if (isGameStarted == true)
-          //     {
-          //         const position = Number(squareNbr);
-          //         if (board[position] != '.')
-          //             console.log('The Square Already Filled By: ', board[position]);
-          //         else
-          //         {
-          //             const toServer = {'gameStatus': "onprogress", 'position': position, 'board': board};
-          //             ws.send(JSON.stringify(toServer));
-          //         }
-          //     }
-          //     else
-          //         console.log('Game Not Start Yet');
-          // }
-          // ws.onclose  = function()
-          // {
-          //     console.log("BYE FROM SERVER");
-          // }
-          // window.onbeforeunload = function()
-          // {
-          //     const toServer = {'gameStatus': "closed", 'position': -1, 'board': board};
-          //     ws.send(JSON.stringify(toServer));
-          // }
+      const domElm1 = this.root.getElementById("p1"); 
+      const domElm2 = this.root.getElementById("p2");
+      const square = this.root.querySelectorAll(".square");
+      square.forEach(elem => {
+        elem.addEventListener('click', (e) => {
+          e.preventDefault();
+          console.log(e.target.getAttribute('data'));
+          sendDataToServer(e.target.getAttribute('data'));
+        });
+      });
+
+      const ws = new WebSocket('ws://' + location.host + '/GameWS/');
+      let board = '.........';
+      let isGameStarted = false;
+
+      function isGameEnd(x_o, board)
+      {
+          if ((board[0] == x_o && board[1] == x_o && board[2] == x_o)
+              || (board[3] == x_o && board[4] == x_o && board[5] == x_o)
+              || (board[6] == x_o && board[7] == x_o && board[8] == x_o)
+              || (board[0] == x_o && board[3] == x_o && board[6] == x_o)
+              || (board[1] == x_o && board[4] == x_o && board[7] == x_o)
+              || (board[2] == x_o && board[5] == x_o && board[8] == x_o)
+              || (board[0] == x_o && board[4] == x_o && board[8] == x_o)
+              || (board[2] == x_o && board[4] == x_o && board[6] == x_o))
+              return true;
+          return false;
+      }
+      ws.onopen = function()
+      {
+        console.log("User On Game");
+      }
+
+      ws.onmessage = (e) =>
+      {
+        const dataPars = JSON.parse(e.data)
+        if (isGameStarted == false)
+        {
+            if (dataPars.player2.length == 0)
+            {
+                console.log("Player1: " + dataPars.player1);
+                console.log("Player2: " + dataPars.player2)
+                console.log("RoomId: " + dataPars.roomid)
+                
+                domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+                domElm2.innerHTML = "PLAYER2: Wait...";
+            }
+            else if (dataPars.player2.length != 0)
+            {
+                isGameStarted = true;
+                console.log("Player1: " + dataPars.player1);
+                console.log("Player2: " + dataPars.player2)
+                console.log("RoomId: " + dataPars.roomid)
+                domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+                domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+            }
+        }
+        else
+        {
+          if (dataPars.etat == "PLAYING")
+          {
+            console.log('Game Is Started');
+            console.log(e.data);
+            board = dataPars.board;
+            const position = dataPars.position;
+            const domElem = this.root.getElementById(`square${position}`);
+            if (dataPars.x_o == "X")
+            {
+              domElem.innerHTML = "X";
+              domElem.classList.add("squareX");
+            }
+            else if (dataPars.x_o == "O")
+            {
+              domElem.innerHTML = "O";
+              domElem.classList.add("squareO");
+            }
+            if (isGameEnd(dataPars.x_o, board) == true)
+            {
+              console.log("Setting The Result Of This Game On Data Base");
+              const toServer = {'gameStatus': "winner", 'position': -1, 'board': board};
+              ws.send(JSON.stringify(toServer));
+            }
+          }
+      }
+    }
+    function sendDataToServer(squareNbr)
+    {
+      if (isGameStarted == true)
+      {
+        const position = Number(squareNbr);
+        if (board[position] != '.')
+          console.log('The Square Already Filled By: ', board[position]);
+        else
+        {
+          const toServer = {'gameStatus': "onprogress", 'position': position, 'board': board};
+          ws.send(JSON.stringify(toServer));
+        }
+      }
+      else
+          console.log('Game Not Start Yet');
+      }
+      ws.onclose  = function()
+      {
+          console.log("BYE FROM SERVER");
+      }
+      window.onbeforeunload = function()
+      {
+        const toServer = {'gameStatus': "closed", 'position': -1, 'board': board};
+        ws.send(JSON.stringify(toServer));
+      }
     }
 }
 // Main UI View
@@ -881,6 +903,7 @@ export class MainUI extends HTMLElement
         middle.appendChild(profile);
         middle.appendChild(setting);
         middle.appendChild(platform);
+        
         
         this.appendChild(home);
         this.appendChild(left);

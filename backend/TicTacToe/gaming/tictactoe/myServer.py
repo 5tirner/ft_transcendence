@@ -4,6 +4,7 @@ from .models import onLobby, gameInfo
 import os
 from .checkClick import isLegalClick
 from .destroyThisGameInfo import destroyThisGameInformations
+from .roomCodes import roomcode
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 class myServerOnLobby(AsyncWebsocketConsumer):
@@ -33,6 +34,13 @@ class myServerOnGame(AsyncWebsocketConsumer):
 
     async def connect(self):
         print(f'----------User On GAME Is: {self.scope["user"]}-------')
+        try:
+            gameInfo.objects.get(login=self.scope["user"])
+            print(f"Welcome Back {self.scope['user']}")
+        except:
+            print(f"Glad To See You! {self.scope['user']}")
+            addUserToDb = gameInfo(login=self.scope["user"], codeToPlay=roomcode(self.scope["user"]))
+            addUserToDb.save()
         if len(self.playerWantsToPlay) == 0:
             player1, player2 = self.scope['user'], ""
             if self.playersOnMatchAndItsRoomId.get(player1) is not None:
@@ -137,6 +145,12 @@ class myServerOnGame(AsyncWebsocketConsumer):
     async def disconnect(self, code):
         print(f"Connection Of User: {self.scope['user']} Lost")
         try:
+            try:
+                self.playerWantsToPlay.remove(self.scope['user'])
+                print(f"Removed Player: {self.scope['user']} From Q")
+            except:
+                print("ERROR HAPPENED WHEN REMOVING PLAYER FROM Q")
+                pass
             roomidForThisUser = self.playersOnMatchAndItsRoomId.get(self.scope["user"])
             player1, player2 = self.scope['user'], self.playersOnMatchAndItsOppenent.get(self.scope['user'])
             destroyThisGameInformations(self.playersOnMatchAndItsOppenent,

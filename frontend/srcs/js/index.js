@@ -12,8 +12,8 @@ document.addEventListener("DOMContentLoaded", () =>
     customElements.define("sidebar-view", Sidebar);
     customElements.define("platform-view", Platform);
     customElements.define("game-view", Game);
+    customElements.define("ttt-view", TTT);
     // customElements.define("profile-view", Profile);
-    // customElements.define("ttt-view", TTT);
 
     window.component = {
         home: document.querySelector("home-view"),

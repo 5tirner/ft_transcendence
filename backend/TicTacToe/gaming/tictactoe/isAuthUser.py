@@ -2,6 +2,7 @@ from rest_framework import status, response
 import requests
 
 def isAuthUser(req):
+    print("Check User Auth")
     try:
         cookies = req.COOKIES.get('jwt_token')
         print(f"Found Cookies: {cookies}")
