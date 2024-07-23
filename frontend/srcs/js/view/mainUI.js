@@ -797,11 +797,6 @@ export class TTT extends HTMLElement
       });
     });
     
-    exitBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      ws.close();
-      window.router.redirecto("/platform");
-    });
 
     const ws = new WebSocket('ws://' + location.host + '/GameWS/');
     let board = '.........';
@@ -823,6 +818,13 @@ export class TTT extends HTMLElement
       console.log("User On Game");
     }
 
+    exitBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
+      ws.send(JSON.stringify(toServer));
+      window.router.redirecto("/platform");
+    });
+    
     ws.onmessage = (e) => {
       const dataPars = JSON.parse(e.data)
       if (isGameStarted == false) {

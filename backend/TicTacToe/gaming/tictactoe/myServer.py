@@ -180,7 +180,7 @@ class myServerOnGame(AsyncWebsocketConsumer):
                 self.playerWantsToPlay.remove(self.scope['user'])
                 print(f"{self.scope['user']} Removed From Q")
             except:
-                print(f"{self.scope} Play And Finish Alraedy")
+                print(f"{self.scope['user']} Play And Finish Alraedy")
             destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
                             self.playersOnMatchAndItsRoomId,
                             self.playersOnMatchAndItsRole, player1, player2)
