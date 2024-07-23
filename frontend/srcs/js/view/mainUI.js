@@ -1,4 +1,5 @@
 import { auth } from '../auth/Authentication.js';
+import API from '../service/API.js';
 // Login View
 export class Login extends HTMLElement {
   constructor() { super('foo'); this.root = this.attachShadow({ mode: 'open' }); }
@@ -468,7 +469,6 @@ export class Platform extends HTMLElement
         super('foo');
         this.root = this.attachShadow({mode:"open"});
     }
-    // 
     connectedCallback()
     {
         this.setAttribute('id', 'platform-view');
@@ -479,6 +479,10 @@ export class Platform extends HTMLElement
             {
                 width: 100%;
                 height: 100%;
+            }
+            a
+            {
+                text-decoration: none;
             }
             .container
             {
@@ -521,7 +525,7 @@ export class Platform extends HTMLElement
             }
             .button 
             {
-              font-size: 80%;
+              font-size: 10px;
               font-weight: 300;
               text-transform: uppercase;
               letter-spacing: 1px;
@@ -640,8 +644,8 @@ export class Platform extends HTMLElement
                 <div class="xo">
                     <img src="js/view/src/img/xo-teal.gif">
                     <div class="btn-wrapper">
-                      <a href="/game" class="xo-btn" game="ttt">
-                        <button class="button multi">Multiplayer</button>
+                      <a href="/game" class="button xo-btn multi" game="ttt">
+                        Multiplayer
                       </a>
                       <button class="button local-xo">Local</button>
                     </div>
@@ -664,6 +668,8 @@ export class Platform extends HTMLElement
         const ticTacToe = this.root.querySelector(".xo-btn");
         ticTacToe.addEventListener("click", (e) => {
           e.preventDefault();
+          const tictacRes = API.getTicTacToe();
+          console.log(tictacRes);
           const href = ticTacToe.getAttribute("game");
           if ( href === "ttt" )
           {

@@ -5,7 +5,7 @@ urlpatterns = [
     path('', game),
     path('myProfile/', myProfile, name="homePage"),
     path('UserStat/<login>/', userStatistic),
-    # path('Game/', game, name="tictactoe"),
+    path('Game/', game, name="tictactoe"),
     # path('Lobby/', TicTacToeLobby),
     # path('History/', historic),
 ]
