@@ -3,9 +3,10 @@ from rest_framework import response, status
 from .roomCodes import roomcode
 from .serializer import gameInfoModelSerializer, historyModelSirializer
 from rest_framework.decorators import api_view
-from django.http import HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import render
 from .isAuthUser import isAuthUser
+import json
 
 
 # @api_view(["GET"])
@@ -57,23 +58,21 @@ def userStatistic(req, login):
     serial = gameInfoModelSerializer(getUserFromDataBase)
     return response.Response(serial.data, status=status.HTTP_200_OK)
 
-# @api_view(["GET", "POST"])
-# def historic(req):
-#     print("-------------------------USER HESTORY----------------------------------")
-#     if req.method == "POST":
-#         serial = historyModelSirializer(data=req.data)
-#         if serial.is_valid():
-#             serial.save()
-#             return response.Response(status=status.HTTP_201_CREATED)
-#         else:
-#             return response.Response(status=status.HTTP_204_NO_CONTENT)
-#     elif req.method == "GET":
-#         # authApiResponse = isAuthUser(req)
-#         # if authApiResponse is None:
-#         #     return response.Response(status=status.HTTP_204_NO_CONTENT)
-#         # user_infos  = authApiResponse.json().get('data')
-#         # getUserFromHistoricModel = history.objects.filter(user_infos.get('username'))
-#         pass
+@api_view(["GET"])
+def historic(req):
+    print("-------------------------USER HESTORY----------------------------------")
+    authApiResponse = isAuthUser(req)
+    if authApiResponse is None:
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
+    user_infos  = authApiResponse.json().get('data')
+    name = user_infos.get('username')
+    allMatches = dict(dict())
+    matchNumbers = 1
+    for i in history.objects.all().values():
+        if i.get('you') == name:
+            allMatches[f"match{matchNumbers}"] = i
+            matchNumbers += 1
+    return JsonResponse(json.dumps(allMatches), safe=False)
 
 # @api_view(["GET"])
 # def TicTacToeLobby(req):
@@ -102,23 +101,23 @@ def userStatistic(req, login):
 #         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(["GET"])
-def game(req):
-    print("-------------------------USER ON GAME----------------------------------")
-    try:
-        authApiResponse = isAuthUser(req)
-        if authApiResponse is None:
-            return response.Response(status=status.HTTP_204_NO_CONTENT)
-        user_infos  = authApiResponse.json().get('data')
-        print(user_infos)
-        searchForUserInDataBase = gameInfo.objects.filter(login=user_infos.get('username')).first()
-        if searchForUserInDataBase is None:
-            print("Glad To See You!")
-            user = gameInfo(login=user_infos.get('username') ,codeToPlay=roomcode(user_infos.get('username')))
-            user.save()
-        else:
-            print('User Is Already Play Games And Stored In The Database')
-            pass
-        return response.Response(status=status.HTTP_200_OK)
-    except:
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
+# @api_view(["GET"])
+# def game(req):
+#     print("-------------------------USER ON GAME----------------------------------")
+#     try:
+#         authApiResponse = isAuthUser(req)
+#         if authApiResponse is None:
+#             return response.Response(status=status.HTTP_204_NO_CONTENT)
+#         user_infos  = authApiResponse.json().get('data')
+#         print(user_infos)
+#         searchForUserInDataBase = gameInfo.objects.filter(login=user_infos.get('username')).first()
+#         if searchForUserInDataBase is None:
+#             print("Glad To See You!")
+#             user = gameInfo(login=user_infos.get('username') ,codeToPlay=roomcode(user_infos.get('username')))
+#             user.save()
+#         else:
+#             print('User Is Already Play Games And Stored In The Database')
+#             pass
+#         return response.Response(status=status.HTTP_200_OK)
+#     except:
+#         return response.Response(status=status.HTTP_204_NO_CONTENT)
