@@ -11,9 +11,10 @@ class myPongserver(AsyncWebsocketConsumer):
     playersOnMatchAndItsRoomId = dict()
     playersOnMatchAndItsOppenent = dict()
     async def connect(self):
-        print(f'----------User On GAME Is: {self.scope["user"]}-------')
+        print(f'----------User On Game Is: {self.scope["user"]}-------')
         if len(self.playerWantsToPlay) == 0:
             player1, player2 = self.scope['user'], ""
+            print("Vide Q")
             if self.playersOnMatchAndItsRoomId.get(player1) is not None:
                 print(f"Can't Add Player {player1} To Q His Alraedy In Match")
                 await self.close()
@@ -28,6 +29,7 @@ class myPongserver(AsyncWebsocketConsumer):
                 await self.channel_layer.group_send(roomid, {'type': 'ToFrontOnConnect', 'Data': toFronEnd})
         else:
             player1, player2 = self.playerWantsToPlay[0], self.scope['user']
+            print("Player Waiting...")
             if self.playersOnMatchAndItsRoomId.get(player2) is not None:
                 print(f"Can't Add Player {player2} To Game With {player1} His Alraedy In Match")
                 await self.close()

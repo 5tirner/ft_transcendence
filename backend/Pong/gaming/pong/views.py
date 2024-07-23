@@ -62,7 +62,8 @@ def PongGame(req):
         return response.Response(status=status.HTTP_204_NO_CONTENT)
     userInfo = AuthApiRes.json().get('data')
     try:
-        pongGameInfo.objects.get(userInfo.get('username'))
+        pongGameInfo.objects.get(login=userInfo.get('username'))
+        print(f"Welcome Back {userInfo.get('username')}")
     except:
         print(f"First Game For {userInfo.get('username')}")
         userAdd = pongGameInfo(login=userInfo.get('username'), codeToPlay=roomcode(userInfo.get('username')))
