@@ -668,8 +668,8 @@ export class Platform extends HTMLElement
         const ticTacToe = this.root.querySelector(".xo-btn");
         ticTacToe.addEventListener("click", (e) => {
           e.preventDefault();
-          const tictacRes = API.getTicTacToe();
-          console.log(tictacRes);
+          // const tictacRes = API.getTicTacToe();
+          // console.log(tictacRes);
           const href = ticTacToe.getAttribute("game");
           if ( href === "ttt" )
           {

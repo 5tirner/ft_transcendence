@@ -4,7 +4,6 @@ from .models import onLobby, gameInfo, history
 import os
 from .checkClick import isLegalClick
 from .destroyThisGameInfo import destroyThisGameInformations
-import requests
 from .roomCodes import roomcode
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 

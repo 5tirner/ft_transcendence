@@ -101,23 +101,23 @@ def historic(req):
 #         return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(["GET"])
-def game(req):
-    print("-------------------------USER ON GAME----------------------------------")
-    try:
-        authApiResponse = isAuthUser(req)
-        if authApiResponse is None:
-            return response.Response(status=status.HTTP_204_NO_CONTENT)
-        user_infos  = authApiResponse.json().get('data')
-        print(user_infos)
-        searchForUserInDataBase = gameInfo.objects.filter(login=user_infos.get('username')).first()
-        if searchForUserInDataBase is None:
-            print("Glad To See You!")
-            user = gameInfo(login=user_infos.get('username') ,codeToPlay=roomcode(user_infos.get('username')))
-            user.save()
-        else:
-            print('User Is Already Play Games And Stored In The Database')
-            pass
-        return response.Response(status=status.HTTP_200_OK)
-    except:
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
+# @api_view(["GET"])
+# def game(req):
+#     print("-------------------------USER ON GAME----------------------------------")
+#     try:
+#         authApiResponse = isAuthUser(req)
+#         if authApiResponse is None:
+#             return response.Response(status=status.HTTP_204_NO_CONTENT)
+#         user_infos  = authApiResponse.json().get('data')
+#         print(user_infos)
+#         searchForUserInDataBase = gameInfo.objects.filter(login=user_infos.get('username')).first()
+#         if searchForUserInDataBase is None:
+#             print("Glad To See You!")
+#             user = gameInfo(login=user_infos.get('username') ,codeToPlay=roomcode(user_infos.get('username')))
+#             user.save()
+#         else:
+#             print('User Is Already Play Games And Stored In The Database')
+#             pass
+#         return response.Response(status=status.HTTP_200_OK)
+#     except:
+#         return response.Response(status=status.HTTP_204_NO_CONTENT)
