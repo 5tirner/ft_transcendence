@@ -2,7 +2,6 @@ from rest_framework import status, response
 import requests
 
 def isAuthUser(req):
-    print("Check User Auth")
     try:
         cookies = req.COOKIES.get('jwt_token')
         print(f"Found Cookies: {cookies}")
@@ -12,7 +11,7 @@ def isAuthUser(req):
         return None
     try:
         authApiResponse = requests.get('http://auth:8000/api/usercheck', cookies=cookies)
-        print(authApiResponse.json())
+        print(f"AuthResponse: {authApiResponse.json()}")
         if authApiResponse.json().get('errors') is not None:
             print(f"Erros {authApiResponse.json().get('errors')}")
             return None
@@ -24,5 +23,5 @@ def isAuthUser(req):
             return None
     except:
         print("Auth API Failed Succesfully")
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
+        return None
     return authApiResponse

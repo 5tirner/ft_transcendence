@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PONG</title>
+    <link rel="icon" type="image/x-icon" href="https://e7.pngegg.com/pngimages/947/598/png-clipart-pong-paddle-sprite-video-game-paddle-text-rectangle.png">
+</head>
+<style>
+    canvas
+    {
+        position: absolute;
+        top: 20%;
+        left: 20%;
+        background-color: rgb(170, 111, 224);
+        border-radius: 2%;
+        width: 4000;
+        height: 1500;
+    }
+</style>
+<body>
+
+    <h1>Welcome To The PONG Game</h1>
+    <canvas id="board"></canvas>
+    <script>
+        const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
+        ws.onopen = function()
+        {
+            console.log("User On Game");
+        }
+        ws.onmessage = function(e)
+        {
+            console.log("Data From Server");
+            console.log(e.data);
+        }
+    </script>
+    
+</body>
+</html>
