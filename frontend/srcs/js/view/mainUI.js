@@ -672,7 +672,6 @@ export class Platform extends HTMLElement
           const href = ticTacToe.getAttribute("game");
           if ( href === "ttt" )
           {
-            window.router.goto("/game");
             if (!customElements.get("ttt-view"))
               customElements.define("ttt-view", TTT);
             const gameSection = document.querySelector(".game-section");
@@ -682,6 +681,7 @@ export class Platform extends HTMLElement
             const ttt = document.createElement("ttt-view");
             gameSection.appendChild(ttt);
             document.querySelector("#ttt-view").removeAttribute("hidden");
+            window.router.redirecto("/game");
           }
         });
     }
