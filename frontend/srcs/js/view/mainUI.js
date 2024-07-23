@@ -349,7 +349,6 @@ export class Game extends HTMLElement
                         11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
                     </svg>
                 </button>
-                <ttt-view></ttt-view>
                 <pong-view></pong-view>
 			</div>
         `;
@@ -668,14 +667,20 @@ export class Platform extends HTMLElement
         const ticTacToe = this.root.querySelector(".xo-btn");
         ticTacToe.addEventListener("click", (e) => {
           e.preventDefault();
-          const tictacRes = API.getTicTacToe();
-          console.log(tictacRes);
+          // const tictacRes = API.getTicTacToe();
+          // console.log(tictacRes);
           const href = ticTacToe.getAttribute("game");
           if ( href === "ttt" )
           {
             window.router.goto("/game");
             if (!customElements.get("ttt-view"))
               customElements.define("ttt-view", TTT);
+            const gameSection = document.querySelector(".game-section");
+            const ticdiv = document.querySelector("#ttt-view");
+            if (ticdiv !== null)
+              ticdiv.remove();
+            const ttt = document.createElement("ttt-view");
+            gameSection.appendChild(ttt);
             document.querySelector("#ttt-view").removeAttribute("hidden");
           }
         });
@@ -768,7 +773,6 @@ export class TTT extends HTMLElement
       square.forEach(elem => {
         elem.addEventListener('click', (e) => {
           e.preventDefault();
-          console.log(e.target.getAttribute('data'));
           sendDataToServer(e.target.getAttribute('data'));
         });
       });
@@ -865,7 +869,7 @@ export class TTT extends HTMLElement
       }
       ws.onclose  = function()
       {
-          console.log("BYE FROM SERVER");
+        console.log("BYE FROM SERVER");
       }
       window.onbeforeunload = function()
       {

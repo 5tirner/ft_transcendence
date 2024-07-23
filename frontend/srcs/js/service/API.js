@@ -74,9 +74,9 @@ const API = {
 		API.commonGetFunc( `${API.chatEndpoint}read/${room_id}/` );
 	},
 	
-  getTicTacToe: () => {
-    return API.commonGetFunc(`${API.tictactoeAuthGame}`);
-  },
+  // getTicTacToe: () => {
+  //   return API.commonGetFunc(`${API.tictactoeAuthGame}`);
+  // },
 	makePostRequest: async (url, data) => {
 		const headers = {
 			"Content-Type": "application/json"

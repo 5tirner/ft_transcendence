@@ -22,8 +22,11 @@ document.addEventListener("DOMContentLoaded", () =>
         right: document.getElementById("right-view"),
     }
     window.addEventListener("popstate", (e) => {
-        if (e.state.path !== '/home' && e.state.path !== '/login')
-          router.redirecto( e.state.path );
+      console.log(e.state);
+      if (e.state.path !== '/home' && e.state.path !== '/login')
+        router.redirecto(e.state.path);
+      else
+        router.redirecto('/platform');
     });
     router.redirecto(location.pathname);
 });
