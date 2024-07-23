@@ -23,7 +23,8 @@ export const auth = {
 			auth.loses = res.data.losses;
 			auth.wins = res.data.wins;
 			auth.fullname = `${res.data.first_name} ${res.data.last_name}`;
-			customElements.define("profile-view", Profile);
+			if ( !customElements.get("profile-view") )
+			 customElements.define("profile-view", Profile);
 			return isLoged;
 		}
 		return false;
