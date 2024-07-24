@@ -9,18 +9,24 @@
 <style>
     canvas
     {
-        position: absolute;
-        top: 20%;
-        left: 20%;
-        background-color: rgb(170, 111, 224);
-        border-radius: 2%;
-        width: 4000;
-        height: 1500;
+        display: block;
+        margin: 0 auto;
+        background-color: rgb(195, 151, 236);
+        width: 800px;
+        height: 350px;
+        border-color: rgb(71, 7, 131);
+        border-width: thin;
+        border-style: solid;
+        border-block-width: 5px;
+    }
+    body
+    {
+        background-color: rgb(195, 151, 236);
     }
 </style>
 <body>
 
-    <h1>Welcome To The PONG Game</h1>
+    <h1 style="text-align: center; color: rgb(71, 7, 131);">Welcome To The PONG Game</h1>
     <canvas id="board"></canvas>
     <script>
         const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
@@ -32,6 +38,15 @@
         {
             console.log("Data From Server");
             console.log(e.data);
+        }
+        window.onbeforeunload = function()
+        {
+            const toSerever = {'gameStat': "closed"};
+            ws.send(JSON.stringify(toSerever));
+        }
+        ws.onclose = function()
+        {
+            console.log("BYE FROM SERVER")
         }
     </script>
     

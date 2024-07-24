@@ -77,3 +77,6 @@ class myPongserver(AsyncWebsocketConsumer):
     async def ToFrontOnConnect(self, data):
         print("Sending Data To Clinet...")
         await self.send(data['Data'])
+    async def endGame(self, data):
+        print(f"WebSocket Will Be Closed Client: {self.scope['user']}")
+        await self.close()
