@@ -1,5 +1,4 @@
 import { auth } from '../auth/Authentication.js';
-import API from '../service/API.js';
 // Login View
 export class Login extends HTMLElement {
   constructor() { super('foo'); this.root = this.attachShadow({ mode: 'open' }); }
@@ -217,32 +216,33 @@ export class Sidebar extends HTMLElement
                 </a>
                 <div export class="nav_list">
                     <a href="/game" export class="nav_link">
-                        <i export class="bx bxs-invader nav_icon"></i>
+                        <i class="bx bxs-invader nav_icon"></i>
                     </a>
-                    <a href="/setting" export class="nav_link">
-                        <i export class="bx bxs-cog nav_icon"></i>
+                    <a href="/setting" class="nav_link">
+                        <i class="bx bxs-cog nav_icon"></i>
                     </a>
-                    <a href="/" export class="nav_link">
-                        <i export class="bx bx-log-out nav_icon"></i>
+                    <a href="/friend" class="nav_link">
+                        <i class='bx bx-group nav_icon'></i>
+                    </a>
+                    <a href="/" class="nav_link">
+                        <i class="bx bx-log-out nav_icon"></i>
                     </a>
                 </div>
-				<a href="/profile" export class="nav_link">
+				<a href="/profile" class="nav_link">
 					<i export class="bx bx-user nav_icon"></i>
 				</a>
 			</nav>
         `;
         this.doSomeThing();
     }
-    // skipcq: JS-0105
     doSomeThing()
     {
         const arr = this.querySelectorAll("a");
         arr.forEach(elem => {
-            // skipcq: JS-0002
             elem.addEventListener("click", (e) => {
                 e.preventDefault();
                 const href = e.currentTarget.getAttribute("href");
-                console.log("That fyp")
+                
                     // if ( href === "/" )
                     // {
                     //     // TODO: handle the logout logic
@@ -339,19 +339,19 @@ export class Game extends HTMLElement
                 }   
             </style>
             <div class="game-section">
-                <button class="fscreen-btn">
-                    <svg viewBox="0 0 24 24">
-                        <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 
-                        7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
-                    </svg>
-                    <svg viewBox="0 0 24 24">
-                        <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 
-                        11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
-                    </svg>
-                </button>
-                <pong-view></pong-view>
-			</div>
+              <button class="fscreen-btn">
+                  <svg viewBox="0 0 24 24">
+                      <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 
+                      7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+                  </svg>
+                  <svg viewBox="0 0 24 24">
+                      <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 
+                      11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>
+                  </svg>
+              </button>
+            </div>
         `;
+     
         if ( document.fullscreenEnabled )
         {
             const button = this.querySelector("button");
@@ -367,13 +367,12 @@ export class Game extends HTMLElement
                 window.component.middle.setAttribute('style', "flex-basis: 100%");
             } else {
                 document.body.removeAttribute("fullscreen");
-                window.component.left.removeAttribute('hidden');
-                window.component.right.removeAttribute('hidden');
                 window.component.middle.removeAttribute('style');
             }
         }
     }
 }
+
 // User Profile View
 export class Profile extends HTMLElement
 {
@@ -474,162 +473,162 @@ export class Platform extends HTMLElement
         this.setAttribute('hidden', '');
         this.root.innerHTML += `
         <style>
-            :host
-            {
-                width: 100%;
-                height: 100%;
-            }
-            a
-            {
-                text-decoration: none;
-            }
-            .container
-            {
-                width: 100%;
-                height: 35%;
-                display: flex;
-                flex-direction: row;
-            }
-            .wrapper
-            {
-                margin: 0 auto;
-                display: flex;
-                gap: 150px;
-                width: 80%;
-                height: 100%;
-            }
-            .pong, .xo
-            {
-                width: 100%;
-                position: relative;
-            }
-            .xo
-            {
-                justify-content: start !important;
-            }
-            .pong img, .xo img
-            {
-                border-radius: 12px;
-                width: 100%;
-                height: 100%;
-            }
-            .btn-wrapper
-            {
-                width: 100%;
-                position: absolute;
-                bottom: 24px;
-                left: 0;
-                display: flex;
-                justify-content: space-around;
-            }
-            .button 
-            {
-              font-size: 10px;
-              font-weight: 300;
-              text-transform: uppercase;
-              letter-spacing: 1px;
-              border: none;
-              cursor: pointer;
-              display: inline-block;
-              padding: 2.5% 6%;
-              border-radius: 8px;
-              background-color: var(--dark-teal);
+          :host
+          {
+              width: 100%;
+              height: 100%;
+          }
+          a
+          {
+              text-decoration: none;
+          }
+          .container
+          {
+              width: 100%;
+              height: 35%;
+              display: flex;
+              flex-direction: row;
+          }
+          .wrapper
+          {
+              margin: 0 auto;
+              display: flex;
+              gap: 150px;
+              width: 80%;
+              height: 100%;
+          }
+          .pong, .xo
+          {
+              width: 100%;
+              position: relative;
+          }
+          .xo
+          {
+              justify-content: start !important;
+          }
+          .pong img, .xo img
+          {
+              border-radius: 12px;
+              width: 100%;
+              height: 100%;
+          }
+          .btn-wrapper
+          {
+              width: 100%;
+              position: absolute;
+              bottom: 24px;
+              left: 0;
+              display: flex;
+              justify-content: space-around;
+          }
+          .button 
+          {
+            font-size: 10px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+            padding: 2.5% 6%;
+            border-radius: 8px;
+            background-color: var(--dark-teal);
+            color: var(--light-olive);
+            box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
+            transition: all 0.1s ease, background 0.3s ease;
+            font-family: "Press Start 2P", sans-serif !important;
+          }
+          .local
+          {
+              background: var(--coral) !important;
+          }
+          .local-xo
+          {
+              background: var(--light-olive) !important;
+              color: var(--coral);
+          }
+          .button:hover,
+          .button:focus
+          {
+              background: #df6108;
+          }
+          .rank
+          {
+              margin-top: 80px;
+              width: 100%;
+              height: 55%;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+          }
+          .rank-title
+          {
+              padding: 10px 0;
+              width: 100%;
+              text-align: center;
+              color: var(--dark-purple);
+          }
+          .avatar {
+              width: 120px;
+              height: 120px;
+              border-radius: 12px;
+          }
+          .avatar img{
+              width: 100%;
+              height: 100%;
+              border-radius: 12px;
+          }
+          
+          .name {
+              width: 100%;
+              text-align: center;
               color: var(--light-olive);
-              box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
-              transition: all 0.1s ease, background 0.3s ease;
-              font-family: "Press Start 2P", sans-serif !important;
-            }
-            .local
-            {
-                background: var(--coral) !important;
-            }
-            .local-xo
-            {
-                background: var(--light-olive) !important;
-                color: var(--coral);
-            }
-            .button:hover,
-            .button:focus
-            {
-                background: #df6108;
-            }
-            .rank
-            {
-                margin-top: 80px;
-                width: 100%;
-                height: 55%;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-            }
-            .rank-title
-            {
-                padding: 10px 0;
-                width: 100%;
-                text-align: center;
-                color: var(--dark-purple);
-            }
-            .avatar {
-                width: 120px;
-                height: 120px;
-                border-radius: 12px;
-            }
-            .avatar img{
-                width: 100%;
-                height: 100%;
-                border-radius: 12px;
-            }
-            
-            .name {
-                width: 100%;
-                text-align: center;
-                color: var(--light-olive);
-                font-size: 12px;
-                padding: 10px 0;
-            
-            }
-            .points {
-                margin-top: 5px;
-                color: var(--dark-purple);
-                width: 100%;
-                height: 20%;
-                text-align: center;
-                font-size: 10px;
-            }
-            .rank-card
-            {
-                margin-top: 20px;
-                min-width: 180px;
-                max-width: 180px;
-                border-radius: 12px;
-                background-color: var(--teal);
-                height: 50%;
-                padding: 15px 10px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: center;
-                max-height: 100%;
-            }
-            .rank:hover .slide
-            {
-                animation-play-state: paused;
-            }
-            @keyframes sliding
-            {
-                from{ transform: translateX(80%); }
-                to{ transform: translateX(-100%); }
-            }
-            .slide
-            {
-                width: 100%;
-                height: 100%;
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-                gap: 2.5rem;
-                animation: 10s sliding infinite linear;
-            }
+              font-size: 12px;
+              padding: 10px 0;
+          
+          }
+          .points {
+              margin-top: 5px;
+              color: var(--dark-purple);
+              width: 100%;
+              height: 20%;
+              text-align: center;
+              font-size: 10px;
+          }
+          .rank-card
+          {
+              margin-top: 20px;
+              min-width: 180px;
+              max-width: 180px;
+              border-radius: 12px;
+              background-color: var(--teal);
+              height: 50%;
+              padding: 15px 10px;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              align-items: center;
+              max-height: 100%;
+          }
+          .rank:hover .slide
+          {
+              animation-play-state: paused;
+          }
+          @keyframes sliding
+          {
+              from{ transform: translateX(80%); }
+              to{ transform: translateX(-100%); }
+          }
+          .slide
+          {
+              width: 100%;
+              height: 100%;
+              display: flex;
+              flex-direction: row;
+              justify-content: center;
+              gap: 2.5rem;
+              animation: 10s sliding infinite linear;
+          }
         </style>
         <div class="container">
             <div class="wrapper">
@@ -667,8 +666,6 @@ export class Platform extends HTMLElement
         const ticTacToe = this.root.querySelector(".xo-btn");
         ticTacToe.addEventListener("click", (e) => {
           e.preventDefault();
-          // const tictacRes = API.getTicTacToe();
-          // console.log(tictacRes);
           const href = ticTacToe.getAttribute("game");
           if ( href === "ttt" )
           {
@@ -785,10 +782,10 @@ export class TTT extends HTMLElement
       </div>
       <button class="exit">Abort</button>
       `;
-    const exitBtn = this.root.querySelector(".exit");
+    const abort   = this.root.querySelector(".exit");
     const domElm1 = this.root.getElementById("p1");
     const domElm2 = this.root.getElementById("p2");
-    const square = this.root.querySelectorAll(".square");
+    const square  = this.root.querySelectorAll(".square");
 
     square.forEach(elem => {
       elem.addEventListener('click', (e) => {
@@ -818,12 +815,18 @@ export class TTT extends HTMLElement
       console.log("User On Game");
     }
 
-    exitBtn.addEventListener('click', (e) => {
-      e.preventDefault();
+    const aborting = (event) => {
+      const self = document.getElementById('ttt-view');
+      if (event)
+        event.preventDefault();
+      if ( self )
+        self.remove();
       const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
       ws.send(JSON.stringify(toServer));
       window.router.redirecto("/platform");
-    });
+    }
+    
+    abort.addEventListener('click', (e) => aborting(e));
     
     ws.onmessage = (e) => {
       const dataPars = JSON.parse(e.data)
@@ -868,7 +871,7 @@ export class TTT extends HTMLElement
         }
       }
     }
-    function sendDataToServer(squareNbr) {
+    function sendDataToServer(squareNbr) {      
       if (isGameStarted == true) {
         const position = Number(squareNbr);
         if (board[position] != '.')
@@ -881,13 +884,244 @@ export class TTT extends HTMLElement
       else
         console.log('Game Not Start Yet');
       ws.onclose = function () {
-        console.log("BYE FROM SERVER");
+        console.log("BYE BYE");
+        // aborting();
       }
       window.onbeforeunload = function () {
         const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
         ws.send(JSON.stringify(toServer));
       }
     }
+  }
+}
+// Setting View
+export class Setting extends HTMLElement
+{
+  constructor() {
+    super('foo');
+    this.root = this.attachShadow({ mode: "open" });
+  }
+  connectedCallback() {
+    this.setAttribute('id', 'setting-view');
+    this.setAttribute('hidden', '');
+    this.root.innerHTML = `
+      <style>
+        .profile-card {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          margin: 0;
+          position: relative;
+        }
+        .profile-card .section {
+          border-radius: 20px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          padding: 20px;
+          width: 500px;
+          text-align: center;
+          background-color: var(--teal);
+        }
+        .profile-card img {
+          border-radius: 50%;
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+          position: relative;
+        }
+        .profile-card .edit-image {
+          position: absolute;
+          top: 88px;
+          right: 220px;
+          background: #007bff;
+          border: none;
+          border-radius: 50%;
+          color: white;
+          width: 30px;
+          height: 30px;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .profile-card .fullname {
+          font-size: 16px;
+          color: var(--light-olive);
+        }
+        .profile-card p {
+          margin-bottom: 10px;
+          color: gray;
+        }
+        .profile-card .badge {
+          display: inline-block;
+          padding: 5px 10px;
+          background: #d4f4d2;
+          color: #34a853;
+          border-radius: 12px;
+          font-size: 12px;
+          margin-bottom: 10px;
+        }
+        .profile-card .info {
+          display: flex;
+          justify-content: space-around;
+          algin-items: center;
+          gap: 20px;
+          margin: 10px 0;
+        }
+        .profile-card .info div {
+          text-align: left;
+          padding-top: 20px;
+        }
+        .profile-card .info div p {
+          margin: 3px 0;
+          font-size: 14px;
+        }
+        .blur
+        {
+          -webkit-filter: blur(10px); 
+          -moz-filter: blur(10px);
+          -o-filter: blur(10px);
+          -ms-filter: blur(10px); 
+        }
+        .profile-card #float
+        {
+          border-radius: 18px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 102;
+          justify-content: center;
+          text-align: center;
+          align-items: center;
+          background-color: rgba(0, 0, 0, .15);
+        }
+        .profile-card #float form
+        {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .profile-card #float form input
+        {
+          color: white;
+          border: 2px solid #8707ff;
+          border-radius: 10px;
+          padding: 10px 25px;
+          background: transparent;
+          max-width: 190px;
+        }
+    
+        .input:active {
+          border: none;
+          box-shadow: 2px 2px 15px #8707ff inset;
+        }
+    
+        .profile-card .section .edit-btn
+        {
+          display: flex;
+          flex-direction: column;
+          justify-content: end;
+        }
+        .profile-card .section .edit-btn
+        {
+          height: 100%;
+          font-size: 10px;
+          text-transform: uppercase;
+          border: none;
+          padding: 10px 40px;
+          cursor: pointer;
+          display: inline-block;
+          border-radius: 8px;
+          background-color: var(--dark-teal);
+          color: var(--light-olive);
+          box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
+          transition: all 0.1s ease, background 0.3s ease;
+          font-family: "Press Start 2P", sans-serif !important;
+        }
+      </style>  
+      <div class="profile-card">
+				<div class="section">
+					<img
+						src="${auth.avatar || "https://i.imgur.com/8bXZb8e.png"}"
+						alt="Profile Picture"
+						id="profileImage"
+					/>
+					<input
+						type="file"
+						id="fileInput"
+						style="display: none"
+						accept="image/*"
+						onchange="changeProfileImage(event)"
+					/>
+					<button
+						class="edit-image"
+						onclick="document.getElementById('fileInput').click();"
+					>
+						✏️
+					</button>
+					<h4 class="fullname">${auth.fullname}</h4>
+					<p username="username">${auth.user}</p>
+					<div class="badge">LVL 8</div>
+					<div class="info">
+						<div>
+							<p>Name</p>
+							<p class="fullname">${auth.fullname}</p>
+						</div>
+						<button name="Edit" class="edit-btn">Edit</button>
+					</div>
+				</div>
+				<div id="float" style="display: none">
+					<form action="" method="post">
+						<input
+							type="text"
+							name="fullname"
+							id="input-fullname"
+							placeholder="Edit your name.."
+							required
+						/>
+						<button name="Save" class="edit-btn"></button>
+					</form>
+				</div>
+			</div> 
+    `;
+    this.render();
+  }
+  render()
+  {
+      const float = this.root.getElementById("float");
+      const editBtn = this.root.querySelector(".edit-btn");
+      // const btn = editBtn.querySelector(".edit-btn");
+      const profileCard = this.root.querySelector(".profile-card .section");
+      const input = this.root.getElementById("input-fullname");
+
+      // btn.addEventListener( "click", (e) => {
+      //     profileCard.className += " blur";
+      //     float.setAttribute("style", "display: flex");
+      //     document.addEventListener("click", (e) => {
+      //       if ( e.target.getAttribute("name") !== "special-name" )
+      //         {
+      //             float.setAttribute("style", "display: none");
+      //             profileCard.classList.remove("blur");
+      //         }
+      //     });
+      //     float.addEventListener("click", (e) => {
+      //         if ( e.target.getAttribute("name") === "Save" )
+      //         {
+      //             if ( input.value.length == 0 )
+      //             {
+      //                 console.log("Please enter some shit");
+      //             }
+      //             else
+      //             {
+      //                 float.setAttribute("style", "display: none");
+      //                 profileCard.classList.remove("blur");
+      //             }
+      //             // post data to the backend for changing the user fullname
+      //         }
+      //     });
+      // })
   }
 }
 // Main UI View

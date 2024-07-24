@@ -1,5 +1,5 @@
 import API from "../service/API.js"
-import { Profile } from "../view/mainUI.js";
+import { Profile, Setting } from "../view/mainUI.js";
 export const auth = {
 	user: null,
 	avatar: null,
@@ -25,6 +25,8 @@ export const auth = {
 			auth.fullname = `${res.data.first_name} ${res.data.last_name}`;
 			if ( !customElements.get("profile-view") )
 			 customElements.define("profile-view", Profile);
+			if ( !customElements.get("setting-view") )
+			 customElements.define("setting-view", Setting);
 			return isLoged;
 		}
 		return false;

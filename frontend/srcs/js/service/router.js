@@ -21,9 +21,14 @@ export const router = {
 		{
 		  if ( path !== '/game' )
 			{
-			}
     		window.component.right.removeAttribute('hidden');
     		window.component.left.removeAttribute('hidden');
+			}
+			else
+			{
+			  window.component.right.setAttribute('hidden', '');
+    		window.component.left.setAttribute('hidden', '');
+			}
   		window.component.middle.removeAttribute('hidden');
     
       // middle section logic
