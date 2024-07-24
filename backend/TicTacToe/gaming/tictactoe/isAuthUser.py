@@ -13,6 +13,9 @@ def isAuthUser(req):
     try:
         authApiResponse = requests.get('http://auth:8000/api/usercheck', cookies=cookies)
         print(authApiResponse.json())
+        if authApiResponse.json().get('errors') is not None:
+            print(f"Erros {authApiResponse.json().get('errors')}")
+            return None
         if authApiResponse.json().get('message') != "User is authenticated":
             print(f"{authApiResponse.json().get('message')}")
             return None

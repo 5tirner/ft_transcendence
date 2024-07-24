@@ -196,5 +196,5 @@ class myServerOnGame(AsyncWebsocketConsumer):
         print("Sending Data To Clinet...")
         await self.send(data['Data'])
     async def endGame(self, data):
-        print("WebSocker Will Be Closed")
+        print(f"WebSocker Will Be Closed Client = {self.scope['user']}")
         await self.close()
