@@ -160,25 +160,33 @@ class myServerOnGame(AsyncWebsocketConsumer):
                     print("ERROR HAPPENED WHEN DESTROY GAME")
                 await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
             elif dataFromClient.get("gameStatus") == "closed":
-                print(f"{thisUser} Will Lose The Match Cuase He Left The Game")
-                roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
-                leftedGame, Win = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)
-                leftedGame.loses += 1
-                leftedGame.save()
-                Win.wins +=1
-                Win.save()
-                print(f"Add Historic Of The Match Between {thisUser} and {hisOppenent}")
-                user1,user2 =history(you=thisUser,oppenent=hisOppenent,winner=hisOppenent),history(you=hisOppenent,oppenent=thisUser,winner=hisOppenent)
-                user1.save()
-                user2.save()
-                try:
+                if self.playersOnMatchAndItsOppenent.get(thisUser) is not None:
+                    print(f"{thisUser} Will Lose The Match Cuase He Left The Game")
+                    roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
+                    leftedGame, Win = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)
+                    leftedGame.loses += 1
+                    leftedGame.save()
+                    Win.wins +=1
+                    Win.save()
+                    print(f"Add Historic Of The Match Between {thisUser} and {hisOppenent}")
+                    user1,user2 =history(you=thisUser,oppenent=hisOppenent,winner=hisOppenent),history(you=hisOppenent,oppenent=thisUser,winner=hisOppenent)
+                    user1.save()
+                    user2.save()
+                    print(f"Try Destroy Data")
                     destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
                                                 self.playersOnMatchAndItsRoomId,
                                                 self.playersOnMatchAndItsRole, thisUser, hisOppenent)
-                except:
-                    print("ERROR HAPPENED WHEN DESTROY GAME")
-                await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
-
+                    print(f"Data For {thisUser} Destroyed")
+                    await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
+                else:
+                    try:
+                        self.playerWantsToPlay.remove(thisUser)
+                        print(f"{thisUser} Left Without Playing")
+                        roomId = gameInfo.objects.get(login=thisUser).codeToPlay
+                        await self.channel_layer.group_discard(roomId, self.channel_name)
+                        await self.close()
+                    except:
+                        print(f"{thisUser} Not In The Q At All")
         except:
             pass
 
