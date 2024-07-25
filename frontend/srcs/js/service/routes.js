@@ -10,7 +10,7 @@ export const routes = (previousLocation, currentLocation) => {
       {
         const currentView   = document.querySelector(`${currentLocation.substring(1)}-view`);
         if ( previousLocation )
-          previousView  = document.querySelector(`${previousLocation.substring(1)}-view`);
+          previousView  = document.querySelector(`${previousLocation.path.substring(1)}-view`);
         if ( previousView )
             previousView.setAttribute('hidden', '');
         if ( currentView )

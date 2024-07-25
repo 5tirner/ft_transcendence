@@ -1,6 +1,7 @@
 import { router } from "./service/router.js";
 import { MainUI, Sidebar, Game, Platform, Profile, Home, TTT, Login } from "./view/mainUI.js";
-
+window.prevState = null;
+window.ws = null;
 window.router = router;
 window.component = {};
 
@@ -22,11 +23,11 @@ document.addEventListener("DOMContentLoaded", () =>
         right: document.getElementById("right-view"),
     }
     window.addEventListener("popstate", (e) => {
-      console.log(e.state);
       if (e.state.path !== '/home' && e.state.path !== '/login')
         router.redirecto(e.state.path);
       else
         router.redirecto('/platform');
+      // aborting()
     });
     router.redirecto(location.pathname);
 });

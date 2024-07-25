@@ -1,12 +1,12 @@
 import { auth } from "../auth/Authentication.js";
 import { routes } from "./routes.js";
 export const router = {
-  mainui: document.querySelector("main-ui"),
-  
   goto: (path, whichGame = "default", addToHistory = true) =>
 	{
-	  const previousLocation = history.state ? history.state.path : null;
+	  const previousLocation = prevState;
 		const currentLocation = path;
+    console.log("prev: ", previousLocation);
+    console.log("curr: ", currentLocation);
 		if ( currentLocation === "/home")
     {
       if (window.component.home)
@@ -35,7 +35,11 @@ export const router = {
       routes(previousLocation, currentLocation);
  
   	  if ( addToHistory )
-  		  history.pushState({ path }, null, location.origin + path);
+       {
+          prevState = { path: currentLocation };
+    		  history.pushState({ path }, null, location.origin + path);
+       }
+      console.log("history: ", previousLocation);
 		}
 		window.scrollTo(0, 0);
 	},
