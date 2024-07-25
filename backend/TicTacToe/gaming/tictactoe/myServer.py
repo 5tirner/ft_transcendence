@@ -116,7 +116,11 @@ class myServerOnGame(AsyncWebsocketConsumer):
                 if roomidForThisUser is not None:
                     await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnPlaying', 'Data': toFrontEnd})
             elif dataFromClient.get("gameStatus") == "winner":
+                thisUser = dataFromClient.get('winner')
+                hisOppenent = self.playersOnMatchAndItsOppenent.get(thisUser)
                 print(f"{thisUser} Won {hisOppenent}")
+                if hisOppenent is None:
+                    print(f"This Match already Counted")
                 roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
                 Winner, loser = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)
                 print(f"Winner {Winner.login}: Wins: {Winner.wins} + 1")

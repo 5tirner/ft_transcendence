@@ -850,7 +850,7 @@ export class TTT extends HTMLElement
       }
       else {
         if (dataPars.etat == "PLAYING") {
-          console.log('Game Is Started');
+          console.log('Game On Progress');
           console.log(e.data);
           board = dataPars.board;
           const position = dataPars.position;
@@ -859,20 +859,46 @@ export class TTT extends HTMLElement
             domElem.innerHTML = "X";
             domElem.classList.add("squareX");
           }
-          else if (dataPars.x_o == "O") {
+          else if (dataPars.x_o == "O")
+          {
             domElem.innerHTML = "O";
             domElem.classList.add("squareO");
           }
-          if (isGameEnd(dataPars.x_o, board) == true) {
+          // console.log("Index", board.indexOf("."),  "->" , board[board.indexOf(".")]);
+          if (board.indexOf(".") == -1)
+          {
             console.log("Setting The Result Of This Game On Data Base");
-            const toServer = { 'gameStatus': "winner", 'position': -1, 'board': board };
+            const toServer = { 'gameStatus': "draw", 'position': -1, 'board': board};
+            ws.send(JSON.stringify(toServer));
+          }
+
+
+          if (isGameEnd(dataPars.x_o, board) == true)
+          {
+            console.log("Setting The Result Of This Game On Data Base");
+            const toServer = { 'gameStatus': "winner", 'position': -1, 'board': board,
+                            'winner': dataPars.user, 'loser': dataPars.oppenent};
             ws.send(JSON.stringify(toServer));
           }
         }
       }
     }
-    function sendDataToServer(squareNbr) {      
-      if (isGameStarted == true) {
+
+    ws.onclose = function ()
+    {
+      console.log("BYE BYE");
+      // aborting();
+    }
+    window.onbeforeunload = function ()
+    {
+      const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
+      ws.send(JSON.stringify(toServer));
+    }
+
+    function sendDataToServer(squareNbr)
+    {
+      if (isGameStarted == true)
+      {
         const position = Number(squareNbr);
         if (board[position] != '.')
           console.log('The Square Already Filled By: ', board[position]);
@@ -883,14 +909,6 @@ export class TTT extends HTMLElement
       }
       else
         console.log('Game Not Start Yet');
-      ws.onclose = function () {
-        console.log("BYE BYE");
-        // aborting();
-      }
-      window.onbeforeunload = function () {
-        const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
-        ws.send(JSON.stringify(toServer));
-      }
     }
   }
 }
