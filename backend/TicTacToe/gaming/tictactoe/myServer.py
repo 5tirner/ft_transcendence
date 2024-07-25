@@ -57,7 +57,10 @@ class myServerOnGame(AsyncWebsocketConsumer):
                 await self.channel_layer.group_send(roomid, {'type': 'ToFrontOnConnect', 'Data': toFronEnd})
         else:
             player1, player2 = self.playerWantsToPlay[0], self.scope['user']
-            if self.playersOnMatchAndItsRoomId.get(player2) is not None:
+            if player1 == player2:
+                print(f"{player1} Deux Fois")
+                await self.close()
+            elif self.playersOnMatchAndItsRoomId.get(player2) is not None:
                 print(f"Can't Add Player {player2} To Game With {player1} His Alraedy In Match")
                 await self.close()
             else:
@@ -91,6 +94,7 @@ class myServerOnGame(AsyncWebsocketConsumer):
         try:
             thisUser, hisOppenent = self.scope["user"], self.playersOnMatchAndItsOppenent.get(self.scope["user"])
             if dataFromClient.get("gameStatus") == "onprogress":
+                print("Still On Progress")
                 if self.playersOnMatchAndItsRoomId.get(thisUser) == gameInfo.objects.get(login=thisUser).codeToPlay:
                     symbol = 'X'
                 else:
@@ -112,6 +116,11 @@ class myServerOnGame(AsyncWebsocketConsumer):
                 if roomidForThisUser is not None:
                     await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnPlaying', 'Data': toFrontEnd})
             elif dataFromClient.get("gameStatus") == "winner":
+                thisUser = dataFromClient.get('winner')
+                hisOppenent = self.playersOnMatchAndItsOppenent.get(thisUser)
+                print(f"{thisUser} Won {hisOppenent}")
+                if hisOppenent is None:
+                    print(f"This Match already Counted")
                 roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
                 Winner, loser = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)
                 print(f"Winner {Winner.login}: Wins: {Winner.wins} + 1")
@@ -132,6 +141,7 @@ class myServerOnGame(AsyncWebsocketConsumer):
                     print("ERROR HAPPENED WHEN DESTROY GAME")
                 await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
             elif dataFromClient.get("gameStatus") == "draw":
+                print(f"Draw Between {thisUser} and {hisOppenent} ")
                 roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
                 p1, p2 = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)
                 p1.draws += 1
@@ -150,6 +160,7 @@ class myServerOnGame(AsyncWebsocketConsumer):
                     print("ERROR HAPPENED WHEN DESTROY GAME")
                 await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
             elif dataFromClient.get("gameStatus") == "closed":
+                print(f"{thisUser} Will Lose The Match Cuase He Left The Game")
                 roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
                 leftedGame, Win = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)
                 leftedGame.loses += 1

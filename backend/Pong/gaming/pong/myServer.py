@@ -30,7 +30,10 @@ class myPongserver(AsyncWebsocketConsumer):
         else:
             player1, player2 = self.playerWantsToPlay[0], self.scope['user']
             print("Player Waiting...")
-            if self.playersOnMatchAndItsRoomId.get(player2) is not None:
+            if player1 == player2:
+                print(f"{player1} Deux Fois")
+                await self.close()
+            elif self.playersOnMatchAndItsRoomId.get(player2) is not None:
                 print(f"Can't Add Player {player2} To Game With {player1} His Alraedy In Match")
                 await self.close()
             else:

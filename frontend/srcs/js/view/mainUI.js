@@ -669,16 +669,13 @@ export class Platform extends HTMLElement
           e.preventDefault();
           const href = ticTacToe.getAttribute("game");
           if ( href === "ttt" )
-          {
-            if (!customElements.get("ttt-view"))
-              customElements.define("ttt-view", TTT);
+          {              
             const gameSection = document.querySelector(".game-section");
             const ticdiv = document.querySelector("#ttt-view");
             if (ticdiv !== null)
               ticdiv.remove();
-            const ttt = document.createElement("ttt-view");
-            gameSection.appendChild(ttt);
-            document.querySelector("#ttt-view").removeAttribute("hidden");
+            else
+              gameSection.appendChild(document.createElement("ttt-view"));
             window.router.redirecto("/game");
           }
         });
@@ -694,7 +691,6 @@ export class TTT extends HTMLElement
   }
   connectedCallback() {
     this.setAttribute('id', 'ttt-view');
-    // this.setAttribute('hidden', '');
     this.root.innerHTML += `
       <style>
         :host {
@@ -797,7 +793,7 @@ export class TTT extends HTMLElement
     });
     
 
-    window.ws = new WebSocket('ws://' + location.host + '/GameWS/');
+    const ws = new WebSocket('ws://' + location.host + '/GameWS/');
     let board = '.........';
     let isGameStarted = false;
 
@@ -814,13 +810,11 @@ export class TTT extends HTMLElement
       return false;
     }
     
-    window.ws.onopen = function () {
+    ws.onopen = function () {
       console.log("User On Game");
     }
     
-    abort.addEventListener('click', aborting);
-    
-    window.ws.onmessage = (e) => {
+    ws.onmessage = (e) => {
       const dataPars = JSON.parse(e.data)
       if (isGameStarted == false) {
         if (dataPars.player2.length == 0) {
@@ -842,7 +836,7 @@ export class TTT extends HTMLElement
       }
       else {
         if (dataPars.etat == "PLAYING") {
-          console.log('Game Is Started');
+          console.log('Game On Progress');
           console.log(e.data);
           board = dataPars.board;
           const position = dataPars.position;
@@ -851,40 +845,67 @@ export class TTT extends HTMLElement
             domElem.innerHTML = "X";
             domElem.classList.add("squareX");
           }
-          else if (dataPars.x_o == "O") {
+          else if (dataPars.x_o == "O")
+          {
             domElem.innerHTML = "O";
             domElem.classList.add("squareO");
           }
-          if (isGameEnd(dataPars.x_o, board) == true) {
+          // console.log("Index", board.indexOf("."),  "->" , board[board.indexOf(".")]);
+          if (board.indexOf(".") == -1)
+          {
             console.log("Setting The Result Of This Game On Data Base");
-            const toServer = { 'gameStatus': "winner", 'position': -1, 'board': board };
-            window.ws.send(JSON.stringify(toServer));
+            const toServer = { 'gameStatus': "draw", 'position': -1, 'board': board};
+            ws.send(JSON.stringify(toServer));
+          }
+
+
+          if (isGameEnd(dataPars.x_o, board) == true)
+          {
+            console.log("Setting The Result Of This Game On Data Base");
+            const toServer = { 'gameStatus': "winner", 'position': -1, 'board': board,
+                            'winner': dataPars.user, 'loser': dataPars.oppenent};
+            ws.send(JSON.stringify(toServer));
           }
         }
       }
     }
-    function sendDataToServer(squareNbr) {      
-      if (isGameStarted == true) {
+
+    ws.onclose = function ()
+    {
+      console.log("BYE BYE");
+      // aborting();
+    }
+    window.onbeforeunload = function ()
+    {
+      const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
+      ws.send(JSON.stringify(toServer));
+    }
+
+    function sendDataToServer(squareNbr)
+    {
+      if (isGameStarted == true)
+      {
         const position = Number(squareNbr);
         if (board[position] != '.')
           console.log('The Square Already Filled By: ', board[position]);
         else {
           const toServer = { 'gameStatus': "onprogress", 'position': position, 'board': board };
-          window.ws.send(JSON.stringify(toServer));
+          ws.send(JSON.stringify(toServer));
         }
       }
       else
         console.log('Game Not Start Yet');
     }
-    window.ws.onclose = function () {
+    ws.onclose = function () {
       console.log("BYE BYE");
       // aborting();
     }
     window.onbeforeunload = function () {
       const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
-      window.ws.send(JSON.stringify(toServer));
+      ws.send(JSON.stringify(toServer));
     }
-    window.addEventListener('popstate', aborting);
+    window.addEventListener('popstate', () => aborting(ws));
+    abort.addEventListener('click', () => aborting(ws));
     
   }
 }
