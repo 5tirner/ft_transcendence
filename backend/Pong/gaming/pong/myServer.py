@@ -66,16 +66,18 @@ class myPongserver(AsyncWebsocketConsumer):
         dataFromClient = json.loads(text_data)
         if dataFromClient.get('move') == "":
             print("Ball")
-        elif dataFromClient.get('move') == "DOWN":
-            if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
-                print("Paddl1 Down")
-            else:
-                print("Paddl2 Down")
         elif dataFromClient.get('move') == "UP":
             if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
                 print("Paddl1 Up")
             else:
                 print("Paddl2 Up")
+        elif dataFromClient.get('move') == "DOWN":
+            if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
+                print("Paddl1 Down")
+                if dataFromClient.get('paddle1') + 1:
+                    pass
+            else:
+                print("Paddl2 Down")
     async def disconnect(self, code):
         print(f"User {self.scope['user']} Lost Connection")
         try:
