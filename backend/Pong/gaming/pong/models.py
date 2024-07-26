@@ -7,3 +7,8 @@ class pongGameInfo(models.Model):
     draws = models.IntegerField(default=0)
     gamesPlayed = models.IntegerField(default=0)
     codeToPlay = models.CharField(max_length=10)
+
+class pongHistory(models.Model):
+    you = models.CharField(max_length=20)
+    oppenent = models.CharField(max_length=20)
+    winner = models.CharField(max_length=20)

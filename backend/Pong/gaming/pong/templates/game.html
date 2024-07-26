@@ -97,6 +97,7 @@
         {
             const canvasContext = canvas.getContext("2d");
             console.log("My Context", canvasContext);
+
             let Lineheight = 5;
             while (Lineheight < 345)
             {
@@ -109,6 +110,7 @@
                 canvasContext.stroke();
                 Lineheight += 15;
             }
+
             canvasContext.beginPath();
             canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
             canvasContext.lineWidth = 1;
@@ -116,6 +118,22 @@
             canvasContext.fill();
             canvasContext.closePath();
             canvasContext.strokeStyle = "rgb(140, 29, 260)";
+            canvasContext.stroke();
+
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 8;
+            canvasContext.moveTo(20, 150)
+            canvasContext.lineTo(20, 200);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "gray";
+            canvasContext.stroke();
+
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 8;
+            canvasContext.moveTo(780, 150)
+            canvasContext.lineTo(780, 200);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "gray";
             canvasContext.stroke();
         }
         window.addEventListener("load", controlCanvas);

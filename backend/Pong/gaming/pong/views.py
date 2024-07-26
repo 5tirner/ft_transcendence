@@ -69,3 +69,26 @@ def PongGame(req):
         userAdd = pongGameInfo(login=userInfo.get('username'), codeToPlay=roomcode(userInfo.get('username')))
         userAdd.save()
     return render(req, 'game.html')
+
+@api_view(['GET'])
+def historic(req):
+    AuthApiRes = isAuthUser(req)
+    if AuthApiRes is None:
+        print("This User Does Not Authenticated")
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def PongTournement(req):
+    AuthApiRes = isAuthUser(req)
+    if AuthApiRes is None:
+        print("This User Does Not Authenticated")
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
+    userInfo = AuthApiRes.json().get('data')
+    try:
+        pongGameInfo.objects.get(login=userInfo.get('username'))
+        print(f"Welcome Back {userInfo.get('username')}")
+    except:
+        print(f"First Game For {userInfo.get('username')}")
+        userAdd = pongGameInfo(login=userInfo.get('username'), codeToPlay=roomcode(userInfo.get('username')))
+        userAdd.save()
+    return render(req, 'gameTournement.html')

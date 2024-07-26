@@ -83,3 +83,13 @@ class myPongserver(AsyncWebsocketConsumer):
     async def endGame(self, data):
         print(f"WebSocket Will Be Closed Client: {self.scope['user']}")
         await self.close()
+
+#Need To Hundle Tournement
+class pongTourServer(AsyncWebsocketConsumer):
+    async def connect(self):
+        print(f"{self.scope['user']} Try To Connect On Tournement Server")
+        await self.accept()
+    async def receive(self, text_data, bytes_data=None):
+        pass
+    async def disconnect(self, code):
+        pass
