@@ -58,8 +58,14 @@ class myPongserver(AsyncWebsocketConsumer):
             print(f"Still In Q: {len(self.playerWantsToPlay)}")
 
     async def receive(self, text_data, bytes_data=None):
-        print(f"Data Received From Clinet:\n{text_data}")
-
+        print(f"Data Received From Clinet {self.scope['user']}:\n{text_data}")
+        dataFromClient = json.loads(text_data)
+        if dataFromClient.get('move') == "":
+            print("Ball")
+        elif dataFromClient.get('move') == "DOWN":
+            print("Paddl Down")
+        elif dataFromClient.get('move') == "UP":
+            print("Paddl up")
     async def disconnect(self, code):
         print(f"User {self.scope['user']} Lost Connection")
         try:

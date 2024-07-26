@@ -59,6 +59,8 @@
     <script>
         let isGameStarted = false;
         let round = 1;
+        let paddl1Y = 150;
+        let paddl2Y = 150;
         const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
 
         ws.onopen = function()
@@ -136,37 +138,51 @@
 
             canvasContext.beginPath();
             canvasContext.lineWidth = 8;
-            canvasContext.moveTo(20, 150)
-            canvasContext.lineTo(20, 200);
+            canvasContext.moveTo(20, paddl1Y)
+            canvasContext.lineTo(20, paddl1Y + 50);
             canvasContext.closePath();
             canvasContext.strokeStyle = "gray";
             canvasContext.stroke();
 
             canvasContext.beginPath();
             canvasContext.lineWidth = 8;
-            canvasContext.moveTo(780, 150)
-            canvasContext.lineTo(780, 200);
+            canvasContext.moveTo(780, paddl2Y)
+            canvasContext.lineTo(780, paddl2Y + 50);
             canvasContext.closePath();
             canvasContext.strokeStyle = "gray";
             canvasContext.stroke();
         }
-
         window.addEventListener("load", controlCanvas);
         function applyDown(e)
         {
-            if (e.key == "ArrowUp")
+            if (isGameStarted == true)
             {
-                console.log("GO UP");
-                
-            }
-            else if (e.key == "ArrowDown")
-            {
-                console.log("GO DOWN");
+                if (e.key == "ArrowUp")
+                {
+                    console.log("GO UP");
+                    const ToServer = {'move': "UP", 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                    ws.send(JSON.stringify(ToServer));
+                }
+                else if (e.key == "ArrowDown")
+                {
+                    console.log("GO DOWN");
+                    const ToServer = {'move': "DOWN" , 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                    ws.send(JSON.stringify(ToServer));
+                }
+                else
+                    console.log("Do NOTHING");
             }
             else
-                console.log("Do NOTHING");
+                console.log("Game Not Start Yet");
         }
-
+        function ballMove()
+        {
+            if (isGameStarted == true)
+            {
+                const ToServer = {'move': "" , 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                ws.send(JSON.stringify(ToServer));
+            }
+        }
         document.addEventListener("keydown", applyDown);
     </script>
     
