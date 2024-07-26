@@ -969,6 +969,7 @@ export class Pong extends HTMLElement
       <h1 class="player2name" id="p2"></h1>
     `;
 
+    
     let isGameStarted = false;
         let round = 1;
         let paddl1Y = 150;
@@ -1022,7 +1023,7 @@ export class Pong extends HTMLElement
 
         const canvas = document.getElementById("board");
         console.log("My Canvas", canvas);
-        function controlCanvas()
+        function DrawElments()
         {
             const canvasContext = canvas.getContext("2d");
             console.log("My Context", canvasContext);
@@ -1039,14 +1040,14 @@ export class Pong extends HTMLElement
                 Lineheight += 15;
             }
 
-            canvasContext.beginPath();
-            canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
-            canvasContext.lineWidth = 1;
-            canvasContext.fillStyle = "white";
-            canvasContext.fill();
-            canvasContext.closePath();
-            canvasContext.strokeStyle = "rgb(140, 29, 260)";
-            canvasContext.stroke();
+            // canvasContext.beginPath();
+            // canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
+            // canvasContext.lineWidth = 1;
+            // canvasContext.fillStyle = "white";
+            // canvasContext.fill();
+            // canvasContext.closePath();
+            // canvasContext.strokeStyle = "rgb(140, 29, 260)";
+            // canvasContext.stroke();
 
             canvasContext.beginPath();
             canvasContext.lineWidth = 8;
@@ -1064,7 +1065,6 @@ export class Pong extends HTMLElement
             canvasContext.strokeStyle = "gray";
             canvasContext.stroke();
         }
-        window.addEventListener("load", controlCanvas);
         function applyDown(e)
         {
             if (isGameStarted == true)
@@ -1095,6 +1095,7 @@ export class Pong extends HTMLElement
                 ws.send(JSON.stringify(ToServer));
             }
         }
+        window.addEventListener("load", DrawElments);
         document.addEventListener("keydown", applyDown);
   }
 }
