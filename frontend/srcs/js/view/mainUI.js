@@ -969,7 +969,7 @@ export class Pong extends HTMLElement
       <h1 class="player2name" id="p2"></h1>
     `;
 
-    
+    const domElm1 = this.root.querySelector("#p1"), domElm2 = this.root.querySelector("#p2");
     let isGameStarted = false;
         let round = 1;
         let paddl1Y = 150;
@@ -993,7 +993,7 @@ export class Pong extends HTMLElement
                     console.log("Player1: " + dataPars.player1);
                     console.log("Player2: " + dataPars.player2)
                     console.log("RoomId: " + dataPars.roomid)
-                    const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
+                    
                     domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
                     domElm2.innerHTML = "PLAYER2: Wait...";
                 }
@@ -1003,7 +1003,6 @@ export class Pong extends HTMLElement
                     console.log("Player1: " + dataPars.player1);
                     console.log("Player2: " + dataPars.player2)
                     console.log("RoomId: " + dataPars.roomid)
-                    const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
                     domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
                     domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
                 }
@@ -1021,9 +1020,9 @@ export class Pong extends HTMLElement
             console.log("BYE FROM SERVER")
         }
 
-        const canvas = document.getElementById("board");
+        const canvas = this.root.querySelector("#board");
         console.log("My Canvas", canvas);
-        function DrawElments()
+        if (canvas.getContext)
         {
             const canvasContext = canvas.getContext("2d");
             console.log("My Context", canvasContext);
@@ -1095,7 +1094,7 @@ export class Pong extends HTMLElement
                 ws.send(JSON.stringify(ToServer));
             }
         }
-        window.addEventListener("load", DrawElments);
+        // window.addEventListener("load", DrawElments);
         document.addEventListener("keydown", applyDown);
   }
 }

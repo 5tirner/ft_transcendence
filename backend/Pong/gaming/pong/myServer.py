@@ -4,6 +4,7 @@ import json
 import os
 from .destroyGameInfo import destroyThisGameInformations
 from .paddleThatMoved import whichPaddlMove
+from .generateCode import roomcode
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
@@ -13,6 +14,14 @@ class myPongserver(AsyncWebsocketConsumer):
     playersOnMatchAndItsOppenent = dict()
     async def connect(self):
         print(f'----------User On Game Is: {self.scope["user"]}-------')
+        try:
+            print(f"Welcome Back {self.scope['user']}.")
+            pongGameInfo.objects.get(login=self.scope['user'])
+        except:
+            print(f"It's Your First Time Here {self.scope['user']}! Welcome.")
+            addUserToDB = pongGameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
+            addUserToDB.save()
+            print(f"{self.scope['user']} Added Succusfully")
         if len(self.playerWantsToPlay) == 0:
             player1, player2 = self.scope['user'], ""
             print("Vide Q")
