@@ -59,6 +59,9 @@ class myPongserver(AsyncWebsocketConsumer):
 
     async def receive(self, text_data, bytes_data=None):
         print(f"Data Received From Clinet {self.scope['user']}:\n{text_data}")
+        thisUser = self.scope['user']
+        oppenent = self.playersOnMatchAndItsOppenent.get(self.scope['user'])
+        print(f"{thisUser} Move His Paddle Agianst {oppenent}")
         dataFromClient = json.loads(text_data)
         if dataFromClient.get('move') == "":
             print("Ball")
