@@ -6,6 +6,7 @@
     <title>PONG-GAME</title>
     <link rel="icon" type="image/x-icon" href="https://e7.pngegg.com/pngimages/947/598/png-clipart-pong-paddle-sprite-video-game-paddle-text-rectangle.png">
 </head>
+
 <style>
     canvas
     {
@@ -19,10 +20,12 @@
         border-radius: 5px;
         filter: brightness(80%);
     }
+
     body
     {
         background-color: rgb(220, 186, 240);
     }
+
     .player1name
     {
         position: absolute;
@@ -30,6 +33,7 @@
         top: 80%;
         color: #421152;
     }
+    
     .player2name
     {
         position: absolute;
@@ -38,22 +42,30 @@
         color: #421152;
     }
 </style>
+
 <body>
+
     <div style="margin-bottom: 200px;">
         <h1 style="text-align: center; color: rgb(128, 9, 240);">PONG-PONG-PONG</h1>
     </div>
+
     <div style="margin-bottom: 50px;">
         <canvas id="board" width="800" height="350">myCNV</canvas>
     </div>
+
     <h1 class="player1name" id="p1"></h1>
     <h1 class="player2name" id="p2"></h1>
+
     <script>
         let isGameStarted = false;
+        let round = 1;
         const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
+
         ws.onopen = function()
         {
             console.log("User On Game");
         }
+
         ws.onmessage = function(e)
         {
             console.log("Data From Server");
@@ -82,15 +94,18 @@
                 }
             }
         }
+
         window.onbeforeunload = function()
         {
             const toSerever = {'gameStat': "closed"};
             ws.send(JSON.stringify(toSerever));
         }
+
         ws.onclose = function()
         {
             console.log("BYE FROM SERVER")
         }
+
         const canvas = document.getElementById("board");
         console.log("My Canvas", canvas);
         function controlCanvas()
@@ -109,6 +124,7 @@
                 canvasContext.stroke();
                 Lineheight += 15;
             }
+
             canvasContext.beginPath();
             canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
             canvasContext.lineWidth = 1;
@@ -117,8 +133,41 @@
             canvasContext.closePath();
             canvasContext.strokeStyle = "rgb(140, 29, 260)";
             canvasContext.stroke();
+
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 8;
+            canvasContext.moveTo(20, 150)
+            canvasContext.lineTo(20, 200);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "gray";
+            canvasContext.stroke();
+
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 8;
+            canvasContext.moveTo(780, 150)
+            canvasContext.lineTo(780, 200);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "gray";
+            canvasContext.stroke();
         }
+
         window.addEventListener("load", controlCanvas);
+        function applyDown(e)
+        {
+            if (e.key == "ArrowUp")
+            {
+                console.log("GO UP");
+                
+            }
+            else if (e.key == "ArrowDown")
+            {
+                console.log("GO DOWN");
+            }
+            else
+                console.log("Do NOTHING");
+        }
+
+        document.addEventListener("keydown", applyDown);
     </script>
     
 </body>

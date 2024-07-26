@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PONG-TOURNEMENT</title>
+</head>
+<body>
+    <h1>Welcome To The Pong Tournement</h1>
+    <script>
+        const IsTheFourPlayerHere = false;
+        const ws = new WebSocket('ws://' + location.host + '/PongTourWs/');
+        ws.onopen = function()
+        {
+            console.log("Welcome To The Tournement")
+        }
+        ws.onmessage = function(event)
+        {
+            console.log(event.data);
+        }
+        ws.onclose = function()
+        {
+            console.log("Ws Closed");
+        }
+    </script>
+</body>
+</html>
