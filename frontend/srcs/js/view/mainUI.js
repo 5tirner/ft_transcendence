@@ -1,4 +1,5 @@
 import { auth } from '../auth/Authentication.js';
+import { aborting } from '../assets/abort.js';
 // Login View
 export class Login extends HTMLElement {
   constructor() { super('foo'); this.root = this.attachShadow({ mode: 'open' }); }
@@ -362,8 +363,6 @@ export class Game extends HTMLElement
             console.log("clicked: ", document.body.getAttribute("fullscreen"));
             if (document.body.getAttribute("fullscreen") === null) {
                 document.body.setAttribute("fullscreen","");
-                window.component.left.setAttribute('hidden', '');
-                window.component.right.setAttribute('hidden', '');
                 window.component.middle.setAttribute('style', "flex-basis: 100%");
             } else {
                 document.body.removeAttribute("fullscreen");
@@ -668,16 +667,13 @@ export class Platform extends HTMLElement
           e.preventDefault();
           const href = ticTacToe.getAttribute("game");
           if ( href === "ttt" )
-          {
-            if (!customElements.get("ttt-view"))
-              customElements.define("ttt-view", TTT);
+          {              
             const gameSection = document.querySelector(".game-section");
             const ticdiv = document.querySelector("#ttt-view");
             if (ticdiv !== null)
               ticdiv.remove();
-            const ttt = document.createElement("ttt-view");
-            gameSection.appendChild(ttt);
-            document.querySelector("#ttt-view").removeAttribute("hidden");
+            else
+              gameSection.appendChild(document.createElement("ttt-view"));
             window.router.redirecto("/game");
           }
         });
@@ -686,14 +682,13 @@ export class Platform extends HTMLElement
 // TicTacToe View
 export class TTT extends HTMLElement
 {
-    constructor()
-    {
-      super('foo');
-      this.root = this.attachShadow({mode: 'open'});
-    }
+  constructor()
+  {
+    super('foo');
+    this.root = this.attachShadow({mode: 'open'});
+  }
   connectedCallback() {
     this.setAttribute('id', 'ttt-view');
-    // this.setAttribute('hidden', '');
     this.root.innerHTML += `
       <style>
         :host {
@@ -782,6 +777,7 @@ export class TTT extends HTMLElement
       </div>
       <button class="exit">Abort</button>
       `;
+    
     const abort   = this.root.querySelector(".exit");
     const domElm1 = this.root.getElementById("p1");
     const domElm2 = this.root.getElementById("p2");
@@ -811,22 +807,10 @@ export class TTT extends HTMLElement
         return true;
       return false;
     }
+    
     ws.onopen = function () {
       console.log("User On Game");
     }
-
-    const aborting = (event) => {
-      const self = document.getElementById('ttt-view');
-      if (event)
-        event.preventDefault();
-      if ( self )
-        self.remove();
-      const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
-      ws.send(JSON.stringify(toServer));
-      window.router.redirecto("/platform");
-    }
-    
-    abort.addEventListener('click', (e) => aborting(e));
     
     ws.onmessage = (e) => {
       const dataPars = JSON.parse(e.data)
@@ -910,6 +894,17 @@ export class TTT extends HTMLElement
       else
         console.log('Game Not Start Yet');
     }
+    ws.onclose = function () {
+      console.log("BYE BYE");
+      // aborting();
+    }
+    window.onbeforeunload = function () {
+      const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
+      ws.send(JSON.stringify(toServer));
+    }
+    window.addEventListener('popstate', () => { console.log("popstate"); aborting(ws)});
+    abort.addEventListener('click', () => aborting(ws));
+    
   }
 }
 // Setting View
@@ -917,12 +912,12 @@ export class Setting extends HTMLElement
 {
   constructor() {
     super('foo');
-    this.root = this.attachShadow({ mode: "open" });
+    // this.root = this.attachShadow({ mode: "open" });
   }
   connectedCallback() {
     this.setAttribute('id', 'setting-view');
     this.setAttribute('hidden', '');
-    this.root.innerHTML = `
+    this.innerHTML = `
       <style>
         .profile-card {
           display: flex;
@@ -937,8 +932,15 @@ export class Setting extends HTMLElement
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           padding: 20px;
           width: 500px;
+          height: 350px;
           text-align: center;
           background-color: var(--teal);
+          position: relative;
+        }
+        #float form {
+          width: 500px;
+          height: 350px;
+          
         }
         .profile-card img {
           border-radius: 50%;
@@ -949,20 +951,22 @@ export class Setting extends HTMLElement
         }
         .profile-card .edit-image {
           position: absolute;
-          top: 88px;
-          right: 220px;
-          background: #007bff;
+          top: 85px;
+          right: 200px;
           border: none;
           border-radius: 50%;
-          color: white;
           width: 30px;
           height: 30px;
           cursor: pointer;
           display: flex;
           justify-content: center;
           align-items: center;
+          text-decoration: none;
+          background-color: var(--peach);
+          color: var(--light-olive) !important;
         }
         .profile-card .fullname {
+          margin: 20px 0;
           font-size: 16px;
           color: var(--light-olive);
         }
@@ -982,7 +986,7 @@ export class Setting extends HTMLElement
         .profile-card .info {
           display: flex;
           justify-content: space-around;
-          algin-items: center;
+          align-items: center;
           gap: 20px;
           margin: 10px 0;
         }
@@ -1001,9 +1005,8 @@ export class Setting extends HTMLElement
           -o-filter: blur(10px);
           -ms-filter: blur(10px); 
         }
-        .profile-card #float
+        #float
         {
-          border-radius: 18px;
           position: absolute;
           top: 0;
           left: 0;
@@ -1013,38 +1016,36 @@ export class Setting extends HTMLElement
           justify-content: center;
           text-align: center;
           align-items: center;
-          background-color: rgba(0, 0, 0, .15);
         }
-        .profile-card #float form
+        #float form
         {
           display: flex;
+          justify-content: center;
+          align-items: center;
           flex-direction: column;
           gap: 1rem;
+          background: transparent;
         }
-        .profile-card #float form input
+        #float form input
         {
           color: white;
-          border: 2px solid #8707ff;
+          border: 2px solid var(--peach);
           border-radius: 10px;
-          padding: 10px 25px;
+          padding: 10px;
           background: transparent;
-          max-width: 190px;
+          width: 80%;
         }
-    
+        #float form input::placeholder
+        {
+          color: var(--light-olive);
+        }
         .input:active {
           border: none;
-          box-shadow: 2px 2px 15px #8707ff inset;
+          outline: none;
         }
-    
-        .profile-card .section .edit-btn
+        
+        .profile-card .section .edit-btn, .save-btn
         {
-          display: flex;
-          flex-direction: column;
-          justify-content: end;
-        }
-        .profile-card .section .edit-btn
-        {
-          height: 100%;
           font-size: 10px;
           text-transform: uppercase;
           border: none;
@@ -1052,11 +1053,20 @@ export class Setting extends HTMLElement
           cursor: pointer;
           display: inline-block;
           border-radius: 8px;
-          background-color: var(--dark-teal);
+          background-color: var(--coral);
           color: var(--light-olive);
           box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
           transition: all 0.1s ease, background 0.3s ease;
           font-family: "Press Start 2P", sans-serif !important;
+        }
+        .save-btn
+        {
+          background-color: var(--dark-teal) !important;
+          color: var(--light-olive) !important;
+        }
+        .edit-btn
+        {
+          height: 30px;
         }
       </style>  
       <div class="profile-card">
@@ -1072,13 +1082,11 @@ export class Setting extends HTMLElement
 						style="display: none"
 						accept="image/*"
 						onchange="changeProfileImage(event)"
+						class="bx bx-pencil"
 					/>
-					<button
-						class="edit-image"
-						onclick="document.getElementById('fileInput').click();"
-					>
-						✏️
-					</button>
+					
+					<a class="edit-image"> <i class='bx bx-pencil'></i> </a>
+					
 					<h4 class="fullname">${auth.fullname}</h4>
 					<p username="username">${auth.user}</p>
 					<div class="badge">LVL 8</div>
@@ -1087,11 +1095,11 @@ export class Setting extends HTMLElement
 							<p>Name</p>
 							<p class="fullname">${auth.fullname}</p>
 						</div>
-						<button name="Edit" class="edit-btn">Edit</button>
+						<button class="edit-btn">Edit</button>
 					</div>
 				</div>
 				<div id="float" style="display: none">
-					<form action="" method="post">
+					<form action="" method="post" name="special-name">
 						<input
 							type="text"
 							name="fullname"
@@ -1099,7 +1107,7 @@ export class Setting extends HTMLElement
 							placeholder="Edit your name.."
 							required
 						/>
-						<button name="Save" class="edit-btn"></button>
+						<button name="Save" class="save-btn">Save</button>
 					</form>
 				</div>
 			</div> 
@@ -1108,38 +1116,40 @@ export class Setting extends HTMLElement
   }
   render()
   {
-      const float = this.root.getElementById("float");
-      const editBtn = this.root.querySelector(".edit-btn");
-      // const btn = editBtn.querySelector(".edit-btn");
-      const profileCard = this.root.querySelector(".profile-card .section");
-      const input = this.root.getElementById("input-fullname");
+    const float = this.querySelector("#float");
+    const editBtn = this.querySelector(".edit-btn");
+    const profileCard = this.querySelector(".profile-card .section");
+    const input = this.querySelector("#input-fullname");
+    const editImg = this.querySelector(".edit-image");
 
-      // btn.addEventListener( "click", (e) => {
-      //     profileCard.className += " blur";
-      //     float.setAttribute("style", "display: flex");
-      //     document.addEventListener("click", (e) => {
-      //       if ( e.target.getAttribute("name") !== "special-name" )
-      //         {
-      //             float.setAttribute("style", "display: none");
-      //             profileCard.classList.remove("blur");
-      //         }
-      //     });
-      //     float.addEventListener("click", (e) => {
-      //         if ( e.target.getAttribute("name") === "Save" )
-      //         {
-      //             if ( input.value.length == 0 )
-      //             {
-      //                 console.log("Please enter some shit");
-      //             }
-      //             else
-      //             {
-      //                 float.setAttribute("style", "display: none");
-      //                 profileCard.classList.remove("blur");
-      //             }
-      //             // post data to the backend for changing the user fullname
-      //         }
-      //     });
-      // })
+    editBtn.addEventListener("click", (e) => {
+      profileCard.classList.add("blur");
+      float.setAttribute("style", "display: flex");
+      float.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (e.target.getAttribute("name") === "Save") {
+          if (input.value.length == 0) {
+            console.log("Please enter some shit");
+          }
+          else {
+            float.setAttribute("style", "display: none");
+            profileCard.classList.remove("blur");
+          }
+          // post data to the backend for changing the user fullname
+        }
+        console.log("target: ", e.target)
+        console.log("current target: ", e.currentTarget)
+        if (e.target === float)
+        {
+          float.setAttribute("style", "display: none");
+          profileCard.classList.remove("blur");
+        }
+      });
+    });
+    // editImg.addEventListener('click', listener);
+    // const listener = () => {
+      
+    // }
   }
 }
 // Main UI View
