@@ -15,6 +15,7 @@ export const routes = (previousLocation, currentLocation) => {
             previousView.setAttribute('hidden', '');
         if ( currentView )
             currentView.removeAttribute('hidden');
+        window.component.middle.removeAttribute('style');
       }
       default:
       {

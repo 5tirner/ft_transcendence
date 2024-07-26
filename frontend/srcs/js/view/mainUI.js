@@ -363,8 +363,6 @@ export class Game extends HTMLElement
             console.log("clicked: ", document.body.getAttribute("fullscreen"));
             if (document.body.getAttribute("fullscreen") === null) {
                 document.body.setAttribute("fullscreen","");
-                window.component.left.setAttribute('hidden', '');
-                window.component.right.setAttribute('hidden', '');
                 window.component.middle.setAttribute('style', "flex-basis: 100%");
             } else {
                 document.body.removeAttribute("fullscreen");
@@ -904,7 +902,7 @@ export class TTT extends HTMLElement
       const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
       ws.send(JSON.stringify(toServer));
     }
-    window.addEventListener('popstate', () => aborting(ws));
+    window.addEventListener('popstate', () => { console.log("popstate"); aborting(ws)});
     abort.addEventListener('click', () => aborting(ws));
     
   }
