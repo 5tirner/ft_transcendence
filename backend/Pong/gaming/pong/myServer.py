@@ -3,6 +3,7 @@ from .models import pongGameInfo
 import json
 import os
 from .destroyGameInfo import destroyThisGameInformations
+from .paddleThatMoved import whichPaddlMove
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
@@ -66,9 +67,15 @@ class myPongserver(AsyncWebsocketConsumer):
         if dataFromClient.get('move') == "":
             print("Ball")
         elif dataFromClient.get('move') == "DOWN":
-            print("Paddl Down")
+            if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
+                print("Paddl1 Down")
+            else:
+                print("Paddl2 Down")
         elif dataFromClient.get('move') == "UP":
-            print("Paddl up")
+            if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
+                print("Paddl1 Up")
+            else:
+                print("Paddl2 Up")
     async def disconnect(self, code):
         print(f"User {self.scope['user']} Lost Connection")
         try:

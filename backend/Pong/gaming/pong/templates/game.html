@@ -110,7 +110,7 @@
 
         const canvas = document.getElementById("board");
         console.log("My Canvas", canvas);
-        function controlCanvas()
+        function DrawElments()
         {
             const canvasContext = canvas.getContext("2d");
             console.log("My Context", canvasContext);
@@ -127,14 +127,14 @@
                 Lineheight += 15;
             }
 
-            canvasContext.beginPath();
-            canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
-            canvasContext.lineWidth = 1;
-            canvasContext.fillStyle = "white";
-            canvasContext.fill();
-            canvasContext.closePath();
-            canvasContext.strokeStyle = "rgb(140, 29, 260)";
-            canvasContext.stroke();
+            // canvasContext.beginPath();
+            // canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
+            // canvasContext.lineWidth = 1;
+            // canvasContext.fillStyle = "white";
+            // canvasContext.fill();
+            // canvasContext.closePath();
+            // canvasContext.strokeStyle = "rgb(140, 29, 260)";
+            // canvasContext.stroke();
 
             canvasContext.beginPath();
             canvasContext.lineWidth = 8;
@@ -152,7 +152,6 @@
             canvasContext.strokeStyle = "gray";
             canvasContext.stroke();
         }
-        window.addEventListener("load", controlCanvas);
         function applyDown(e)
         {
             if (isGameStarted == true)
@@ -183,6 +182,7 @@
                 ws.send(JSON.stringify(ToServer));
             }
         }
+        window.addEventListener("load", DrawElments);
         document.addEventListener("keydown", applyDown);
     </script>
     
