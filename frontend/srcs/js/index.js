@@ -1,5 +1,5 @@
 import { router } from "./service/router.js";
-import { MainUI, Sidebar, Game, Platform, Profile, Home, TTT, Login } from "./view/mainUI.js";
+import { MainUI, Sidebar, Game, Platform, Profile, Home, TTT, Login, Pong } from "./view/mainUI.js";
 window.prevState = null;
 window.router = router;
 window.component = {};
@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", () =>
     customElements.define("platform-view", Platform);
     customElements.define("game-view", Game);
     customElements.define("ttt-view", TTT);
+    customElements.define("pong-view", Pong);
 
     window.component = {
         home: document.querySelector("home-view"),
