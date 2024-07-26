@@ -461,223 +461,228 @@ export class Profile extends HTMLElement
 // Platform View
 export class Platform extends HTMLElement
 {
-    constructor()
-    {
-        super('foo');
-        this.root = this.attachShadow({mode:"open"});
-    }
-    connectedCallback()
-    {
-        this.setAttribute('id', 'platform-view');
-        this.setAttribute('hidden', '');
-        this.root.innerHTML += `
-        <style>
-          :host
-          {
-              width: 100%;
-              height: 100%;
-          }
-          a
-          {
-              text-decoration: none;
-          }
-          .container
-          {
-              width: 100%;
-              height: 35%;
-              display: flex;
-              flex-direction: row;
-          }
-          .wrapper
-          {
-              margin: 0 auto;
-              display: flex;
-              gap: 150px;
-              width: 80%;
-              height: 100%;
-          }
-          .pong, .xo
-          {
-              width: 100%;
-              position: relative;
-          }
-          .xo
-          {
-              justify-content: start !important;
-          }
-          .pong img, .xo img
-          {
-              border-radius: 12px;
-              width: 100%;
-              height: 100%;
-          }
-          .btn-wrapper
-          {
-              width: 100%;
-              position: absolute;
-              bottom: 24px;
-              left: 0;
-              display: flex;
-              justify-content: space-around;
-          }
-          .button 
-          {
-            font-size: 10px;
-            font-weight: 300;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border: none;
-            cursor: pointer;
-            display: inline-block;
-            padding: 2.5% 6%;
-            border-radius: 8px;
-            background-color: var(--dark-teal);
-            color: var(--light-olive);
-            box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
-            transition: all 0.1s ease, background 0.3s ease;
-            font-family: "Press Start 2P", sans-serif !important;
-          }
-          .local
-          {
-              background: var(--coral) !important;
-          }
-          .local-xo
-          {
-              background: var(--light-olive) !important;
-              color: var(--coral);
-          }
-          .button:hover,
-          .button:focus
-          {
-              background: #df6108;
-          }
-          .rank
-          {
-              margin-top: 80px;
-              width: 100%;
-              height: 55%;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-          }
-          .rank-title
-          {
-              padding: 10px 0;
-              width: 100%;
-              text-align: center;
-              color: var(--dark-purple);
-          }
-          .avatar {
-              width: 120px;
-              height: 120px;
-              border-radius: 12px;
-          }
-          .avatar img{
-              width: 100%;
-              height: 100%;
-              border-radius: 12px;
-          }
-          
-          .name {
-              width: 100%;
-              text-align: center;
-              color: var(--light-olive);
-              font-size: 12px;
-              padding: 10px 0;
-          
-          }
-          .points {
-              margin-top: 5px;
-              color: var(--dark-purple);
-              width: 100%;
-              height: 20%;
-              text-align: center;
-              font-size: 10px;
-          }
-          .rank-card
-          {
-              margin-top: 20px;
-              min-width: 180px;
-              max-width: 180px;
-              border-radius: 12px;
-              background-color: var(--teal);
-              height: 50%;
-              padding: 15px 10px;
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-              align-items: center;
-              max-height: 100%;
-          }
-          .rank:hover .slide
-          {
-              animation-play-state: paused;
-          }
-          @keyframes sliding
-          {
-              from{ transform: translateX(80%); }
-              to{ transform: translateX(-100%); }
-          }
-          .slide
-          {
-              width: 100%;
-              height: 100%;
-              display: flex;
-              flex-direction: row;
-              justify-content: center;
-              gap: 2.5rem;
-              animation: 10s sliding infinite linear;
-          }
-        </style>
-        <div class="container">
-            <div class="wrapper">
-                <div class="pong">
-                    <img src="js/view/src/img/pong.gif">
-                    <div class="btn-wrapper">
-                        <button class="button multi">Multiplayer</button>
-                        <button class="button local">Local</button>
-                    </div>
+  constructor()
+  {
+    super('foo');
+    this.root = this.attachShadow({mode:"open"});
+  }
+  connectedCallback()
+  {
+    this.setAttribute('id', 'platform-view');
+    this.setAttribute('hidden', '');
+    this.root.innerHTML += `
+    <style>
+      :host
+      {
+          width: 100%;
+          height: 100%;
+      }
+      a
+      {
+          text-decoration: none;
+      }
+      .container
+      {
+          width: 100%;
+          height: 35%;
+          display: flex;
+          flex-direction: row;
+      }
+      .wrapper
+      {
+          margin: 0 auto;
+          display: flex;
+          gap: 150px;
+          width: 80%;
+          height: 100%;
+      }
+      .pong, .xo
+      {
+          width: 100%;
+          position: relative;
+      }
+      .xo
+      {
+          justify-content: start !important;
+      }
+      .pong img, .xo img
+      {
+          border-radius: 12px;
+          width: 100%;
+          height: 100%;
+      }
+      .btn-wrapper
+      {
+          width: 100%;
+          position: absolute;
+          bottom: 24px;
+          left: 0;
+          display: flex;
+          justify-content: space-around;
+      }
+      .button 
+      {
+        font-size: 10px;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: none;
+        cursor: pointer;
+        display: inline-block;
+        padding: 2.5% 6%;
+        border-radius: 8px;
+        background-color: var(--dark-teal);
+        color: var(--light-olive);
+        box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
+        transition: all 0.1s ease, background 0.3s ease;
+        font-family: "Press Start 2P", sans-serif !important;
+      }
+      .local
+      {
+          background: var(--coral) !important;
+      }
+      .local-xo
+      {
+          background: var(--light-olive) !important;
+          color: var(--coral);
+      }
+      .button:hover,
+      .button:focus
+      {
+          background: #df6108;
+      }
+      .rank
+      {
+          margin-top: 80px;
+          width: 100%;
+          height: 55%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+      .rank-title
+      {
+          padding: 10px 0;
+          width: 100%;
+          text-align: center;
+          color: var(--dark-purple);
+      }
+      .avatar {
+          width: 120px;
+          height: 120px;
+          border-radius: 12px;
+      }
+      .avatar img{
+          width: 100%;
+          height: 100%;
+          border-radius: 12px;
+      }
+      
+      .name {
+          width: 100%;
+          text-align: center;
+          color: var(--light-olive);
+          font-size: 12px;
+          padding: 10px 0;
+      
+      }
+      .points {
+          margin-top: 5px;
+          color: var(--dark-purple);
+          width: 100%;
+          height: 20%;
+          text-align: center;
+          font-size: 10px;
+      }
+      .rank-card
+      {
+          margin-top: 20px;
+          min-width: 180px;
+          max-width: 180px;
+          border-radius: 12px;
+          background-color: var(--teal);
+          height: 50%;
+          padding: 15px 10px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          max-height: 100%;
+      }
+      .rank:hover .slide
+      {
+          animation-play-state: paused;
+      }
+      @keyframes sliding
+      {
+          from{ transform: translateX(80%); }
+          to{ transform: translateX(-100%); }
+      }
+      .slide
+      {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          gap: 2.5rem;
+          animation: 10s sliding infinite linear;
+      }
+    </style>
+    <div class="container">
+        <div class="wrapper">
+            <div class="pong">
+                <img src="js/view/src/img/pong.gif">
+                <div class="btn-wrapper">
+                <a href="/game" class="button po-btn multi common" game="pong">
+                  Multiplayer
+                </a>
+                    <button class="button local">Local</button>
                 </div>
-                <div class="xo">
-                    <img src="js/view/src/img/xo-teal.gif">
-                    <div class="btn-wrapper">
-                      <a href="/game" class="button xo-btn multi" game="ttt">
-                        Multiplayer
-                      </a>
-                      <button class="button local-xo">Local</button>
-                    </div>
+            </div>
+            <div class="xo">
+                <img src="js/view/src/img/xo-teal.gif">
+                <div class="btn-wrapper">
+                  <a href="/game" class="button xo-btn multi common" game="ttt">
+                    Multiplayer
+                  </a>
+                  <button class="button local-xo">Local</button>
                 </div>
             </div>
         </div>
-        <div class="rank">
-            <div class="rank-title">Players Rank</div>
-            <div class="slide">
-                <div class="rank-card">
-                    <div class="avatar">
-                        <!-- <img src="https://avatar.iran.liara.run/public" alt="avatar"> -->
-                    </div>
-                    <div class="name">YACHAAB</div>
-                    <div class="points">199pts</div>
+    </div>
+    <div class="rank">
+        <div class="rank-title">Players Rank</div>
+        <div class="slide">
+            <div class="rank-card">
+                <div class="avatar">
+                    <!-- <img src="https://avatar.iran.liara.run/public" alt="avatar"> -->
                 </div>
+                <div class="name">YACHAAB</div>
+                <div class="points">199pts</div>
             </div>
         </div>
-        `;
-        const ticTacToe = this.root.querySelector(".xo-btn");
-        ticTacToe.addEventListener("click", (e) => {
-          e.preventDefault();
-          const href = ticTacToe.getAttribute("game");
-          if ( href === "ttt" )
-          {              
-            const gameSection = document.querySelector(".game-section");
-            const ticdiv = document.querySelector("#ttt-view");
-            if (ticdiv !== null)
-              ticdiv.remove();
-            else
-              gameSection.appendChild(document.createElement("ttt-view"));
-            window.router.redirecto("/game");
-          }
-        });
+    </div>
+    `;
+    const startGame = this.root.querySelectorAll(".common");
+    startGame.forEach(elem => {
+      elem.addEventListener("click", (e) => {
+        e.preventDefault();
+        const game = e.target.getAttribute("game");
+        manipulateGameSection(game);
+      });
+    });
+    const manipulateGameSection = ( gameToAppend ) =>
+    {
+      const gameSection = document.querySelector('.game-section');
+      const gameElem    = document.querySelector(`#${gameToAppend}-view`);
+      if (gameElem !== null)
+        gameElem.remove();
+      else
+        gameSection.appendChild(document.createElement(`${gameToAppend}-view`));
+      window.router.redirecto("/game");
     }
+  }
 }
 // TicTacToe View
 export class TTT extends HTMLElement
@@ -905,6 +910,192 @@ export class TTT extends HTMLElement
     window.addEventListener('popstate', () => { console.log("popstate"); aborting(ws)});
     abort.addEventListener('click', () => aborting(ws));
     
+  }
+}
+// TicTacToe View
+export class Pong extends HTMLElement
+{
+  constructor()
+  {
+    super('foo');
+    this.root = this.attachShadow({mode: 'open'});
+  }
+  connectedCallback() {
+    this.root.innerHTML = `
+      <style>
+          canvas
+          {
+              display: block;
+              margin: 0 auto;
+              background-color: #ccb4e2b0;
+              border-color: rgb(128, 9, 240);
+              border-width: thin;
+              border-style: solid;
+              border-block-width: 10px;
+              border-radius: 5px;
+              filter: brightness(80%);
+          }
+      
+          body
+          {
+              background-color: rgb(220, 186, 240);
+          }
+      
+          .player1name
+          {
+              position: absolute;
+              left: 0%;
+              top: 80%;
+              color: #421152;
+          }
+          
+          .player2name
+          {
+              position: absolute;
+              left: 72%;
+              top: 80%;
+              color: #421152;
+          }
+      </style>
+      <div style="margin-bottom: 200px;">
+          <h1 style="text-align: center; color: rgb(128, 9, 240);">PONG-PONG-PONG</h1>
+      </div>
+  
+      <div style="margin-bottom: 50px;">
+        <canvas id="board" width="800" height="350">myCNV</canvas>
+      </div>
+  
+      <h1 class="player1name" id="p1"></h1>
+      <h1 class="player2name" id="p2"></h1>
+    `;
+
+    let isGameStarted = false;
+        let round = 1;
+        let paddl1Y = 150;
+        let paddl2Y = 150;
+        const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
+
+        ws.onopen = function()
+        {
+            console.log("User On Game");
+        }
+
+        ws.onmessage = function(e)
+        {
+            console.log("Data From Server");
+            console.log(e.data);
+            const dataPars = JSON.parse(e.data)
+            if (isGameStarted == false)
+            {
+                if (dataPars.player2.length == 0)
+                {
+                    console.log("Player1: " + dataPars.player1);
+                    console.log("Player2: " + dataPars.player2)
+                    console.log("RoomId: " + dataPars.roomid)
+                    const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
+                    domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+                    domElm2.innerHTML = "PLAYER2: Wait...";
+                }
+                else if (dataPars.player2.length != 0)
+                {
+                    isGameStarted = true;
+                    console.log("Player1: " + dataPars.player1);
+                    console.log("Player2: " + dataPars.player2)
+                    console.log("RoomId: " + dataPars.roomid)
+                    const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
+                    domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+                    domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+                }
+            }
+        }
+
+        window.onbeforeunload = function()
+        {
+            const toSerever = {'gameStat': "closed"};
+            ws.send(JSON.stringify(toSerever));
+        }
+
+        ws.onclose = function()
+        {
+            console.log("BYE FROM SERVER")
+        }
+
+        const canvas = document.getElementById("board");
+        console.log("My Canvas", canvas);
+        function controlCanvas()
+        {
+            const canvasContext = canvas.getContext("2d");
+            console.log("My Context", canvasContext);
+            let Lineheight = 5;
+            while (Lineheight < 345)
+            {
+                canvasContext.beginPath();
+                canvasContext.lineWidth = 3;
+                canvasContext.moveTo(400, Lineheight);
+                canvasContext.lineTo(400, Lineheight + 5);
+                canvasContext.closePath();
+                canvasContext.strokeStyle = "rgb(128, 9, 240)";
+                canvasContext.stroke();
+                Lineheight += 15;
+            }
+
+            canvasContext.beginPath();
+            canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
+            canvasContext.lineWidth = 1;
+            canvasContext.fillStyle = "white";
+            canvasContext.fill();
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "rgb(140, 29, 260)";
+            canvasContext.stroke();
+
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 8;
+            canvasContext.moveTo(20, paddl1Y)
+            canvasContext.lineTo(20, paddl1Y + 50);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "gray";
+            canvasContext.stroke();
+
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 8;
+            canvasContext.moveTo(780, paddl2Y)
+            canvasContext.lineTo(780, paddl2Y + 50);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "gray";
+            canvasContext.stroke();
+        }
+        window.addEventListener("load", controlCanvas);
+        function applyDown(e)
+        {
+            if (isGameStarted == true)
+            {
+                if (e.key == "ArrowUp")
+                {
+                    console.log("GO UP");
+                    const ToServer = {'move': "UP", 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                    ws.send(JSON.stringify(ToServer));
+                }
+                else if (e.key == "ArrowDown")
+                {
+                    console.log("GO DOWN");
+                    const ToServer = {'move': "DOWN" , 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                    ws.send(JSON.stringify(ToServer));
+                }
+                else
+                    console.log("Do NOTHING");
+            }
+            else
+                console.log("Game Not Start Yet");
+        }
+        function ballMove()
+        {
+            if (isGameStarted == true)
+            {
+                const ToServer = {'move': "" , 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                ws.send(JSON.stringify(ToServer));
+            }
+        }
+        document.addEventListener("keydown", applyDown);
   }
 }
 // Setting View
