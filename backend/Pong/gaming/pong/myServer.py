@@ -72,44 +72,63 @@ class myPongserver(AsyncWebsocketConsumer):
         thisUser = self.scope['user']
         oppenent = self.playersOnMatchAndItsOppenent.get(self.scope['user'])
         roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
-        print(f"{thisUser} Move His Paddle Agianst {oppenent}")
         dataFromClient = json.loads(text_data)
         if dataFromClient.get('gameStatus') == "onprogress":
-            if dataFromClient.get('move') == "":
-                print("Ball")
-            elif dataFromClient.get('move') == "UP":
+            if dataFromClient.get('move') == "UP":
+                print(f"{thisUser} Move His Paddle Agianst {oppenent} ->UP")
                 if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
                     print(f"Paddl1 Up {dataFromClient.get('paddle1')} -> {dataFromClient.get('paddle1') - 5}")
                     toFront = json.dumps({
-                        'paddle1': dataFromClient.get('paddle1') - 5,
+                        'paddle1': dataFromClient.get('paddle1') - 10,
                         'paddle2': dataFromClient.get('paddle2'),
                         'player1': thisUser,
                         'player2': oppenent,
+                        'Ballx': dataFromClient.get('ballx'),
                         })
                 else:
                     print(f"Paddl2 Up {dataFromClient.get('paddle2')} -> {dataFromClient.get('paddle2') - 5}")
                     toFront = json.dumps({
                         'paddle1': dataFromClient.get('paddle1'),
-                        'paddle2': dataFromClient.get('paddle2') - 5,
+                        'paddle2': dataFromClient.get('paddle2') - 10,
                         'player1': thisUser,
                         'player2': oppenent,
+                        'Ballx': dataFromClient.get('ballx'),
                         })
             elif dataFromClient.get('move') == "DOWN":
+                print(f"{thisUser} Move His Paddle Agianst {oppenent} ->DOWN")
                 if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
                     print(f"Paddl1 Down {dataFromClient.get('paddle1')} -> {dataFromClient.get('paddle1') + 5}")
                     toFront = json.dumps({
-                        'paddle1': dataFromClient.get('paddle1') + 5,
+                        'paddle1': dataFromClient.get('paddle1') + 10,
                         'paddle2': dataFromClient.get('paddle2'),
                         'player1': thisUser,
                         'player2': oppenent,
+                        'Ballx': dataFromClient.get('ballx'),
                         })
                 else:
                     print(f"Paddl2 Down {dataFromClient.get('paddle2')} -> {dataFromClient.get('paddle2') + 5}")
                     toFront = json.dumps({
                         'paddle1': dataFromClient.get('paddle1'),
-                        'paddle2': dataFromClient.get('paddle2') + 5,
+                        'paddle2': dataFromClient.get('paddle2') + 10,
                         'player1': thisUser,
                         'player2': oppenent,
+                        'Ballx': dataFromClient.get('ballx'),
+                    })
+            elif dataFromClient.get('move') == 'BALL':
+                BallNewPos = dataFromClient.get('ballx')
+                print(f"Ball Cordonates: {dataFromClient.get('ballx')}, {dataFromClient.get('bally')}")
+                if dataFromClient.get('BallDir') == "LEFT":
+                    print(f"Ball Move To Left {BallNewPos}->{BallNewPos - 10}")
+                    BallNewPos -= 40
+                else:
+                    print(f"Ball Move To RIGHT {BallNewPos}->{BallNewPos + 10}")
+                    BallNewPos += 40
+                toFront = json.dumps({
+                        'paddle1': dataFromClient.get('paddle1'),
+                        'paddle2': dataFromClient.get('paddle2'),
+                        'player1': thisUser,
+                        'player2': oppenent,
+                        'Ballx': BallNewPos,
                     })
             await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnConnect', 'Data': toFront})
         elif dataFromClient.get('gameStatus') == "closed":
@@ -152,7 +171,9 @@ class myPongserver(AsyncWebsocketConsumer):
                 print(f"{self.scope['user']} Play And Finish Alraedy")
             destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
                             self.playersOnMatchAndItsRoomId, player1, player2)
-            await self.channel_layer.group_discard(roomidForThisUser, self.channel_name)
+            if roomidForThisUser is not None:
+                await self.channel_layer.group_discard(roomidForThisUser, self.channel_name)
+            print("Channel Discard")
         except:
             pass
     

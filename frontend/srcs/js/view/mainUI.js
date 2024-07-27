@@ -1,7 +1,8 @@
 import { auth } from '../auth/Authentication.js';
 import { aborting } from '../assets/abort.js';
 // Login View
-export class Login extends HTMLElement {
+export class Login extends HTMLElement
+{
   constructor() { super('foo'); this.root = this.attachShadow({ mode: 'open' }); }
   connectedCallback() {
     this.setAttribute("id", "login-view");
@@ -913,7 +914,8 @@ export class TTT extends HTMLElement
   }
 }
 // TicTacToe View
-export class Pong extends HTMLElement {
+export class Pong extends HTMLElement 
+{
   constructor() {
     super('foo');
     this.root = this.attachShadow({ mode: 'open' });
@@ -998,11 +1000,11 @@ export class Pong extends HTMLElement {
       <div style="margin-bottom: 100px;">
           <h1 style="text-align: center; color: rgb(128, 9, 240);">PONG-PONG-PONG</h1>
       </div>
-  
+
       <div style="margin-bottom: 50px;">
         <canvas id="board" width="800" height="350">myCNV</canvas>
       </div>
-  
+
       <h1 class="player1name" id="p1"></h1>
       <h1 class="player2name" id="p2"></h1>
       
@@ -1019,129 +1021,169 @@ export class Pong extends HTMLElement {
     const leave = this.root.querySelector('.btn-primary');
     const domElm1 = this.root.querySelector("#p1"), domElm2 = this.root.querySelector("#p2");
     let isGameStarted = false;
-    let round = 1;
+    let xBallPos = 380, yBallPos = 175;
+    let BallDirection = "LEFT";
     let paddl1Y = 150;
     let paddl2Y = 150;
+    let SaveInterval = 0;
     const canvas = this.root.querySelector("#board");
     const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
 
-    function drawElements() {
-      if (canvas.getContext) {
-        const canvasContext = canvas.getContext("2d");
-        // console.log("My Context", canvasContext);
-        canvasContext.shadowColor = "black";
-        canvasContext.shadowBlur = 15;
-        canvasContext.shadowOffsetX = 5;
-        canvasContext.shadowOffsetY = 2;
-        let Lineheight = 5;
-        while (Lineheight < 345) {
-          canvasContext.beginPath();
-          canvasContext.lineWidth = 4;
-          canvasContext.moveTo(400, Lineheight);
-          canvasContext.lineTo(400, Lineheight + 5);
-          canvasContext.closePath();
-          canvasContext.strokeStyle = "rgb(128, 9, 240)";
-          canvasContext.stroke();
-          Lineheight += 15;
+    console.log("My Canvas", canvas);
+    function drawElements()
+    {
+      if (canvas.getContext)
+        {
+            const canvasContext = canvas.getContext("2d");
+            // console.log("My Context", canvasContext);
+            canvasContext.shadowColor = "black";
+            canvasContext.shadowBlur = 15;
+            canvasContext.shadowOffsetX = 5;
+            canvasContext.shadowOffsetY = 2;
+            let Lineheight = 5;
+            while (Lineheight < 345)
+            {
+                canvasContext.beginPath();
+                canvasContext.lineWidth = 4;
+                canvasContext.moveTo(400, Lineheight);
+                canvasContext.lineTo(400, Lineheight + 5);
+                canvasContext.closePath();
+                canvasContext.strokeStyle = "rgb(128, 9, 240)";
+                canvasContext.stroke();
+                Lineheight += 15;
+              }
+              
+            canvasContext.beginPath();
+            canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
+            canvasContext.lineWidth = 1;
+            canvasContext.fillStyle = "#F0F8FF";
+            canvasContext.fill();
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "rgb(140, 29, 260)";
+            canvasContext.stroke();
+              
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 8;
+            canvasContext.moveTo(20, paddl1Y)
+            canvasContext.lineTo(20, paddl1Y + 50);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "#F0F8FF";
+            canvasContext.stroke();
+
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 8;
+            canvasContext.moveTo(780, paddl2Y)
+            canvasContext.lineTo(780, paddl2Y + 50);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "#F0F8FF";
+            canvasContext.stroke();
         }
-
-        canvasContext.beginPath();
-        canvasContext.arc(380, 350 / 2, 15, 0, 3.14 * 2);
-        canvasContext.lineWidth = 1;
-        canvasContext.fillStyle = "#F0F8FF";
-        canvasContext.fill();
-        canvasContext.closePath();
-        canvasContext.strokeStyle = "rgb(140, 29, 260)";
-        canvasContext.stroke();
-
-        canvasContext.beginPath();
-        canvasContext.lineWidth = 8;
-        canvasContext.moveTo(20, paddl1Y)
-        canvasContext.lineTo(20, paddl1Y + 50);
-        canvasContext.closePath();
-        canvasContext.strokeStyle = "#F0F8FF";
-        canvasContext.stroke();
-
-        canvasContext.beginPath();
-        canvasContext.lineWidth = 8;
-        canvasContext.moveTo(780, paddl2Y)
-        canvasContext.lineTo(780, paddl2Y + 50);
-        canvasContext.closePath();
-        canvasContext.strokeStyle = "#F0F8FF";
-        canvasContext.stroke();
-      }
     }
-    const applyDown = (e) => {
-      if (isGameStarted == true) {
-        if (e.key == "ArrowUp") {
-          console.log("GO UP");
-          const ToServer = { 'gameStatus': "onprogress", 'move': "UP", 'paddle1': paddl1Y, 'paddle2': paddl2Y }
-          ws.send(JSON.stringify(ToServer));
-        }
-        else if (e.key == "ArrowDown") {
-          console.log("GO DOWN");
-          const ToServer = { 'gameStatus': "onprogress", 'move': "DOWN", 'paddle1': paddl1Y, 'paddle2': paddl2Y }
-          ws.send(JSON.stringify(ToServer));
+    this.applyDown = (e) =>
+    {
+        if (isGameStarted == true)
+        {
+            if (e.key == "ArrowUp")
+            {
+                console.log("GO UP");
+                const ToServer =
+                {
+                  'gameStatus': "onprogress", 'move': "UP",
+                  'paddle1': paddl1Y, 'paddle2': paddl2Y,
+                  'ballx': xBallPos, 'bally': yBallPos,
+                  'BallDir': BallDirection,
+                }
+                ws.send(JSON.stringify(ToServer));
+            }
+            else if (e.key == "ArrowDown")
+            {
+                console.log("GO DOWN");
+                const ToServer =
+                {
+                  'gameStatus': "onprogress", 'move': "DOWN",
+                  'paddle1': paddl1Y, 'paddle2': paddl2Y,
+                  'ballx': xBallPos, 'bally': yBallPos,
+                  'BallDir': BallDirection,
+                }
+                ws.send(JSON.stringify(ToServer));
+            }
+            else
+                console.log("Do NOTHING");
         }
         else
-          console.log("Do NOTHING");
-      }
-      else
-        console.log("Game Not Start Yet");
-    }
-    function ballMove() {
-      if (isGameStarted == true) {
-        const ToServer = { 'move': "", 'paddle1': paddl1Y, 'paddle2': paddl2Y }
-        ws.send(JSON.stringify(ToServer));
-      }
-    }
-    document.addEventListener("keydown", applyDown);
-
-    ws.onopen = function () {
-      console.log("User On Game");
+          console.log("Game Not Start Yet");
     }
 
-    ws.onmessage = function (e) {
-      // console.log("Data From Server");
-      // console.log(e.data);
-      const dataPars = JSON.parse(e.data)
-      if (isGameStarted == false) {
-        if (dataPars.player2.length == 0) {
-          console.log("Player1: " + dataPars.player1);
-          console.log("Player2: " + dataPars.player2)
-          console.log("RoomId: " + dataPars.roomid)
-
-          domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-          domElm2.innerHTML = "PLAYER2: Wait...";
+    function ballMove()
+    {
+        if (isGameStarted == true)
+        {
+          if (xBallPos <= 0)
+            BallDirection = "RIGHT";
+          else if (xBallPos >= 800)
+            BallDirection = "LEFT";
+          const ToServer =
+          {
+            'gameStatus': "onprogress", 'move': "BALL",
+            'paddle1': paddl1Y, 'paddle2': paddl2Y,
+            'ballx': xBallPos, 'bally': yBallPos,
+            'BallDir': BallDirection,
+          }
+          ws.send(JSON.stringify(ToServer));
         }
-        else if (dataPars.player2.length != 0) {
-          isGameStarted = true;
-          console.log("Player1: " + dataPars.player1);
-          console.log("Player2: " + dataPars.player2)
-          console.log("RoomId: " + dataPars.roomid)
-          domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-          domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+    }
+
+    document.addEventListener("keyup", this.applyDown);
+
+    ws.onopen = function()
+    {
+        console.log("User On Game");
+    }
+
+    ws.onmessage = function(e)
+    {
+        // console.log("Data From Server");
+        // console.log(e.data);
+        const dataPars = JSON.parse(e.data)
+        if (isGameStarted == false)
+        {
+            if (dataPars.player2.length == 0)
+            {
+                console.log("Player1: " + dataPars.player1);
+                console.log("Player2: " + dataPars.player2)
+                console.log("RoomId: " + dataPars.roomid)
+                domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+                domElm2.innerHTML = "PLAYER2: Wait...";
+            }
+            else if (dataPars.player2.length != 0)
+            {
+                isGameStarted = true;
+                console.log("Player1: " + dataPars.player1);
+                console.log("Player2: " + dataPars.player2)
+                console.log("RoomId: " + dataPars.roomid)
+                domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+                domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+                SaveInterval = setInterval(ballMove, 100);
+            }
+        }
+        else if (isGameStarted == true)
+        {
+          // console.log("From Server During Game: ", dataPars);
+          if (dataPars.paddle1 <= 300 && dataPars.paddle1 >= 0)
+            paddl1Y = dataPars.paddle1;
+          if (dataPars.paddle2 <= 300 && dataPars.paddle2 >= 0)
+            paddl2Y = dataPars.paddle2;
+          xBallPos = dataPars.Ballx;
+          const canvasContext = canvas.getContext('2d');
+          canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+          drawElements();
         }
       }
-      else if (isGameStarted == true) {
-        console.log("From Server During Game: ", dataPars);
-        if (dataPars.paddle1 <= 300 && dataPars.paddle1 >= 0)
-          paddl1Y = dataPars.paddle1;
-        if (dataPars.paddle2 <= 300 && dataPars.paddle2 >= 0)
-          paddl2Y = dataPars.paddle2;
-        const canvasContext = canvas.getContext('2d');
-        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        drawElements();
-      }
-    }
-    // window.addEventListener('beforeunload', (event) => {
-    //   event.returnValue = `Are you sure you want to leave?`;
-    // });
+    
+    drawElements();
 
     window.onbeforeunload = function (e) {
       e.preventDefault();
-      // const toSerever = {'gameStatus': "closed"};
-      // ws.send(JSON.stringify(toSerever));
       return (true);
     }
 
@@ -1152,35 +1194,37 @@ export class Pong extends HTMLElement {
         console.log("BYE FROM SERVER");
       }
     }
-    const fcancel = () => {
+    this.fcancel = () => {
       console.log("canceling");
       history.pushState({ path: '/game' }, null, '/game');
       popup.setAttribute('style', 'display: none');
     }
 
-    const fleave = () => {
+    this.fleave = () => {
       console.log("leaving");
       popup.setAttribute('style', 'display: none');
       aborting(ws, 'pong');
       router.goto('/platform');
     }
-
+    cancel.addEventListener("click", this.fcancel);
+    leave.addEventListener("click", this.fleave);
+    
     window.onpopstate = function () {
       console.log("Pong popState triggered!");
       popup.setAttribute('style', 'display: block');
-      cancel.addEventListener("click", fcancel);
-      leave.addEventListener("click", fleave);
     }
-    drawElements();
   }
+  
   disconnectedCallback() {
     console.log('Element removed from the DOM');
-    document.removeEventListener("keydown", this.applyDown);
-    // cancel.removeEventListener("click", fcancel);
-    // leave.removeEventListener("click", fleave);
+    console.log("Down: ", );
+    document.removeEventListener("keyup", this.applyDown);
+    cancel.removeEventListener("click", this.fcancel);
+    leave.removeEventListener("click", this.fleave);
     window.onpopstate = null;
   }
 }
+
 // Setting View
 export class Setting extends HTMLElement
 {
