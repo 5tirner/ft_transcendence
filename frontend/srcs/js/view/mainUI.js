@@ -975,6 +975,7 @@ export class Pong extends HTMLElement
         let BallDirection = "LEFT";
         let paddl1Y = 150;
         let paddl2Y = 150;
+        let SaveInterval = 0;
         const canvas = this.root.querySelector("#board");
         const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
 
@@ -1062,15 +1063,27 @@ export class Pong extends HTMLElement
             else
                 console.log("Game Not Start Yet");
         }
+
         function ballMove()
         {
             if (isGameStarted == true)
             {
-                const ToServer = {'move': "" , 'paddle1': paddl1Y, 'paddle2': paddl2Y}
-                ws.send(JSON.stringify(ToServer));
+              if (xBallPos <= 0)
+                BallDirection = "RIGHT";
+              else if (xBallPos >= 800)
+                BallDirection = "LEFT";
+              const ToServer =
+              {
+                'gameStatus': "onprogress", 'move': "BALL",
+                'paddle1': paddl1Y, 'paddle2': paddl2Y,
+                'ballx': xBallPos, 'bally': yBallPos,
+                'BallDir': BallDirection,
+              }
+              ws.send(JSON.stringify(ToServer));
             }
         }
-        document.addEventListener("keydown", applyDown);
+
+        document.addEventListener("keyup", applyDown);
   
         ws.onopen = function()
         {
@@ -1089,7 +1102,6 @@ export class Pong extends HTMLElement
                     console.log("Player1: " + dataPars.player1);
                     console.log("Player2: " + dataPars.player2)
                     console.log("RoomId: " + dataPars.roomid)
-                    
                     domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
                     domElm2.innerHTML = "PLAYER2: Wait...";
                 }
@@ -1101,20 +1113,22 @@ export class Pong extends HTMLElement
                     console.log("RoomId: " + dataPars.roomid)
                     domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
                     domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+                    SaveInterval = setInterval(ballMove, 100);
                 }
             }
             else if (isGameStarted == true)
             {
-              console.log("From Server During Game: ", dataPars);
+              // console.log("From Server During Game: ", dataPars);
               if (dataPars.paddle1 <= 300 && dataPars.paddle1 >= 0)
                 paddl1Y = dataPars.paddle1;
               if (dataPars.paddle2 <= 300 && dataPars.paddle2 >= 0)
                 paddl2Y = dataPars.paddle2;
+              xBallPos = dataPars.Ballx;
               const canvasContext = canvas.getContext('2d');
               canvasContext.clearRect(0, 0, canvas.width, canvas.height);
               drawElements();
             }
-        }
+          }
 
         window.onbeforeunload = function()
         {
@@ -1125,6 +1139,7 @@ export class Pong extends HTMLElement
         ws.onclose = function()
         {
             console.log("BYE FROM SERVER")
+            clearInterval(SaveInterval)
         }
         drawElements();
   }
