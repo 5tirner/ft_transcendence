@@ -974,99 +974,54 @@ export class Pong extends HTMLElement
         let round = 1;
         let paddl1Y = 150;
         let paddl2Y = 150;
+        const canvas = this.root.querySelector("#board");
         const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
 
-        ws.onopen = function()
-        {
-            console.log("User On Game");
-        }
-
-        ws.onmessage = function(e)
-        {
-            console.log("Data From Server");
-            console.log(e.data);
-            const dataPars = JSON.parse(e.data)
-            if (isGameStarted == false)
-            {
-                if (dataPars.player2.length == 0)
-                {
-                    console.log("Player1: " + dataPars.player1);
-                    console.log("Player2: " + dataPars.player2)
-                    console.log("RoomId: " + dataPars.roomid)
-                    
-                    domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-                    domElm2.innerHTML = "PLAYER2: Wait...";
-                }
-                else if (dataPars.player2.length != 0)
-                {
-                    isGameStarted = true;
-                    console.log("Player1: " + dataPars.player1);
-                    console.log("Player2: " + dataPars.player2)
-                    console.log("RoomId: " + dataPars.roomid)
-                    domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-                    domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-                }
-            }
-            else if (isGameStarted == true)
-            {
-              console.log("From Server During Game: ", dataPars);
-            }
-        }
-
-        window.onbeforeunload = function()
-        {
-            const toSerever = {'gameStat': "closed"};
-            ws.send(JSON.stringify(toSerever));
-        }
-
-        ws.onclose = function()
-        {
-            console.log("BYE FROM SERVER")
-        }
-
-        const canvas = this.root.querySelector("#board");
         console.log("My Canvas", canvas);
-        if (canvas.getContext)
+        function drawElements()
         {
-            const canvasContext = canvas.getContext("2d");
-            console.log("My Context", canvasContext);
-            let Lineheight = 5;
-            while (Lineheight < 345)
+          if (canvas.getContext)
             {
+                const canvasContext = canvas.getContext("2d");
+                console.log("My Context", canvasContext);
+                let Lineheight = 5;
+                while (Lineheight < 345)
+                {
+                    canvasContext.beginPath();
+                    canvasContext.lineWidth = 3;
+                    canvasContext.moveTo(400, Lineheight);
+                    canvasContext.lineTo(400, Lineheight + 5);
+                    canvasContext.closePath();
+                    canvasContext.strokeStyle = "rgb(128, 9, 240)";
+                    canvasContext.stroke();
+                    Lineheight += 15;
+                }
+    
+                // canvasContext.beginPath();
+                // canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
+                // canvasContext.lineWidth = 1;
+                // canvasContext.fillStyle = "white";
+                // canvasContext.fill();
+                // canvasContext.closePath();
+                // canvasContext.strokeStyle = "rgb(140, 29, 260)";
+                // canvasContext.stroke();
+    
                 canvasContext.beginPath();
-                canvasContext.lineWidth = 3;
-                canvasContext.moveTo(400, Lineheight);
-                canvasContext.lineTo(400, Lineheight + 5);
+                canvasContext.lineWidth = 8;
+                canvasContext.moveTo(20, paddl1Y)
+                canvasContext.lineTo(20, paddl1Y + 50);
                 canvasContext.closePath();
-                canvasContext.strokeStyle = "rgb(128, 9, 240)";
+                canvasContext.strokeStyle = "gray";
                 canvasContext.stroke();
-                Lineheight += 15;
+    
+                canvasContext.beginPath();
+                canvasContext.lineWidth = 8;
+                canvasContext.moveTo(780, paddl2Y)
+                canvasContext.lineTo(780, paddl2Y + 50);
+                canvasContext.closePath();
+                canvasContext.strokeStyle = "gray";
+                canvasContext.stroke();
             }
-
-            // canvasContext.beginPath();
-            // canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
-            // canvasContext.lineWidth = 1;
-            // canvasContext.fillStyle = "white";
-            // canvasContext.fill();
-            // canvasContext.closePath();
-            // canvasContext.strokeStyle = "rgb(140, 29, 260)";
-            // canvasContext.stroke();
-
-            canvasContext.beginPath();
-            canvasContext.lineWidth = 8;
-            canvasContext.moveTo(20, paddl1Y)
-            canvasContext.lineTo(20, paddl1Y + 50);
-            canvasContext.closePath();
-            canvasContext.strokeStyle = "gray";
-            canvasContext.stroke();
-
-            canvasContext.beginPath();
-            canvasContext.lineWidth = 8;
-            canvasContext.moveTo(780, paddl2Y)
-            canvasContext.lineTo(780, paddl2Y + 50);
-            canvasContext.closePath();
-            canvasContext.strokeStyle = "gray";
-            canvasContext.stroke();
         }
         function applyDown(e)
         {
@@ -1098,8 +1053,61 @@ export class Pong extends HTMLElement
                 ws.send(JSON.stringify(ToServer));
             }
         }
-        // window.addEventListener("load", DrawElments);
         document.addEventListener("keydown", applyDown);
+  
+        ws.onopen = function()
+        {
+            console.log("User On Game");
+        }
+
+        ws.onmessage = function(e)
+        {
+            // console.log("Data From Server");
+            // console.log(e.data);
+            const dataPars = JSON.parse(e.data)
+            if (isGameStarted == false)
+            {
+                if (dataPars.player2.length == 0)
+                {
+                    console.log("Player1: " + dataPars.player1);
+                    console.log("Player2: " + dataPars.player2)
+                    console.log("RoomId: " + dataPars.roomid)
+                    
+                    domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+                    domElm2.innerHTML = "PLAYER2: Wait...";
+                }
+                else if (dataPars.player2.length != 0)
+                {
+                    isGameStarted = true;
+                    console.log("Player1: " + dataPars.player1);
+                    console.log("Player2: " + dataPars.player2)
+                    console.log("RoomId: " + dataPars.roomid)
+                    domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+                    domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+                }
+            }
+            else if (isGameStarted == true)
+            {
+              console.log("From Server During Game: ", dataPars);
+              paddl1Y = dataPars.paddle1, paddl2Y = dataPars.paddle2;
+              const canvasContext = canvas.getContext('2d');
+              canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+              drawElements();
+            }
+        }
+
+        window.onbeforeunload = function()
+        {
+            const toSerever = {'gameStat': "closed"};
+            ws.send(JSON.stringify(toSerever));
+        }
+
+        ws.onclose = function()
+        {
+            console.log("BYE FROM SERVER")
+        }
+
+        drawElements();
   }
 }
 // Setting View
