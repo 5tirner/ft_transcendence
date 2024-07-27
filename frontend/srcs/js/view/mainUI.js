@@ -1089,7 +1089,10 @@ export class Pong extends HTMLElement
             else if (isGameStarted == true)
             {
               console.log("From Server During Game: ", dataPars);
-              paddl1Y = dataPars.paddle1, paddl2Y = dataPars.paddle2;
+              if (dataPars.paddle1 <= 300 && dataPars.paddle1 >= 0)
+                paddl1Y = dataPars.paddle1;
+              if (dataPars.paddle2 <= 300 && dataPars.paddle2 >= 0)
+                paddl2Y = dataPars.paddle2;
               const canvasContext = canvas.getContext('2d');
               canvasContext.clearRect(0, 0, canvas.width, canvas.height);
               drawElements();
