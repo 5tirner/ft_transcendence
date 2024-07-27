@@ -15,7 +15,7 @@ export const auth = {
 	},
 	isAuth: async () => {
 		const response = await API.isLogedIn();
-		if (response.ok) {
+		if (response && response.ok) {
 			const res = await response.json();
 			const { isLoged } = res;
 			auth.user = res.data.username;

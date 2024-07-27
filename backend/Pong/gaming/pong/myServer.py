@@ -74,7 +74,7 @@ class myPongserver(AsyncWebsocketConsumer):
         roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
         print(f"{thisUser} Move His Paddle Agianst {oppenent}")
         dataFromClient = json.loads(text_data)
-        if dataFromClient.get('gameStat') == "onprogress":
+        if dataFromClient.get('gameStatus') == "onprogress":
             if dataFromClient.get('move') == "":
                 print("Ball")
             elif dataFromClient.get('move') == "UP":
@@ -112,7 +112,7 @@ class myPongserver(AsyncWebsocketConsumer):
                         'player2': oppenent,
                     })
             await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnConnect', 'Data': toFront})
-        elif dataFromClient.get('gameStat') == "closed":
+        elif dataFromClient.get('gameStatus') == "closed":
             if self.playersOnMatchAndItsOppenent.get(thisUser) is not None:
                 print(f"{thisUser} Will Lose The Match Cuase He Left The Game")
                 roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)

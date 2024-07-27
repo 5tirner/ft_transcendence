@@ -1,8 +1,8 @@
-export const aborting = (ws) => {
-  const self = document.getElementById('ttt-view');
+export const aborting = (ws, game) => {
+  const self = document.getElementById(`${game}-view`);
   if ( self )
     self.remove();
   const toServer = { 'gameStatus': "closed", 'position': -1 };
   ws.send(JSON.stringify(toServer));
-  window.router.redirecto("/platform");
+  window.router.goto("/platform");
 }

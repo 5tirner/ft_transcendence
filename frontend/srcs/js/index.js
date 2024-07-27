@@ -1,8 +1,10 @@
 import { router } from "./service/router.js";
 import { MainUI, Sidebar, Game, Platform, Profile, Home, TTT, Login, Pong } from "./view/mainUI.js";
-window.prevState = null;
-window.router = router;
-window.component = {};
+
+window.prevState  = null;
+window.router     = router;
+window.component  = {};
+window.goBack    = true;
 
 document.addEventListener("DOMContentLoaded", () =>
 {
@@ -22,12 +24,15 @@ document.addEventListener("DOMContentLoaded", () =>
         right: document.getElementById("right-view"),
     }
     
-    window.addEventListener("popstate", (e) => {
-      if (e.state.path !== '/home' && e.state.path !== '/login')
-        router.redirecto(e.state.path);
-      else
-        router.redirecto('/platform');
-    });
-
-    router.redirecto(location.pathname);
+    router.redirecto('/platform');
+    
+    // window.addEventListener("popstate", (e) => {
+    //   if (e.state.path !== '/home' && e.state.path !== '/login')
+    //   { 
+    //     console.log("1");
+    //     router.redirecto(e.state.path);
+    //   }
+    //   else
+    //     router.redirecto('/platform');
+    // });
 });
