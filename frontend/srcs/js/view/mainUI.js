@@ -971,7 +971,8 @@ export class Pong extends HTMLElement
 
     const domElm1 = this.root.querySelector("#p1"), domElm2 = this.root.querySelector("#p2");
     let isGameStarted = false;
-        let round = 1;
+        let xBallPos = 380, yBallPos = 175;
+        let BallDirection = "LEFT";
         let paddl1Y = 150;
         let paddl2Y = 150;
         const canvas = this.root.querySelector("#board");
@@ -1002,7 +1003,7 @@ export class Pong extends HTMLElement
                   }
                   
                 canvasContext.beginPath();
-                canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
+                canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
                 canvasContext.lineWidth = 1;
                 canvasContext.fillStyle = "#F0F8FF";
                 canvasContext.fill();
@@ -1034,13 +1035,25 @@ export class Pong extends HTMLElement
                 if (e.key == "ArrowUp")
                 {
                     console.log("GO UP");
-                    const ToServer = {'gameStat': "onprogress", 'move': "UP", 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                    const ToServer =
+                    {
+                      'gameStatus': "onprogress", 'move': "UP",
+                      'paddle1': paddl1Y, 'paddle2': paddl2Y,
+                      'ballx': xBallPos, 'bally': yBallPos,
+                      'BallDir': BallDirection,
+                    }
                     ws.send(JSON.stringify(ToServer));
                 }
                 else if (e.key == "ArrowDown")
                 {
                     console.log("GO DOWN");
-                    const ToServer = {'gameStat': "onprogress", 'move': "DOWN" , 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                    const ToServer =
+                    {
+                      'gameStatus': "onprogress", 'move': "DOWN",
+                      'paddle1': paddl1Y, 'paddle2': paddl2Y,
+                      'ballx': xBallPos, 'bally': yBallPos,
+                      'BallDir': BallDirection,
+                    }
                     ws.send(JSON.stringify(ToServer));
                 }
                 else
@@ -1105,7 +1118,7 @@ export class Pong extends HTMLElement
 
         window.onbeforeunload = function()
         {
-            const toSerever = {'gameStat': "closed"};
+            const toSerever = {'gameStatus': "closed"};
             ws.send(JSON.stringify(toSerever));
         }
 
@@ -1113,7 +1126,6 @@ export class Pong extends HTMLElement
         {
             console.log("BYE FROM SERVER")
         }
-
         drawElements();
   }
 }
