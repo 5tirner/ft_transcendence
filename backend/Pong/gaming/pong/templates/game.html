@@ -59,8 +59,8 @@
     <script>
         let isGameStarted = false;
         let round = 1;
-        let p1Start = 150, p1End = 200;
-        let p2Start = 150, p2End = 200;
+        let paddl1Y = 150;
+        let paddl2Y = 150;
         const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
 
         ws.onopen = function()
@@ -147,7 +147,6 @@
 
             canvasContext.beginPath();
             canvasContext.lineWidth = 8;
-            canvasContext.lineStyle = "around";
             canvasContext.moveTo(780, paddl2Y)
             canvasContext.lineTo(780, paddl2Y + 50);
             canvasContext.closePath();
@@ -161,13 +160,13 @@
                 if (e.key == "ArrowUp")
                 {
                     console.log("GO UP");
-                    const ToServer = {'move': "UP", 'p1Start': p1Start, 'p2Start': p2Start, 'p1End': p1End, 'p2End': p2End};
+                    const ToServer = {'move': "UP", 'paddle1': paddl1Y, 'paddle2': paddl2Y}
                     ws.send(JSON.stringify(ToServer));
                 }
                 else if (e.key == "ArrowDown")
                 {
                     console.log("GO DOWN");
-                    const ToServer = {'move': "DOWN" , 'p1Start': p1Start, 'p2Start': p2Start, 'p1End': p1End, 'p2End': p2End};
+                    const ToServer = {'move': "DOWN" , 'paddle1': paddl1Y, 'paddle2': paddl2Y}
                     ws.send(JSON.stringify(ToServer));
                 }
                 else
@@ -180,7 +179,7 @@
         {
             if (isGameStarted == true)
             {
-                const ToServer = {'move': ""}
+                const ToServer = {'move': "" , 'paddle1': paddl1Y, 'paddle2': paddl2Y}
                 ws.send(JSON.stringify(ToServer));
             }
         }
