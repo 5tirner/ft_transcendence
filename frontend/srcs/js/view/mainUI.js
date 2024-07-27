@@ -957,7 +957,7 @@ export class Pong extends HTMLElement
               color: #421152;
           }
       </style>
-      <div style="margin-bottom: 200px;">
+      <div style="margin-bottom: 100px;">
           <h1 style="text-align: center; color: rgb(128, 9, 240);">PONG-PONG-PONG</h1>
       </div>
   
@@ -1006,6 +1006,10 @@ export class Pong extends HTMLElement
                     domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
                     domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
                 }
+            }
+            else if (isGameStarted == true)
+            {
+              console.log("From Server During Game: ", dataPars);
             }
         }
 
@@ -1071,13 +1075,13 @@ export class Pong extends HTMLElement
                 if (e.key == "ArrowUp")
                 {
                     console.log("GO UP");
-                    const ToServer = {'move': "UP", 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                    const ToServer = {'gameStat': "onprogress", 'move': "UP", 'paddle1': paddl1Y, 'paddle2': paddl2Y}
                     ws.send(JSON.stringify(ToServer));
                 }
                 else if (e.key == "ArrowDown")
                 {
                     console.log("GO DOWN");
-                    const ToServer = {'move': "DOWN" , 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                    const ToServer = {'gameStat': "onprogress", 'move': "DOWN" , 'paddle1': paddl1Y, 'paddle2': paddl2Y}
                     ws.send(JSON.stringify(ToServer));
                 }
                 else
