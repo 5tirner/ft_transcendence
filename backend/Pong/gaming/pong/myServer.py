@@ -11,6 +11,7 @@ class myPongserver(AsyncWebsocketConsumer):
     playerWantsToPlay = list()
     playersOnMatchAndItsRoomId = dict()
     playersOnMatchAndItsOppenent = dict()
+    playersOnMatchAndItsDeriction = dict()
     async def connect(self):
         print(f'----------User On Game Is: {self.scope["user"]}-------')
         try:

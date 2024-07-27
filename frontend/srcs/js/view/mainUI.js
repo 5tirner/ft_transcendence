@@ -983,35 +983,39 @@ export class Pong extends HTMLElement
           if (canvas.getContext)
             {
                 const canvasContext = canvas.getContext("2d");
-                console.log("My Context", canvasContext);
+                // console.log("My Context", canvasContext);
+                canvasContext.shadowColor = "black";
+                canvasContext.shadowBlur = 15;
+                canvasContext.shadowOffsetX = 5;
+                canvasContext.shadowOffsetY = 2;
                 let Lineheight = 5;
                 while (Lineheight < 345)
                 {
                     canvasContext.beginPath();
-                    canvasContext.lineWidth = 3;
+                    canvasContext.lineWidth = 4;
                     canvasContext.moveTo(400, Lineheight);
                     canvasContext.lineTo(400, Lineheight + 5);
                     canvasContext.closePath();
                     canvasContext.strokeStyle = "rgb(128, 9, 240)";
                     canvasContext.stroke();
                     Lineheight += 15;
-                }
-    
-                // canvasContext.beginPath();
-                // canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
-                // canvasContext.lineWidth = 1;
-                // canvasContext.fillStyle = "white";
-                // canvasContext.fill();
-                // canvasContext.closePath();
-                // canvasContext.strokeStyle = "rgb(140, 29, 260)";
-                // canvasContext.stroke();
-    
+                  }
+                  
+                canvasContext.beginPath();
+                canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
+                canvasContext.lineWidth = 1;
+                canvasContext.fillStyle = "#F0F8FF";
+                canvasContext.fill();
+                canvasContext.closePath();
+                canvasContext.strokeStyle = "rgb(140, 29, 260)";
+                canvasContext.stroke();
+                  
                 canvasContext.beginPath();
                 canvasContext.lineWidth = 8;
                 canvasContext.moveTo(20, paddl1Y)
                 canvasContext.lineTo(20, paddl1Y + 50);
                 canvasContext.closePath();
-                canvasContext.strokeStyle = "gray";
+                canvasContext.strokeStyle = "#F0F8FF";
                 canvasContext.stroke();
     
                 canvasContext.beginPath();
@@ -1019,7 +1023,7 @@ export class Pong extends HTMLElement
                 canvasContext.moveTo(780, paddl2Y)
                 canvasContext.lineTo(780, paddl2Y + 50);
                 canvasContext.closePath();
-                canvasContext.strokeStyle = "gray";
+                canvasContext.strokeStyle = "#F0F8FF";
                 canvasContext.stroke();
             }
         }
