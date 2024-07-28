@@ -372,7 +372,6 @@ export class Game extends HTMLElement
         }
     }
 }
-
 // User Profile View
 export class Profile extends HTMLElement
 {
@@ -665,8 +664,8 @@ export class Platform extends HTMLElement
         </div>
     </div>
     `;
-    const startGame = this.root.querySelectorAll(".common");
-    startGame.forEach(elem => {
+    this.startGame = this.root.querySelectorAll(".common");
+    this.startGame.forEach(elem => {
       elem.addEventListener("click", (e) => {
         e.preventDefault();
         const game = e.target.getAttribute("game");
@@ -683,6 +682,21 @@ export class Platform extends HTMLElement
         gameSection.appendChild(document.createElement(`${gameToAppend}-view`));
       window.router.redirecto("/game");
     }
+    window.onpopstate = (e) => {
+      console.log("bro state should change to: ", e.state.path);
+      window.router.goto(e.state.path);
+    };
+  }
+  
+  disconnectedCallback()
+  {
+    this.startGame.forEach(elem => {
+      elem.removeEventListener("click", (e) => {
+        e.preventDefault();
+        const game = e.target.getAttribute("game");
+        manipulateGameSection(game);
+      });
+    });
   }
 }
 // Abort Game Button
@@ -992,7 +1006,6 @@ export class Pong extends HTMLElement
     const canvas = this.root.querySelector("#board");
     socket.ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
 
-    console.log("My Canvas", canvas);
     function drawElements()
     {
       if (canvas.getContext)
@@ -1145,16 +1158,12 @@ export class Pong extends HTMLElement
     
     drawElements();
 
-    window.onbeforeunload = function () {
-      return (true);
-    }
-
     socket.ws.onclose = function () {
-      if (onbeforeunload) {
+      // if (onbeforeunload) {
         const toSerever = { 'gameStatus': "closed" };
         socket.ws.send(JSON.stringify(toSerever));
         console.log("BYE FROM SERVER");
-      }
+      // }
     }
   }
   
@@ -1162,7 +1171,6 @@ export class Pong extends HTMLElement
     console.log('Element removed from the DOM');
     console.log("Down: ", );
     document.removeEventListener("keyup", this.applyDown);
-    window.onpopstate = null;
   }
 }
 // Setting View
@@ -1519,6 +1527,7 @@ export class ConfirmMsg extends HTMLElement
     console.log("confirm masg removed");
     this.cancel.removeEventListener("click", this.fcancel);
     this.leave.removeEventListener("click", this.fleave);
+    window.onpopstate = null;
   }
 }
 // Main UI View
