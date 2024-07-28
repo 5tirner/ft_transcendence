@@ -53,6 +53,8 @@ class myPongserver(AsyncWebsocketConsumer):
                 self.playersOnMatchAndItsOppenent[player2] = player1
                 self.playersOnMatchAndItsRoomId[player1] = roomid
                 self.playersOnMatchAndItsRoomId[player2] = roomid
+                self.playersOnMatchAndItsDeriction[player1] = "Left"
+                self.playersOnMatchAndItsDeriction[player2] = "Right"
                 await self.channel_layer.group_add(roomid, self.channel_name)
                 self.playerWantsToPlay.remove(self.playerWantsToPlay[0])
                 await self.accept()
@@ -114,22 +116,6 @@ class myPongserver(AsyncWebsocketConsumer):
                         'player2': oppenent,
                         'Ballx': dataFromClient.get('ballx'),
                     })
-            # elif dataFromClient.get('move') == 'BALL':
-            #     BallNewPos = dataFromClient.get('ballx')
-            #     print(f"Ball Cordonates: {dataFromClient.get('ballx')}, {dataFromClient.get('bally')}")
-            #     if dataFromClient.get('BallDir') == "LEFT":
-            #         print(f"Ball Move To Left {BallNewPos}->{BallNewPos - 10}")
-            #         BallNewPos -= 40
-            #     else:
-            #         print(f"Ball Move To RIGHT {BallNewPos}->{BallNewPos + 10}")
-            #         BallNewPos += 40
-            #     toFront = json.dumps({
-            #             'paddle1': dataFromClient.get('paddle1'),
-            #             'paddle2': dataFromClient.get('paddle2'),
-            #             'player1': thisUser,
-            #             'player2': oppenent,
-            #             'Ballx': BallNewPos,
-            #         })
             await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnConnect', 'Data': toFront})
         elif dataFromClient.get('gameStatus') == "closed":
             if self.playersOnMatchAndItsOppenent.get(thisUser) is not None:
@@ -147,7 +133,8 @@ class myPongserver(AsyncWebsocketConsumer):
                 user2.save()
                 print(f"Try Destroy Data")
                 destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
-                                            self.playersOnMatchAndItsRoomId, thisUser, oppenent)
+                                            self.playersOnMatchAndItsRoomId,
+                                            self.playersOnMatchAndItsDeriction, thisUser, oppenent)
                 print(f"Data For {thisUser} Destroyed")
                 await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
             else:
@@ -159,6 +146,33 @@ class myPongserver(AsyncWebsocketConsumer):
                     await self.close()
                 except:
                     print(f"{thisUser} Not In The Q At All")
+        elif dataFromClient.get('gameStatus') == "End":
+            if self.playersOnMatchAndItsDeriction.get(thisUser) == "Left" and dataFromClient.get('Side') == "Left":
+                loser = thisUser
+                winner = oppenent
+            else:
+                winner = thisUser
+                loser = oppenent
+            print(f"The Game Is End, {winner} Won {loser}")
+            try:
+                roomId = self.playersOnMatchAndItsRoomId.get(thisUser)
+                Wuser = pongGameInfo.objects.get(login=winner)
+                Luser = pongGameInfo.objects.get(login=loser)
+                Wuser.wins += 1
+                Wuser.save()
+                Luser.loses += 1
+                Luser.save()
+                print(f"Add Historic Of The Match Between {thisUser} and {oppenent}")
+                user1 = pongHistory(you=thisUser,oppenent=oppenent,winner=winner)
+                user2 = pongHistory(you=oppenent,oppenent=thisUser,winner=winner)
+                user1.save()
+                user2.save()
+                destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+                                            self.playersOnMatchAndItsRoomId,
+                                            self.playersOnMatchAndItsDeriction , thisUser, oppenent)
+                await self.channel_layer.group_send(roomId, {'type': 'endGame', 'Data': 'EMPTY'})
+            except:
+                print(f"{thisUser} Already End And This Match Counted")
     async def disconnect(self, code):
         print(f"User {self.scope['user']} Lost Connection")
         try:
@@ -170,7 +184,7 @@ class myPongserver(AsyncWebsocketConsumer):
             except:
                 print(f"{self.scope['user']} Play And Finish Alraedy")
             destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
-                            self.playersOnMatchAndItsRoomId, player1, player2)
+                            self.playersOnMatchAndItsRoomId, self.playersOnMatchAndItsDeriction, player1, player2)
             if roomidForThisUser is not None:
                 await self.channel_layer.group_discard(roomidForThisUser, self.channel_name)
             print("Channel Discard")

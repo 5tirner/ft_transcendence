@@ -977,6 +977,7 @@ export class Pong extends HTMLElement
         let paddl2Y = 125;
         let SaveInterval = 0;
         let isThereDataFromServer = false;
+        let BallRoute = "LINE";
         const canvas = this.root.querySelector("#board");
         const canvasContext = canvas.getContext('2d');
         canvasContext.shadowColor = "black";
@@ -1068,19 +1069,59 @@ export class Pong extends HTMLElement
         {
             if (isGameStarted == true)
             {
-              if (BallDirection == "LEFT" && xBallPos == 20 && yBallPos >= paddl1Y && yBallPos <= paddl1Y+50)
-                console.log("Ball Hit The Paddle One");
-              else if (BallDirection == "RIGHT" && xBallPos == 780
-                  && yBallPos >= paddl2Y && yBallPos <= paddl2Y+50)
-                  console.log("Ball Hit The Paddle Two");
-              if (xBallPos <= 10)
-                BallDirection = "RIGHT";
-              else if (xBallPos >= 790)
-                BallDirection = "LEFT";
+              if (BallRoute == "UP")
+              {
+                if (yBallPos >= 10)
+                  yBallPos -= 10;
+                else
+                  BallRoute = "DOWN";
+              }
+              else if (BallRoute == "DOWN")
+              {
+                console.log("ADD TEN TO GO DOWN");
+                if (yBallPos + 10 <= 290)
+                  console.log("ADDED"), yBallPos += 10;
+                else
+                  BallRoute = "UP";
+              }
+
               if (BallDirection == "LEFT")
+              {
                 xBallPos -= 10;
+                if (xBallPos == 30 && yBallPos + 10 >= paddl1Y && yBallPos - 10 <= paddl1Y+50)
+                {
+                  console.log("Ball Hit The Paddle One");
+                  console.log("Ball T = ", yBallPos, ", Paddle1y = ", paddl1Y)
+                  if (yBallPos == paddl1Y + 25)
+                    BallRoute = "LINE", console.log("BALL GO " + BallRoute);
+                  else if (yBallPos < paddl1Y + 25)
+                    BallRoute = "UP", console.log("BALL GO UP " + BallRoute);
+                  else if (yBallPos > paddl1Y + 25)
+                    BallRoute = "DOWN", console.log("BALL GO " + BallRoute);
+                  BallDirection = "RIGHT";
+                  xBallPos += 10;
+                }
+                else if (xBallPos < 20)
+                  ws.send(JSON.stringify({'gameStatus': "End", 'Side': "Left"}));
+              }
               else if (BallDirection == "RIGHT")
+              {
                 xBallPos += 10;
+                if(xBallPos == 770 && yBallPos + 10 >= paddl2Y && yBallPos - 10 <= paddl2Y+50)
+                {
+                  console.log("Ball Hit The Paddle Two");
+                  BallDirection = "LEFT";
+                  xBallPos -= 10;
+                  if (yBallPos == paddl2Y + 25)
+                    BallRoute = "LINE", console.log("BALL GO " + BallRoute);
+                  else if (yBallPos < paddl2Y + 25)
+                    BallRoute = "UP", console.log("BALL GO UP " + BallRoute);
+                  else if (yBallPos > paddl2Y + 25)
+                    BallRoute = "DOWN", console.log("BALL GO " + BallRoute);
+                }
+                else if (xBallPos > 780)
+                  ws.send(JSON.stringify({'gameStatus': "End", 'Side': "Right"}));
+              }
               if (isThereDataFromServer == false)
               {
                 canvasContext.clearRect(0, 0, canvas.width, canvas.height);
