@@ -114,22 +114,22 @@ class myPongserver(AsyncWebsocketConsumer):
                         'player2': oppenent,
                         'Ballx': dataFromClient.get('ballx'),
                     })
-            elif dataFromClient.get('move') == 'BALL':
-                BallNewPos = dataFromClient.get('ballx')
-                print(f"Ball Cordonates: {dataFromClient.get('ballx')}, {dataFromClient.get('bally')}")
-                if dataFromClient.get('BallDir') == "LEFT":
-                    print(f"Ball Move To Left {BallNewPos}->{BallNewPos - 10}")
-                    BallNewPos -= 40
-                else:
-                    print(f"Ball Move To RIGHT {BallNewPos}->{BallNewPos + 10}")
-                    BallNewPos += 40
-                toFront = json.dumps({
-                        'paddle1': dataFromClient.get('paddle1'),
-                        'paddle2': dataFromClient.get('paddle2'),
-                        'player1': thisUser,
-                        'player2': oppenent,
-                        'Ballx': BallNewPos,
-                    })
+            # elif dataFromClient.get('move') == 'BALL':
+            #     BallNewPos = dataFromClient.get('ballx')
+            #     print(f"Ball Cordonates: {dataFromClient.get('ballx')}, {dataFromClient.get('bally')}")
+            #     if dataFromClient.get('BallDir') == "LEFT":
+            #         print(f"Ball Move To Left {BallNewPos}->{BallNewPos - 10}")
+            #         BallNewPos -= 40
+            #     else:
+            #         print(f"Ball Move To RIGHT {BallNewPos}->{BallNewPos + 10}")
+            #         BallNewPos += 40
+            #     toFront = json.dumps({
+            #             'paddle1': dataFromClient.get('paddle1'),
+            #             'paddle2': dataFromClient.get('paddle2'),
+            #             'player1': thisUser,
+            #             'player2': oppenent,
+            #             'Ballx': BallNewPos,
+            #         })
             await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnConnect', 'Data': toFront})
         elif dataFromClient.get('gameStatus') == "closed":
             if self.playersOnMatchAndItsOppenent.get(thisUser) is not None:

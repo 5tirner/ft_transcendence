@@ -962,7 +962,7 @@ export class Pong extends HTMLElement
       </div>
   
       <div style="margin-bottom: 50px;">
-        <canvas id="board" width="800" height="350">myCNV</canvas>
+        <canvas id="board" width="800" height="300">myCNV</canvas>
       </div>
   
       <h1 class="player1name" id="p1"></h1>
@@ -971,64 +971,64 @@ export class Pong extends HTMLElement
 
     const domElm1 = this.root.querySelector("#p1"), domElm2 = this.root.querySelector("#p2");
     let isGameStarted = false;
-        let xBallPos = 380, yBallPos = 175;
+        let xBallPos = 380, yBallPos = 150;
         let BallDirection = "LEFT";
-        let paddl1Y = 150;
-        let paddl2Y = 150;
+        let paddl1Y = 125;
+        let paddl2Y = 125;
         let SaveInterval = 0;
+        let isThereDataFromServer = false;
         const canvas = this.root.querySelector("#board");
+        const canvasContext = canvas.getContext('2d');
+        canvasContext.shadowColor = "black";
+        canvasContext.shadowBlur = 15;
+        canvasContext.shadowOffsetX = 5;
+        canvasContext.shadowOffsetY = 2;
         const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
 
         console.log("My Canvas", canvas);
         function drawElements()
         {
-          if (canvas.getContext)
-            {
-                const canvasContext = canvas.getContext("2d");
-                // console.log("My Context", canvasContext);
-                canvasContext.shadowColor = "black";
-                canvasContext.shadowBlur = 15;
-                canvasContext.shadowOffsetX = 5;
-                canvasContext.shadowOffsetY = 2;
-                let Lineheight = 5;
-                while (Lineheight < 345)
-                {
-                    canvasContext.beginPath();
-                    canvasContext.lineWidth = 4;
-                    canvasContext.moveTo(400, Lineheight);
-                    canvasContext.lineTo(400, Lineheight + 5);
-                    canvasContext.closePath();
-                    canvasContext.strokeStyle = "rgb(128, 9, 240)";
-                    canvasContext.stroke();
-                    Lineheight += 15;
-                  }
-                  
-                canvasContext.beginPath();
-                canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
-                canvasContext.lineWidth = 1;
-                canvasContext.fillStyle = "#F0F8FF";
-                canvasContext.fill();
-                canvasContext.closePath();
-                canvasContext.strokeStyle = "rgb(140, 29, 260)";
-                canvasContext.stroke();
-                  
-                canvasContext.beginPath();
-                canvasContext.lineWidth = 8;
-                canvasContext.moveTo(20, paddl1Y)
-                canvasContext.lineTo(20, paddl1Y + 50);
-                canvasContext.closePath();
-                canvasContext.strokeStyle = "#F0F8FF";
-                canvasContext.stroke();
-    
-                canvasContext.beginPath();
-                canvasContext.lineWidth = 8;
-                canvasContext.moveTo(780, paddl2Y)
-                canvasContext.lineTo(780, paddl2Y + 50);
-                canvasContext.closePath();
-                canvasContext.strokeStyle = "#F0F8FF";
-                canvasContext.stroke();
+          let Lineheight = 5;
+          while (Lineheight < 300)
+          {
+              canvasContext.beginPath();
+              canvasContext.lineWidth = 4;
+              canvasContext.moveTo(400, Lineheight);
+              canvasContext.lineTo(400, Lineheight + 5);
+              canvasContext.closePath();
+              canvasContext.strokeStyle = "rgb(128, 9, 240)";
+              canvasContext.stroke();
+              Lineheight += 15;
             }
+            
+          canvasContext.beginPath();
+          canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
+          canvasContext.lineWidth = 1;
+          canvasContext.fillStyle = "#F0F8FF";
+          canvasContext.fill();
+          canvasContext.closePath();
+          canvasContext.strokeStyle = "rgb(140, 29, 260)";
+          canvasContext.stroke();
+            
+          canvasContext.beginPath();
+          canvasContext.lineWidth = 8;
+          canvasContext.moveTo(20, paddl1Y)
+          canvasContext.lineTo(20, paddl1Y + 50);
+          canvasContext.closePath();
+          canvasContext.strokeStyle = "#F0F8FF";
+          canvasContext.stroke();
+
+          canvasContext.beginPath();
+          canvasContext.lineWidth = 8;
+          canvasContext.moveTo(780, paddl2Y)
+          canvasContext.lineTo(780, paddl2Y + 50);
+          canvasContext.closePath();
+          canvasContext.strokeStyle = "#F0F8FF";
+          canvasContext.stroke();
+          if (isThereDataFromServer == true)
+            isThereDataFromServer = false;
         }
+
         function applyDown(e)
         {
             if (isGameStarted == true)
@@ -1072,14 +1072,15 @@ export class Pong extends HTMLElement
                 BallDirection = "RIGHT";
               else if (xBallPos >= 800)
                 BallDirection = "LEFT";
-              const ToServer =
+              if (BallDirection == "LEFT")
+                xBallPos -= 10;
+              else if (BallDirection == "RIGHT")
+                xBallPos += 10;
+              if (isThereDataFromServer == false)
               {
-                'gameStatus': "onprogress", 'move': "BALL",
-                'paddle1': paddl1Y, 'paddle2': paddl2Y,
-                'ballx': xBallPos, 'bally': yBallPos,
-                'BallDir': BallDirection,
+                canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+                drawElements();
               }
-              ws.send(JSON.stringify(ToServer));
             }
         }
 
@@ -1113,18 +1114,18 @@ export class Pong extends HTMLElement
                     console.log("RoomId: " + dataPars.roomid)
                     domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
                     domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-                    SaveInterval = setInterval(ballMove, 100);
+                    SaveInterval = setInterval(ballMove, 30);
                 }
             }
             else if (isGameStarted == true)
             {
               // console.log("From Server During Game: ", dataPars);
-              if (dataPars.paddle1 <= 300 && dataPars.paddle1 >= 0)
+              isThereDataFromServer = true;
+              if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
                 paddl1Y = dataPars.paddle1;
-              if (dataPars.paddle2 <= 300 && dataPars.paddle2 >= 0)
+              if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
                 paddl2Y = dataPars.paddle2;
-              xBallPos = dataPars.Ballx;
-              const canvasContext = canvas.getContext('2d');
+              // xBallPos = dataPars.Ballx;
               canvasContext.clearRect(0, 0, canvas.width, canvas.height);
               drawElements();
             }
@@ -1141,7 +1142,7 @@ export class Pong extends HTMLElement
             console.log("BYE FROM SERVER")
             clearInterval(SaveInterval)
         }
-        drawElements();
+        // drawElements();
   }
 }
 // Setting View
