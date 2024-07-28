@@ -1160,7 +1160,7 @@ export class Pong extends HTMLElement
                     console.log("RoomId: " + dataPars.roomid)
                     domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
                     domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-                    SaveInterval = setInterval(ballMove, 30);
+                    SaveInterval = setInterval(ballMove, 50);
                 }
             }
             else if (isGameStarted == true)

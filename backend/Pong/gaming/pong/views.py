@@ -2,10 +2,11 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework import response, status
 from .serializer import pongGameInfoSerializer
-from .models import pongGameInfo
+from .models import pongGameInfo, pongHistory
 from .isAuthUser import isAuthUser
 from .generateCode import roomcode
-
+from django.http import JsonResponse
+import json
 
 @api_view(['GET', 'POST'])
 def myProfile(req):
@@ -72,10 +73,19 @@ def PongGame(req):
 
 @api_view(['GET'])
 def historic(req):
-    AuthApiRes = isAuthUser(req)
-    if AuthApiRes is None:
-        print("This User Does Not Authenticated")
+    print("-------------------------USER HESTORY----------------------------------")
+    authApiResponse = isAuthUser(req)
+    if authApiResponse is None:
         return response.Response(status=status.HTTP_204_NO_CONTENT)
+    user_infos  = authApiResponse.json().get('data')
+    name = user_infos.get('username')
+    allMatches = dict(dict())
+    matchNumbers = 1
+    for i in pongHistory.objects.all().values():
+        if i.get('you') == name:
+            allMatches[f"match{matchNumbers}"] = i
+            matchNumbers += 1
+    return JsonResponse(json.dumps(allMatches), safe=False)
 
 @api_view(['GET'])
 def PongTournement(req):
