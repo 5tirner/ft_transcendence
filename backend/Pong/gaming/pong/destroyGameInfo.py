@@ -1,4 +1,4 @@
-def destroyThisGameInformations(playersOnMatchAndItsOppenent, playersOnMatchAndItsRoomId, p1, p2):
+def destroyThisGameInformations(playersOnMatchAndItsOppenent, playersOnMatchAndItsRoomId, playersOnMatchAndItsDeriction, p1, p2):
     try:
         playersOnMatchAndItsOppenent.pop(p1)
     except:
