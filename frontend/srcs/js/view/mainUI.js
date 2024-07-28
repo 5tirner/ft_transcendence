@@ -1068,9 +1068,14 @@ export class Pong extends HTMLElement
         {
             if (isGameStarted == true)
             {
-              if (xBallPos <= 0)
+              if (BallDirection == "LEFT" && xBallPos == 20 && yBallPos >= paddl1Y && yBallPos <= paddl1Y+50)
+                console.log("Ball Hit The Paddle One");
+              else if (BallDirection == "RIGHT" && xBallPos == 780
+                  && yBallPos >= paddl2Y && yBallPos <= paddl2Y+50)
+                  console.log("Ball Hit The Paddle Two");
+              if (xBallPos <= 10)
                 BallDirection = "RIGHT";
-              else if (xBallPos >= 800)
+              else if (xBallPos >= 790)
                 BallDirection = "LEFT";
               if (BallDirection == "LEFT")
                 xBallPos -= 10;

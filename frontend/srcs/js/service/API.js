@@ -103,7 +103,7 @@ const API = {
 			const response = await fetch(url, opts);
 			return response;
 		} catch (e) {
-			console.log("Error: ", e);
+			console.log(e);
 		}
 		return null;
 	}

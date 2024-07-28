@@ -1,12 +1,14 @@
 import { auth } from "../auth/Authentication.js";
 import { routes } from "./routes.js";
 export const router = {
-  goto: (path, whichGame = "default", addToHistory = true) =>
+  goto: (path, addToHistory = true) =>
 	{
-	  const previousLocation = prevState;
+	  const previousLocation = window.prevState;
 		const currentLocation = path;
-    console.log("prev: ", previousLocation);
-    console.log("curr: ", currentLocation);
+		
+    // console.log("prev: ", previousLocation);
+    // console.log("curr: ", currentLocation);
+		
 		if ( currentLocation === "/home")
     {
       if (window.component.home)
@@ -19,7 +21,7 @@ export const router = {
     }
 		else
 		{
-		  if ( path !== '/game' )
+		  if ( currentLocation !== '/game' )
 			{
     		window.component.right.removeAttribute('hidden');
     		window.component.left.removeAttribute('hidden');
@@ -31,15 +33,14 @@ export const router = {
 			}
   		window.component.middle.removeAttribute('hidden');
     
+  	  if ( addToHistory )
+      {
+        prevState = { path: currentLocation };
+  		  history.pushState({ path }, null, location.origin + path);
+      }
+ 
       // middle section logic
       routes(previousLocation, currentLocation);
- 
-  	  if ( addToHistory )
-       {
-          prevState = { path: currentLocation };
-    		  history.pushState({ path }, null, location.origin + path);
-       }
-      console.log("history: ", previousLocation);
 		}
 		window.scrollTo(0, 0);
 	},
