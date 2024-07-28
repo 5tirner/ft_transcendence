@@ -1,5 +1,8 @@
 import { auth } from '../auth/Authentication.js';
 import { aborting } from '../assets/abort.js';
+const socket = {
+  ws: null
+}
 // Login View
 export class Login extends HTMLElement
 {
@@ -217,9 +220,6 @@ export class Sidebar extends HTMLElement
                     <i export class="bx bx-grid-alt nav_icon"></i>
                 </a>
                 <div export class="nav_list">
-                    <a href="/game" export class="nav_link">
-                        <i class="bx bxs-invader nav_icon"></i>
-                    </a>
                     <a href="/setting" class="nav_link">
                         <i class="bx bxs-cog nav_icon"></i>
                     </a>
@@ -685,6 +685,47 @@ export class Platform extends HTMLElement
     }
   }
 }
+// Abort Game Button
+export class AbortButton extends HTMLElement {
+  constructor() {
+    super();
+    // this.root = this.attachShadow({ mode: 'open' });
+  }
+  connectedCallback() {
+    this.setAttribute('class', 'abort');
+    this.confirm = 
+    this.innerHTML = `
+      <style>
+        .abort {
+          font-size: 14px;
+          font-weight: 300;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          border: none;
+          cursor: pointer;
+          display: inline-block;
+          cursor: pointer;
+          padding: 10px 60px;
+          border-radius: 8px;
+          background-color: var(--coral);
+          color: var(--peach);
+          box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
+          transition: all 0.1s ease, background 0.3s ease;
+          font-family: "Press Start 2P", sans-serif !important;
+        }
+      </style>
+      EXIT
+    `;
+    const parent = this.parentNode;
+    const confirmMsg = parent.querySelector('confirm-msg');
+    this.cancel = confirmMsg.querySelector(".btn-cancel");
+    this.leave = confirmMsg.querySelector(".btn-primary");
+    this.listener = () => {
+      confirmMsg.setAttribute('style', 'display: block');
+    }
+    this.addEventListener('click', this.listener);
+  }
+}
 // TicTacToe View
 export class TTT extends HTMLElement
 {
@@ -702,23 +743,6 @@ export class TTT extends HTMLElement
           width: 100%;
           height: 100%;
           color: var(--dark-teal);
-          font-family: "Press Start 2P", sans-serif !important;
-        }
-        button {
-          font-size: 14px;
-          font-weight: 300;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          border: none;
-          cursor: pointer;
-          display: inline-block;
-          cursor: pointer;
-          padding: 15px 60px;
-          border-radius: 8px;
-          background-color: var(--coral);
-          color: var(--peach);
-          box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
-          transition: all 0.1s ease, background 0.3s ease;
           font-family: "Press Start 2P", sans-serif !important;
         }
         h1 {
@@ -762,8 +786,7 @@ export class TTT extends HTMLElement
         }
         .squareO {
           color: #e74c3c;
-        }
-        
+        } 
       </style>
       <h1>TIC-TAC-TOE GAME</h1>
       <div class="board">
@@ -781,15 +804,15 @@ export class TTT extends HTMLElement
         <p class="player1name" id="p1"></p>
         <p class="player2name" id="p2"></p>
       </div>
-      <button class="exit">Abort</button>
-      `;
+      <abort-btn></abort-btn>
+      <confirm-msg game="ttt"></confirm-msg>
+    `;
     
-    const abort   = this.root.querySelector(".exit");
     const domElm1 = this.root.getElementById("p1");
     const domElm2 = this.root.getElementById("p2");
-    const square  = this.root.querySelectorAll(".square");
+    this.square  = this.root.querySelectorAll(".square");
 
-    square.forEach(elem => {
+    this.square.forEach(elem => {
       elem.addEventListener('click', (e) => {
         e.preventDefault();
         sendDataToServer(e.target.getAttribute('data'));
@@ -797,7 +820,7 @@ export class TTT extends HTMLElement
     });
     
 
-    const ws = new WebSocket('ws://' + location.host + '/GameWS/');
+    socket.ws = new WebSocket('ws://' + location.host + '/GameWS/');
     let board = '.........';
     let isGameStarted = false;
 
@@ -814,11 +837,11 @@ export class TTT extends HTMLElement
       return false;
     }
     
-    ws.onopen = function () {
+    socket.ws.onopen = function () {
       console.log("User On Game");
     }
     
-    ws.onmessage = (e) => {
+    socket.ws.onmessage = (e) => {
       const dataPars = JSON.parse(e.data)
       if (isGameStarted == false) {
         if (dataPars.player2.length == 0) {
@@ -859,7 +882,7 @@ export class TTT extends HTMLElement
           {
             console.log("Setting The Result Of This Game On Data Base");
             const toServer = { 'gameStatus': "draw", 'position': -1, 'board': board};
-            ws.send(JSON.stringify(toServer));
+            socket.ws.send(JSON.stringify(toServer));
           }
 
 
@@ -868,23 +891,12 @@ export class TTT extends HTMLElement
             console.log("Setting The Result Of This Game On Data Base");
             const toServer = { 'gameStatus': "winner", 'position': -1, 'board': board,
                             'winner': dataPars.user, 'loser': dataPars.oppenent};
-            ws.send(JSON.stringify(toServer));
+            socket.ws.send(JSON.stringify(toServer));
           }
         }
       }
     }
-
-    ws.onclose = function ()
-    {
-      console.log("BYE BYE");
-      // aborting();
-    }
-    window.onbeforeunload = function ()
-    {
-      const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
-      ws.send(JSON.stringify(toServer));
-    }
-
+    
     function sendDataToServer(squareNbr)
     {
       if (isGameStarted == true)
@@ -894,23 +906,27 @@ export class TTT extends HTMLElement
           console.log('The Square Already Filled By: ', board[position]);
         else {
           const toServer = { 'gameStatus': "onprogress", 'position': position, 'board': board };
-          ws.send(JSON.stringify(toServer));
+          socket.ws.send(JSON.stringify(toServer));
         }
       }
       else
         console.log('Game Not Start Yet');
     }
-    ws.onclose = function () {
-      console.log("BYE BYE");
-      // aborting();
+    socket.ws.onclose = function () {
+      console.log("Socket closed BYE BYE");
     }
     window.onbeforeunload = function () {
-      const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
-      ws.send(JSON.stringify(toServer));
+      aborting(socket.ws, 'ttt');
     }
-    window.addEventListener('popstate', () => { console.log("popstate"); aborting(ws, 'ttt')});
-    abort.addEventListener('click', () => aborting(ws, 'ttt'));
-    
+  }
+  disconnectedCallback()
+  {
+    this.square.forEach(elem => {
+      elem.removeEventListener('click', (e) => {
+        e.preventDefault();
+        sendDataToServer(e.target.getAttribute('data'));
+      });
+    });
   }
 }
 // TicTacToe View
@@ -923,102 +939,49 @@ export class Pong extends HTMLElement
   connectedCallback() {
     this.setAttribute('id', 'pong-view');
     this.root.innerHTML = `
-      <style>
-      :host
+    <style>
+      canvas
       {
-        
+          display: block;
+          margin: 0 auto;
+          background-color: #ccb4e2b0;
+          border-color: rgb(128, 9, 240);
+          border-width: thin;
+          border-style: solid;
+          border-block-width: 10px;
+          border-radius: 5px;
+          filter: brightness(80%);
       }
-      .popup {
-        width: 33%;
-        background-color: var(--dark-purple);
-        padding: 15px;
-        left: 0;
-        margin-left: 33.333333%;
-        border: none;
-        border-radius: 10px;
-        position: absolute;
-        top: 15%;
-        box-shadow: 5px 5px 5px #000;
-        z-index: 10001;
-        color: var(--light-olive);
-      }
-      .popup .text-right .btn-cancel
+  
+      .player1name
       {
-        font-family: var(--body-font);
-        background-color: var(--dark-teal);
-        color: var(--light-olive);
-        padding: 10px 20px;
-        border-radius: 18px;
-        border: none;
+          position: absolute;
+          left: 0%;
+          top: 80%;
+          color: #421152;
       }
       
-      .popup .text-right .btn-primary
+      .player2name
       {
-        font-family: var(--body-font);
-        background-color: var(--coral);
-        color: var(--light-olive);
-        padding: 10px 20px;
-        border-radius: 18px;
-        border: none;
+          position: absolute;
+          left: 72%;
+          top: 80%;
+          color: #421152;
       }
-      .text-right
-      {
-        padding-top: 20px;
-        display: flex;
-        justify-content: end;
-        gap: 15px;
-      }
-          canvas
-          {
-              display: block;
-              margin: 0 auto;
-              background-color: #ccb4e2b0;
-              border-color: rgb(128, 9, 240);
-              border-width: thin;
-              border-style: solid;
-              border-block-width: 10px;
-              border-radius: 5px;
-              filter: brightness(80%);
-          }
-      
-          .player1name
-          {
-              position: absolute;
-              left: 0%;
-              top: 80%;
-              color: #421152;
-          }
-          
-          .player2name
-          {
-              position: absolute;
-              left: 72%;
-              top: 80%;
-              color: #421152;
-          }
-      </style>
-      <div style="margin-bottom: 100px;">
-          <h1 style="text-align: center; color: rgb(128, 9, 240);">PONG-PONG-PONG</h1>
-      </div>
+    </style>
+    <div style="margin-bottom: 100px;">
+        <h1 style="text-align: center; color: rgb(128, 9, 240);">PONG-PONG-PONG</h1>
+    </div>
 
-      <div style="margin-bottom: 50px;">
-        <canvas id="board" width="800" height="350">myCNV</canvas>
-      </div>
+    <div style="margin-bottom: 50px;">
+      <canvas id="board" width="800" height="350">myCNV</canvas>
+    </div>
 
-      <h1 class="player1name" id="p1"></h1>
-      <h1 class="player2name" id="p2"></h1>
-      
-      <div class="popup" style="display: none">
-        <p>Sure wanna leave?</p>
-        <div class="text-right">
-          <button class="btn btn-cancel">Cancel</button>
-          <button class="btn btn-primary">Ok</button>
-        </div>
-      </div>
+    <h1 class="player1name" id="p1"></h1>
+    <h1 class="player2name" id="p2"></h1>
+     <abort-btn></abort-btn>
+    <confirm-msg game="pong"></confirm-msg>
     `;
-    const popup = this.root.querySelector(".popup");
-    const cancel = this.root.querySelector('.btn-cancel');
-    const leave = this.root.querySelector('.btn-primary');
     const domElm1 = this.root.querySelector("#p1"), domElm2 = this.root.querySelector("#p2");
     let isGameStarted = false;
     let xBallPos = 380, yBallPos = 175;
@@ -1027,7 +990,7 @@ export class Pong extends HTMLElement
     let paddl2Y = 150;
     let SaveInterval = 0;
     const canvas = this.root.querySelector("#board");
-    const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
+    socket.ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
 
     console.log("My Canvas", canvas);
     function drawElements()
@@ -1093,7 +1056,7 @@ export class Pong extends HTMLElement
                   'ballx': xBallPos, 'bally': yBallPos,
                   'BallDir': BallDirection,
                 }
-                ws.send(JSON.stringify(ToServer));
+                socket.ws.send(JSON.stringify(ToServer));
             }
             else if (e.key == "ArrowDown")
             {
@@ -1105,7 +1068,7 @@ export class Pong extends HTMLElement
                   'ballx': xBallPos, 'bally': yBallPos,
                   'BallDir': BallDirection,
                 }
-                ws.send(JSON.stringify(ToServer));
+                socket.ws.send(JSON.stringify(ToServer));
             }
             else
                 console.log("Do NOTHING");
@@ -1129,89 +1092,69 @@ export class Pong extends HTMLElement
             'ballx': xBallPos, 'bally': yBallPos,
             'BallDir': BallDirection,
           }
-          ws.send(JSON.stringify(ToServer));
+          socket.ws.send(JSON.stringify(ToServer));
         }
     }
 
     document.addEventListener("keyup", this.applyDown);
 
-    ws.onopen = function()
+    socket.ws.onopen = function()
     {
         console.log("User On Game");
     }
 
-    ws.onmessage = function(e)
+    socket.ws.onmessage = function(e)
     {
-        // console.log("Data From Server");
-        // console.log(e.data);
-        const dataPars = JSON.parse(e.data)
-        if (isGameStarted == false)
+      // console.log("Data From Server");
+      // console.log(e.data);
+      const dataPars = JSON.parse(e.data)
+      if (isGameStarted == false)
+      {
+        if (dataPars.player2.length == 0)
         {
-            if (dataPars.player2.length == 0)
-            {
-                console.log("Player1: " + dataPars.player1);
-                console.log("Player2: " + dataPars.player2)
-                console.log("RoomId: " + dataPars.roomid)
-                domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-                domElm2.innerHTML = "PLAYER2: Wait...";
-            }
-            else if (dataPars.player2.length != 0)
-            {
-                isGameStarted = true;
-                console.log("Player1: " + dataPars.player1);
-                console.log("Player2: " + dataPars.player2)
-                console.log("RoomId: " + dataPars.roomid)
-                domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-                domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-                SaveInterval = setInterval(ballMove, 100);
-            }
+            console.log("Player1: " + dataPars.player1);
+            console.log("Player2: " + dataPars.player2)
+            console.log("RoomId: " + dataPars.roomid)
+            domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+            domElm2.innerHTML = "PLAYER2: Wait...";
         }
-        else if (isGameStarted == true)
+        else if (dataPars.player2.length != 0)
         {
-          // console.log("From Server During Game: ", dataPars);
-          if (dataPars.paddle1 <= 300 && dataPars.paddle1 >= 0)
-            paddl1Y = dataPars.paddle1;
-          if (dataPars.paddle2 <= 300 && dataPars.paddle2 >= 0)
-            paddl2Y = dataPars.paddle2;
-          xBallPos = dataPars.Ballx;
-          const canvasContext = canvas.getContext('2d');
-          canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-          drawElements();
+            isGameStarted = true;
+            console.log("Player1: " + dataPars.player1);
+            console.log("Player2: " + dataPars.player2)
+            console.log("RoomId: " + dataPars.roomid)
+            domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+            domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+            SaveInterval = setInterval(ballMove, 100);
         }
       }
+      else if (isGameStarted == true)
+      {
+        // console.log("From Server During Game: ", dataPars);
+        if (dataPars.paddle1 <= 300 && dataPars.paddle1 >= 0)
+          paddl1Y = dataPars.paddle1;
+        if (dataPars.paddle2 <= 300 && dataPars.paddle2 >= 0)
+          paddl2Y = dataPars.paddle2;
+        xBallPos = dataPars.Ballx;
+        const canvasContext = canvas.getContext('2d');
+        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        drawElements();
+      }
+    }
     
     drawElements();
 
-    window.onbeforeunload = function (e) {
-      e.preventDefault();
+    window.onbeforeunload = function () {
       return (true);
     }
 
-    ws.onclose = function () {
+    socket.ws.onclose = function () {
       if (onbeforeunload) {
         const toSerever = { 'gameStatus': "closed" };
-        ws.send(JSON.stringify(toSerever));
+        socket.ws.send(JSON.stringify(toSerever));
         console.log("BYE FROM SERVER");
       }
-    }
-    this.fcancel = () => {
-      console.log("canceling");
-      history.pushState({ path: '/game' }, null, '/game');
-      popup.setAttribute('style', 'display: none');
-    }
-
-    this.fleave = () => {
-      console.log("leaving");
-      popup.setAttribute('style', 'display: none');
-      aborting(ws, 'pong');
-      router.goto('/platform');
-    }
-    cancel.addEventListener("click", this.fcancel);
-    leave.addEventListener("click", this.fleave);
-    
-    window.onpopstate = function () {
-      console.log("Pong popState triggered!");
-      popup.setAttribute('style', 'display: block');
     }
   }
   
@@ -1219,12 +1162,9 @@ export class Pong extends HTMLElement
     console.log('Element removed from the DOM');
     console.log("Down: ", );
     document.removeEventListener("keyup", this.applyDown);
-    cancel.removeEventListener("click", this.fcancel);
-    leave.removeEventListener("click", this.fleave);
     window.onpopstate = null;
   }
 }
-
 // Setting View
 export class Setting extends HTMLElement
 {
@@ -1470,6 +1410,117 @@ export class Setting extends HTMLElement
     // }
   }
 }
+// confirm Message component
+export class ConfirmMsg extends HTMLElement
+{
+  constructor()
+  {
+    super('foor');
+    this.root = this.attachShadow({ mode: 'open' });
+  }
+  connectedCallback()
+  {
+    this.setAttribute('id', 'confirm-msg')
+    this.setAttribute('style', 'display: none');
+    this.root.innerHTML = `
+      <style>
+        :host
+        {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+        .wrapper
+        {
+          width: 100%;
+          height: 100%;
+          z-index: 1001;
+          position: absolute;
+          top: 0;
+          left: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .popup {
+          width: 33%;
+          background-color: var(--dark-purple);
+          padding: 15px;
+          border: none;
+          border-radius: 10px;
+          box-shadow: 5px 5px 5px #000;
+          color: var(--light-olive);
+        }
+        .popup .text-right .btn-cancel
+        {
+          font-family: var(--body-font);
+          background-color: var(--dark-teal);
+          color: var(--light-olive);
+          padding: 10px 20px;
+          border-radius: 18px;
+          border: none;
+        }
+        
+        .popup .text-right .btn-primary
+        {
+          font-family: var(--body-font);
+          background-color: var(--coral);
+          color: var(--light-olive);
+          padding: 10px 20px;
+          border-radius: 18px;
+          border: none;
+        }
+        .text-right
+        {
+          padding-top: 20px;
+          display: flex;
+          justify-content: end;
+          gap: 15px;
+        small{
+          font-size: 10px;
+        }
+        }
+      </style>
+      <div class="wrapper">
+        <div class="popup">
+          <p>Sure wanna leave?</p>
+          <small>You'll lose a game</small> 
+          <div class="text-right">
+            <button class="btn btn-cancel">Cancel</button>
+            <button class="btn btn-primary">Ok</button>
+          </div>
+        </div>
+      </div>
+    `;
+    const game = this.getAttribute('game');
+    this.cancel = this.root.querySelector('.btn-cancel');
+    this.leave  = this.root.querySelector('.btn-primary');
+    
+    window.onpopstate = () => {
+      history.replaceState({ path: '/game' }, null, location.origin + '/game');
+      console.log(`${game} popState triggered!`);
+      this.setAttribute('style', 'display: block');
+    }
+    this.fcancel = () => {
+      console.log("canceling");
+      this.setAttribute('style', 'display: none');
+    }
+    this.fleave = () => {
+      console.log("leaving");
+      this.setAttribute('style', 'display: none');
+      aborting(socket.ws, game);
+      router.goto('/platform');
+    }
+    this.cancel.addEventListener("click", this.fcancel);
+    this.leave.addEventListener("click", this.fleave);
+  }
+  disconnectedCallback()
+  {
+    console.log("confirm masg removed");
+    this.cancel.removeEventListener("click", this.fcancel);
+    this.leave.removeEventListener("click", this.fleave);
+  }
+}
 // Main UI View
 export class MainUI extends HTMLElement
 {
@@ -1512,5 +1563,4 @@ export class MainUI extends HTMLElement
       this.appendChild(middle);
       this.appendChild(right);
     }
-    
 }

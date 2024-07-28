@@ -5,10 +5,7 @@ export const router = {
 	{
 	  const previousLocation = window.prevState;
 		const currentLocation = path;
-		
-    // console.log("prev: ", previousLocation);
-    // console.log("curr: ", currentLocation);
-		
+
 		if ( currentLocation === "/home")
     {
       if (window.component.home)
