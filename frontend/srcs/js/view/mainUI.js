@@ -1,5 +1,8 @@
 import { auth } from '../auth/Authentication.js';
 import { aborting } from '../assets/abort.js';
+const socket = {
+  ws: null
+}
 // Login View
 export class Login extends HTMLElement {
   constructor() { super('foo'); this.root = this.attachShadow({ mode: 'open' }); }
@@ -191,7 +194,7 @@ export class Home extends HTMLElement
     links.forEach((link) => {
       link.addEventListener("click", (e) => {
         e.preventDefault();
-        console.log("clicked");
+        // console.log("clicked");
         this.querySelector('login-view').removeAttribute('hidden');
       });
     });
@@ -216,9 +219,6 @@ export class Sidebar extends HTMLElement
                     <i export class="bx bx-grid-alt nav_icon"></i>
                 </a>
                 <div export class="nav_list">
-                    <a href="/game" export class="nav_link">
-                        <i class="bx bxs-invader nav_icon"></i>
-                    </a>
                     <a href="/setting" class="nav_link">
                         <i class="bx bxs-cog nav_icon"></i>
                     </a>
@@ -360,7 +360,7 @@ export class Game extends HTMLElement
         }
         function toggleFscreen()
         {
-            console.log("clicked: ", document.body.getAttribute("fullscreen"));
+            // console.log("clicked: ", document.body.getAttribute("fullscreen"));
             if (document.body.getAttribute("fullscreen") === null) {
                 document.body.setAttribute("fullscreen","");
                 window.component.middle.setAttribute('style', "flex-basis: 100%");
@@ -371,7 +371,6 @@ export class Game extends HTMLElement
         }
     }
 }
-
 // User Profile View
 export class Profile extends HTMLElement
 {
@@ -628,6 +627,24 @@ export class Platform extends HTMLElement
           gap: 2.5rem;
           animation: 10s sliding infinite linear;
       }
+      @media screen and (max-width: 900px) {
+        .container {
+          width: 100%;
+          height: 35%;
+          display: flex;
+          flex-direction: column;
+        }
+        .wrapper
+        {
+           display: flex;
+           flex-direction: column;
+           gap: 40px;
+        }
+        .rank
+        {
+          display: none;
+        }
+      }
     </style>
     <div class="container">
         <div class="wrapper">
@@ -664,8 +681,8 @@ export class Platform extends HTMLElement
         </div>
     </div>
     `;
-    const startGame = this.root.querySelectorAll(".common");
-    startGame.forEach(elem => {
+    this.startGame = this.root.querySelectorAll(".common");
+    this.startGame.forEach(elem => {
       elem.addEventListener("click", (e) => {
         e.preventDefault();
         const game = e.target.getAttribute("game");
@@ -682,6 +699,21 @@ export class Platform extends HTMLElement
         gameSection.appendChild(document.createElement(`${gameToAppend}-view`));
       window.router.redirecto("/game");
     }
+    window.onpopstate = (e) => {
+      // console.log("bro state should change to: ", e.state.path);
+      window.router.goto(e.state.path);
+    };
+  }
+  
+  disconnectedCallback()
+  {
+    this.startGame.forEach(elem => {
+      elem.removeEventListener("click", (e) => {
+        e.preventDefault();
+        const game = e.target.getAttribute("game");
+        manipulateGameSection(game);
+      });
+    });
   }
 }
 // TicTacToe View
@@ -701,23 +733,6 @@ export class TTT extends HTMLElement
           width: 100%;
           height: 100%;
           color: var(--dark-teal);
-          font-family: "Press Start 2P", sans-serif !important;
-        }
-        button {
-          font-size: 14px;
-          font-weight: 300;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          border: none;
-          cursor: pointer;
-          display: inline-block;
-          cursor: pointer;
-          padding: 15px 60px;
-          border-radius: 8px;
-          background-color: var(--coral);
-          color: var(--peach);
-          box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
-          transition: all 0.1s ease, background 0.3s ease;
           font-family: "Press Start 2P", sans-serif !important;
         }
         h1 {
@@ -761,8 +776,7 @@ export class TTT extends HTMLElement
         }
         .squareO {
           color: #e74c3c;
-        }
-        
+        } 
       </style>
       <h1>TIC-TAC-TOE GAME</h1>
       <div class="board">
@@ -780,15 +794,15 @@ export class TTT extends HTMLElement
         <p class="player1name" id="p1"></p>
         <p class="player2name" id="p2"></p>
       </div>
-      <button class="exit">Abort</button>
-      `;
+      <abort-btn></abort-btn>
+      <confirm-msg game="ttt"></confirm-msg>
+    `;
     
-    const abort   = this.root.querySelector(".exit");
     const domElm1 = this.root.getElementById("p1");
     const domElm2 = this.root.getElementById("p2");
-    const square  = this.root.querySelectorAll(".square");
+    this.square  = this.root.querySelectorAll(".square");
 
-    square.forEach(elem => {
+    this.square.forEach(elem => {
       elem.addEventListener('click', (e) => {
         e.preventDefault();
         sendDataToServer(e.target.getAttribute('data'));
@@ -796,7 +810,7 @@ export class TTT extends HTMLElement
     });
     
 
-    const ws = new WebSocket('ws://' + location.host + '/GameWS/');
+    socket.ws = new WebSocket('ws://' + location.host + '/GameWS/');
     let board = '.........';
     let isGameStarted = false;
 
@@ -813,34 +827,34 @@ export class TTT extends HTMLElement
       return false;
     }
     
-    ws.onopen = function () {
-      console.log("User On Game");
+    socket.ws.onopen = function () {
+      // console.log("User On Game");
     }
     
-    ws.onmessage = (e) => {
+    socket.ws.onmessage = (e) => {
       const dataPars = JSON.parse(e.data)
       if (isGameStarted == false) {
         if (dataPars.player2.length == 0) {
-          console.log("Player1: " + dataPars.player1);
-          console.log("Player2: " + dataPars.player2)
-          console.log("RoomId: " + dataPars.roomid)
+          // console.log("Player1: " + dataPars.player1);
+          // console.log("Player2: " + dataPars.player2)
+          // console.log("RoomId: " + dataPars.roomid)
 
           domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
           domElm2.innerHTML = "PLAYER2: Wait...";
         }
         else if (dataPars.player2.length != 0) {
           isGameStarted = true;
-          console.log("Player1: " + dataPars.player1);
-          console.log("Player2: " + dataPars.player2)
-          console.log("RoomId: " + dataPars.roomid)
+          // console.log("Player1: " + dataPars.player1);
+          // console.log("Player2: " + dataPars.player2)
+          // console.log("RoomId: " + dataPars.roomid)
           domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
           domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
         }
       }
       else {
         if (dataPars.etat == "PLAYING") {
-          console.log('Game On Progress');
-          console.log(e.data);
+          // console.log('Game On Progress');
+          // console.log(e.data);
           board = dataPars.board;
           const position = dataPars.position;
           const domElem = this.root.getElementById(`square${position}`);
@@ -853,37 +867,26 @@ export class TTT extends HTMLElement
             domElem.innerHTML = "O";
             domElem.classList.add("squareO");
           }
-          // console.log("Index", board.indexOf("."),  "->" , board[board.indexOf(".")]);
+          // // console.log("Index", board.indexOf("."),  "->" , board[board.indexOf(".")]);
           if (board.indexOf(".") == -1)
           {
-            console.log("Setting The Result Of This Game On Data Base");
+            // console.log("Setting The Result Of This Game On Data Base");
             const toServer = { 'gameStatus': "draw", 'position': -1, 'board': board};
-            ws.send(JSON.stringify(toServer));
+            socket.ws.send(JSON.stringify(toServer));
           }
 
 
           if (isGameEnd(dataPars.x_o, board) == true)
           {
-            console.log("Setting The Result Of This Game On Data Base");
+            // console.log("Setting The Result Of This Game On Data Base");
             const toServer = { 'gameStatus': "winner", 'position': -1, 'board': board,
                             'winner': dataPars.user, 'loser': dataPars.oppenent};
-            ws.send(JSON.stringify(toServer));
+            socket.ws.send(JSON.stringify(toServer));
           }
         }
       }
     }
-
-    ws.onclose = function ()
-    {
-      console.log("BYE BYE");
-      // aborting();
-    }
-    window.onbeforeunload = function ()
-    {
-      const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
-      ws.send(JSON.stringify(toServer));
-    }
-
+    
     function sendDataToServer(squareNbr)
     {
       if (isGameStarted == true)
@@ -893,26 +896,30 @@ export class TTT extends HTMLElement
           console.log('The Square Already Filled By: ', board[position]);
         else {
           const toServer = { 'gameStatus': "onprogress", 'position': position, 'board': board };
-          ws.send(JSON.stringify(toServer));
+          socket.ws.send(JSON.stringify(toServer));
         }
       }
       else
         console.log('Game Not Start Yet');
     }
-    ws.onclose = function () {
-      console.log("BYE BYE");
-      // aborting();
+    socket.ws.onclose = function () {
+      // console.log("Socket closed BYE BYE");
     }
     window.onbeforeunload = function () {
-      const toServer = { 'gameStatus': "closed", 'position': -1, 'board': board };
-      ws.send(JSON.stringify(toServer));
+      aborting(socket.ws, 'ttt');
     }
-    window.addEventListener('popstate', () => { console.log("popstate"); aborting(ws)});
-    abort.addEventListener('click', () => aborting(ws));
-    
+  }
+  disconnectedCallback()
+  {
+    this.square.forEach(elem => {
+      elem.removeEventListener('click', (e) => {
+        e.preventDefault();
+        sendDataToServer(e.target.getAttribute('data'));
+      });
+    });
   }
 }
-// TicTacToe View
+// Pong View
 export class Pong extends HTMLElement
 {
   constructor()
@@ -921,6 +928,7 @@ export class Pong extends HTMLElement
     this.root = this.attachShadow({mode: 'open'});
   }
   connectedCallback() {
+    this.setAttribute('id', 'pong-view');
     this.root.innerHTML = `
       <style>
           canvas
@@ -967,228 +975,217 @@ export class Pong extends HTMLElement
   
       <h1 class="player1name" id="p1"></h1>
       <h1 class="player2name" id="p2"></h1>
+      <abort-btn></abort-btn>
+      <confirm-msg game="pong"></confirm-msg>
     `;
 
     const domElm1 = this.root.querySelector("#p1"), domElm2 = this.root.querySelector("#p2");
     let isGameStarted = false;
-        let xBallPos = 380, yBallPos = 150;
-        let BallDirection = "LEFT";
-        let paddl1Y = 125;
-        let paddl2Y = 125;
-        let SaveInterval = 0;
-        let isThereDataFromServer = false;
-        let BallRoute = "LINE";
-        const canvas = this.root.querySelector("#board");
-        const canvasContext = canvas.getContext('2d');
-        canvasContext.shadowColor = "black";
-        canvasContext.shadowBlur = 15;
-        canvasContext.shadowOffsetX = 5;
-        canvasContext.shadowOffsetY = 2;
-        const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
+    let xBallPos = 380, yBallPos = 150;
+    let BallDirection = "LEFT";
+    let paddl1Y = 125;
+    let paddl2Y = 125;
+    let SaveInterval = 0;
+    let isThereDataFromServer = false;
+    let BallRoute = "LINE";
+    const canvas = this.root.querySelector("#board");
+    const canvasContext = canvas.getContext('2d');
+    canvasContext.shadowColor = "black";
+    canvasContext.shadowBlur = 15;
+    canvasContext.shadowOffsetX = 5;
+    canvasContext.shadowOffsetY = 2;
+    socket.ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
 
-        console.log("My Canvas", canvas);
-        function drawElements()
+    function drawElements()
+    {
+      let Lineheight = 5;
+      while (Lineheight < 300)
+      {
+          canvasContext.beginPath();
+          canvasContext.lineWidth = 4;
+          canvasContext.moveTo(400, Lineheight);
+          canvasContext.lineTo(400, Lineheight + 5);
+          canvasContext.closePath();
+          canvasContext.strokeStyle = "rgb(128, 9, 240)";
+          canvasContext.stroke();
+          Lineheight += 15;
+        }
+        
+      canvasContext.beginPath();
+      canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
+      canvasContext.lineWidth = 1;
+      canvasContext.fillStyle = "#F0F8FF";
+      canvasContext.fill();
+      canvasContext.closePath();
+      canvasContext.strokeStyle = "rgb(140, 29, 260)";
+      canvasContext.stroke();
+        
+      canvasContext.beginPath();
+      canvasContext.lineWidth = 8;
+      canvasContext.moveTo(20, paddl1Y)
+      canvasContext.lineTo(20, paddl1Y + 50);
+      canvasContext.closePath();
+      canvasContext.strokeStyle = "#F0F8FF";
+      canvasContext.stroke();
+
+      canvasContext.beginPath();
+      canvasContext.lineWidth = 8;
+      canvasContext.moveTo(780, paddl2Y)
+      canvasContext.lineTo(780, paddl2Y + 50);
+      canvasContext.closePath();
+      canvasContext.strokeStyle = "#F0F8FF";
+      canvasContext.stroke();
+      if (isThereDataFromServer == true)
+        isThereDataFromServer = false;
+    }
+
+    function applyDown(e)
+    {
+      if (isGameStarted == true)
+      {
+        if (e.key == "ArrowUp")
         {
-          let Lineheight = 5;
-          while (Lineheight < 300)
+          console.log("GO UP");
+          const ToServer =
           {
-              canvasContext.beginPath();
-              canvasContext.lineWidth = 4;
-              canvasContext.moveTo(400, Lineheight);
-              canvasContext.lineTo(400, Lineheight + 5);
-              canvasContext.closePath();
-              canvasContext.strokeStyle = "rgb(128, 9, 240)";
-              canvasContext.stroke();
-              Lineheight += 15;
-            }
-            
-          canvasContext.beginPath();
-          canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
-          canvasContext.lineWidth = 1;
-          canvasContext.fillStyle = "#F0F8FF";
-          canvasContext.fill();
-          canvasContext.closePath();
-          canvasContext.strokeStyle = "rgb(140, 29, 260)";
-          canvasContext.stroke();
-            
-          canvasContext.beginPath();
-          canvasContext.lineWidth = 8;
-          canvasContext.moveTo(20, paddl1Y)
-          canvasContext.lineTo(20, paddl1Y + 50);
-          canvasContext.closePath();
-          canvasContext.strokeStyle = "#F0F8FF";
-          canvasContext.stroke();
-
-          canvasContext.beginPath();
-          canvasContext.lineWidth = 8;
-          canvasContext.moveTo(780, paddl2Y)
-          canvasContext.lineTo(780, paddl2Y + 50);
-          canvasContext.closePath();
-          canvasContext.strokeStyle = "#F0F8FF";
-          canvasContext.stroke();
-          if (isThereDataFromServer == true)
-            isThereDataFromServer = false;
-        }
-
-        function applyDown(e)
-        {
-            if (isGameStarted == true)
-            {
-                if (e.key == "ArrowUp")
-                {
-                    console.log("GO UP");
-                    const ToServer =
-                    {
-                      'gameStatus': "onprogress", 'move': "UP",
-                      'paddle1': paddl1Y, 'paddle2': paddl2Y,
-                      'ballx': xBallPos, 'bally': yBallPos,
-                      'BallDir': BallDirection,
-                    }
-                    ws.send(JSON.stringify(ToServer));
-                }
-                else if (e.key == "ArrowDown")
-                {
-                    console.log("GO DOWN");
-                    const ToServer =
-                    {
-                      'gameStatus': "onprogress", 'move': "DOWN",
-                      'paddle1': paddl1Y, 'paddle2': paddl2Y,
-                      'ballx': xBallPos, 'bally': yBallPos,
-                      'BallDir': BallDirection,
-                    }
-                    ws.send(JSON.stringify(ToServer));
-                }
-                else
-                    console.log("Do NOTHING");
-            }
-            else
-                console.log("Game Not Start Yet");
-        }
-
-        function ballMove()
-        {
-            if (isGameStarted == true)
-            {
-              if (BallRoute == "UP")
-              {
-                if (yBallPos >= 10)
-                  yBallPos -= 10;
-                else
-                  BallRoute = "DOWN";
-              }
-              else if (BallRoute == "DOWN")
-              {
-                console.log("ADD TEN TO GO DOWN");
-                if (yBallPos + 10 <= 290)
-                  console.log("ADDED"), yBallPos += 10;
-                else
-                  BallRoute = "UP";
-              }
-
-              if (BallDirection == "LEFT")
-              {
-                xBallPos -= 10;
-                if (xBallPos == 30 && yBallPos + 10 >= paddl1Y && yBallPos - 10 <= paddl1Y+50)
-                {
-                  console.log("Ball Hit The Paddle One");
-                  console.log("Ball T = ", yBallPos, ", Paddle1y = ", paddl1Y)
-                  if (yBallPos == paddl1Y + 25)
-                    BallRoute = "LINE", console.log("BALL GO " + BallRoute);
-                  else if (yBallPos < paddl1Y + 25)
-                    BallRoute = "UP", console.log("BALL GO UP " + BallRoute);
-                  else if (yBallPos > paddl1Y + 25)
-                    BallRoute = "DOWN", console.log("BALL GO " + BallRoute);
-                  BallDirection = "RIGHT";
-                  xBallPos += 10;
-                }
-                else if (xBallPos < 20)
-                  ws.send(JSON.stringify({'gameStatus': "End", 'Side': "Left"}));
-              }
-              else if (BallDirection == "RIGHT")
-              {
-                xBallPos += 10;
-                if(xBallPos == 770 && yBallPos + 10 >= paddl2Y && yBallPos - 10 <= paddl2Y+50)
-                {
-                  console.log("Ball Hit The Paddle Two");
-                  BallDirection = "LEFT";
-                  xBallPos -= 10;
-                  if (yBallPos == paddl2Y + 25)
-                    BallRoute = "LINE", console.log("BALL GO " + BallRoute);
-                  else if (yBallPos < paddl2Y + 25)
-                    BallRoute = "UP", console.log("BALL GO UP " + BallRoute);
-                  else if (yBallPos > paddl2Y + 25)
-                    BallRoute = "DOWN", console.log("BALL GO " + BallRoute);
-                }
-                else if (xBallPos > 780)
-                  ws.send(JSON.stringify({'gameStatus': "End", 'Side': "Right"}));
-              }
-              if (isThereDataFromServer == false)
-              {
-                canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-                drawElements();
-              }
-            }
-        }
-
-        document.addEventListener("keyup", applyDown);
-  
-        ws.onopen = function()
-        {
-            console.log("User On Game");
-        }
-
-        ws.onmessage = function(e)
-        {
-            // console.log("Data From Server");
-            // console.log(e.data);
-            const dataPars = JSON.parse(e.data)
-            if (isGameStarted == false)
-            {
-                if (dataPars.player2.length == 0)
-                {
-                    console.log("Player1: " + dataPars.player1);
-                    console.log("Player2: " + dataPars.player2)
-                    console.log("RoomId: " + dataPars.roomid)
-                    domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-                    domElm2.innerHTML = "PLAYER2: Wait...";
-                }
-                else if (dataPars.player2.length != 0)
-                {
-                    isGameStarted = true;
-                    console.log("Player1: " + dataPars.player1);
-                    console.log("Player2: " + dataPars.player2)
-                    console.log("RoomId: " + dataPars.roomid)
-                    domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-                    domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-                    SaveInterval = setInterval(ballMove, 200);
-                }
-            }
-            else if (isGameStarted == true)
-            {
-              // console.log("From Server During Game: ", dataPars);
-              isThereDataFromServer = true;
-              if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
-                paddl1Y = dataPars.paddle1;
-              if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
-                paddl2Y = dataPars.paddle2;
-              // xBallPos = dataPars.Ballx;
-              canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-              drawElements();
-            }
+            'gameStatus': "onprogress", 'move': "UP",
+            'paddle1': paddl1Y, 'paddle2': paddl2Y,
+            'ballx': xBallPos, 'bally': yBallPos,
+            'BallDir': BallDirection,
           }
-
-        window.onbeforeunload = function()
+          socket.ws.send(JSON.stringify(ToServer));
+        }
+        else if (e.key == "ArrowDown")
         {
-            const toSerever = {'gameStatus': "closed"};
-            ws.send(JSON.stringify(toSerever));
+          console.log("GO DOWN");
+          const ToServer =
+          {
+            'gameStatus': "onprogress", 'move': "DOWN",
+            'paddle1': paddl1Y, 'paddle2': paddl2Y,
+            'ballx': xBallPos, 'bally': yBallPos,
+            'BallDir': BallDirection,
+          }
+          socket.ws.send(JSON.stringify(ToServer));
+        }
+          else
+              console.log("Do NOTHING");
+      }
+      else
+          console.log("Game Not Start Yet");
+    }
+
+    function ballMove()
+    {
+      if (isGameStarted == true)
+      {
+        if (BallRoute == "UP")
+        {
+          if (yBallPos - 10 >= 10)
+            yBallPos -= 10;
+          else
+            BallRoute = "DOWN";
+        }
+        else if (BallRoute == "DOWN")
+        {
+          if (yBallPos + 10 <= 290)
+            yBallPos += 10;
+          else
+            BallRoute = "UP";
         }
 
-        ws.onclose = function()
+        if (BallDirection == "LEFT")
         {
-            console.log("BYE FROM SERVER")
-            clearInterval(SaveInterval)
+          xBallPos -= 10;
+          if (xBallPos == 30 && yBallPos + 10 >= paddl1Y && yBallPos - 10 <= paddl1Y+50)
+          {
+            console.log("Ball Hit The Paddle One");
+            console.log("Ball T = ", yBallPos, ", Paddle1y = ", paddl1Y)
+            if (yBallPos == paddl1Y + 25)
+              BallRoute = "LINE", console.log("BALL GO " + BallRoute);
+            else if (yBallPos < paddl1Y + 25)
+              BallRoute = "UP", console.log("BALL GO UP " + BallRoute);
+            else if (yBallPos > paddl1Y + 25)
+              BallRoute = "DOWN", console.log("BALL GO " + BallRoute);
+            BallDirection = "RIGHT";
+            xBallPos += 10;
+          }
+          else if (xBallPos <= 0)
+            socket.ws.send(JSON.stringify({'gameStatus': "End", 'Side': "Left"}));
         }
-        // drawElements();
+        else if (BallDirection == "RIGHT")
+        {
+          xBallPos += 10;
+          if(xBallPos == 770 && yBallPos + 10 >= paddl2Y && yBallPos - 10 <= paddl2Y+50)
+          {
+            console.log("Ball Hit The Paddle Two");
+            console.log("Ball T = ", yBallPos, ", Paddle2y = ", paddl2Y)
+            BallDirection = "LEFT";
+            xBallPos -= 10;
+            if (yBallPos == paddl2Y + 25)
+              BallRoute = "LINE", console.log("BALL GO " + BallRoute);
+            else if (yBallPos < paddl2Y + 25)
+              BallRoute = "UP", console.log("BALL GO UP " + BallRoute);
+            else if (yBallPos > paddl2Y + 25)
+              BallRoute = "DOWN",  console.log("BALL GO " + BallRoute);
+          }
+          else if (xBallPos >= 800)
+            socket.ws.send(JSON.stringify({'gameStatus': "End", 'Side': "Right"}));
+        }
+        if (isThereDataFromServer == false)
+        {
+          canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+          drawElements();
+        }
+      }
+    }
+
+    document.addEventListener("keyup", applyDown);
+
+    socket.ws.onopen = function(){
+      console.log("User On Game");
+    }
+
+    socket.ws.onmessage = function(e)
+    {
+      const dataPars = JSON.parse(e.data)
+      if (isGameStarted == false)
+      {
+          if (dataPars.player2.length == 0)
+          {
+              console.log("Player1: " + dataPars.player1);
+              console.log("Player2: " + dataPars.player2)
+              console.log("RoomId: " + dataPars.roomid)
+              domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+              domElm2.innerHTML = "PLAYER2: Wait...";
+          }
+          else if (dataPars.player2.length != 0)
+          {
+              isGameStarted = true;
+              console.log("Player1: " + dataPars.player1);
+              console.log("Player2: " + dataPars.player2)
+              console.log("RoomId: " + dataPars.roomid)
+              domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+              domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+              SaveInterval = setInterval(ballMove, 150);
+          }
+      }
+      else if (isGameStarted == true)
+      {
+        // console.log("From Server During Game: ", dataPars);
+        isThereDataFromServer = true;
+        if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
+          paddl1Y = dataPars.paddle1;
+        if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
+          paddl2Y = dataPars.paddle2;
+        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        drawElements();
+      }
+    }
+    socket.ws.onclose = function()
+    {
+      console.log("BYE FROM SERVER");
+      clearInterval(SaveInterval);
+    }
   }
 }
 // Setting View
@@ -1413,7 +1410,7 @@ export class Setting extends HTMLElement
         e.preventDefault();
         if (e.target.getAttribute("name") === "Save") {
           if (input.value.length == 0) {
-            console.log("Please enter some shit");
+            // console.log("Please enter some shit");
           }
           else {
             float.setAttribute("style", "display: none");
@@ -1421,8 +1418,8 @@ export class Setting extends HTMLElement
           }
           // post data to the backend for changing the user fullname
         }
-        console.log("target: ", e.target)
-        console.log("current target: ", e.currentTarget)
+        // console.log("target: ", e.target)
+        // console.log("current target: ", e.currentTarget)
         if (e.target === float)
         {
           float.setAttribute("style", "display: none");
@@ -1434,6 +1431,161 @@ export class Setting extends HTMLElement
     // const listener = () => {
       
     // }
+  }
+}
+// confirm Message component
+export class ConfirmMsg extends HTMLElement
+{
+  constructor()
+  {
+    super('foor');
+    this.root = this.attachShadow({ mode: 'open' });
+  }
+  connectedCallback()
+  {
+    this.setAttribute('id', 'confirm-msg')
+    this.setAttribute('style', 'display: none');
+    this.root.innerHTML = `
+      <style>
+        :host
+        {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+        .wrapper
+        {
+          width: 100%;
+          height: 100%;
+          z-index: 1001;
+          position: absolute;
+          top: 0;
+          left: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .popup {
+          width: 33%;
+          background-color: var(--dark-purple);
+          padding: 15px;
+          border: none;
+          border-radius: 10px;
+          box-shadow: 5px 5px 5px #000;
+          color: var(--light-olive);
+        }
+        .popup .text-right .btn-cancel
+        {
+          font-family: var(--body-font);
+          background-color: var(--dark-teal);
+          color: var(--light-olive);
+          padding: 10px 20px;
+          border-radius: 18px;
+          border: none;
+        }
+        
+        .popup .text-right .btn-primary
+        {
+          font-family: var(--body-font);
+          background-color: var(--coral);
+          color: var(--light-olive);
+          padding: 10px 20px;
+          border-radius: 18px;
+          border: none;
+        }
+        .text-right
+        {
+          padding-top: 20px;
+          display: flex;
+          justify-content: end;
+          gap: 15px;
+        small{
+          font-size: 10px;
+        }
+        }
+      </style>
+      <div class="wrapper">
+        <div class="popup">
+          <p>Sure wanna leave?</p>
+          <small>You'll lose a game</small> 
+          <div class="text-right">
+            <button class="btn btn-cancel">Cancel</button>
+            <button class="btn btn-primary">Ok</button>
+          </div>
+        </div>
+      </div>
+    `;
+    const game = this.getAttribute('game');
+    this.cancel = this.root.querySelector('.btn-cancel');
+    this.leave  = this.root.querySelector('.btn-primary');
+    
+    window.onpopstate = () => {
+      history.replaceState({ path: '/game' }, null, location.origin + '/game');
+      // console.log(`${game} popState triggered!`);
+      this.setAttribute('style', 'display: block');
+    }
+    this.fcancel = () => {
+      // console.log("canceling");
+      this.setAttribute('style', 'display: none');
+    }
+    this.fleave = () => {
+      // console.log("leaving");
+      this.setAttribute('style', 'display: none');
+      console.log("whiche game would be removed: ", game);
+      aborting(socket.ws, game);
+      window.router.goto('/platform');
+    }
+    this.cancel.addEventListener("click", this.fcancel);
+    this.leave.addEventListener("click", this.fleave);
+  }
+  disconnectedCallback()
+  {
+    // console.log("confirm masg removed");
+    this.cancel.removeEventListener("click", this.fcancel);
+    this.leave.removeEventListener("click", this.fleave);
+    window.onpopstate = null;
+  }
+}
+// Abort Game Button
+export class AbortButton extends HTMLElement
+{
+  constructor() {
+    super();
+    // this.root = this.attachShadow({ mode: 'open' });
+  }
+  connectedCallback() {
+    this.setAttribute('class', 'abort');
+    this.confirm = 
+    this.innerHTML = `
+      <style>
+        .abort {
+          font-size: 14px;
+          font-weight: 300;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          border: none;
+          cursor: pointer;
+          display: inline-block;
+          cursor: pointer;
+          padding: 10px 60px;
+          border-radius: 8px;
+          background-color: var(--coral);
+          color: var(--peach);
+          box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
+          transition: all 0.1s ease, background 0.3s ease;
+          font-family: "Press Start 2P", sans-serif !important;
+        }
+      </style>
+      EXIT
+    `;
+    const parent = this.parentNode;
+    const confirmMsg = parent.querySelector('confirm-msg');
+    this.cancel = confirmMsg.querySelector(".btn-cancel");
+    this.leave = confirmMsg.querySelector(".btn-primary");
+    this.listener = () => {
+      confirmMsg.setAttribute('style', 'display: block');
+    }
+    this.addEventListener('click', this.listener);
   }
 }
 // Main UI View

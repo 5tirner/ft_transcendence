@@ -1,5 +1,5 @@
 import { router } from "./service/router.js";
-import { MainUI, Sidebar, Game, Platform, Profile, Home, TTT, Login, Pong } from "./view/mainUI.js";
+import { MainUI, Sidebar, Game, Platform, Profile, Home, TTT, Login, Pong, ConfirmMsg, AbortButton } from "./view/mainUI.js";
 
 window.prevState  = null;
 window.router     = router;
@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", () =>
     customElements.define("game-view", Game);
     customElements.define("ttt-view", TTT);
     customElements.define("pong-view", Pong);
+    customElements.define("confirm-msg", ConfirmMsg);
+     customElements.define("abort-btn", AbortButton);
 
     window.component = {
         home: document.querySelector("home-view"),
