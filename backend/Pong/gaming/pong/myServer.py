@@ -1,13 +1,12 @@
-from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from .models import pongGameInfo, pongHistory
-import json
 import os
 from .destroyGameInfo import destroyThisGameInformations
 from .generateCode import roomcode
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
-class myPongserver(AsyncWebsocketConsumer):
+class myPongserver(AsyncJsonWebsocketConsumer):
     playerWantsToPlay = list()
     playersOnMatchAndItsRoomId = dict()
     playersOnMatchAndItsOppenent = dict()
@@ -34,7 +33,7 @@ class myPongserver(AsyncWebsocketConsumer):
                 print(f"{self.scope['user']} Alone In The Q, He Waiting")
                 await self.channel_layer.group_add(roomid, self.channel_name)
                 await self.accept()
-                toFronEnd = json.dumps({'player1': player1, 'player2': player2, 'roomid': roomid})
+                toFronEnd = {'player1': player1, 'player2': player2, 'roomid': roomid}
                 print(f"Player1: {player1}, Player2: {player2}, RoomId: {roomid}")
                 await self.channel_layer.group_send(roomid, {'type': 'ToFrontOnConnect', 'Data': toFronEnd})
         else:
@@ -64,16 +63,16 @@ class myPongserver(AsyncWebsocketConsumer):
                 user2 = pongGameInfo.objects.get(login=player2)
                 user2.gamesPlayed += 1
                 user2.save()
-                toFrontEnd = json.dumps({'player1': player1, 'player2': player2, 'roomid': roomid})
+                toFrontEnd = {'player1': player1, 'player2': player2, 'roomid': roomid}
                 print(f"Player1: {player1}, Player2: {player2}, RoomId: {roomid}")
                 await self.channel_layer.group_send(roomid, {'type': 'ToFrontOnConnect', 'Data': toFrontEnd})
             print(f"Still In Q: {len(self.playerWantsToPlay)}")
-    async def receive(self, text_data, bytes_data=None):
+    async def receive_json(self, dataFromClient, bytes_data=None):
         try:
             thisUser = self.scope['user']
             oppenent = self.playersOnMatchAndItsOppenent.get(self.scope['user'])
             roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
-            dataFromClient = json.loads(text_data)
+            # dataFromClient = text_data
             if dataFromClient.get('gameStatus') == "onprogress":
                 BallRoute = dataFromClient.get('BallRoute')
                 BallDirection = dataFromClient.get('BallDir')
@@ -103,7 +102,7 @@ class myPongserver(AsyncWebsocketConsumer):
                         else:
                             BallRoute = "UP"
                     if (BallDirection == "LEFT"):
-                        ballx -= 1
+                        ballx -= 2
                         if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
                             # if (bally == paddle1 + 25):
                             #     BallRoute = "LINE"
@@ -114,7 +113,7 @@ class myPongserver(AsyncWebsocketConsumer):
                             BallDirection = "RIGHT"
                             # ballx += 10
                     elif (BallDirection == "RIGHT"):
-                        ballx += 1
+                        ballx += 2
                         if ballx == 770 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
                             # if (bally == paddle2 + 25):
                             #     BallRoute = "LINE"
@@ -124,7 +123,7 @@ class myPongserver(AsyncWebsocketConsumer):
                                 BallRoute = "DOWN"
                             BallDirection = "LEFT"
                             # ballx -= 10
-                toFront = json.dumps({
+                toFront = {
                         'MoveFor': dataFromClient.get('WhatIGiveYou'),
                         'paddle1': paddle1,
                         'paddle2': paddle2,
@@ -132,7 +131,7 @@ class myPongserver(AsyncWebsocketConsumer):
                         'player2': oppenent,
                         'Ballx': ballx, 'Bally' :bally,
                         'BallDir': BallDirection, 'BallRoute': BallRoute,
-                    })
+                    }
                 await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnConnect', 'Data': toFront})
             elif dataFromClient.get('gameStatus') == "closed":
                 if self.playersOnMatchAndItsOppenent.get(thisUser) is not None:
@@ -215,13 +214,55 @@ class myPongserver(AsyncWebsocketConsumer):
         
     async def ToFrontOnConnect(self, data):
         # print("Sending Data To Clinet...")
-        await self.send(data['Data'])
+        await self.send_json(data['Data'])
     async def endGame(self, data):
         print(f"WebSocket Will Be Closed Client: {self.scope['user']}")
         await self.close()
 
+class pongLocalServer(AsyncJsonWebsocketConsumer):
+    async def connect(self):
+        print(f"{self.scope['user']} Try To Play Local Server")
+        await self.accept()
+    async def receive_json(self, dataFromClient, bytes_data=None):
+        BallRoute = dataFromClient.get('BallRoute')
+        BallDirection = dataFromClient.get('BallDir')
+        ballx = dataFromClient.get('ballx')
+        bally = dataFromClient.get('bally')
+        paddle1 = dataFromClient.get('paddle1')
+        paddle2 = dataFromClient.get('paddle2') 
+        if dataFromClient.get('move') == "UP":
+            print(dataFromClient)
+            paddle1 -= 10
+            print(f"UP From {dataFromClient.get('paddle1')} To {paddle1}")
+        elif dataFromClient.get('move') == "DOWN":
+            print(dataFromClient)
+            paddle1 += 10
+            print(f"DOWN From {dataFromClient.get('paddle1')} To {paddle1}")
+        elif dataFromClient.get('move') == "W":
+            print(dataFromClient)
+            paddle2 -= 10
+            print(f"W From {dataFromClient.get('paddle2')} To {paddle2}")
+        elif dataFromClient.get('move') == "S":
+            print(dataFromClient)
+            paddle2 += 10
+            print(f"S From {dataFromClient.get('paddle2')} To {paddle2}")
+        tofront = {
+            'MoveFor': dataFromClient.get('WhatIGiveYou'),
+            'paddle1': paddle1,
+            'paddle2': paddle2,
+            'Ballx': ballx, 'Bally' :bally,
+            'BallDir': BallDirection, 'BallRoute': BallRoute,
+        }
+        await self.send_json(tofront)
+    async def disconnect(self, code):
+        print(f"Local Game End")
+        await self.close()
+
+
+
+
 #Need To Hundle Tournement
-class pongTourServer(AsyncWebsocketConsumer):
+class pongTourServer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         print(f"{self.scope['user']} Try To Connect On Tournement Server")
         await self.accept()

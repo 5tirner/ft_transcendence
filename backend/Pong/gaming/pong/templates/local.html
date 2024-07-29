@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocalGame</title>
+</head>
+<style>
+    canvas
+    {
+        display: block;
+        margin: 0 auto;
+        background-color: #ccb4e2b0;
+        border-color: rgb(128, 9, 240);
+        border-width: thin;
+        border-style: solid;
+        border-block-width: 10px;
+        border-radius: 5px;
+        filter: brightness(80%);
+    }
+
+    body
+    {
+        background-color: rgb(175, 115, 231);
+    }
+    button
+    {
+        background-color: rgb(32, 5, 95);
+        color: rgb(207, 172, 240);
+    }
+</style>
+
+<body>
+    <div style="margin-bottom: 100px;">
+        <h1 style="text-align: center; color: rgb(128, 9, 240);">PONG-PONG-LOCAL</h1>
+    </div>
+
+    <div style="margin-bottom: 200px;">
+      <canvas id="board" width="800" height="300">myCNV</canvas>
+    </div>
+
+    <div style="text-align: center;">
+        <button onclick="start()">START PLAYING</button>
+    </div>
+
+    <script>
+        let isGameStarted = false;
+        let xBallPos = 380, yBallPos = 150;
+        let BallDirection = "LEFT";
+        let paddl1Y = 125;
+        let paddl2Y = 125;
+        let SaveInterval = 0;
+        let BallRoute = "LINE";
+        const canvas = document.getElementById('board');
+        const canvasContext = canvas.getContext('2d');
+        canvasContext.shadowColor = "black";
+        canvasContext.shadowBlur = 15;
+        canvasContext.shadowOffsetX = 5;
+        canvasContext.shadowOffsetY = 2;
+        const ws = new WebSocket('ws://' + location.host + '/localGameWs/');
+    
+        function ballMove()
+        {
+            if (xBallPos <= 0 || xBallPos >= 800)
+                ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
+            else
+            {
+                const ToServer =
+                {
+                    'WhatIGiveYou': "BALL MOVE",
+                    'gameStatus': "onprogress", 'move': "BALL",
+                    'paddle1': paddl1Y, 'paddle2': paddl2Y,
+                    'ballx': xBallPos, 'bally': yBallPos,
+                    'BallDir': BallDirection, 'BallRoute': BallRoute,
+                }
+              ws.send(JSON.stringify(ToServer));
+            }
+        }
+
+        function drawElements()
+        {
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+            ballMove();
+            let Lineheight = 5;
+            while (Lineheight < 300)
+            {
+                canvasContext.beginPath();
+                canvasContext.lineWidth = 4;
+                canvasContext.moveTo(400, Lineheight);
+                canvasContext.lineTo(400, Lineheight + 5);
+                canvasContext.closePath();
+                canvasContext.strokeStyle = "rgb(128, 9, 240)";
+                canvasContext.stroke();
+                Lineheight += 15;
+            }
+            canvasContext.beginPath();
+            canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
+            canvasContext.lineWidth = 1;
+            canvasContext.fillStyle = "#F0F8FF";
+            canvasContext.fill();
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "rgb(140, 29, 260)";
+            canvasContext.stroke();
+
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 8;
+            canvasContext.moveTo(20, paddl1Y)
+            canvasContext.lineTo(20, paddl1Y + 50);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "#F0F8FF";
+            canvasContext.stroke();
+        
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 8;
+            canvasContext.moveTo(780, paddl2Y)
+            canvasContext.lineTo(780, paddl2Y + 50);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "#F0F8FF";
+            canvasContext.stroke();
+        }
+
+        function applyMove(e)
+        {
+            console.log(e.key);
+            if (isGameStarted == true)
+            {
+              if (e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "w" || e.key == 's')
+              {
+                const ToServer =
+                {
+                    'WhatIGiveYou': "PADDLES MOVE",
+                    'gameStatus': "onprogress", 'move': "",
+                    'paddle1': paddl1Y, 'paddle2': paddl2Y,
+                    'ballx': xBallPos, 'bally': yBallPos,
+                    'BallDir': BallDirection, 'BallRoute': BallRoute,
+                }
+                if (e.key == "ArrowUp")
+                    console.log("GO UP"), ToServer.move = "UP";
+                else if (e.key == "ArrowDown")
+                    console.log("GO DOWN"), ToServer.move = "DOWN";
+                else if (e.key == 'w')
+                    console.log("GO W"), ToServer.move = "W";
+                else if (e.key == 's')
+                    console.log("GO S"), ToServer.move = "S";
+                ws.send(JSON.stringify(ToServer));
+              }
+            }
+        }
+
+        function start()
+        {
+            isGameStarted = true;
+            SaveInterval = setInterval(drawElements, 1);
+        }
+
+        document.addEventListener("keyup", applyMove);
+
+        ws.onopen = function()
+        {
+            console.log("User On Game");
+        }
+
+        ws.onmessage = function(e)
+        {
+            const dataPars = JSON.parse(e.data)
+            if (dataPars.MoveFor == "PADDLES MOVE")
+            {
+              if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
+                paddl1Y = dataPars.paddle1;
+              if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
+                paddl2Y = dataPars.paddle2;
+            }
+            else
+            {
+              xBallPos = dataPars.Ballx, yBallPos = dataPars.Bally;
+              BallDirection = dataPars.BallDir;
+              BallRoute = dataPars.BallRoute;
+            }
+        }
+
+        ws.onclose = function()
+        {
+            isGameStarted = false;
+            console.log("BYE FROM SERVER");
+            clearInterval(SaveInterval);
+        }
+    </script>
+</body>
+</html>
