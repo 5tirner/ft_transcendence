@@ -1039,7 +1039,7 @@ export class Pong extends HTMLElement
         isThereDataFromServer = false;
     }
 
-    function applyDown(e)
+    this.applyDown = (e) => 
     {
       if (isGameStarted == true)
       {
@@ -1139,7 +1139,7 @@ export class Pong extends HTMLElement
       }
     }
 
-    document.addEventListener("keyup", applyDown);
+    document.addEventListener("keyup", this.applyDown);
 
     socket.ws.onopen = function(){
       console.log("User On Game");
@@ -1187,6 +1187,10 @@ export class Pong extends HTMLElement
       console.log("BYE FROM SERVER");
       clearInterval(SaveInterval);
     }
+  }
+  disconnectedCallback()
+  {
+    document.removeEventListener("keyup", this.applyDown);
   }
 }
 // Setting View
