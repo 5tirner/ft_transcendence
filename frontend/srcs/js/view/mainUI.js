@@ -986,7 +986,6 @@ export class Pong extends HTMLElement
     let paddl1Y = 125;
     let paddl2Y = 125;
     let SaveInterval = 0;
-    let isThereDataFromServer = false;
     let BallRoute = "LINE";
     const canvas = this.root.querySelector("#board");
     const canvasContext = canvas.getContext('2d');
@@ -996,8 +995,30 @@ export class Pong extends HTMLElement
     canvasContext.shadowOffsetY = 2;
     socket.ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
 
+    function ballMove()
+    {
+      if (xBallPos <= 0 || xBallPos >= 800)
+        socket.ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
+      else
+      {
+        const ToServer =
+        {
+          'WhatIGiveYou': "BALL MOVE",
+          'gameStatus': "onprogress", 'move': "BALL",
+          'paddle1': paddl1Y, 'paddle2': paddl2Y,
+          'ballx': xBallPos, 'bally': yBallPos,
+          'BallDir': BallDirection, 'BallRoute': BallRoute,
+        }
+        socket.ws.send(JSON.stringify(ToServer));
+        // canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        // drawElements();
+      }
+    }
+
     function drawElements()
     {
+      canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+      ballMove();
       let Lineheight = 5;
       while (Lineheight < 300)
       {
@@ -1009,7 +1030,7 @@ export class Pong extends HTMLElement
           canvasContext.strokeStyle = "rgb(128, 9, 240)";
           canvasContext.stroke();
           Lineheight += 15;
-        }
+      }
         
       canvasContext.beginPath();
       canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
@@ -1035,111 +1056,32 @@ export class Pong extends HTMLElement
       canvasContext.closePath();
       canvasContext.strokeStyle = "#F0F8FF";
       canvasContext.stroke();
-      if (isThereDataFromServer == true)
-        isThereDataFromServer = false;
     }
 
-    function applyDown(e)
+    function applyMove(e)
     {
       if (isGameStarted == true)
       {
-        if (e.key == "ArrowUp")
+        if (e.key == "ArrowUp" || e.key == "ArrowDown")
         {
-          console.log("GO UP");
           const ToServer =
           {
-            'gameStatus': "onprogress", 'move': "UP",
+            'WhatIGiveYou': "PADDLES MOVE",
+            'gameStatus': "onprogress", 'move': "",
             'paddle1': paddl1Y, 'paddle2': paddl2Y,
             'ballx': xBallPos, 'bally': yBallPos,
-            'BallDir': BallDirection,
+            'BallDir': BallDirection, 'BallRoute': BallRoute,
           }
+          if (e.key == "ArrowUp")
+            console.log("GO UP"), ToServer.move = "UP";
+          else
+            console.log("GO DOWN"), ToServer.move = "DOWN";
           socket.ws.send(JSON.stringify(ToServer));
-        }
-        else if (e.key == "ArrowDown")
-        {
-          console.log("GO DOWN");
-          const ToServer =
-          {
-            'gameStatus': "onprogress", 'move': "DOWN",
-            'paddle1': paddl1Y, 'paddle2': paddl2Y,
-            'ballx': xBallPos, 'bally': yBallPos,
-            'BallDir': BallDirection,
-          }
-          socket.ws.send(JSON.stringify(ToServer));
-        }
-          else
-              console.log("Do NOTHING");
-      }
-      else
-          console.log("Game Not Start Yet");
-    }
-
-    function ballMove()
-    {
-      if (isGameStarted == true)
-      {
-        if (BallRoute == "UP")
-        {
-          if (yBallPos - 10 >= 10)
-            yBallPos -= 10;
-          else
-            BallRoute = "DOWN";
-        }
-        else if (BallRoute == "DOWN")
-        {
-          if (yBallPos + 10 <= 290)
-            yBallPos += 10;
-          else
-            BallRoute = "UP";
-        }
-
-        if (BallDirection == "LEFT")
-        {
-          xBallPos -= 10;
-          if (xBallPos == 30 && yBallPos + 10 >= paddl1Y && yBallPos - 10 <= paddl1Y+50)
-          {
-            console.log("Ball Hit The Paddle One");
-            console.log("Ball T = ", yBallPos, ", Paddle1y = ", paddl1Y)
-            if (yBallPos == paddl1Y + 25)
-              BallRoute = "LINE", console.log("BALL GO " + BallRoute);
-            else if (yBallPos < paddl1Y + 25)
-              BallRoute = "UP", console.log("BALL GO UP " + BallRoute);
-            else if (yBallPos > paddl1Y + 25)
-              BallRoute = "DOWN", console.log("BALL GO " + BallRoute);
-            BallDirection = "RIGHT";
-            xBallPos += 10;
-          }
-          else if (xBallPos <= 0)
-            socket.ws.send(JSON.stringify({'gameStatus': "End", 'Side': "Left"}));
-        }
-        else if (BallDirection == "RIGHT")
-        {
-          xBallPos += 10;
-          if(xBallPos == 770 && yBallPos + 10 >= paddl2Y && yBallPos - 10 <= paddl2Y+50)
-          {
-            console.log("Ball Hit The Paddle Two");
-            console.log("Ball T = ", yBallPos, ", Paddle2y = ", paddl2Y)
-            BallDirection = "LEFT";
-            xBallPos -= 10;
-            if (yBallPos == paddl2Y + 25)
-              BallRoute = "LINE", console.log("BALL GO " + BallRoute);
-            else if (yBallPos < paddl2Y + 25)
-              BallRoute = "UP", console.log("BALL GO UP " + BallRoute);
-            else if (yBallPos > paddl2Y + 25)
-              BallRoute = "DOWN",  console.log("BALL GO " + BallRoute);
-          }
-          else if (xBallPos >= 800)
-            socket.ws.send(JSON.stringify({'gameStatus': "End", 'Side': "Right"}));
-        }
-        if (isThereDataFromServer == false)
-        {
-          canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-          drawElements();
         }
       }
     }
 
-    document.addEventListener("keyup", applyDown);
+    document.addEventListener("keyup", applyMove);
 
     socket.ws.onopen = function(){
       console.log("User On Game");
@@ -1166,23 +1108,38 @@ export class Pong extends HTMLElement
               console.log("RoomId: " + dataPars.roomid)
               domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
               domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-              SaveInterval = setInterval(ballMove, 150);
+              SaveInterval = setInterval(drawElements, 1);
           }
       }
       else if (isGameStarted == true)
       {
-        // console.log("From Server During Game: ", dataPars);
-        isThereDataFromServer = true;
-        if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
-          paddl1Y = dataPars.paddle1;
-        if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
-          paddl2Y = dataPars.paddle2;
-        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        drawElements();
+        if (dataPars.MoveFor == "PADDLES MOVE")
+        {
+          if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
+            paddl1Y = dataPars.paddle1;
+          if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
+            paddl2Y = dataPars.paddle2;
+        }
+        else
+        {
+          xBallPos = dataPars.Ballx, yBallPos = dataPars.Bally;
+          BallDirection = dataPars.BallDir;
+          BallRoute = dataPars.BallRoute;
+        }
+        // {
+        //   // console.log("Paddle1: ", paddl1Y, " -> ", dataPars.paddle1)
+        //   // console.log("Paddle2: ", paddl2Y, " -> ", dataPars.paddle2)
+        //   // console.log(dataPars);
+        //   clearInterval(SaveInterval);
+        //   canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        //   drawElements();
+        //   SaveInterval = setInterval(ballMove, 10);
+        // }
       }
     }
     socket.ws.onclose = function()
     {
+      isGameStarted = false;
       console.log("BYE FROM SERVER");
       clearInterval(SaveInterval);
     }
