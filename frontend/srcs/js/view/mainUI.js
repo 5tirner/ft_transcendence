@@ -1112,7 +1112,7 @@ export class Pong extends HTMLElement
               console.log("RoomId: " + dataPars.roomid)
               domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
               domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-              SaveInterval = setInterval(drawElements, 1);
+              SaveInterval = setInterval(drawElements, 5);
           }
       }
       else if (isGameStarted == true)
@@ -1221,7 +1221,7 @@ export class PongLocal extends HTMLElement
     function ballMove()
     {
         if (xBallPos <= 0 || xBallPos >= 800)
-            socket.ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
+            socket.ws.send(JSON.stringify({'gameStatus': 'End'}));
         else
         {
             const ToServer =
@@ -1280,7 +1280,7 @@ export class PongLocal extends HTMLElement
 
     function applyMove(e)
     {
-        console.log(e.key);
+        // console.log(e.key);
         if (isGameStarted == true)
         {
           if (e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "w" || e.key == 's')
@@ -1309,7 +1309,7 @@ export class PongLocal extends HTMLElement
     function start()
     {
       isGameStarted = true;
-      SaveInterval = setInterval(drawElements, 1);
+      SaveInterval = setInterval(drawElements, 5);
     }
 
     document.addEventListener("keyup", applyMove);

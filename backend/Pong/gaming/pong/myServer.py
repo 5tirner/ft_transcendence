@@ -217,63 +217,66 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
         print(f"{self.scope['user']} Try To Play Local Server")
         await self.accept()
     async def receive_json(self, dataFromClient, bytes_data=None):
-        BallRoute = dataFromClient.get('BallRoute')
-        BallDirection = dataFromClient.get('BallDir')
-        ballx = dataFromClient.get('ballx')
-        bally = dataFromClient.get('bally')
-        paddle1 = dataFromClient.get('paddle1')
-        paddle2 = dataFromClient.get('paddle2') 
-        if dataFromClient.get('move') == "UP":
-            print(dataFromClient)
-            paddle1 -= 10
-            print(f"UP From {dataFromClient.get('paddle1')} To {paddle1}")
-        elif dataFromClient.get('move') == "DOWN":
-            print(dataFromClient)
-            paddle1 += 10
-            print(f"DOWN From {dataFromClient.get('paddle1')} To {paddle1}")
-        elif dataFromClient.get('move') == "W":
-            print(dataFromClient)
-            paddle2 -= 10
-            print(f"W From {dataFromClient.get('paddle2')} To {paddle2}")
-        elif dataFromClient.get('move') == "S":
-            print(dataFromClient)
-            paddle2 += 10
-            print(f"S From {dataFromClient.get('paddle2')} To {paddle2}")
-        elif dataFromClient.get('move') == "BALL":
-            if BallRoute == "UP":
-                if bally - 10 >= 10:
-                    bally -= 1
-                else:
-                    BallRoute = "DOWN"
-            elif BallRoute == "DOWN":
-                if bally + 10 <= 290:
-                    bally += 1
-                else:
-                    BallRoute = "UP"
-            if (BallDirection == "LEFT"):
-                ballx -= 2
-                if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
-                    if (bally < paddle1 + 25):
-                        BallRoute = "UP"
-                    elif (bally > paddle1 + 25):
+        if dataFromClient.get('gameStatus') == "onprogress":
+            BallRoute = dataFromClient.get('BallRoute')
+            BallDirection = dataFromClient.get('BallDir')
+            ballx = dataFromClient.get('ballx')
+            bally = dataFromClient.get('bally')
+            paddle1 = dataFromClient.get('paddle1')
+            paddle2 = dataFromClient.get('paddle2')
+            if dataFromClient.get('move') == "W":
+                # print(dataFromClient)
+                paddle1 -= 10
+                # print(f"UP From {dataFromClient.get('paddle1')} To {paddle1}")
+            elif dataFromClient.get('move') == "S":
+                # print(dataFromClient)
+                paddle1 += 10
+                # print(f"DOWN From {dataFromClient.get('paddle1')} To {paddle1}")
+            elif dataFromClient.get('move') == "UP":
+                # print(dataFromClient)
+                paddle2 -= 10
+                # print(f"W From {dataFromClient.get('paddle2')} To {paddle2}")
+            elif dataFromClient.get('move') == "DOWN":
+                # print(dataFromClient)
+                paddle2 += 10
+                # print(f"S From {dataFromClient.get('paddle2')} To {paddle2}")
+            elif dataFromClient.get('move') == "BALL":
+                if BallRoute == "UP":
+                    if bally - 10 >= 10:
+                        bally -= 1
+                    else:
                         BallRoute = "DOWN"
-                    BallDirection = "RIGHT"
-            elif (BallDirection == "RIGHT"):
-                ballx += 2
-                if ballx == 770 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
-                    if (bally < paddle2 + 25):
+                elif BallRoute == "DOWN":
+                    if bally + 10 <= 290:
+                        bally += 1
+                    else:
                         BallRoute = "UP"
-                    elif (bally > paddle2 + 25):
-                        BallRoute = "DOWN"
-                    BallDirection = "LEFT"
-        tofront = {
-            'MoveFor': dataFromClient.get('WhatIGiveYou'),
-            'paddle1': paddle1,
-            'paddle2': paddle2,
-            'Ballx': ballx, 'Bally' :bally,
-            'BallDir': BallDirection, 'BallRoute': BallRoute,
-        }
-        await self.send_json(tofront)
+                if (BallDirection == "LEFT"):
+                    ballx -= 2
+                    if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
+                        if (bally < paddle1 + 25):
+                            BallRoute = "UP"
+                        elif (bally > paddle1 + 25):
+                            BallRoute = "DOWN"
+                        BallDirection = "RIGHT"
+                elif (BallDirection == "RIGHT"):
+                    ballx += 2
+                    if ballx == 770 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
+                        if (bally < paddle2 + 25):
+                            BallRoute = "UP"
+                        elif (bally > paddle2 + 25):
+                            BallRoute = "DOWN"
+                        BallDirection = "LEFT"
+            tofront = {
+                'MoveFor': dataFromClient.get('WhatIGiveYou'),
+                'paddle1': paddle1,
+                'paddle2': paddle2,
+                'Ballx': ballx, 'Bally' :bally,
+                'BallDir': BallDirection, 'BallRoute': BallRoute,
+            }
+            await self.send_json(tofront)
+        elif dataFromClient.get('gameStatus') == "End":
+            await self.disconnect(1)
     async def disconnect(self, code):
         print(f"Local Game End")
         await self.close()
