@@ -989,7 +989,7 @@ export class Pong extends HTMLElement
     let BallDirection = "LEFT";
     let paddl1Y = 125;
     let paddl2Y = 125;
-    let SaveInterval = 0;
+    // let SaveInterval = 0;
     let BallRoute = "LINE";
     const canvas = this.root.querySelector("#board");
     const canvasContext = canvas.getContext('2d');
@@ -1060,6 +1060,8 @@ export class Pong extends HTMLElement
       canvasContext.closePath();
       canvasContext.strokeStyle = "#F0F8FF";
       canvasContext.stroke();
+      if (isGameStarted == true)
+        requestAnimationFrame(drawElements);
     }
 
     function applyMove(e)
@@ -1085,7 +1087,7 @@ export class Pong extends HTMLElement
       }
     }
 
-    document.addEventListener("keyup", applyMove);
+    document.addEventListener("keydown", applyMove);
 
     socket.ws.onopen = function(){
       console.log("User On Game");
@@ -1112,7 +1114,8 @@ export class Pong extends HTMLElement
               console.log("RoomId: " + dataPars.roomid)
               domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
               domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-              SaveInterval = setInterval(drawElements, 5);
+              // SaveInterval = setInterval(drawElements, 5);
+              requestAnimationFrame(drawElements);
           }
       }
       else if (isGameStarted == true)
@@ -1145,7 +1148,7 @@ export class Pong extends HTMLElement
     {
       isGameStarted = false;
       console.log("BYE FROM SERVER");
-      clearInterval(SaveInterval);
+      // clearInterval(SaveInterval);
     }
   }
   disconnectedCallback()
@@ -1153,6 +1156,19 @@ export class Pong extends HTMLElement
     document.removeEventListener("keyup", this.applyDown);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// -------------------------------------------------- LOCAL --------------------
 // Pong View
 export class PongLocal extends HTMLElement
 {
@@ -1276,6 +1292,8 @@ export class PongLocal extends HTMLElement
         canvasContext.closePath();
         canvasContext.strokeStyle = "#F0F8FF";
         canvasContext.stroke();
+        if (isGameStarted == true)
+          requestAnimationFrame(drawElements);
     }
 
     function applyMove(e)
@@ -1294,13 +1312,13 @@ export class PongLocal extends HTMLElement
                 'BallDir': BallDirection, 'BallRoute': BallRoute,
             }
             if (e.key == "ArrowUp")
-                console.log("GO UP"), ToServer.move = "UP";
+                ToServer.move = "UP";
             else if (e.key == "ArrowDown")
-                console.log("GO DOWN"), ToServer.move = "DOWN";
+                ToServer.move = "DOWN";
             else if (e.key == 'w')
-                console.log("GO W"), ToServer.move = "W";
+                ToServer.move = "W";
             else if (e.key == 's')
-                console.log("GO S"), ToServer.move = "S";
+                ToServer.move = "S";
             socket.ws.send(JSON.stringify(ToServer));
           }
         }
@@ -1309,10 +1327,11 @@ export class PongLocal extends HTMLElement
     function start()
     {
       isGameStarted = true;
-      SaveInterval = setInterval(drawElements, 5);
+      // SaveInterval = setInterval(drawElements, 5);
+      requestAnimationFrame(drawElements);
     }
 
-    document.addEventListener("keyup", applyMove);
+    document.addEventListener("keydown", applyMove);
 
     socket.ws.onopen = function()
     {
@@ -1341,7 +1360,7 @@ export class PongLocal extends HTMLElement
     {
         isGameStarted = false;
         console.log("BYE FROM SERVER");
-        clearInterval(SaveInterval);
+        // clearInterval(SaveInterval);
     }
   }
   disconnectedCallback()
