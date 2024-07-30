@@ -1,5 +1,5 @@
 import { router } from "./service/router.js";
-import { MainUI, Sidebar, Game, Platform, Profile, Home, TTT, Login, Pong, ConfirmMsg, AbortButton } from "./view/mainUI.js";
+import { MainUI, Sidebar, Game, Platform, Profile, Home, TTT, Login, Pong, ConfirmMsg, AbortButton, PongLocal } from "./view/mainUI.js";
 
 window.prevState  = null;
 window.router     = router;
@@ -17,7 +17,8 @@ document.addEventListener("DOMContentLoaded", () =>
     customElements.define("ttt-view", TTT);
     customElements.define("pong-view", Pong);
     customElements.define("confirm-msg", ConfirmMsg);
-     customElements.define("abort-btn", AbortButton);
+    customElements.define("abort-btn", AbortButton);
+    customElements.define("po-local-view", PongLocal);
 
     window.component = {
         home: document.querySelector("home-view"),

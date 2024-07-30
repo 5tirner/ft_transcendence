@@ -536,7 +536,7 @@ export class Platform extends HTMLElement
         transition: all 0.1s ease, background 0.3s ease;
         font-family: "Press Start 2P", sans-serif !important;
       }
-      .local
+      .po-local
       {
           background: var(--coral) !important;
       }
@@ -654,7 +654,7 @@ export class Platform extends HTMLElement
                 <a href="/game" class="button po-btn multi common" game="pong">
                   Multiplayer
                 </a>
-                    <button class="button local">Local</button>
+                    <button class="button po-local">Local</button>
                 </div>
             </div>
             <div class="xo">
@@ -682,6 +682,7 @@ export class Platform extends HTMLElement
     </div>
     `;
     this.startGame = this.root.querySelectorAll(".common");
+    this.poLocal = this.root.querySelector('.po-local');
     this.startGame.forEach(elem => {
       elem.addEventListener("click", (e) => {
         e.preventDefault();
@@ -699,6 +700,9 @@ export class Platform extends HTMLElement
         gameSection.appendChild(document.createElement(`${gameToAppend}-view`));
       window.router.redirecto("/game");
     }
+    
+    this.poLocal.addEventListener('click', () => manipulateGameSection('po-local'));
+    
     window.onpopstate = (e) => {
       // console.log("bro state should change to: ", e.state.path);
       window.router.goto(e.state.path);
@@ -986,7 +990,6 @@ export class Pong extends HTMLElement
     let paddl1Y = 125;
     let paddl2Y = 125;
     let SaveInterval = 0;
-    let isThereDataFromServer = false;
     let BallRoute = "LINE";
     const canvas = this.root.querySelector("#board");
     const canvasContext = canvas.getContext('2d');
@@ -996,8 +999,30 @@ export class Pong extends HTMLElement
     canvasContext.shadowOffsetY = 2;
     socket.ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
 
+    function ballMove()
+    {
+      if (xBallPos <= 0 || xBallPos >= 800)
+        socket.ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
+      else
+      {
+        const ToServer =
+        {
+          'WhatIGiveYou': "BALL MOVE",
+          'gameStatus': "onprogress", 'move': "BALL",
+          'paddle1': paddl1Y, 'paddle2': paddl2Y,
+          'ballx': xBallPos, 'bally': yBallPos,
+          'BallDir': BallDirection, 'BallRoute': BallRoute,
+        }
+        socket.ws.send(JSON.stringify(ToServer));
+        // canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        // drawElements();
+      }
+    }
+
     function drawElements()
     {
+      canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+      ballMove();
       let Lineheight = 5;
       while (Lineheight < 300)
       {
@@ -1009,7 +1034,7 @@ export class Pong extends HTMLElement
           canvasContext.strokeStyle = "rgb(128, 9, 240)";
           canvasContext.stroke();
           Lineheight += 15;
-        }
+      }
         
       canvasContext.beginPath();
       canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
@@ -1035,111 +1060,32 @@ export class Pong extends HTMLElement
       canvasContext.closePath();
       canvasContext.strokeStyle = "#F0F8FF";
       canvasContext.stroke();
-      if (isThereDataFromServer == true)
-        isThereDataFromServer = false;
     }
 
-    this.applyDown = (e) => 
+    function applyMove(e)
     {
       if (isGameStarted == true)
       {
-        if (e.key == "ArrowUp")
+        if (e.key == "ArrowUp" || e.key == "ArrowDown")
         {
-          // // console.log("GO UP");
           const ToServer =
           {
-            'gameStatus': "onprogress", 'move': "UP",
+            'WhatIGiveYou': "PADDLES MOVE",
+            'gameStatus': "onprogress", 'move': "",
             'paddle1': paddl1Y, 'paddle2': paddl2Y,
             'ballx': xBallPos, 'bally': yBallPos,
-            'BallDir': BallDirection,
+            'BallDir': BallDirection, 'BallRoute': BallRoute,
           }
-          socket.ws.send(JSON.stringify(ToServer));
-        }
-        else if (e.key == "ArrowDown")
-        {
-          // console.log("GO DOWN");
-          const ToServer =
-          {
-            'gameStatus': "onprogress", 'move': "DOWN",
-            'paddle1': paddl1Y, 'paddle2': paddl2Y,
-            'ballx': xBallPos, 'bally': yBallPos,
-            'BallDir': BallDirection,
-          }
-          socket.ws.send(JSON.stringify(ToServer));
-        }
-          //else
-              // console.log("Do NOTHING");
-      }
-      //else
-          // console.log("Game Not Start Yet");
-    }
-
-    function ballMove()
-    {
-      if (isGameStarted == true)
-      {
-        if (BallRoute == "UP")
-        {
-          if (yBallPos >= 10)
-            yBallPos -= 10;
+          if (e.key == "ArrowUp")
+            console.log("GO UP"), ToServer.move = "UP";
           else
-            BallRoute = "DOWN";
-        }
-        else if (BallRoute == "DOWN")
-        {
-          // console.log("ADD TEN TO GO DOWN");
-          if (yBallPos + 10 <= 290)
-            console.log("ADDED"), yBallPos += 10;
-          else
-            BallRoute = "UP";
-        }
-
-        if (BallDirection == "LEFT")
-        {
-          xBallPos -= 10;
-          if (xBallPos == 30 && yBallPos + 10 >= paddl1Y && yBallPos - 10 <= paddl1Y+50)
-          {
-            // console.log("Ball Hit The Paddle One");
-            // console.log("Ball T = ", yBallPos, ", Paddle1y = ", paddl1Y)
-            if (yBallPos == paddl1Y + 25)
-              BallRoute = "LINE"; // console.log("BALL GO " + BallRoute);
-            else if (yBallPos < paddl1Y + 25)
-              BallRoute = "UP"; // console.log("BALL GO UP " + BallRoute);
-            else if (yBallPos > paddl1Y + 25)
-              BallRoute = "DOWN"; // console.log("BALL GO " + BallRoute);
-            BallDirection = "RIGHT";
-            xBallPos += 10;
-          }
-          else if (xBallPos < 20)
-            socket.ws.send(JSON.stringify({'gameStatus': "End", 'Side': "Left"}));
-        }
-        else if (BallDirection == "RIGHT")
-        {
-          xBallPos += 10;
-          if(xBallPos == 770 && yBallPos + 10 >= paddl2Y && yBallPos - 10 <= paddl2Y+50)
-          {
-            // console.log("Ball Hit The Paddle Two");
-            BallDirection = "LEFT";
-            xBallPos -= 10;
-            if (yBallPos == paddl2Y + 25)
-              BallRoute = "LINE"; // console.log("BALL GO " + BallRoute);
-            else if (yBallPos < paddl2Y + 25)
-              BallRoute = "UP"; // console.log("BALL GO UP " + BallRoute);
-            else if (yBallPos > paddl2Y + 25)
-              BallRoute = "DOWN"; // console.log("BALL GO " + BallRoute);
-          }
-          else if (xBallPos > 780)
-            socket.ws.send(JSON.stringify({'gameStatus': "End", 'Side': "Right"}));
-        }
-        if (isThereDataFromServer == false)
-        {
-          canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-          drawElements();
+            console.log("GO DOWN"), ToServer.move = "DOWN";
+          socket.ws.send(JSON.stringify(ToServer));
         }
       }
     }
 
-    document.addEventListener("keyup", this.applyDown);
+    document.addEventListener("keyup", applyMove);
 
     socket.ws.onopen = function(){
       console.log("User On Game");
@@ -1152,38 +1098,52 @@ export class Pong extends HTMLElement
       {
           if (dataPars.player2.length == 0)
           {
-              // console.log("Player1: " + dataPars.player1);
-              // console.log("Player2: " + dataPars.player2)
-              // console.log("RoomId: " + dataPars.roomid)
+              console.log("Player1: " + dataPars.player1);
+              console.log("Player2: " + dataPars.player2)
+              console.log("RoomId: " + dataPars.roomid)
               domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
               domElm2.innerHTML = "PLAYER2: Wait...";
           }
           else if (dataPars.player2.length != 0)
           {
               isGameStarted = true;
-              // console.log("Player1: " + dataPars.player1);
-              // console.log("Player2: " + dataPars.player2)
-              // console.log("RoomId: " + dataPars.roomid)
+              console.log("Player1: " + dataPars.player1);
+              console.log("Player2: " + dataPars.player2)
+              console.log("RoomId: " + dataPars.roomid)
               domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
               domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-              SaveInterval = setInterval(ballMove, 200);
+              SaveInterval = setInterval(drawElements, 1);
           }
       }
       else if (isGameStarted == true)
       {
-        // console.log("From Server During Game: ", dataPars);
-        isThereDataFromServer = true;
-        if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
-          paddl1Y = dataPars.paddle1;
-        if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
-          paddl2Y = dataPars.paddle2;
-        // xBallPos = dataPars.Ballx;
-        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        drawElements();
+        if (dataPars.MoveFor == "PADDLES MOVE")
+        {
+          if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
+            paddl1Y = dataPars.paddle1;
+          if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
+            paddl2Y = dataPars.paddle2;
+        }
+        else
+        {
+          xBallPos = dataPars.Ballx, yBallPos = dataPars.Bally;
+          BallDirection = dataPars.BallDir;
+          BallRoute = dataPars.BallRoute;
+        }
+        // {
+        //   // console.log("Paddle1: ", paddl1Y, " -> ", dataPars.paddle1)
+        //   // console.log("Paddle2: ", paddl2Y, " -> ", dataPars.paddle2)
+        //   // console.log(dataPars);
+        //   clearInterval(SaveInterval);
+        //   canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        //   drawElements();
+        //   SaveInterval = setInterval(ballMove, 10);
+        // }
       }
     }
     socket.ws.onclose = function()
     {
+      isGameStarted = false;
       console.log("BYE FROM SERVER");
       clearInterval(SaveInterval);
     }
@@ -1193,6 +1153,203 @@ export class Pong extends HTMLElement
     document.removeEventListener("keyup", this.applyDown);
   }
 }
+// Pong View
+export class PongLocal extends HTMLElement
+{
+  constructor()
+  {
+    super('foo');
+    this.root = this.attachShadow({mode: 'open'});
+  }
+  connectedCallback() {
+    this.setAttribute('id', 'pong-view');
+    this.root.innerHTML = `
+      <style>
+          canvas
+          {
+              display: block;
+              margin: 0 auto;
+              background-color: #ccb4e2b0;
+              border-color: rgb(128, 9, 240);
+              border-width: thin;
+              border-style: solid;
+              border-block-width: 10px;
+              border-radius: 5px;
+              filter: brightness(80%);
+          }
+      
+          body
+          {
+              background-color: rgb(175, 115, 231);
+          }
+          button
+          {
+              background-color: rgb(32, 5, 95);
+              color: rgb(207, 172, 240);
+          }
+      </style>
+      <div style="margin-bottom: 100px;">
+          <h1 style="text-align: center; color: rgb(128, 9, 240);">PONG-PONG-LOCAL</h1>
+      </div>
+  
+      <div style="margin-bottom: 200px;">
+        <canvas id="board" width="800" height="300">myCNV</canvas>
+      </div>
+  
+      <div style="text-align: center;">
+          <button class="start-btn">START PLAYING</button>
+      </div>
+      <abort-btn></abort-btn>
+      <confirm-msg game="pong"></confirm-msg>
+    `;
+    this.startBtn = this.root.querySelector('.start-btn');
+    let isGameStarted = false;
+    let xBallPos = 380, yBallPos = 150;
+    let BallDirection = "LEFT";
+    let paddl1Y = 125;
+    let paddl2Y = 125;
+    let SaveInterval = 0;
+    let BallRoute = "LINE";
+    const canvas = this.root.querySelector('#board');
+    const canvasContext = canvas.getContext('2d');
+    canvasContext.shadowColor = "black";
+    canvasContext.shadowBlur = 15;
+    canvasContext.shadowOffsetX = 5;
+    canvasContext.shadowOffsetY = 2;
+    socket.ws = new WebSocket('ws://' + location.host + '/localGameWs/');
+
+    function ballMove()
+    {
+        if (xBallPos <= 0 || xBallPos >= 800)
+            socket.ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
+        else
+        {
+            const ToServer =
+            {
+                'WhatIGiveYou': "BALL MOVE",
+                'gameStatus': "onprogress", 'move': "BALL",
+                'paddle1': paddl1Y, 'paddle2': paddl2Y,
+                'ballx': xBallPos, 'bally': yBallPos,
+                'BallDir': BallDirection, 'BallRoute': BallRoute,
+            }
+          socket.ws.send(JSON.stringify(ToServer));
+        }
+    }
+    this.startBtn.addEventListener('click', start);
+    function drawElements()
+    {
+        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        ballMove();
+        let Lineheight = 5;
+        while (Lineheight < 300)
+        {
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 4;
+            canvasContext.moveTo(400, Lineheight);
+            canvasContext.lineTo(400, Lineheight + 5);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "rgb(128, 9, 240)";
+            canvasContext.stroke();
+            Lineheight += 15;
+        }
+        canvasContext.beginPath();
+        canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
+        canvasContext.lineWidth = 1;
+        canvasContext.fillStyle = "#F0F8FF";
+        canvasContext.fill();
+        canvasContext.closePath();
+        canvasContext.strokeStyle = "rgb(140, 29, 260)";
+        canvasContext.stroke();
+
+        canvasContext.beginPath();
+        canvasContext.lineWidth = 8;
+        canvasContext.moveTo(20, paddl1Y)
+        canvasContext.lineTo(20, paddl1Y + 50);
+        canvasContext.closePath();
+        canvasContext.strokeStyle = "#F0F8FF";
+        canvasContext.stroke();
+    
+        canvasContext.beginPath();
+        canvasContext.lineWidth = 8;
+        canvasContext.moveTo(780, paddl2Y)
+        canvasContext.lineTo(780, paddl2Y + 50);
+        canvasContext.closePath();
+        canvasContext.strokeStyle = "#F0F8FF";
+        canvasContext.stroke();
+    }
+
+    function applyMove(e)
+    {
+        console.log(e.key);
+        if (isGameStarted == true)
+        {
+          if (e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "w" || e.key == 's')
+          {
+            const ToServer =
+            {
+                'WhatIGiveYou': "PADDLES MOVE",
+                'gameStatus': "onprogress", 'move': "",
+                'paddle1': paddl1Y, 'paddle2': paddl2Y,
+                'ballx': xBallPos, 'bally': yBallPos,
+                'BallDir': BallDirection, 'BallRoute': BallRoute,
+            }
+            if (e.key == "ArrowUp")
+                console.log("GO UP"), ToServer.move = "UP";
+            else if (e.key == "ArrowDown")
+                console.log("GO DOWN"), ToServer.move = "DOWN";
+            else if (e.key == 'w')
+                console.log("GO W"), ToServer.move = "W";
+            else if (e.key == 's')
+                console.log("GO S"), ToServer.move = "S";
+            socket.ws.send(JSON.stringify(ToServer));
+          }
+        }
+    }
+
+    function start()
+    {
+      isGameStarted = true;
+      SaveInterval = setInterval(drawElements, 1);
+    }
+
+    document.addEventListener("keyup", applyMove);
+
+    socket.ws.onopen = function()
+    {
+        console.log("User On Game");
+    }
+
+    socket.ws.onmessage = function(e)
+    {
+        const dataPars = JSON.parse(e.data)
+        if (dataPars.MoveFor == "PADDLES MOVE")
+        {
+          if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
+            paddl1Y = dataPars.paddle1;
+          if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
+            paddl2Y = dataPars.paddle2;
+        }
+        else
+        {
+          xBallPos = dataPars.Ballx, yBallPos = dataPars.Bally;
+          BallDirection = dataPars.BallDir;
+          BallRoute = dataPars.BallRoute;
+        }
+    }
+
+    socket.ws.onclose = function()
+    {
+        isGameStarted = false;
+        console.log("BYE FROM SERVER");
+        clearInterval(SaveInterval);
+    }
+  }
+  disconnectedCallback()
+  {
+    document.removeEventListener("keyup", this.applyDown);
+  }
+}
+
 // Setting View
 export class Setting extends HTMLElement
 {

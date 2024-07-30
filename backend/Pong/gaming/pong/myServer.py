@@ -92,17 +92,17 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                         paddle2 += 10
                 elif dataFromClient.get('move') == "BALL":
                     if BallRoute == "UP":
-                        if bally - 10 >= 10:
+                        if bally - 1 >= 10:
                             bally -= 1
                         else:
                             BallRoute = "DOWN"
                     elif BallRoute == "DOWN":
-                        if bally + 10 <= 290:
+                        if bally + 1 <= 290:
                             bally += 1
                         else:
                             BallRoute = "UP"
                     if (BallDirection == "LEFT"):
-                        ballx -= 2
+                        ballx -= 1
                         if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
                             # if (bally == paddle1 + 25):
                             #     BallRoute = "LINE"
@@ -113,7 +113,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                             BallDirection = "RIGHT"
                             # ballx += 10
                     elif (BallDirection == "RIGHT"):
-                        ballx += 2
+                        ballx += 1
                         if ballx == 770 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
                             # if (bally == paddle2 + 25):
                             #     BallRoute = "LINE"
