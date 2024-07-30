@@ -72,6 +72,14 @@ def PongGame(req):
     return render(req, 'game.html')
 
 @api_view(['GET'])
+def PongLocalGame(req):
+    AuthApiRes = isAuthUser(req)
+    if AuthApiRes is None:
+        print("This User Does Not Authenticated")
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
+    return render(req, 'local.html')
+
+@api_view(['GET'])
 def historic(req):
     print("-------------------------USER HESTORY----------------------------------")
     authApiResponse = isAuthUser(req)
