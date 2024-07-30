@@ -1122,6 +1122,7 @@ export class Pong extends HTMLElement
       {
         if (dataPars.MoveFor == "PADDLES MOVE")
         {
+          cancelAnimationFrame(drawElements);
           if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
             paddl1Y = dataPars.paddle1;
           if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
@@ -1224,7 +1225,7 @@ export class PongLocal extends HTMLElement
     let BallDirection = "LEFT";
     let paddl1Y = 125;
     let paddl2Y = 125;
-    let SaveInterval = 0;
+    // let SaveInterval = 0;
     let BallRoute = "LINE";
     const canvas = this.root.querySelector('#board');
     const canvasContext = canvas.getContext('2d');
@@ -1343,6 +1344,7 @@ export class PongLocal extends HTMLElement
         const dataPars = JSON.parse(e.data)
         if (dataPars.MoveFor == "PADDLES MOVE")
         {
+          cancelAnimationFrame(drawElements);
           if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
             paddl1Y = dataPars.paddle1;
           if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
