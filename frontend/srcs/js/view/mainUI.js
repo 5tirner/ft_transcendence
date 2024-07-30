@@ -1060,6 +1060,7 @@ export class Pong extends HTMLElement
       canvasContext.closePath();
       canvasContext.strokeStyle = "#F0F8FF";
       canvasContext.stroke();
+      requestAnimationFrame(drawElements);
     }
 
     function applyMove(e)
@@ -1085,7 +1086,7 @@ export class Pong extends HTMLElement
       }
     }
 
-    document.addEventListener("keyup", applyMove);
+    document.addEventListener("keydown", applyMove);
 
     socket.ws.onopen = function(){
       console.log("User On Game");
@@ -1112,7 +1113,8 @@ export class Pong extends HTMLElement
               console.log("RoomId: " + dataPars.roomid)
               domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
               domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-              SaveInterval = setInterval(drawElements, 5);
+              // SaveInterval = setInterval(drawElements, 5);
+              requestAnimationFrame(drawElements);
           }
       }
       else if (isGameStarted == true)
@@ -1145,7 +1147,7 @@ export class Pong extends HTMLElement
     {
       isGameStarted = false;
       console.log("BYE FROM SERVER");
-      clearInterval(SaveInterval);
+      // clearInterval(SaveInterval);
     }
   }
   disconnectedCallback()
@@ -1153,6 +1155,19 @@ export class Pong extends HTMLElement
     document.removeEventListener("keyup", this.applyDown);
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+// -------------------------------------------------- LOCAL --------------------
 // Pong View
 export class PongLocal extends HTMLElement
 {
@@ -1309,7 +1324,8 @@ export class PongLocal extends HTMLElement
     function start()
     {
       isGameStarted = true;
-      SaveInterval = setInterval(drawElements, 5);
+      // SaveInterval = setInterval(drawElements, 5);
+      requestAnimationFrame(drawElements);
     }
 
     document.addEventListener("keyup", applyMove);
@@ -1341,7 +1357,7 @@ export class PongLocal extends HTMLElement
     {
         isGameStarted = false;
         console.log("BYE FROM SERVER");
-        clearInterval(SaveInterval);
+        // clearInterval(SaveInterval);
     }
   }
   disconnectedCallback()
