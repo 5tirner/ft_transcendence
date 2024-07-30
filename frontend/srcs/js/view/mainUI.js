@@ -989,7 +989,7 @@ export class Pong extends HTMLElement
     let BallDirection = "LEFT";
     let paddl1Y = 125;
     let paddl2Y = 125;
-    let SaveInterval = 0;
+    // let SaveInterval = 0;
     let BallRoute = "LINE";
     const canvas = this.root.querySelector("#board");
     const canvasContext = canvas.getContext('2d');
@@ -1060,7 +1060,8 @@ export class Pong extends HTMLElement
       canvasContext.closePath();
       canvasContext.strokeStyle = "#F0F8FF";
       canvasContext.stroke();
-      requestAnimationFrame(drawElements);
+      if (isGameStarted == true)
+        requestAnimationFrame(drawElements);
     }
 
     function applyMove(e)
@@ -1291,6 +1292,8 @@ export class PongLocal extends HTMLElement
         canvasContext.closePath();
         canvasContext.strokeStyle = "#F0F8FF";
         canvasContext.stroke();
+        if (isGameStarted == true)
+          requestAnimationFrame(drawElements);
     }
 
     function applyMove(e)
@@ -1309,13 +1312,13 @@ export class PongLocal extends HTMLElement
                 'BallDir': BallDirection, 'BallRoute': BallRoute,
             }
             if (e.key == "ArrowUp")
-                console.log("GO UP"), ToServer.move = "UP";
+                ToServer.move = "UP";
             else if (e.key == "ArrowDown")
-                console.log("GO DOWN"), ToServer.move = "DOWN";
+                ToServer.move = "DOWN";
             else if (e.key == 'w')
-                console.log("GO W"), ToServer.move = "W";
+                ToServer.move = "W";
             else if (e.key == 's')
-                console.log("GO S"), ToServer.move = "S";
+                ToServer.move = "S";
             socket.ws.send(JSON.stringify(ToServer));
           }
         }
@@ -1328,7 +1331,7 @@ export class PongLocal extends HTMLElement
       requestAnimationFrame(drawElements);
     }
 
-    document.addEventListener("keyup", applyMove);
+    document.addEventListener("keydown", applyMove);
 
     socket.ws.onopen = function()
     {
