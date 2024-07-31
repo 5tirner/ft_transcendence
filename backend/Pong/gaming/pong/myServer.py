@@ -276,6 +276,7 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
             try:
                 await self.send_json(tofront)
             except:
+                print("Can't Send Data");
                 pass
         elif dataFromClient.get('gameStatus') == "End":
             await self.disconnect(1)
