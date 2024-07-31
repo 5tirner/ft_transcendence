@@ -276,21 +276,30 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
             try:
                 await self.send_json(tofront)
             except:
-                print("Can't Send Data");
+                print("Can't Send Data")
                 pass
         elif dataFromClient.get('gameStatus') == "End":
             await self.disconnect(1)
     async def disconnect(self, code):
         print(f"Local Game End")
-        await self.close()
+        await self.close(code)
 
 
 
 
 #Need To Hundle Tournement
 class pongTourServer(AsyncJsonWebsocketConsumer):
+    tournementGroups = list()
     async def connect(self):
         print(f"{self.scope['user']} Try To Connect On Tournement Server")
+        if len(self.tournementGroups) == 0:
+            print(f"{self.scope['user']} Is The First One Joined To This Tour")
+            self.tournementGroups.append(self.scope['user'])
+        elif len(self.tournementGroups) < 4:
+            print(f"{self.scope['user']} Will Joined To This List Of Players:")
+            print(f"-> {self.tournementGroups}")
+            self.tournementGroups.append(self.scope['user'])
+        # Need Logic When Tournement List Is Full
         await self.accept()
     async def receive(self, text_data, bytes_data=None):
         pass
