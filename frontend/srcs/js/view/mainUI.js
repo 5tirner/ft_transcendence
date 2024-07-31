@@ -1194,7 +1194,6 @@ export class PongLocal extends HTMLElement
               border-radius: 5px;
               filter: brightness(80%);
           }
-      
           body
           {
               background-color: rgb(175, 115, 231);
