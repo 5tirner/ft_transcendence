@@ -81,14 +81,14 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                 paddle2 = dataFromClient.get('paddle2') 
                 if dataFromClient.get('move') == "UP":
                     if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
-                        paddle1 -= 10
+                        paddle1 -= 20
                     else:
-                        paddle2 -= 10
+                        paddle2 -= 20
                 elif dataFromClient.get('move') == "DOWN":
                     if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
-                        paddle1 += 10
+                        paddle1 += 20
                     else:
-                        paddle2 += 10
+                        paddle2 += 20
                 elif dataFromClient.get('move') == "BALL":
                     if BallRoute == "UP":
                         if bally - 5 >= 10:
@@ -226,19 +226,19 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
             paddle2 = dataFromClient.get('paddle2')
             if dataFromClient.get('move') == "W":
                 # print(dataFromClient)
-                paddle1 -= 10
+                paddle1 -= 20
                 # print(f"UP From {dataFromClient.get('paddle1')} To {paddle1}")
             elif dataFromClient.get('move') == "S":
                 # print(dataFromClient)
-                paddle1 += 10
+                paddle1 += 20
                 # print(f"DOWN From {dataFromClient.get('paddle1')} To {paddle1}")
             elif dataFromClient.get('move') == "UP":
                 # print(dataFromClient)
-                paddle2 -= 10
+                paddle2 -= 20
                 # print(f"W From {dataFromClient.get('paddle2')} To {paddle2}")
             elif dataFromClient.get('move') == "DOWN":
                 # print(dataFromClient)
-                paddle2 += 10
+                paddle2 += 20
                 # print(f"S From {dataFromClient.get('paddle2')} To {paddle2}")
             if BallRoute == "UP":
                 if bally - 5 >= 10:
@@ -273,7 +273,10 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
                 'Ballx': ballx, 'Bally' :bally,
                 'BallDir': BallDirection, 'BallRoute': BallRoute,
             }
-            await self.send_json(tofront)
+            try:
+                await self.send_json(tofront)
+            except:
+                pass
         elif dataFromClient.get('gameStatus') == "End":
             await self.disconnect(1)
     async def disconnect(self, code):

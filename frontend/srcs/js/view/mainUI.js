@@ -1087,7 +1087,7 @@ export class Pong extends HTMLElement
       }
     }
 
-    document.addEventListener("keydown", applyMove);
+    document.addEventListener("keyup", applyMove);
 
     socket.ws.onopen = function(){
       console.log("User On Game");
@@ -1115,14 +1115,13 @@ export class Pong extends HTMLElement
               domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
               domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
               // SaveInterval = setInterval(drawElements, 5);
-              requestAnimationFrame(drawElements);
+              drawElements();
           }
       }
       else if (isGameStarted == true)
       {
         if (dataPars.MoveFor == "PADDLES MOVE")
         {
-          cancelAnimationFrame(drawElements);
           if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
             paddl1Y = dataPars.paddle1;
           if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
@@ -1149,6 +1148,7 @@ export class Pong extends HTMLElement
     {
       isGameStarted = false;
       console.log("BYE FROM SERVER");
+      window.stop();
       // clearInterval(SaveInterval);
     }
   }
@@ -1293,8 +1293,11 @@ export class PongLocal extends HTMLElement
         canvasContext.closePath();
         canvasContext.strokeStyle = "#F0F8FF";
         canvasContext.stroke();
-        if (isGameStarted == true)
-          requestAnimationFrame(drawElements);
+        setTimeout (() =>
+          {
+            if (isGameStarted == true)
+              requestAnimationFrame(drawElements);
+          }, 25);
     }
 
     function applyMove(e)
@@ -1329,7 +1332,7 @@ export class PongLocal extends HTMLElement
     {
       isGameStarted = true;
       // SaveInterval = setInterval(drawElements, 5);
-      requestAnimationFrame(drawElements);
+      drawElements();
     }
 
     document.addEventListener("keydown", applyMove);
@@ -1362,6 +1365,7 @@ export class PongLocal extends HTMLElement
     {
         isGameStarted = false;
         console.log("BYE FROM SERVER");
+        window.stop();
         // clearInterval(SaveInterval);
     }
   }
