@@ -974,7 +974,7 @@ export class Pong extends HTMLElement
       </div>
   
       <div style="margin-bottom: 50px;">
-        <canvas id="board" width="800" height="300">myCNV</canvas>
+        <canvas id="board" width="600" height="300">myCNV</canvas>
       </div>
   
       <h1 class="player1name" id="p1"></h1>
@@ -985,7 +985,7 @@ export class Pong extends HTMLElement
 
     const domElm1 = this.root.querySelector("#p1"), domElm2 = this.root.querySelector("#p2");
     let isGameStarted = false;
-    let xBallPos = 380, yBallPos = 150;
+    let xBallPos = 280, yBallPos = 150;
     let BallDirection = "LEFT";
     let paddl1Y = 125;
     let paddl2Y = 125;
@@ -1001,7 +1001,7 @@ export class Pong extends HTMLElement
 
     function ballMove()
     {
-      if (xBallPos <= 0 || xBallPos >= 800)
+      if (xBallPos <= 0 || xBallPos >= 600)
         socket.ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
       else
       {
@@ -1024,21 +1024,21 @@ export class Pong extends HTMLElement
       setTimeout(()=>{
       canvasContext.clearRect(0, 0, canvas.width, canvas.height);
       ballMove();
-      let Lineheight = 5;
-      while (Lineheight < 300)
-      {
-          canvasContext.beginPath();
-          canvasContext.lineWidth = 4;
-          canvasContext.moveTo(400, Lineheight);
-          canvasContext.lineTo(400, Lineheight + 5);
-          canvasContext.closePath();
-          canvasContext.strokeStyle = "rgb(128, 9, 240)";
-          canvasContext.stroke();
-          Lineheight += 15;
-      }
+      // let Lineheight = 5;
+      // while (Lineheight < 300)
+      // {
+      canvasContext.beginPath();
+      canvasContext.lineWidth = 4;
+      canvasContext.moveTo(300, 0);
+      canvasContext.lineTo(300, 300);
+      canvasContext.closePath();
+      canvasContext.strokeStyle = "rgb(128, 9, 240)";
+      canvasContext.stroke();
+      //     Lineheight += 15;
+      // }
         
       canvasContext.beginPath();
-      canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
+      canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.20);
       canvasContext.lineWidth = 1;
       canvasContext.fillStyle = "#F0F8FF";
       canvasContext.fill();
@@ -1056,8 +1056,8 @@ export class Pong extends HTMLElement
 
       canvasContext.beginPath();
       canvasContext.lineWidth = 8;
-      canvasContext.moveTo(780, paddl2Y)
-      canvasContext.lineTo(780, paddl2Y + 50);
+      canvasContext.moveTo(580, paddl2Y)
+      canvasContext.lineTo(580, paddl2Y + 50);
       canvasContext.closePath();
       canvasContext.strokeStyle = "#F0F8FF";
       canvasContext.stroke();
@@ -1272,7 +1272,7 @@ export class PongLocal extends HTMLElement
             Lineheight += 15;
         }
         canvasContext.beginPath();
-        canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
+        canvasContext.arc(xBallPos, yBallPos, 5, 0, 3.14*2);
         canvasContext.lineWidth = 1;
         canvasContext.fillStyle = "#F0F8FF";
         canvasContext.fill();
@@ -1297,7 +1297,7 @@ export class PongLocal extends HTMLElement
         canvasContext.stroke();
         if (isGameStarted == true)
           requestAnimationFrame(drawElements);
-      }, 1000/25);
+      });
     }
 
     function applyMove(e)
