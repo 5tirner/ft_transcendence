@@ -26,7 +26,16 @@ class myPongserver(AsyncJsonWebsocketConsumer):
             print("Vide Q")
             if self.playersOnMatchAndItsRoomId.get(player1) is not None:
                 await self.accept()
-                print(f"Can't Add Player {player1} To Q His Alraedy In Match")
+                player2 = self.playersOnMatchAndItsOppenent.get(player1)
+                destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+                    self.playersOnMatchAndItsRoomId,
+                    self.playersOnMatchAndItsDeriction, player1, player2)
+                print(f"Can't Add Player {player1} To Q His Already In Match")
+                user1 = pongGameInfo.objects.get(login=player1)
+                user1.loses+=1, user1.save()
+                user2 = pongGameInfo.objects.get(login=player2)
+                user2.wins +=1, user2.save()
+                print(f"And This Conuted As Lose To {player1} Against {player2}")
                 await self.close()
             else:
                 roomid = pongGameInfo.objects.get(login=self.scope["user"]).codeToPlay
@@ -46,6 +55,15 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                 await self.close()
             elif self.playersOnMatchAndItsRoomId.get(player2) is not None:
                 await self.accept()
+                destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+                    self.playersOnMatchAndItsRoomId,
+                    self.playersOnMatchAndItsDeriction, player1, player2)
+                user1 = pongGameInfo.objects.get(login=player1)
+                user1.loses+=1
+                user1.save()
+                user2 = pongGameInfo.objects.get(login=player2)
+                user2.wins +=1
+                user2.save()
                 print(f"Can't Add Player {player2} To Game With {player1} His Alraedy In Match")
                 await self.close()
             else:
@@ -130,6 +148,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                     }
                 await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnConnect', 'Data': toFront})
             elif dataFromClient.get('gameStatus') == "closed":
+                print(f"{self.scope['user']} Left")
                 if self.playersOnMatchAndItsOppenent.get(thisUser) is not None:
                     print(f"{thisUser} Will Lose The Match Cuase He Left The Game")
                     roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)

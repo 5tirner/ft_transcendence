@@ -1001,7 +1001,7 @@ export class Pong extends HTMLElement
 
     function ballMove()
     {
-      if (xBallPos <= 0 || xBallPos >= 600)
+      if (xBallPos < 20 || xBallPos > 580)
         socket.ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
       else
       {
@@ -1022,11 +1022,8 @@ export class Pong extends HTMLElement
     function drawElements()
     {
       setTimeout(()=>{
-      canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+      canvasContext.clearRect(0, 0, canvas.width,canvas.height);
       ballMove();
-      // let Lineheight = 5;
-      // while (Lineheight < 300)
-      // {
       canvasContext.beginPath();
       canvasContext.lineWidth = 4;
       canvasContext.moveTo(300, 0);
@@ -1034,9 +1031,7 @@ export class Pong extends HTMLElement
       canvasContext.closePath();
       canvasContext.strokeStyle = "rgb(128, 9, 240)";
       canvasContext.stroke();
-      //     Lineheight += 15;
-      // }
-        
+
       canvasContext.beginPath();
       canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.20);
       canvasContext.lineWidth = 0.5;
@@ -1072,6 +1067,7 @@ export class Pong extends HTMLElement
       {
         if (e.key == "ArrowUp" || e.key == "ArrowDown")
         {
+          cancelAnimationFrame(drawElements);
           const ToServer =
           {
             'WhatIGiveYou': "PADDLES MOVE",
@@ -1145,8 +1141,10 @@ export class Pong extends HTMLElement
         // }
       }
     }
+
     socket.ws.onclose = function()
     {
+      cancelAnimationFrame(drawElements);
       isGameStarted = false;
       console.log("BYE FROM SERVER");
       window.stop();
@@ -1302,6 +1300,7 @@ export class PongLocal extends HTMLElement
         {
           if (e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "w" || e.key == 's')
           {
+            cancelAnimationFrame(drawElements);
             const ToServer =
             {
                 'WhatIGiveYou': "PADDLES MOVE",
@@ -1342,7 +1341,6 @@ export class PongLocal extends HTMLElement
         const dataPars = JSON.parse(e.data)
         if (dataPars.MoveFor == "PADDLES MOVE")
         {
-          cancelAnimationFrame(drawElements);
           if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
             paddl1Y = dataPars.paddle1;
           if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
@@ -1358,6 +1356,7 @@ export class PongLocal extends HTMLElement
 
     socket.ws.onclose = function()
     {
+        cancelAnimationFrame(drawElements);
         isGameStarted = false;
         console.log("BYE FROM SERVER");
         window.stop();
