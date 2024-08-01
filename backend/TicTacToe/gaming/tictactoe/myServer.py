@@ -44,6 +44,7 @@ class myServerOnGame(AsyncWebsocketConsumer):
         if len(self.playerWantsToPlay) == 0:
             player1, player2 = self.scope['user'], ""
             if self.playersOnMatchAndItsRoomId.get(player1) is not None:
+                await self.accept()
                 print(f"Can't Add Player {player1} To Q His Alraedy In Match")
                 await self.close()
             else:
@@ -60,9 +61,11 @@ class myServerOnGame(AsyncWebsocketConsumer):
         else:
             player1, player2 = self.playerWantsToPlay[0], self.scope['user']
             if player1 == player2:
+                await self.accept()
                 print(f"{player1} Deux Fois")
                 await self.close()
             elif self.playersOnMatchAndItsRoomId.get(player2) is not None:
+                await self.accept()
                 print(f"Can't Add Player {player2} To Game With {player1} His Alraedy In Match")
                 await self.close()
             else:

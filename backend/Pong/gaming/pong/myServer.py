@@ -14,8 +14,8 @@ class myPongserver(AsyncJsonWebsocketConsumer):
     async def connect(self):
         print(f'----------User On Game Is: {self.scope["user"]}-------')
         try:
-            print(f"Welcome Back {self.scope['user']}.")
             pongGameInfo.objects.get(login=self.scope['user'])
+            print(f"Welcome Back {self.scope['user']}.")
         except:
             print(f"It's Your First Time Here {self.scope['user']}! Welcome.")
             addUserToDB = pongGameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
@@ -25,6 +25,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
             player1, player2 = self.scope['user'], ""
             print("Vide Q")
             if self.playersOnMatchAndItsRoomId.get(player1) is not None:
+                await self.accept()
                 print(f"Can't Add Player {player1} To Q His Alraedy In Match")
                 await self.close()
             else:
@@ -40,9 +41,11 @@ class myPongserver(AsyncJsonWebsocketConsumer):
             player1, player2 = self.playerWantsToPlay[0], self.scope['user']
             print("Player Waiting...")
             if player1 == player2:
+                await self.accept()
                 print(f"{player1} Deux Fois")
                 await self.close()
             elif self.playersOnMatchAndItsRoomId.get(player2) is not None:
+                await self.accept()
                 print(f"Can't Add Player {player2} To Game With {player1} His Alraedy In Match")
                 await self.close()
             else:
@@ -288,13 +291,13 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
         await self.close(code)
 
 
-
-
 #Need To Hundle Tournement
 class pongTourServer(AsyncJsonWebsocketConsumer):
     tournementGroups = list(dict())
+    palyerAndItsRoomId = dict()
     async def connect(self):
         print(f"{self.scope['user']} Try To Connect On Tournement Server")
+
         if len(self.tournementGroups) == 0:
             print(f"{self.scope['user']} Is The First One Joined To This Tour")
             self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
@@ -304,6 +307,7 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
             self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
             if len(self.tournementGroups) == 4:
                 print(f"The Players Of This Tournement Are:\n{self.tournementGroups}")
+                self.tournementGroups.clear()
         await self.accept()
     async def receive(self, text_data, bytes_data=None):
         pass
