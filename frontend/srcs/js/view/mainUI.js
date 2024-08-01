@@ -1021,6 +1021,7 @@ export class Pong extends HTMLElement
 
     function drawElements()
     {
+      setTimeout(()=>{
       canvasContext.clearRect(0, 0, canvas.width, canvas.height);
       ballMove();
       let Lineheight = 5;
@@ -1062,6 +1063,7 @@ export class Pong extends HTMLElement
       canvasContext.stroke();
       if (isGameStarted == true)
         requestAnimationFrame(drawElements);
+      });
     }
 
     function applyMove(e)
@@ -1254,6 +1256,7 @@ export class PongLocal extends HTMLElement
     this.startBtn.addEventListener('click', start);
     function drawElements()
     {
+      setTimeout(()=>{
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
         ballMove();
         let Lineheight = 5;
@@ -1294,6 +1297,7 @@ export class PongLocal extends HTMLElement
         canvasContext.stroke();
         if (isGameStarted == true)
           requestAnimationFrame(drawElements);
+      }, 1000/25);
     }
 
     function applyMove(e)
