@@ -161,6 +161,9 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                 if self.playersOnMatchAndItsDeriction.get(thisUser) == "Left" and dataFromClient.get('Side') == "LEFT":
                     loser = thisUser
                     winner = oppenent
+                elif self.playersOnMatchAndItsDeriction.get(thisUser) == "Right" and dataFromClient.get('Side') == "RIGHT":
+                    loser = thisUser
+                    winner = oppenent
                 else:
                     winner = thisUser
                     loser = oppenent
@@ -279,7 +282,7 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
                 print("Can't Send Data")
                 pass
         elif dataFromClient.get('gameStatus') == "End":
-            await self.disconnect(1)
+            await self.disconnect(1000)
     async def disconnect(self, code):
         print(f"Local Game End")
         await self.close(code)
@@ -289,17 +292,18 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
 
 #Need To Hundle Tournement
 class pongTourServer(AsyncJsonWebsocketConsumer):
-    tournementGroups = list()
+    tournementGroups = list(dict())
     async def connect(self):
         print(f"{self.scope['user']} Try To Connect On Tournement Server")
         if len(self.tournementGroups) == 0:
             print(f"{self.scope['user']} Is The First One Joined To This Tour")
-            self.tournementGroups.append(self.scope['user'])
+            self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
         elif len(self.tournementGroups) < 4:
             print(f"{self.scope['user']} Will Joined To This List Of Players:")
             print(f"-> {self.tournementGroups}")
-            self.tournementGroups.append(self.scope['user'])
-        # Need Logic When Tournement List Is Full
+            self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
+            if len(self.tournementGroups) == 4:
+                print(f"The Players Of This Tournement Are:\n{self.tournementGroups}")
         await self.accept()
     async def receive(self, text_data, bytes_data=None):
         pass

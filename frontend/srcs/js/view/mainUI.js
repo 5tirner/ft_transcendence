@@ -1292,11 +1292,8 @@ export class PongLocal extends HTMLElement
         canvasContext.closePath();
         canvasContext.strokeStyle = "#F0F8FF";
         canvasContext.stroke();
-        setTimeout (() =>
-          {
-            if (isGameStarted == true)
-              requestAnimationFrame(drawElements);
-          }, 25);
+        if (isGameStarted == true)
+          requestAnimationFrame(drawElements);
     }
 
     function applyMove(e)
