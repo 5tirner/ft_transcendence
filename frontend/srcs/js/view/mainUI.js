@@ -1002,8 +1002,11 @@ export class Pong extends HTMLElement
     function ballMove()
     {
       if (xBallPos < 20 || xBallPos > 580)
+      {
+        isGameStarted = false;
         socket.ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
-      else
+      }
+      else if (isGameStarted == true)
       {
         const ToServer =
         {
@@ -1019,7 +1022,7 @@ export class Pong extends HTMLElement
       }
     }
 
-    function drawElements()
+    async function drawElements()
     {
       setTimeout(()=>{
       canvasContext.clearRect(0, 0, canvas.width,canvas.height);
@@ -1057,8 +1060,8 @@ export class Pong extends HTMLElement
       canvasContext.strokeStyle = "#F0F8FF";
       canvasContext.stroke();
       if (isGameStarted == true)
-        requestAnimationFrame(drawElements);
-      });
+        drawElements();
+      }, 1);
     }
 
     function applyMove(e)
@@ -1067,7 +1070,6 @@ export class Pong extends HTMLElement
       {
         if (e.key == "ArrowUp" || e.key == "ArrowDown")
         {
-          cancelAnimationFrame(drawElements);
           const ToServer =
           {
             'WhatIGiveYou': "PADDLES MOVE",
@@ -1144,7 +1146,7 @@ export class Pong extends HTMLElement
 
     socket.ws.onclose = function()
     {
-      cancelAnimationFrame(drawElements);
+      clearTimeout(drawElements);
       isGameStarted = false;
       console.log("BYE FROM SERVER");
       window.stop();
@@ -1212,7 +1214,7 @@ export class PongLocal extends HTMLElement
       </div>
   
       <div style="text-align: center;">
-          <button class="start-btn">START PLAYING</button>
+          <button onclick="style.display = 'none'" class="start-btn">START PLAYING</button>
       </div>
       <abort-btn></abort-btn>
       <confirm-msg game="pong"></confirm-msg>
@@ -1236,8 +1238,12 @@ export class PongLocal extends HTMLElement
     function ballMove()
     {
         if (xBallPos <= 0 || xBallPos >= 600)
-            socket.ws.send(JSON.stringify({'gameStatus': 'End'}));
-        else
+        {
+          // clearTimeout(drawElements);
+          isGameStarted = false;
+          socket.ws.send(JSON.stringify({'gameStatus': 'End'}));
+        }
+        else if (isGameStarted == true)
         {
             const ToServer =
             {
@@ -1251,7 +1257,7 @@ export class PongLocal extends HTMLElement
         }
     }
     this.startBtn.addEventListener('click', start);
-    function drawElements()
+    async function drawElements()
     {
       setTimeout(()=>{
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
@@ -1288,9 +1294,10 @@ export class PongLocal extends HTMLElement
         canvasContext.closePath();
         canvasContext.strokeStyle = "#F0F8FF";
         canvasContext.stroke();
+        // console.log(isGameStarted);
         if (isGameStarted == true)
-          requestAnimationFrame(drawElements);
-      });
+          drawElements();
+      }, 1);
     }
 
     function applyMove(e)
@@ -1300,7 +1307,6 @@ export class PongLocal extends HTMLElement
         {
           if (e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "w" || e.key == 's')
           {
-            cancelAnimationFrame(drawElements);
             const ToServer =
             {
                 'WhatIGiveYou': "PADDLES MOVE",
@@ -1325,11 +1331,10 @@ export class PongLocal extends HTMLElement
     function start()
     {
       isGameStarted = true;
-      // SaveInterval = setInterval(drawElements, 5);
       drawElements();
     }
 
-    document.addEventListener("keydown", applyMove);
+    document.addEventListener("keyup", applyMove);
 
     socket.ws.onopen = function()
     {
@@ -1356,11 +1361,9 @@ export class PongLocal extends HTMLElement
 
     socket.ws.onclose = function()
     {
-        cancelAnimationFrame(drawElements);
-        isGameStarted = false;
+        clearTimeout(drawElements);
+        // isGameStarted = false;
         console.log("BYE FROM SERVER");
-        window.stop();
-        // clearInterval(SaveInterval);
     }
   }
   disconnectedCallback()

@@ -105,10 +105,6 @@ class myServerOnGame(AsyncWebsocketConsumer):
                 user2 = gameInfo.objects.get(login=player2)
                 user2.gamesPlayed += 1
                 user2.save()
-                if player1 == "ysabr":
-                    player1 = "M9ayam Sba3"
-                elif player2 == "ysabr":
-                    player2 = "M9ayam Sba3"
                 toFrontEnd = json.dumps({'player1': player1, 'player2': player2, 'roomid': roomid})
                 print(f"Player1: {player1}, Player2: {player2}, RoomId: {roomid}")
                 await self.channel_layer.group_send(roomid, {'type': 'ToFrontOnConnect', 'Data': toFrontEnd})
