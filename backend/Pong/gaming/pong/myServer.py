@@ -24,7 +24,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
         if len(self.playerWantsToPlay) == 0:
             player1, player2 = self.scope['user'], ""
             print("Vide Q")
-            if self.playersOnMatchAndItsRoomId.get(player1) is not None:
+            if self.playersOnMatchAndItsOppenent.get(player1) is not None:
                 await self.accept()
                 player2 = self.playersOnMatchAndItsOppenent.get(player1)
                 destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
@@ -32,9 +32,11 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                     self.playersOnMatchAndItsDeriction, player1, player2)
                 print(f"Can't Add Player {player1} To Q His Already In Match")
                 user1 = pongGameInfo.objects.get(login=player1)
-                user1.loses+=1, user1.save()
+                user1.loses+=1
+                user1.save()
                 user2 = pongGameInfo.objects.get(login=player2)
-                user2.wins +=1, user2.save()
+                user2.wins +=1
+                user2.save()
                 print(f"And This Conuted As Lose To {player1} Against {player2}")
                 await self.close()
             else:
@@ -51,10 +53,15 @@ class myPongserver(AsyncJsonWebsocketConsumer):
             print("Player Waiting...")
             if player1 == player2:
                 await self.accept()
+                try:
+                    self.playerWantsToPlay.remove(player1)
+                except:
+                    pass
                 print(f"{player1} Deux Fois")
                 await self.close()
             elif self.playersOnMatchAndItsRoomId.get(player2) is not None:
                 await self.accept()
+                print(f"Can't Add Player {player2} To Game With {player1} His Alraedy In Match")
                 destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
                     self.playersOnMatchAndItsRoomId,
                     self.playersOnMatchAndItsDeriction, player1, player2)
@@ -64,7 +71,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                 user2 = pongGameInfo.objects.get(login=player2)
                 user2.wins +=1
                 user2.save()
-                print(f"Can't Add Player {player2} To Game With {player1} His Alraedy In Match")
+                print(f"And This Conuted As Lose To {player1} Against {player2}")
                 await self.close()
             else:
                 print(f"{self.scope['user']} Will Joinned To The Player {self.playerWantsToPlay[0]}")
