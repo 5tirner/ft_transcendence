@@ -13,7 +13,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
     playersOnMatchAndItsRoomId = dict()
     playersOnMatchAndItsOppenent = dict()
     playersOnMatchAndItsDeriction = dict()
-    randomAdd = random.choice([1, 2, 5])
+    # randomAdd = random.choice([1, 2, 5])
     async def connect(self):
         print(f'----------User On Game Is: {self.scope["user"]}-------')
         try:
@@ -122,33 +122,31 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                         paddle2 += 20
                 elif dataFromClient.get('move') == "BALL":
                     if BallRoute == "UP":
-                        if bally - self.randomAdd >= 10:
-                            bally -= self.randomAdd
+                        if bally - 2 >= 10:
+                            bally -= 2
                         else:
                             BallRoute = "DOWN"
                     elif BallRoute == "DOWN":
-                        if bally + self.randomAdd <= 290:
-                            bally += self.randomAdd
+                        if bally + 2 <= 290:
+                            bally += 2
                         else:
                             BallRoute = "UP"
                     if (BallDirection == "LEFT"):
-                        ballx -= 1
+                        ballx -= 2
                         if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
                             if (bally < paddle1 + 25):
                                 BallRoute = "UP"
                             elif (bally > paddle1 + 25):
                                 BallRoute = "DOWN"
                             BallDirection = "RIGHT"
-                            self.randomAdd = random.choice([1, 2, 5])
                     elif (BallDirection == "RIGHT"):
-                        ballx += 1
+                        ballx += 2
                         if ballx == 570 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
                             if (bally < paddle2 + 25):
                                 BallRoute = "UP"
                             elif (bally > paddle2 + 25):
                                 BallRoute = "DOWN"
                             BallDirection = "LEFT"
-                            self.randomAdd = random.choice([1, 2, 5])
                 toFront = {
                         'MoveFor': dataFromClient.get('WhatIGiveYou'),
                         'paddle1': paddle1,
@@ -329,9 +327,10 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
 #Need To Hundle Tournement
 class pongTourServer(AsyncJsonWebsocketConsumer):
     tournementGroups = list(dict())
-    palyerAndItsRoomId = dict()
+    palyerAndHisRoomId = dict()
+    playerAndHisOppenent = dict()
     async def connect(self):
-        print(f"{self.scope['user']} Try To Connect On Tournement Server")
+        print(f"[-----{self.scope['user']} Try To Connect On Tournement Server].------")
 
         if len(self.tournementGroups) == 0:
             print(f"{self.scope['user']} Is The First One Joined To This Tour")
@@ -341,10 +340,48 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
             print(f"-> {self.tournementGroups}")
             self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
             if len(self.tournementGroups) == 4:
-                print(f"The Players Of This Tournement Are:\n{self.tournementGroups}")
-                self.tournementGroups.clear()
+                player1 = self.tournementGroups[0].get('name')
+                player2 = self.tournementGroups[1].get('name')
+                player3 = self.tournementGroups[2].get('name')
+                player4 = self.tournementGroups[3].get('name')
+                print("---------------------- Players On Tour ---------------------")
+                print(player1)
+                print(player2)
+                print(player3)
+                print(player4)
+                self.palyerAndHisRoomId[player1] = pongGameInfo.objects.get(login=player1).codeToPlay
+                self.palyerAndHisRoomId[player3] = pongGameInfo.objects.get(login=player1).codeToPlay
+                self.playerAndHisOppenent[player1] = player3
+                self.playerAndHisOppenent[player3] = player1
+                await self.channel_layer.group_add(self.palyerAndHisRoomId.get(player1),
+                                             self.tournementGroups[0].get('channel_name'))
+                await self.channel_layer.group_add(self.palyerAndHisRoomId.get(player1),
+                                             self.tournementGroups[2].get('channel_name'))
+                self.palyerAndHisRoomId[player2] = pongGameInfo.objects.get(login=player2).codeToPlay
+                self.palyerAndHisRoomId[player4] = pongGameInfo.objects.get(login=player2).codeToPlay
+                self.playerAndHisOppenent[player2] = player4
+                self.playerAndHisOppenent[player4] = player2
+                await self.channel_layer.group_add(self.palyerAndHisRoomId.get(player2),
+                                             self.tournementGroups[1].get('channel_name'))
+                await self.channel_layer.group_add(self.palyerAndHisRoomId.get(player2),
+                                             self.tournementGroups[3].get('channel_name'))
         await self.accept()
+        if len(self.tournementGroups) == 4:
+            self.tournementGroups.clear()
+            try:
+                toFront1 = {'player1': player1, 'player2': player3}
+                toFront2 = {'player1': player2, 'player2': player4}
+                await self.channel_layer.group_send(self.palyerAndHisRoomId.get(player1),
+                        {'type': 'toClinets', 'Data': toFront1})
+                await self.channel_layer.group_send(self.palyerAndHisRoomId.get(player2),
+                        {'type': 'toClinets', 'Data': toFront2})
+            except:
+                pass
+
     async def receive(self, text_data, bytes_data=None):
         pass
     async def disconnect(self, code):
         pass
+
+    async def toClinets(self, data):
+        await self.send_json(data['Data'])
