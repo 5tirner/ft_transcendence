@@ -1720,6 +1720,11 @@ export class ConfirmMsg extends HTMLElement
     }
     this.cancel.addEventListener("click", this.fcancel);
     this.leave.addEventListener("click", this.fleave);
+    
+    window.onbeforeunload = function()
+    {
+      aborting(socket.ws, 'game');
+    }
   }
   disconnectedCallback()
   {
@@ -1727,6 +1732,7 @@ export class ConfirmMsg extends HTMLElement
     this.cancel.removeEventListener("click", this.fcancel);
     this.leave.removeEventListener("click", this.fleave);
     window.onpopstate = null;
+    window.onbeforeunload = null;
   }
 }
 // Abort Game Button
