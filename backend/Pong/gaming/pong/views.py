@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework import response, status
 from .serializer import pongGameInfoSerializer
-from .models import pongGameInfo, pongHistory
+from .models import pongGameInfo, pongHistory, TournamentInfo
 from .isAuthUser import isAuthUser
 from .generateCode import roomcode
 from django.http import JsonResponse
@@ -92,6 +92,22 @@ def historic(req):
     for i in pongHistory.objects.all().values():
         if i.get('you') == name:
             allMatches[f"match{matchNumbers}"] = i
+            matchNumbers += 1
+    return JsonResponse(json.dumps(allMatches), safe=False)
+
+@api_view(['GET'])
+def TournamentHistory(req):
+    print("-------------------------USER Tournament----------------------------------")
+    authApiResponse = isAuthUser(req)
+    if authApiResponse is None:
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
+    user_infos  = authApiResponse.json().get('data')
+    name = user_infos.get('username')
+    allMatches = dict(dict())
+    matchNumbers = 1
+    for i in TournamentInfo.objects.all().values():
+        if i.get('you') == name:
+            allMatches[f"Tournament{matchNumbers}"] = i
             matchNumbers += 1
     return JsonResponse(json.dumps(allMatches), safe=False)
 
