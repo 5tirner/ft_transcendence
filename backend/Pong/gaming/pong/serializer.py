@@ -5,3 +5,6 @@ class pongGameInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = pongGameInfo
         fields = ['login', 'wins', 'loses', 'draws', 'gamesPlayed', 'codeToPlay']
+
+
+
