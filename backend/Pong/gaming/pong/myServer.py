@@ -3,6 +3,8 @@ from .models import pongGameInfo, pongHistory
 import os
 from .destroyGameInfo import destroyThisGameInformations
 from .generateCode import roomcode
+import random
+from asyncio import sleep
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
@@ -11,11 +13,12 @@ class myPongserver(AsyncJsonWebsocketConsumer):
     playersOnMatchAndItsRoomId = dict()
     playersOnMatchAndItsOppenent = dict()
     playersOnMatchAndItsDeriction = dict()
+    randomAdd = random.choice([1, 2, 5])
     async def connect(self):
         print(f'----------User On Game Is: {self.scope["user"]}-------')
         try:
-            print(f"Welcome Back {self.scope['user']}.")
             pongGameInfo.objects.get(login=self.scope['user'])
+            print(f"Welcome Back {self.scope['user']}.")
         except:
             print(f"It's Your First Time Here {self.scope['user']}! Welcome.")
             addUserToDB = pongGameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
@@ -24,8 +27,20 @@ class myPongserver(AsyncJsonWebsocketConsumer):
         if len(self.playerWantsToPlay) == 0:
             player1, player2 = self.scope['user'], ""
             print("Vide Q")
-            if self.playersOnMatchAndItsRoomId.get(player1) is not None:
-                print(f"Can't Add Player {player1} To Q His Alraedy In Match")
+            if self.playersOnMatchAndItsOppenent.get(player1) is not None:
+                await self.accept()
+                player2 = self.playersOnMatchAndItsOppenent.get(player1)
+                destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+                    self.playersOnMatchAndItsRoomId,
+                    self.playersOnMatchAndItsDeriction, player1, player2)
+                print(f"Can't Add Player {player1} To Q His Already In Match")
+                user1 = pongGameInfo.objects.get(login=player1)
+                user1.loses+=1
+                user1.save()
+                user2 = pongGameInfo.objects.get(login=player2)
+                user2.wins +=1
+                user2.save()
+                print(f"And This Conuted As Lose To {player1} Against {player2}")
                 await self.close()
             else:
                 roomid = pongGameInfo.objects.get(login=self.scope["user"]).codeToPlay
@@ -40,10 +55,26 @@ class myPongserver(AsyncJsonWebsocketConsumer):
             player1, player2 = self.playerWantsToPlay[0], self.scope['user']
             print("Player Waiting...")
             if player1 == player2:
+                await self.accept()
+                try:
+                    self.playerWantsToPlay.remove(player1)
+                except:
+                    pass
                 print(f"{player1} Deux Fois")
                 await self.close()
             elif self.playersOnMatchAndItsRoomId.get(player2) is not None:
+                await self.accept()
                 print(f"Can't Add Player {player2} To Game With {player1} His Alraedy In Match")
+                destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+                    self.playersOnMatchAndItsRoomId,
+                    self.playersOnMatchAndItsDeriction, player1, player2)
+                user1 = pongGameInfo.objects.get(login=player1)
+                user1.loses+=1
+                user1.save()
+                user2 = pongGameInfo.objects.get(login=player2)
+                user2.wins +=1
+                user2.save()
+                print(f"And This Conuted As Lose To {player1} Against {player2}")
                 await self.close()
             else:
                 print(f"{self.scope['user']} Will Joinned To The Player {self.playerWantsToPlay[0]}")
@@ -81,41 +112,43 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                 paddle2 = dataFromClient.get('paddle2') 
                 if dataFromClient.get('move') == "UP":
                     if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
-                        paddle1 -= 10
+                        paddle1 -= 20
                     else:
-                        paddle2 -= 10
+                        paddle2 -= 20
                 elif dataFromClient.get('move') == "DOWN":
                     if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
-                        paddle1 += 10
+                        paddle1 += 20
                     else:
-                        paddle2 += 10
+                        paddle2 += 20
                 elif dataFromClient.get('move') == "BALL":
                     if BallRoute == "UP":
-                        if bally - 5 >= 10:
-                            bally -= 5
+                        if bally - self.randomAdd >= 10:
+                            bally -= self.randomAdd
                         else:
                             BallRoute = "DOWN"
                     elif BallRoute == "DOWN":
-                        if bally + 5 <= 290:
-                            bally += 5
+                        if bally + self.randomAdd <= 290:
+                            bally += self.randomAdd
                         else:
                             BallRoute = "UP"
                     if (BallDirection == "LEFT"):
-                        ballx -= 5
+                        ballx -= 1
                         if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
                             if (bally < paddle1 + 25):
                                 BallRoute = "UP"
                             elif (bally > paddle1 + 25):
                                 BallRoute = "DOWN"
                             BallDirection = "RIGHT"
+                            self.randomAdd = random.choice([1, 2, 5])
                     elif (BallDirection == "RIGHT"):
-                        ballx += 5
-                        if ballx == 770 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
+                        ballx += 1
+                        if ballx == 570 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
                             if (bally < paddle2 + 25):
                                 BallRoute = "UP"
                             elif (bally > paddle2 + 25):
                                 BallRoute = "DOWN"
                             BallDirection = "LEFT"
+                            self.randomAdd = random.choice([1, 2, 5])
                 toFront = {
                         'MoveFor': dataFromClient.get('WhatIGiveYou'),
                         'paddle1': paddle1,
@@ -127,6 +160,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                     }
                 await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnConnect', 'Data': toFront})
             elif dataFromClient.get('gameStatus') == "closed":
+                print(f"{self.scope['user']} Left")
                 if self.playersOnMatchAndItsOppenent.get(thisUser) is not None:
                     print(f"{thisUser} Will Lose The Match Cuase He Left The Game")
                     roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
@@ -159,6 +193,9 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                 print(f"Player Side {self.playersOnMatchAndItsDeriction.get(thisUser)}")
                 print(f"Goal Side {dataFromClient.get('Side')}")
                 if self.playersOnMatchAndItsDeriction.get(thisUser) == "Left" and dataFromClient.get('Side') == "LEFT":
+                    loser = thisUser
+                    winner = oppenent
+                elif self.playersOnMatchAndItsDeriction.get(thisUser) == "Right" and dataFromClient.get('Side') == "RIGHT":
                     loser = thisUser
                     winner = oppenent
                 else:
@@ -213,6 +250,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
         await self.close()
 
 class pongLocalServer(AsyncJsonWebsocketConsumer):
+    randomAdd = random.choice([1, 2, 5])
     async def connect(self):
         print(f"{self.scope['user']} Try To Play Local Server")
         await self.accept()
@@ -226,46 +264,49 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
             paddle2 = dataFromClient.get('paddle2')
             if dataFromClient.get('move') == "W":
                 # print(dataFromClient)
-                paddle1 -= 10
+                paddle1 -= 20
                 # print(f"UP From {dataFromClient.get('paddle1')} To {paddle1}")
             elif dataFromClient.get('move') == "S":
                 # print(dataFromClient)
-                paddle1 += 10
+                paddle1 += 20
                 # print(f"DOWN From {dataFromClient.get('paddle1')} To {paddle1}")
             elif dataFromClient.get('move') == "UP":
                 # print(dataFromClient)
-                paddle2 -= 10
+                paddle2 -= 20
                 # print(f"W From {dataFromClient.get('paddle2')} To {paddle2}")
             elif dataFromClient.get('move') == "DOWN":
                 # print(dataFromClient)
-                paddle2 += 10
+                paddle2 += 20
                 # print(f"S From {dataFromClient.get('paddle2')} To {paddle2}")
-            if BallRoute == "UP":
-                if bally - 5 >= 10:
-                    bally -= 5
-                else:
-                    BallRoute = "DOWN"
-            elif BallRoute == "DOWN":
-                if bally + 5 <= 290:
-                    bally += 5
-                else:
-                    BallRoute = "UP"
-            if (BallDirection == "LEFT"):
-                ballx -= 5
-                if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
-                    if (bally < paddle1 + 25):
-                        BallRoute = "UP"
-                    elif (bally > paddle1 + 25):
+            elif dataFromClient.get('move') == "BALL":
+                if BallRoute == "UP":
+                    if bally - self.randomAdd >= 10:
+                        bally -= self.randomAdd
+                    else:
                         BallRoute = "DOWN"
-                    BallDirection = "RIGHT"
-            elif (BallDirection == "RIGHT"):
-                ballx += 5
-                if ballx == 770 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
-                    if (bally < paddle2 + 25):
+                elif BallRoute == "DOWN":
+                    if bally + self.randomAdd <= 290:
+                        bally += self.randomAdd
+                    else:
                         BallRoute = "UP"
-                    elif (bally > paddle2 + 25):
-                        BallRoute = "DOWN"
-                    BallDirection = "LEFT"
+                if (BallDirection == "LEFT"):
+                    ballx -= 1
+                    if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
+                        if (bally < paddle1 + 25):
+                            BallRoute = "UP"
+                        elif (bally > paddle1 + 25):
+                            BallRoute = "DOWN"
+                        BallDirection = "RIGHT"
+                        self.randomAdd = random.choice([1, 2, 5])
+                elif (BallDirection == "RIGHT"):
+                    ballx += 1
+                    if ballx == 570 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
+                        if (bally < paddle2 + 25):
+                            BallRoute = "UP"
+                        elif (bally > paddle2 + 25):
+                            BallRoute = "DOWN"
+                        BallDirection = "LEFT"
+                        self.randomAdd = random.choice([1, 2, 5])
             tofront = {
                 'MoveFor': dataFromClient.get('WhatIGiveYou'),
                 'paddle1': paddle1,
@@ -273,20 +314,35 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
                 'Ballx': ballx, 'Bally' :bally,
                 'BallDir': BallDirection, 'BallRoute': BallRoute,
             }
-            await self.send_json(tofront)
+            try:
+                await self.send_json(tofront)
+                # await sleep(1)
+            except:
+                print("Can't Send Data")
         elif dataFromClient.get('gameStatus') == "End":
-            await self.disconnect(1)
+            await self.disconnect(1000)
     async def disconnect(self, code):
         print(f"Local Game End")
-        await self.close()
-
-
+        await self.close(code)
 
 
 #Need To Hundle Tournement
 class pongTourServer(AsyncJsonWebsocketConsumer):
+    tournementGroups = list(dict())
+    palyerAndItsRoomId = dict()
     async def connect(self):
         print(f"{self.scope['user']} Try To Connect On Tournement Server")
+
+        if len(self.tournementGroups) == 0:
+            print(f"{self.scope['user']} Is The First One Joined To This Tour")
+            self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
+        elif len(self.tournementGroups) < 4:
+            print(f"{self.scope['user']} Will Joined To This List Of Players:")
+            print(f"-> {self.tournementGroups}")
+            self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
+            if len(self.tournementGroups) == 4:
+                print(f"The Players Of This Tournement Are:\n{self.tournementGroups}")
+                self.tournementGroups.clear()
         await self.accept()
     async def receive(self, text_data, bytes_data=None):
         pass

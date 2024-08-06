@@ -8,7 +8,7 @@ from .generateCode import roomcode
 from django.http import JsonResponse
 import json
 
-@api_view(['GET', 'POST'])
+@api_view(['GET'])
 def myProfile(req):
     print("-------------------------USER PROFILE----------------------------------")
     if req.method == "GET":
@@ -31,13 +31,13 @@ def myProfile(req):
         serial = pongGameInfoSerializer(element)
         print(f"Send Response As: {serial.data}")
         return response.Response(serial.data, status=status.HTTP_200_OK)
-    elif req.method == "POST":
-        dataToPost = req.data
-        serial = pongGameInfoSerializer(data=dataToPost)
-        if serial.is_valid():
-            serial.save()
-            return response.Response(status=status.HTTP_201_CREATED)
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
+    # elif req.method == "POST":
+    #     dataToPost = req.data
+    #     serial = pongGameInfoSerializer(data=dataToPost)
+    #     if serial.is_valid():
+    #         serial.save()
+    #         return response.Response(status=status.HTTP_201_CREATED)
+    #     return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
 def userInfos(req, login):
@@ -71,13 +71,13 @@ def PongGame(req):
         userAdd.save()
     return render(req, 'game.html')
 
-@api_view(['GET'])
-def PongLocalGame(req):
-    AuthApiRes = isAuthUser(req)
-    if AuthApiRes is None:
-        print("This User Does Not Authenticated")
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
-    return render(req, 'local.html')
+# @api_view(['GET'])
+# def PongLocalGame(req):
+#     AuthApiRes = isAuthUser(req)
+#     if AuthApiRes is None:
+#         print("This User Does Not Authenticated")
+#         return response.Response(status=status.HTTP_204_NO_CONTENT)
+#     return render(req, 'local.html')
 
 @api_view(['GET'])
 def historic(req):

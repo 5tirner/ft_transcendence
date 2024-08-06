@@ -10,7 +10,10 @@ volumes:
 services:
 # -------------- ELASTIC ----------------#
 #   elasticsearch:
-#     image: docker.elastic.co/elasticsearch/elasticsearch:$ELK_VERSION
+#     build: 
+#       context: ./ELK/elastic/
+#       dockerfile: Dockerfile
+#     image: elasticsearch
 #     container_name: elasticsearch
 #     environment:
 #       - ES_JAVA_OPTS=-Xmx256m -Xms256m
@@ -25,6 +28,7 @@ services:
 #       - 9300:9300
 #     restart: always
 #     volumes:
+#       # - ./ELK/elastic/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
 #       - esdata:/usr/share/elasticsearch/data
 # # -------------- KIBANA ----------------#
 #   kibana:
@@ -47,7 +51,6 @@ services:
 #       - ./ELK/kibana/kibana.yml:/usr/share/config/kibana.yml:ro
 # # -------------- LOGSTASH ----------------#
 #   logstash:
-#     init: true
 #     user: root
 #     image: docker.elastic.co/logstash/logstash:$ELK_VERSION
 #     container_name: logstash
@@ -58,14 +61,14 @@ services:
 #     environment:
 #       - ELASTIC_URL=$ELASTIC_URL
 #       - ELASTIC_USER=$ELASTIC_USER
-#       - xpack.monitoring.enable=false
+#       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
+#       # - xpack.monitoring.enable=false
 #     depends_on:
 #       - elasticsearch
 #     volumes:
 #       - ./ELK/logstash/ingest_data:/usr/share/logstash/ingest_data/
-#       - ./ELK/logstash/logstash.conf:/usr/share/logstash/config/logstash.conf:ro
+#       - ./ELK/logstash/:/usr/share/logstash/pipeline/
 #     restart: always
-#     command: logstash -f /usr/share/logstash/config/logstash.conf
 # # ------------- ELASTIC SETUP ------------#
 #   setup:
 #     init: true

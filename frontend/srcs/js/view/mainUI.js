@@ -377,19 +377,19 @@ export class Profile extends HTMLElement
     constructor()
     {
       super('foo');
-      this.root = this.attachShadow({ mode: "open" });
+      // this.root = this.attachShadow({ mode: "open" });
     }
     // connected call back
     connectedCallback()
     {
       this.setAttribute("id", "profile-view");
       this.setAttribute("hidden", "");
-      this.root.innerHTML = `
+      this.innerHTML = `
         <style>
-            :host {
-              width: 100%;
-              height: 100%;
-            }
+            // :host {
+            //   width: 100%;
+            //   height: 100%;
+            // }
             .first {
               margin: 0 auto;
               border: solid 1px rgb(100 100 100 / .5)!important;
@@ -566,48 +566,7 @@ export class Platform extends HTMLElement
           text-align: center;
           color: var(--dark-purple);
       }
-      .avatar {
-          width: 120px;
-          height: 120px;
-          border-radius: 12px;
-      }
-      .avatar img{
-          width: 100%;
-          height: 100%;
-          border-radius: 12px;
-      }
       
-      .name {
-          width: 100%;
-          text-align: center;
-          color: var(--light-olive);
-          font-size: 12px;
-          padding: 10px 0;
-      
-      }
-      .points {
-          margin-top: 5px;
-          color: var(--dark-purple);
-          width: 100%;
-          height: 20%;
-          text-align: center;
-          font-size: 10px;
-      }
-      .rank-card
-      {
-          margin-top: 20px;
-          min-width: 180px;
-          max-width: 180px;
-          border-radius: 12px;
-          background-color: var(--teal);
-          height: 50%;
-          padding: 15px 10px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          max-height: 100%;
-      }
       .rank:hover .slide
       {
           animation-play-state: paused;
@@ -625,7 +584,7 @@ export class Platform extends HTMLElement
           flex-direction: row;
           justify-content: center;
           gap: 2.5rem;
-          animation: 10s sliding infinite linear;
+          animation: 20s sliding infinite linear;
       }
       @media screen and (max-width: 900px) {
         .container {
@@ -666,18 +625,19 @@ export class Platform extends HTMLElement
                   <button class="button local-xo">Local</button>
                 </div>
             </div>
+            <div class="pong">
+                <div class="btn-wrapper">
+                <a href="/game" class="button po-btn-tour multi common" game="tournament">
+                  Tournament
+                </a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="rank">
         <div class="rank-title">Players Rank</div>
         <div class="slide">
-            <div class="rank-card">
-                <div class="avatar">
-                    <!-- <img src="https://avatar.iran.liara.run/public" alt="avatar"> -->
-                </div>
-                <div class="name">YACHAAB</div>
-                <div class="points">199pts</div>
-            </div>
+            
         </div>
     </div>
     `;
@@ -700,13 +660,19 @@ export class Platform extends HTMLElement
         gameSection.appendChild(document.createElement(`${gameToAppend}-view`));
       window.router.redirecto("/game");
     }
-    
     this.poLocal.addEventListener('click', () => manipulateGameSection('po-local'));
     
     window.onpopstate = (e) => {
-      // console.log("bro state should change to: ", e.state.path);
       window.router.goto(e.state.path);
     };
+    
+    const renderPlayersCard = () => 
+    {
+      // get number of rankder player from database and based on the number create components sma3ti
+      const slider = this.root.querySelector('.slide');
+      const card = document.createElement('rank-pl');
+    
+    }
   }
   
   disconnectedCallback()
@@ -718,6 +684,70 @@ export class Platform extends HTMLElement
         manipulateGameSection(game);
       });
     });
+  }
+}
+// Rank players
+export class RankPlayers extends HTMLElement
+{
+  constructor()
+  {
+    super('foo');
+    this.root = this.attachShadow({mode:'open'})
+  }
+  connectedCallback()
+  {
+    this.root.innerHTML = `
+      <style>
+        .avatar {
+            width: 110px;
+            height: 110px;
+        }
+        .avatar img{
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        
+        .name {
+            width: 100%;
+            text-align: center;
+            color: var(--light-olive);
+            font-size: 12px;
+            padding: 10px 0;
+        
+        }
+        .points {
+            margin-top: 5px;
+            color: var(--dark-purple);
+            width: 100%;
+            height: 20%;
+            text-align: center;
+            font-size: 10px;
+        }
+        .rank-card
+        {
+            margin-top: 20px;
+            min-width: 180px;
+            max-width: 180px;
+            border-radius: 12px;
+            background-color: var(--teal);
+            height: 50%;
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-height: 100%;
+        }
+      </style>
+      <div class="rank-card">
+          <div class="avatar">
+              <img src="${auth.avatar}" alt="avatar">
+          </div>
+          <div class="name">${auth.fullname}</div>
+          <div class="points">${auth.wins} wins</div>
+      </div>
+    `
   }
 }
 // TicTacToe View
@@ -974,7 +1004,7 @@ export class Pong extends HTMLElement
       </div>
   
       <div style="margin-bottom: 50px;">
-        <canvas id="board" width="800" height="300">myCNV</canvas>
+        <canvas id="board" width="600" height="300">myCNV</canvas>
       </div>
   
       <h1 class="player1name" id="p1"></h1>
@@ -985,7 +1015,7 @@ export class Pong extends HTMLElement
 
     const domElm1 = this.root.querySelector("#p1"), domElm2 = this.root.querySelector("#p2");
     let isGameStarted = false;
-    let xBallPos = 380, yBallPos = 150;
+    let xBallPos = 280, yBallPos = 150;
     let BallDirection = "LEFT";
     let paddl1Y = 125;
     let paddl2Y = 125;
@@ -1001,9 +1031,12 @@ export class Pong extends HTMLElement
 
     function ballMove()
     {
-      if (xBallPos <= 0 || xBallPos >= 800)
+      if (xBallPos < 20 || xBallPos > 580)
+      {
+        isGameStarted = false;
         socket.ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
-      else
+      }
+      else if (isGameStarted == true)
       {
         const ToServer =
         {
@@ -1019,26 +1052,22 @@ export class Pong extends HTMLElement
       }
     }
 
-    function drawElements()
+    async function drawElements()
     {
-      canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+      setTimeout(()=>{
+      canvasContext.clearRect(0, 0, canvas.width,canvas.height);
       ballMove();
-      let Lineheight = 5;
-      while (Lineheight < 300)
-      {
-          canvasContext.beginPath();
-          canvasContext.lineWidth = 4;
-          canvasContext.moveTo(400, Lineheight);
-          canvasContext.lineTo(400, Lineheight + 5);
-          canvasContext.closePath();
-          canvasContext.strokeStyle = "rgb(128, 9, 240)";
-          canvasContext.stroke();
-          Lineheight += 15;
-      }
-        
       canvasContext.beginPath();
-      canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
-      canvasContext.lineWidth = 1;
+      canvasContext.lineWidth = 4;
+      canvasContext.moveTo(300, 0);
+      canvasContext.lineTo(300, 300);
+      canvasContext.closePath();
+      canvasContext.strokeStyle = "rgb(128, 9, 240)";
+      canvasContext.stroke();
+
+      canvasContext.beginPath();
+      canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.20);
+      canvasContext.lineWidth = 0.5;
       canvasContext.fillStyle = "#F0F8FF";
       canvasContext.fill();
       canvasContext.closePath();
@@ -1055,13 +1084,14 @@ export class Pong extends HTMLElement
 
       canvasContext.beginPath();
       canvasContext.lineWidth = 8;
-      canvasContext.moveTo(780, paddl2Y)
-      canvasContext.lineTo(780, paddl2Y + 50);
+      canvasContext.moveTo(580, paddl2Y)
+      canvasContext.lineTo(580, paddl2Y + 50);
       canvasContext.closePath();
       canvasContext.strokeStyle = "#F0F8FF";
       canvasContext.stroke();
       if (isGameStarted == true)
-        requestAnimationFrame(drawElements);
+        drawElements();
+      }, 1);
     }
 
     function applyMove(e)
@@ -1087,7 +1117,7 @@ export class Pong extends HTMLElement
       }
     }
 
-    document.addEventListener("keydown", applyMove);
+    document.addEventListener("keyup", applyMove);
 
     socket.ws.onopen = function(){
       console.log("User On Game");
@@ -1114,15 +1144,13 @@ export class Pong extends HTMLElement
               console.log("RoomId: " + dataPars.roomid)
               domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
               domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-              // SaveInterval = setInterval(drawElements, 5);
-              requestAnimationFrame(drawElements);
+              drawElements();
           }
       }
       else if (isGameStarted == true)
       {
         if (dataPars.MoveFor == "PADDLES MOVE")
         {
-          cancelAnimationFrame(drawElements);
           if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
             paddl1Y = dataPars.paddle1;
           if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
@@ -1145,10 +1173,13 @@ export class Pong extends HTMLElement
         // }
       }
     }
+
     socket.ws.onclose = function()
     {
+      clearTimeout(drawElements);
       isGameStarted = false;
       console.log("BYE FROM SERVER");
+      window.stop();
       // clearInterval(SaveInterval);
     }
   }
@@ -1157,19 +1188,6 @@ export class Pong extends HTMLElement
     document.removeEventListener("keyup", this.applyDown);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// -------------------------------------------------- LOCAL --------------------
 // Pong View
 export class PongLocal extends HTMLElement
 {
@@ -1194,7 +1212,6 @@ export class PongLocal extends HTMLElement
               border-radius: 5px;
               filter: brightness(80%);
           }
-      
           body
           {
               background-color: rgb(175, 115, 231);
@@ -1210,11 +1227,11 @@ export class PongLocal extends HTMLElement
       </div>
   
       <div style="margin-bottom: 200px;">
-        <canvas id="board" width="800" height="300">myCNV</canvas>
+        <canvas id="board" width="600" height="300">myCNV</canvas>
       </div>
   
       <div style="text-align: center;">
-          <button class="start-btn">START PLAYING</button>
+          <button onclick="style.display = 'none'" class="start-btn">START PLAYING</button>
       </div>
       <abort-btn></abort-btn>
       <confirm-msg game="pong"></confirm-msg>
@@ -1237,9 +1254,13 @@ export class PongLocal extends HTMLElement
 
     function ballMove()
     {
-        if (xBallPos <= 0 || xBallPos >= 800)
-            socket.ws.send(JSON.stringify({'gameStatus': 'End'}));
-        else
+        if (xBallPos <= 0 || xBallPos >= 600)
+        {
+          // clearTimeout(drawElements);
+          isGameStarted = false;
+          socket.ws.send(JSON.stringify({'gameStatus': 'End'}));
+        }
+        else if (isGameStarted == true)
         {
             const ToServer =
             {
@@ -1253,25 +1274,22 @@ export class PongLocal extends HTMLElement
         }
     }
     this.startBtn.addEventListener('click', start);
-    function drawElements()
+    async function drawElements()
     {
+      setTimeout(()=>{
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
         ballMove();
-        let Lineheight = 5;
-        while (Lineheight < 300)
-        {
-            canvasContext.beginPath();
-            canvasContext.lineWidth = 4;
-            canvasContext.moveTo(400, Lineheight);
-            canvasContext.lineTo(400, Lineheight + 5);
-            canvasContext.closePath();
-            canvasContext.strokeStyle = "rgb(128, 9, 240)";
-            canvasContext.stroke();
-            Lineheight += 15;
-        }
         canvasContext.beginPath();
-        canvasContext.arc(xBallPos, yBallPos, 10, 0, 3.14*2);
-        canvasContext.lineWidth = 1;
+        canvasContext.lineWidth = 4;
+        canvasContext.moveTo(300, 0);
+        canvasContext.lineTo(300, 300);
+        canvasContext.closePath();
+        canvasContext.strokeStyle = "rgb(128, 9, 240)";
+        canvasContext.stroke();
+
+        canvasContext.beginPath();
+        canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.20);
+        canvasContext.lineWidth = 0.5;
         canvasContext.fillStyle = "#F0F8FF";
         canvasContext.fill();
         canvasContext.closePath();
@@ -1288,13 +1306,15 @@ export class PongLocal extends HTMLElement
     
         canvasContext.beginPath();
         canvasContext.lineWidth = 8;
-        canvasContext.moveTo(780, paddl2Y)
-        canvasContext.lineTo(780, paddl2Y + 50);
+        canvasContext.moveTo(580, paddl2Y)
+        canvasContext.lineTo(580, paddl2Y + 50);
         canvasContext.closePath();
         canvasContext.strokeStyle = "#F0F8FF";
         canvasContext.stroke();
+        // console.log(isGameStarted);
         if (isGameStarted == true)
-          requestAnimationFrame(drawElements);
+          drawElements();
+      }, 1);
     }
 
     function applyMove(e)
@@ -1328,11 +1348,10 @@ export class PongLocal extends HTMLElement
     function start()
     {
       isGameStarted = true;
-      // SaveInterval = setInterval(drawElements, 5);
-      requestAnimationFrame(drawElements);
+      drawElements();
     }
 
-    document.addEventListener("keydown", applyMove);
+    document.addEventListener("keyup", applyMove);
 
     socket.ws.onopen = function()
     {
@@ -1344,7 +1363,6 @@ export class PongLocal extends HTMLElement
         const dataPars = JSON.parse(e.data)
         if (dataPars.MoveFor == "PADDLES MOVE")
         {
-          cancelAnimationFrame(drawElements);
           if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
             paddl1Y = dataPars.paddle1;
           if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
@@ -1360,9 +1378,9 @@ export class PongLocal extends HTMLElement
 
     socket.ws.onclose = function()
     {
-        isGameStarted = false;
+        clearTimeout(drawElements);
+        // isGameStarted = false;
         console.log("BYE FROM SERVER");
-        // clearInterval(SaveInterval);
     }
   }
   disconnectedCallback()
@@ -1370,7 +1388,6 @@ export class PongLocal extends HTMLElement
     document.removeEventListener("keyup", this.applyDown);
   }
 }
-
 // Setting View
 export class Setting extends HTMLElement
 {
@@ -1720,10 +1737,10 @@ export class ConfirmMsg extends HTMLElement
     }
     this.cancel.addEventListener("click", this.fcancel);
     this.leave.addEventListener("click", this.fleave);
-    
+
     window.onbeforeunload = function()
     {
-      aborting(socket.ws, 'game');
+      aborting(socket.ws, game);
     }
   }
   disconnectedCallback()

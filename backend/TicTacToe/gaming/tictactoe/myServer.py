@@ -7,24 +7,24 @@ from .destroyThisGameInfo import destroyThisGameInformations
 from .roomCodes import roomcode
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
-class myServerOnLobby(AsyncWebsocketConsumer):
-    async def connect(self):
-        print(f'----------User On Lobby Is: {self.scope["user"]}-------')
-        await self.accept()
-    async def receive(self, text_data, bytes_data=0):
-        print(f'----------Data Come From User: {self.scope["user"]}-------')
-        print(f"Data: {text_data}")
-        await self.send(self.scope["user"])
-        print("DONE!")
-    async def disconnect(self, code):
-        print(f"Connection Of User: {self.scope['user']} Lost")
-        try:
-            userinLobby = onLobby.objects.get(login=self.scope['user'])
-            userinLobby.delete()
-            print("User Out Of Lobby")
-        except:
-            print("Already Out Of Lobby")
-        await self.close()
+# class myServerOnLobby(AsyncWebsocketConsumer):
+#     async def connect(self):
+#         print(f'----------User On Lobby Is: {self.scope["user"]}-------')
+#         await self.accept()
+#     async def receive(self, text_data, bytes_data=0):
+#         print(f'----------Data Come From User: {self.scope["user"]}-------')
+#         print(f"Data: {text_data}")
+#         await self.send(self.scope["user"])
+#         print("DONE!")
+#     async def disconnect(self, code):
+#         print(f"Connection Of User: {self.scope['user']} Lost")
+#         try:
+#             userinLobby = onLobby.objects.get(login=self.scope['user'])
+#             userinLobby.delete()
+#             print("User Out Of Lobby")
+#         except:
+#             print("Already Out Of Lobby")
+#         await self.close()
 
 class myServerOnGame(AsyncWebsocketConsumer):
     playerWantsToPlay = list()
@@ -43,8 +43,17 @@ class myServerOnGame(AsyncWebsocketConsumer):
             addUserToDb.save()
         if len(self.playerWantsToPlay) == 0:
             player1, player2 = self.scope['user'], ""
-            if self.playersOnMatchAndItsRoomId.get(player1) is not None:
+            if self.playersOnMatchAndItsOppenent.get(player1) is not None:
+                await self.accept()
+                player2 = self.playersOnMatchAndItsOppenent.get(player1)
                 print(f"Can't Add Player {player1} To Q His Alraedy In Match")
+                user1 = gameInfo.objects.get(login=player1)
+                user1.loses += 1
+                user1.save()
+                user2 = gameInfo.objects.get(login=player2)
+                user2.wins += 1
+                user1.save()
+                print(f"And This Counted As Win For {player2} Against {player1}")
                 await self.close()
             else:
                 roomid = gameInfo.objects.get(login=self.scope["user"]).codeToPlay
@@ -60,10 +69,23 @@ class myServerOnGame(AsyncWebsocketConsumer):
         else:
             player1, player2 = self.playerWantsToPlay[0], self.scope['user']
             if player1 == player2:
+                self.accept()
                 print(f"{player1} Deux Fois")
+                try:
+                    self.playerWantsToPlay.remove(player1)
+                except:
+                    pass
                 await self.close()
             elif self.playersOnMatchAndItsRoomId.get(player2) is not None:
+                self.accept()
                 print(f"Can't Add Player {player2} To Game With {player1} His Alraedy In Match")
+                user1 = gameInfo.objects.get(login=player1)
+                user1.loses += 1
+                user1.save()
+                user2 = gameInfo.objects.get(login=player2)
+                user2.wins += 1
+                user1.save()
+                print(f"And This Counted As Win For {player2} Against {player1}")
                 await self.close()
             else:
                 print(f"{self.scope['user']} Will Joinned To The Player {self.playerWantsToPlay[0]}")
@@ -83,10 +105,6 @@ class myServerOnGame(AsyncWebsocketConsumer):
                 user2 = gameInfo.objects.get(login=player2)
                 user2.gamesPlayed += 1
                 user2.save()
-                if player1 == "ysabr":
-                    player1 = "M9ayam Sba3"
-                elif player2 == "ysabr":
-                    player2 = "M9ayam Sba3"
                 toFrontEnd = json.dumps({'player1': player1, 'player2': player2, 'roomid': roomid})
                 print(f"Player1: {player1}, Player2: {player2}, RoomId: {roomid}")
                 await self.channel_layer.group_send(roomid, {'type': 'ToFrontOnConnect', 'Data': toFrontEnd})
