@@ -386,9 +386,9 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
                 toFront1 = {'player1': player1, 'player2': player3, 'roomid': self.playersOnMatchAndItsRoomId.get(player1)}
                 toFront2 = {'player1': player2, 'player2': player4, 'roomid': self.playersOnMatchAndItsRoomId.get(player2)}
                 await self.channel_layer.group_send(self.playersOnMatchAndItsRoomId.get(player1),
-                        {'type': 'toClinets', 'Data': toFront1})
+                        {'type': 'ToFrontOnConnect', 'Data': toFront1})
                 await self.channel_layer.group_send(self.playersOnMatchAndItsRoomId.get(player2),
-                        {'type': 'toClinets', 'Data': toFront2})
+                        {'type': 'ToFrontOnConnect', 'Data': toFront2})
             except:
                 pass
 
