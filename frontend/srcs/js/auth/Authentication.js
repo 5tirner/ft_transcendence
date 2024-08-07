@@ -32,6 +32,11 @@ export const auth = {
 			return isLoged;
 		}
 		return false;
+	},
+	getTicStat: async () =>
+	{
+    const object = await API.getTicTacToeStat();
+    return object.json();
 	}
 };
 window.Auth = auth;

@@ -69,7 +69,10 @@ const API = {
 	getConvMessages:  (room_id) => {
 		return API.commonGetFunc( `${API.chatEndpoint}${room_id}` );
 	},
-
+	getTicTacToeStat: () =>
+	{
+    return API.commonGetFunc(`${API.tictactoeEndpoint}`);
+	},
 	markMessagesAsRead: (room_id) => {
 		API.commonGetFunc( `${API.chatEndpoint}read/${room_id}/` );
 	},

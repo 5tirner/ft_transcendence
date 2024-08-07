@@ -380,10 +380,11 @@ export class Profile extends HTMLElement
       // this.root = this.attachShadow({ mode: "open" });
     }
     // connected call back
-    connectedCallback()
+    async connectedCallback()
     {
       this.setAttribute("id", "profile-view");
       this.setAttribute("hidden", "");
+      const data = await auth.getTicStat();
       this.innerHTML = `
         <style>
             // :host {
@@ -503,8 +504,7 @@ export class Profile extends HTMLElement
               <div class="username info">@${auth.user}</div>
           </div>
           <div class="loss common">Loss Count: ${auth.loses}</div>
-        </div>
-        -->
+        </div> -->
         <header>
             <h4>Game User Statistics</h4>
         </header>
@@ -514,9 +514,9 @@ export class Profile extends HTMLElement
           <p><strong>Level:</strong> 25</p>
           <p><strong>Guild:</strong> Warriors of Light</p>
         </section>
-        <div class="flexing">
+        <!-- <div class="flexing">
           <section class="stats">
-              <h2>Statistics</h2>
+              <h4>Tic-Tac-Toe Stats</h4>
               <table>
                   <thead>
                       <tr>
@@ -527,19 +527,19 @@ export class Profile extends HTMLElement
                   <tbody>
                       <tr>
                           <td>Games Played</td>
-                          <td>150</td>
+                          <td>${data.gamesPlayed}</td>
                       </tr>
                       <tr>
                           <td>Wins</td>
-                          <td>85</td>
+                          <td>${data.wins}</td>
                       </tr>
                       <tr>
                           <td>Losses</td>
-                          <td>65</td>
+                          <td>${data.loses}</td>
                       </tr>
                       <tr>
-                          <td>Kill/Death Ratio</td>
-                          <td>2.5</td>
+                          <td>Draw</td>
+                          <td>${data.draws}</td>
                       </tr>
                       <tr>
                           <td>Total Points</td>
@@ -548,9 +548,8 @@ export class Profile extends HTMLElement
                   </tbody>
               </table>
           </section>
-            
           <section class="stats">
-            <h2>Statistics</h2>
+            <h4>Tic-Tac-Toe Stat</h4>
             <table>
                 <thead>
                     <tr>
@@ -582,9 +581,92 @@ export class Profile extends HTMLElement
                 </tbody>
             </table>
           </section>
-        </div
+        </div> -->
       `;
     }
+}
+
+export class TicTacToeStat extends HTMLElement
+{
+  constructor()
+  {
+    super('foo');
+    this.root = this.attachShadow({ mode: "open" });
+  }
+  connectedCallback()
+  {
+    this.setAttribute('id', 'TTT-stat');
+    this.setAttribute('game', 'Tic-Tac-Toe');
+    this.root.innerHTML = `
+      <style>
+        .stats {
+            background-color: white;
+            margin: 2rem auto;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+        
+        .user-info h2, .stats h2 {
+            margin-top: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+      </style>
+      <section class="stats">
+          <h4>Tic-Tac-Toe Stats</h4>
+          <table>
+              <thead>
+                  <tr>
+                      <th>Stat</th>
+                      <th>Value</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>Games Played</td>
+                      <td>${data.gamesPlayed}</td>
+                  </tr>
+                  <tr>
+                      <td>Wins</td>
+                      <td>${data.wins}</td>
+                  </tr>
+                  <tr>
+                      <td>Losses</td>
+                      <td>${data.loses}</td>
+                  </tr>
+                  <tr>
+                      <td>Draw</td>
+                      <td>${data.draws}</td>
+                  </tr>
+                  <tr>
+                      <td>Total Points</td>
+                      <td>13200</td>
+                  </tr>
+              </tbody>
+          </table>
+      </section>
+    `;
+  }
 }
 // Platform View
 export class Platform extends HTMLElement
@@ -724,9 +806,9 @@ export class Platform extends HTMLElement
         }
         .wrapper
         {
-           display: flex;
-           flex-direction: column;
-           gap: 40px;
+          display: flex;
+          flex-direction: column;
+          gap: 40px;
         }
         .rank
         {
