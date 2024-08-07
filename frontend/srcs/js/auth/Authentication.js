@@ -1,5 +1,5 @@
 import API from "../service/API.js"
-import { Profile, Setting } from "../view/mainUI.js";
+import { Profile, RankPlayers, Setting } from "../view/mainUI.js";
 export const auth = {
 	user: null,
 	avatar: null,
@@ -27,9 +27,16 @@ export const auth = {
 			 customElements.define("profile-view", Profile);
 			if ( !customElements.get("setting-view") )
 			 customElements.define("setting-view", Setting);
+			if ( !customElements.get("rank-pl") )
+			 customElements.define("rank-pl", RankPlayers);
 			return isLoged;
 		}
 		return false;
+	},
+	getTicStat: async () =>
+	{
+    const object = await API.getTicTacToeStat();
+    return object.json();
 	}
 };
 window.Auth = auth;

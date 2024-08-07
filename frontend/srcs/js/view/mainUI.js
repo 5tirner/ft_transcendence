@@ -377,19 +377,20 @@ export class Profile extends HTMLElement
     constructor()
     {
       super('foo');
-      this.root = this.attachShadow({ mode: "open" });
+      // this.root = this.attachShadow({ mode: "open" });
     }
     // connected call back
-    connectedCallback()
+    async connectedCallback()
     {
       this.setAttribute("id", "profile-view");
       this.setAttribute("hidden", "");
-      this.root.innerHTML = `
+      const data = await auth.getTicStat();
+      this.innerHTML = `
         <style>
-            :host {
-              width: 100%;
-              height: 100%;
-            }
+            // :host {
+            //   width: 100%;
+            //   height: 100%;
+            // }
             .first {
               margin: 0 auto;
               border: solid 1px rgb(100 100 100 / .5)!important;
@@ -442,8 +443,58 @@ export class Profile extends HTMLElement
               flex-grow: 2;
               flex-basis: 2%;
             }
+            
+            
+            header {
+                background-color: #4CAF50;
+                color: white;
+                text-align: center;
+                padding: 1rem 0;
+            }
+            
+            h1 {
+                margin: 0;
+            }
+            
+            .user-info, .stats {
+                background-color: white;
+                margin: 2rem auto;
+                padding: 1rem;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                max-width: 600px;
+            }
+            
+            .user-info h2, .stats h2 {
+                margin-top: 0;
+            }
+            
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 1rem;
+            }
+            
+            th, td {
+                padding: 0.5rem;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            
+            th {
+                background-color: #f2f2f2;
+            }
+            
+            tr:hover {
+                background-color: #f1f1f1;
+            }
+            .flexing
+            {
+              display: flex;
+              flex-direction: row;
+            }
         </style>
-        <div class="first">
+        <!-- <div class="first">
           <div class="win common">Win Count: ${auth.wins}</div>
           <div class="user common">
               <div class="avatar">
@@ -453,9 +504,169 @@ export class Profile extends HTMLElement
               <div class="username info">@${auth.user}</div>
           </div>
           <div class="loss common">Loss Count: ${auth.loses}</div>
-        </div>
+        </div> -->
+        <header>
+            <h4>Game User Statistics</h4>
+        </header>
+        <section class="user-info">
+          <h2>User Information</h2>
+          <p><strong>Username:</strong> Gamer123</p>
+          <p><strong>Level:</strong> 25</p>
+          <p><strong>Guild:</strong> Warriors of Light</p>
+        </section>
+        <!-- <div class="flexing">
+          <section class="stats">
+              <h4>Tic-Tac-Toe Stats</h4>
+              <table>
+                  <thead>
+                      <tr>
+                          <th>Stat</th>
+                          <th>Value</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>Games Played</td>
+                          <td>${data.gamesPlayed}</td>
+                      </tr>
+                      <tr>
+                          <td>Wins</td>
+                          <td>${data.wins}</td>
+                      </tr>
+                      <tr>
+                          <td>Losses</td>
+                          <td>${data.loses}</td>
+                      </tr>
+                      <tr>
+                          <td>Draw</td>
+                          <td>${data.draws}</td>
+                      </tr>
+                      <tr>
+                          <td>Total Points</td>
+                          <td>13200</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </section>
+          <section class="stats">
+            <h4>Tic-Tac-Toe Stat</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stat</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Games Played</td>
+                        <td>150</td>
+                    </tr>
+                    <tr>
+                        <td>Wins</td>
+                        <td>85</td>
+                    </tr>
+                    <tr>
+                        <td>Losses</td>
+                        <td>65</td>
+                    </tr>
+                    <tr>
+                        <td>Kill/Death Ratio</td>
+                        <td>2.5</td>
+                    </tr>
+                    <tr>
+                        <td>Total Points</td>
+                        <td>13200</td>
+                    </tr>
+                </tbody>
+            </table>
+          </section>
+        </div> -->
       `;
     }
+}
+
+export class TicTacToeStat extends HTMLElement
+{
+  constructor()
+  {
+    super('foo');
+    this.root = this.attachShadow({ mode: "open" });
+  }
+  connectedCallback()
+  {
+    this.setAttribute('id', 'TTT-stat');
+    this.setAttribute('game', 'Tic-Tac-Toe');
+    this.root.innerHTML = `
+      <style>
+        .stats {
+            background-color: white;
+            margin: 2rem auto;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+        }
+        
+        .user-info h2, .stats h2 {
+            margin-top: 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        th, td {
+            padding: 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+      </style>
+      <section class="stats">
+          <h4>Tic-Tac-Toe Stats</h4>
+          <table>
+              <thead>
+                  <tr>
+                      <th>Stat</th>
+                      <th>Value</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>Games Played</td>
+                      <td>${data.gamesPlayed}</td>
+                  </tr>
+                  <tr>
+                      <td>Wins</td>
+                      <td>${data.wins}</td>
+                  </tr>
+                  <tr>
+                      <td>Losses</td>
+                      <td>${data.loses}</td>
+                  </tr>
+                  <tr>
+                      <td>Draw</td>
+                      <td>${data.draws}</td>
+                  </tr>
+                  <tr>
+                      <td>Total Points</td>
+                      <td>13200</td>
+                  </tr>
+              </tbody>
+          </table>
+      </section>
+    `;
+  }
 }
 // Platform View
 export class Platform extends HTMLElement
@@ -566,48 +777,7 @@ export class Platform extends HTMLElement
           text-align: center;
           color: var(--dark-purple);
       }
-      .avatar {
-          width: 120px;
-          height: 120px;
-          border-radius: 12px;
-      }
-      .avatar img{
-          width: 100%;
-          height: 100%;
-          border-radius: 12px;
-      }
       
-      .name {
-          width: 100%;
-          text-align: center;
-          color: var(--light-olive);
-          font-size: 12px;
-          padding: 10px 0;
-      
-      }
-      .points {
-          margin-top: 5px;
-          color: var(--dark-purple);
-          width: 100%;
-          height: 20%;
-          text-align: center;
-          font-size: 10px;
-      }
-      .rank-card
-      {
-          margin-top: 20px;
-          min-width: 180px;
-          max-width: 180px;
-          border-radius: 12px;
-          background-color: var(--teal);
-          height: 50%;
-          padding: 15px 10px;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          max-height: 100%;
-      }
       .rank:hover .slide
       {
           animation-play-state: paused;
@@ -625,7 +795,7 @@ export class Platform extends HTMLElement
           flex-direction: row;
           justify-content: center;
           gap: 2.5rem;
-          animation: 10s sliding infinite linear;
+          animation: 20s sliding infinite linear;
       }
       @media screen and (max-width: 900px) {
         .container {
@@ -636,9 +806,9 @@ export class Platform extends HTMLElement
         }
         .wrapper
         {
-           display: flex;
-           flex-direction: column;
-           gap: 40px;
+          display: flex;
+          flex-direction: column;
+          gap: 40px;
         }
         .rank
         {
@@ -666,18 +836,19 @@ export class Platform extends HTMLElement
                   <button class="button local-xo">Local</button>
                 </div>
             </div>
+            <div class="pong">
+                <div class="btn-wrapper">
+                <a href="/game" class="button po-btn-tour multi common" game="tournament">
+                  Tournament
+                </a>
+                </div>
+            </div>
         </div>
     </div>
     <div class="rank">
         <div class="rank-title">Players Rank</div>
         <div class="slide">
-            <div class="rank-card">
-                <div class="avatar">
-                    <!-- <img src="https://avatar.iran.liara.run/public" alt="avatar"> -->
-                </div>
-                <div class="name">YACHAAB</div>
-                <div class="points">199pts</div>
-            </div>
+            
         </div>
     </div>
     `;
@@ -700,13 +871,19 @@ export class Platform extends HTMLElement
         gameSection.appendChild(document.createElement(`${gameToAppend}-view`));
       window.router.redirecto("/game");
     }
-    
     this.poLocal.addEventListener('click', () => manipulateGameSection('po-local'));
     
     window.onpopstate = (e) => {
-      // console.log("bro state should change to: ", e.state.path);
       window.router.goto(e.state.path);
     };
+    
+    const renderPlayersCard = () => 
+    {
+      // get number of rankder player from database and based on the number create components sma3ti
+      const slider = this.root.querySelector('.slide');
+      const card = document.createElement('rank-pl');
+    
+    }
   }
   
   disconnectedCallback()
@@ -718,6 +895,70 @@ export class Platform extends HTMLElement
         manipulateGameSection(game);
       });
     });
+  }
+}
+// Rank players
+export class RankPlayers extends HTMLElement
+{
+  constructor()
+  {
+    super('foo');
+    this.root = this.attachShadow({mode:'open'})
+  }
+  connectedCallback()
+  {
+    this.root.innerHTML = `
+      <style>
+        .avatar {
+            width: 110px;
+            height: 110px;
+        }
+        .avatar img{
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+        
+        .name {
+            width: 100%;
+            text-align: center;
+            color: var(--light-olive);
+            font-size: 12px;
+            padding: 10px 0;
+        
+        }
+        .points {
+            margin-top: 5px;
+            color: var(--dark-purple);
+            width: 100%;
+            height: 20%;
+            text-align: center;
+            font-size: 10px;
+        }
+        .rank-card
+        {
+            margin-top: 20px;
+            min-width: 180px;
+            max-width: 180px;
+            border-radius: 12px;
+            background-color: var(--teal);
+            height: 50%;
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            max-height: 100%;
+        }
+      </style>
+      <div class="rank-card">
+          <div class="avatar">
+              <img src="${auth.avatar}" alt="avatar">
+          </div>
+          <div class="name">${auth.fullname}</div>
+          <div class="points">${auth.wins} wins</div>
+      </div>
+    `
   }
 }
 // TicTacToe View
@@ -1158,19 +1399,6 @@ export class Pong extends HTMLElement
     document.removeEventListener("keyup", this.applyDown);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// -------------------------------------------------- LOCAL --------------------
 // Pong View
 export class PongLocal extends HTMLElement
 {
@@ -1371,7 +1599,6 @@ export class PongLocal extends HTMLElement
     document.removeEventListener("keyup", this.applyDown);
   }
 }
-
 // Setting View
 export class Setting extends HTMLElement
 {

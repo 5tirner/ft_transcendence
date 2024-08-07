@@ -26,8 +26,7 @@ ps :
 ls :
 	@docker images
 
-re: down
-	@$(DC) up --build -d
+re: down upd
 
 create_data_dir:
 	[ -d ${HOME}/data/www ] || mkdir -p ${HOME}/data/www
