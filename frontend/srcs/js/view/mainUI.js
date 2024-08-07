@@ -442,8 +442,58 @@ export class Profile extends HTMLElement
               flex-grow: 2;
               flex-basis: 2%;
             }
+            
+            
+            header {
+                background-color: #4CAF50;
+                color: white;
+                text-align: center;
+                padding: 1rem 0;
+            }
+            
+            h1 {
+                margin: 0;
+            }
+            
+            .user-info, .stats {
+                background-color: white;
+                margin: 2rem auto;
+                padding: 1rem;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                max-width: 600px;
+            }
+            
+            .user-info h2, .stats h2 {
+                margin-top: 0;
+            }
+            
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 1rem;
+            }
+            
+            th, td {
+                padding: 0.5rem;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            
+            th {
+                background-color: #f2f2f2;
+            }
+            
+            tr:hover {
+                background-color: #f1f1f1;
+            }
+            .flexing
+            {
+              display: flex;
+              flex-direction: row;
+            }
         </style>
-        <div class="first">
+        <!-- <div class="first">
           <div class="win common">Win Count: ${auth.wins}</div>
           <div class="user common">
               <div class="avatar">
@@ -454,6 +504,85 @@ export class Profile extends HTMLElement
           </div>
           <div class="loss common">Loss Count: ${auth.loses}</div>
         </div>
+        -->
+        <header>
+            <h4>Game User Statistics</h4>
+        </header>
+        <section class="user-info">
+          <h2>User Information</h2>
+          <p><strong>Username:</strong> Gamer123</p>
+          <p><strong>Level:</strong> 25</p>
+          <p><strong>Guild:</strong> Warriors of Light</p>
+        </section>
+        <div class="flexing">
+          <section class="stats">
+              <h2>Statistics</h2>
+              <table>
+                  <thead>
+                      <tr>
+                          <th>Stat</th>
+                          <th>Value</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>Games Played</td>
+                          <td>150</td>
+                      </tr>
+                      <tr>
+                          <td>Wins</td>
+                          <td>85</td>
+                      </tr>
+                      <tr>
+                          <td>Losses</td>
+                          <td>65</td>
+                      </tr>
+                      <tr>
+                          <td>Kill/Death Ratio</td>
+                          <td>2.5</td>
+                      </tr>
+                      <tr>
+                          <td>Total Points</td>
+                          <td>13200</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </section>
+            
+          <section class="stats">
+            <h2>Statistics</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stat</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Games Played</td>
+                        <td>150</td>
+                    </tr>
+                    <tr>
+                        <td>Wins</td>
+                        <td>85</td>
+                    </tr>
+                    <tr>
+                        <td>Losses</td>
+                        <td>65</td>
+                    </tr>
+                    <tr>
+                        <td>Kill/Death Ratio</td>
+                        <td>2.5</td>
+                    </tr>
+                    <tr>
+                        <td>Total Points</td>
+                        <td>13200</td>
+                    </tr>
+                </tbody>
+            </table>
+          </section>
+        </div
       `;
     }
 }
