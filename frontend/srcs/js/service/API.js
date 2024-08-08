@@ -2,8 +2,10 @@ const API = {
 	authEndpoint: "http://127.0.0.1:8000/api/",
 	chatEndpoint: "http://127.0.0.1:8000/api/chat/",
 	friendshipEndpoint: "http://127.0.0.1:8000/api/friendship",
-	tictactoeEndpoint: "http://127.0.0.1:8000/TicTacToe/myProfile/",
-	tictactoeAuthGame: "http://127.0.0.1:8000/TicTacToe/Game/",
+	tttStatEndpoint: "http://127.0.0.1:8000/TicTacToe/myProfile/",
+	tttHistoEndpoint: "http://127.0.0.1:8000/TicTacToe/History",
+	pongStatEndpoint:"http://127.0.0.1:8000/PongPong/myProfile",
+	pongHistoEndpoint: "http://127.0.0.1:8000/PongPong/History",
 
 	// ADD HERE ALL THE OTHER API FUNCTIONS
 	commonPostFunc: async (endPoint, userData ) => {
@@ -71,7 +73,23 @@ const API = {
 	},
 	getTicTacToeStat: () =>
 	{
-    return API.commonGetFunc(`${API.tictactoeEndpoint}`);
+    console.log("Fetching Tic user stats");
+    return API.commonGetFunc(`${API.tttStatEndpoint}`);
+	},
+	getTicTacToeHistory: () =>
+	{
+    console.log("Fetching Tic user History");
+    return API.commonGetFunc(`${API.tttHistoEndpoint}`);
+	},
+	getPigPagPogStat: () =>
+	{
+    console.log("Fetching Pong user stats");
+    return API.commonGetFunc(`${API.pongStatEndpoint}`);
+	},
+	getPigPagPogHistory: () =>
+	{
+    console.log("Fetching Pong user History");
+    return API.commonGetFunc(`${API.pongHistoEndpoint}`);
 	},
 	markMessagesAsRead: (room_id) => {
 		API.commonGetFunc( `${API.chatEndpoint}read/${room_id}/` );

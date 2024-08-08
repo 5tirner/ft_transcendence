@@ -6,6 +6,7 @@ export const routes = (previousLocation, currentLocation) => {
       case "/platform":
       case "/profile":
       case "/setting":
+      case "/history":
       case "/game":
       {
         const currentView   = document.querySelector(`${currentLocation.substring(1)}-view`);
