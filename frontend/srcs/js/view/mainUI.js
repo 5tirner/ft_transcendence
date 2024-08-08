@@ -216,17 +216,20 @@ export class Sidebar extends HTMLElement
         `
             <nav export class="nav">
                 <a href="/platform" export class="nav_logo">
-                    <i export class="bx bx-grid-alt nav_icon"></i>
+                  <i export class="bx bx-grid-alt nav_icon"></i>
                 </a>
                 <div export class="nav_list">
                     <a href="/setting" class="nav_link">
-                        <i class="bx bxs-cog nav_icon"></i>
+                      <i class="bx bxs-cog nav_icon"></i>
                     </a>
                     <a href="/friend" class="nav_link">
-                        <i class='bx bx-group nav_icon'></i>
+                      <i class='bx bx-group nav_icon'></i>
+                    </a>
+                    <a href="/history" class="nav_link">
+                      <i class='bx bx-history nav_icon'></i>
                     </a>
                     <a href="/" class="nav_link">
-                        <i class="bx bx-log-out nav_icon"></i>
+                      <i class="bx bx-log-out nav_icon"></i>
                     </a>
                 </div>
 				<a href="/profile" class="nav_link">
@@ -241,17 +244,25 @@ export class Sidebar extends HTMLElement
         const arr = this.querySelectorAll("a");
         arr.forEach(elem => {
             elem.addEventListener("click", (e) => {
-                e.preventDefault();
-                const href = e.currentTarget.getAttribute("href");
-                
-                    // if ( href === "/" )
-                    // {
-                    //     // TODO: handle the logout logic
-                    //     Auth.logout();
-                    //     global.router.goto(href);
-                        
-                    // }
-                    window.router.goto(href);
+              e.preventDefault();
+              const href = e.currentTarget.getAttribute("href");
+              if (href === '/profile')
+              {
+                const component = document.querySelector("#TheStat");
+                const holder = document.querySelector("#components-holder");
+                if (component)
+                  component.remove();
+                holder.appendChild(document.createElement('stat-ics'));
+              }
+              if (href === '/history')
+              {
+                const component = document.querySelector('#TheHistory')
+                const holder = document.querySelector('#middle-view');
+                if (component)
+                  component.remove();
+                holder.appendChild(document.createElement('histo-ry'));
+              }
+              window.router.goto(href);
             });
         });
     }
@@ -380,119 +391,61 @@ export class Profile extends HTMLElement
       // this.root = this.attachShadow({ mode: "open" });
     }
     // connected call back
-    async connectedCallback()
+    connectedCallback()
     {
       this.setAttribute("id", "profile-view");
       this.setAttribute("hidden", "");
-      const data = await auth.getTicStat();
       this.innerHTML = `
         <style>
-            // :host {
-            //   width: 100%;
-            //   height: 100%;
-            // }
-            .first {
-              margin: 0 auto;
-              border: solid 1px rgb(100 100 100 / .5)!important;
-              border-radius: 18px;
-              width: 90%;
-              height: 30%;
-              display: flex;
-              flex-flow: row wrap;
-              justify-content: space-between;
-              padding: 20px;
-              background-color: var(--teal);
-            }
-            .common {
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: end;
-              font-size: 10px;
-              padding-bottom: 40px;
-            }
-            .win {
-              flex-grow: 2;
-              flex-basis: 2%}
-            .user {
-              flex: 4;
-              flex-basis: 8%}
-            .avatar {
-              width: 100%;
-              text-align: center;
-            }
-            div img {
-              width: 150px;
-              height: 150px;
-              border: solid 2px rgb(200 200 200 / .75)!important;
-              border-radius: 50%;
-              background: rgb(100 100 100 / .75);
-              object-fit: cover;
-            }
-            .info {
-              width: 100%;
-              padding-top: 20px;
-              text-align: center;
-              color: red;
-            }
-            .info:last-child {
-              color: rgb(200 200 200 / .75);
-              font-size: 8px;
-            }
-            .loss {
-              flex-grow: 2;
-              flex-basis: 2%;
-            }
-            
-            
-            header {
-                background-color: #4CAF50;
-                color: white;
-                text-align: center;
-                padding: 1rem 0;
-            }
-            
-            h1 {
-                margin: 0;
-            }
-            
-            .user-info, .stats {
-                background-color: white;
-                margin: 2rem auto;
-                padding: 1rem;
-                border-radius: 8px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                max-width: 600px;
-            }
-            
-            .user-info h2, .stats h2 {
-                margin-top: 0;
-            }
-            
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 1rem;
-            }
-            
-            th, td {
-                padding: 0.5rem;
-                text-align: left;
-                border-bottom: 1px solid #ddd;
-            }
-            
-            th {
-                background-color: #f2f2f2;
-            }
-            
-            tr:hover {
-                background-color: #f1f1f1;
-            }
-            .flexing
-            {
-              display: flex;
-              flex-direction: row;
-            }
+        .user-info {
+            background-color: var(--dark-purple);
+            color: var(--light-olive);
+            margin: 3rem auto;
+            padding: 3rem;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .user-info .avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-right: 2rem;
+            border: 3px solid #4CAF50;
+        }
+        
+        .user-info .info {
+            flex: 1;
+        }
+        
+        .user-info p {
+          font-size: 16px;
+          margin: 0.5rem 0;
+        }
+        
+        .progress-bar {
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            height: 25px;
+        }
+        
+        .progress {
+            background-color: #4CAF50;
+            height: 100%;
+            width: 0;
+        }
+        
+        .progress-text {
+            margin: 0;
+            font-size: 1rem;
+        }
+        
         </style>
         <!-- <div class="first">
           <div class="win common">Win Count: ${auth.wins}</div>
@@ -505,107 +458,48 @@ export class Profile extends HTMLElement
           </div>
           <div class="loss common">Loss Count: ${auth.loses}</div>
         </div> -->
-        <header>
-            <h4>Game User Statistics</h4>
-        </header>
         <section class="user-info">
-          <h2>User Information</h2>
-          <p><strong>Username:</strong> Gamer123</p>
-          <p><strong>Level:</strong> 25</p>
-          <p><strong>Guild:</strong> Warriors of Light</p>
+          <img src="${auth.avatar}" alt="User Avatar" class="avatar">
+          <div class="info">
+              <p><strong>Username:</strong> ${auth.user}</p>
+              <p><strong>Fullname:</strong> ${auth.fullname}</p>
+              <div class="progress-bar">
+                  <div class="progress" style="width: 70%;"></div>
+              </div>
+              <p class="progress-text">Experience: 70%</p>
+          </div>
         </section>
-        <!-- <div class="flexing">
-          <section class="stats">
-              <h4>Tic-Tac-Toe Stats</h4>
-              <table>
-                  <thead>
-                      <tr>
-                          <th>Stat</th>
-                          <th>Value</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td>Games Played</td>
-                          <td>${data.gamesPlayed}</td>
-                      </tr>
-                      <tr>
-                          <td>Wins</td>
-                          <td>${data.wins}</td>
-                      </tr>
-                      <tr>
-                          <td>Losses</td>
-                          <td>${data.loses}</td>
-                      </tr>
-                      <tr>
-                          <td>Draw</td>
-                          <td>${data.draws}</td>
-                      </tr>
-                      <tr>
-                          <td>Total Points</td>
-                          <td>13200</td>
-                      </tr>
-                  </tbody>
-              </table>
-          </section>
-          <section class="stats">
-            <h4>Tic-Tac-Toe Stat</h4>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Stat</th>
-                        <th>Value</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Games Played</td>
-                        <td>150</td>
-                    </tr>
-                    <tr>
-                        <td>Wins</td>
-                        <td>85</td>
-                    </tr>
-                    <tr>
-                        <td>Losses</td>
-                        <td>65</td>
-                    </tr>
-                    <tr>
-                        <td>Kill/Death Ratio</td>
-                        <td>2.5</td>
-                    </tr>
-                    <tr>
-                        <td>Total Points</td>
-                        <td>13200</td>
-                    </tr>
-                </tbody>
-            </table>
-          </section>
-        </div> -->
+        <div id="components-holder"></div>
+        <!-- <tic-tac-toe-stat></tic-tac-toe-stat> -->
       `;
     }
 }
 
-export class TicTacToeStat extends HTMLElement
+// Statistics Component
+export class Stats extends HTMLElement
 {
   constructor()
   {
     super('foo');
     this.root = this.attachShadow({ mode: "open" });
   }
-  connectedCallback()
+  async connectedCallback()
   {
-    this.setAttribute('id', 'TTT-stat');
+    this.setAttribute('id', 'TheStat');
     this.setAttribute('game', 'Tic-Tac-Toe');
+    const ticData = await auth.getTicStat();
+    const pigData = await auth.getPongStat();
     this.root.innerHTML = `
       <style>
         .stats {
-            background-color: white;
-            margin: 2rem auto;
-            padding: 1rem;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
+          background-color: var(--dark-purple);
+          color: var(--light-olive);
+          margin: 2rem auto;
+          padding: 1rem;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          max-width: 600px;
+          padding: 50px 80px;
         }
         
         .user-info h2, .stats h2 {
@@ -625,46 +519,251 @@ export class TicTacToeStat extends HTMLElement
         }
         
         th {
-            background-color: #f2f2f2;
+            // background-color: #f2f2f2;
         }
         
         tr:hover {
             background-color: #f1f1f1;
+            color: var(--dark-purple)
+        }
+        .flexing
+        {
+          width: 100%;
+          display: flex;
+          flex-direction: row;
         }
       </style>
-      <section class="stats">
-          <h4>Tic-Tac-Toe Stats</h4>
-          <table>
-              <thead>
-                  <tr>
-                      <th>Stat</th>
-                      <th>Value</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  <tr>
-                      <td>Games Played</td>
-                      <td>${data.gamesPlayed}</td>
-                  </tr>
-                  <tr>
-                      <td>Wins</td>
-                      <td>${data.wins}</td>
-                  </tr>
-                  <tr>
-                      <td>Losses</td>
-                      <td>${data.loses}</td>
-                  </tr>
-                  <tr>
-                      <td>Draw</td>
-                      <td>${data.draws}</td>
-                  </tr>
-                  <tr>
-                      <td>Total Points</td>
-                      <td>13200</td>
-                  </tr>
-              </tbody>
-          </table>
-      </section>
+      <div class="flexing">
+        <section class="stats">
+            <h4>Pong Stats</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stat</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Games Played</td>
+                        <td>${pigData.gamesPlayed}</td>
+                    </tr>
+                    <tr>
+                        <td>Wins</td>
+                        <td>${pigData.wins}</td>
+                    </tr>
+                    <tr>
+                        <td>Losses</td>
+                        <td>${pigData.loses}</td>
+                    </tr>
+                    <tr>
+                        <td>Draw</td>
+                        <td>${pigData.draws}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Points</td>
+                        <td>13200</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+        <section class="stats">
+            <h4>Tic-Tac-Toe Stats</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Stat</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Games Played</td>
+                        <td>${ticData.gamesPlayed}</td>
+                    </tr>
+                    <tr>
+                        <td>Wins</td>
+                        <td>${ticData.wins}</td>
+                    </tr>
+                    <tr>
+                        <td>Losses</td>
+                        <td>${ticData.loses}</td>
+                    </tr>
+                    <tr>
+                        <td>Draw</td>
+                        <td>${ticData.draws}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Points</td>
+                        <td>13200</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+      </div>
+    `;
+  }
+}
+// Game History
+export class Histo extends HTMLElement
+{
+  constructor()
+  {
+    super('foo');
+    this.root = this.attachShadow({ mode: "open" });
+  }
+  async connectedCallback()
+  {
+    this.setAttribute('id', 'TheHistory');
+    const ticData = await auth.getTicHisto();
+    const pigData = await auth.getPongHisto();
+    this.root.innerHTML = `
+      <style>
+      .container {
+          background: var(--dark-purple);
+          color: var(--light-olive);
+          padding: 40px;
+          border-radius: 24px;
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+          width: 90%;
+          max-width: 1000px;
+          text-align: left;
+          position: relative;
+          width: 100%;
+      }
+      
+      h1 {
+          color: var(--light-olive);
+          margin-bottom: 20px;
+          font-size: 24px;
+          font-weight: 500;
+      }
+      
+      table {
+          width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+      }
+      
+      th, td {
+          padding: 15px 20px;
+          text-align: left;
+          font-size: 14px;
+          color: #666;
+      }
+      
+      th {
+          background: var(--dark-purple);
+          color: var(--light-olive);
+          border-bottom: 2px solid #eee;
+      }
+      
+      tbody tr {
+          background: var(--dark-purple);
+          color: var(--light-olive);
+          transition: background-color 0.3s;
+      }
+      
+      tbody tr:hover {
+          background-color: #f9f9f9;
+      }
+      
+      .highlight {
+          background-color: #f0f8ff;
+          font-weight: bold;
+          border-radius: 8px;
+          position: relative;
+      }
+      
+      td.highlight {
+          font-size: 16px;
+          color: #333;
+      }
+      
+      
+      // .highlight::before {
+      //     content: '';
+      //     position: absolute;
+      //     top: -8px;
+      //     bottom: -8px;
+      //     left: -8px;
+      //     right: -8px;
+      //     background-color: rgba(240, 248, 255, 0.8);
+      //     z-index: -1;
+      //     border-radius: 16px;
+      //     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      // }
+      
+      .opponent {
+          display: flex;
+          align-items: center;
+      }
+      
+      .opponent img {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          margin-right: 10px;
+      }
+      
+      .win {
+          color: green;
+          font-weight: bold;
+      }
+      
+      .loss {
+          color: red;
+          font-weight: bold;
+      }
+
+      </style>
+      <div class="container">
+        <h1>Player Match History</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Opponent</th>
+                    <th>Result</th>
+                    <th>Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="opponent">
+                        <img src="https://avatar.iran.liara.run/public" alt="Player B Avatar">
+                        <span>Player B</span>
+                    </td>
+                    <td class="win">Win</td>
+                    <td>3-2</td>
+                </tr>
+                <tr>
+                    <td class="opponent">
+                        <img src="https://avatar.iran.liara.run/public" alt="Player C Avatar">
+                        <span>Player C</span>
+                    </td>
+                    <td class="loss">Loss</td>
+                    <td>1-3</td>
+                </tr>
+                <tr>
+                    <td class="opponent">
+                        <img src="https://avatar.iran.liara.run/public" alt="Player D Avatar">
+                        <span>Player D</span>
+                    </td>
+                    <td class="win">Win</td>
+                    <td>4-1</td>
+                </tr>
+                <tr>
+                    <td class="opponent">
+                        <img src="https://avatar.iran.liara.run/public" alt="Player E Avatar">
+                        <span>Player E</span>
+                    </td>
+                    <td class="win">Win</td>
+                    <td>3-0</td>
+                </tr>
+    
+            </tbody>
+        </table>
+    </div>
     `;
   }
 }

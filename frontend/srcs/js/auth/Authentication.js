@@ -37,6 +37,22 @@ export const auth = {
 	{
     const object = await API.getTicTacToeStat();
     return object.json();
+	},
+	getTicHisto: async () =>
+	{
+    const object = await API.getTicTacToeHistory();
+    return object.json();
+	},
+	getPongStat: async () =>
+	{
+    const object = await API.getPigPagPogStat();
+    return object.json();
+	},
+	getPongHisto: async () =>
+	{
+    const object = await API.getPigPagPogHistory();
+    return object.json();
 	}
+	
 };
 window.Auth = auth;
