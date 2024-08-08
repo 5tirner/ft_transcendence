@@ -100,6 +100,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
             print(f"Still In Q: {len(self.playerWantsToPlay)}")
     async def receive_json(self, dataFromClient, bytes_data=None):
         try:
+            # print(dataFromClient)
             thisUser = self.scope['user']
             oppenent = self.playersOnMatchAndItsOppenent.get(self.scope['user'])
             roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
