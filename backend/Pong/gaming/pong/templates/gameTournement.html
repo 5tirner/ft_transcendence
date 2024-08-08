@@ -53,7 +53,6 @@
     <h1 class="player2name" id="p2"></h1>
     <script>
         let isGameStarted = false;
-        let round = 1;
         let xBallPos = 280, yBallPos = 150;
         let BallDirection = "LEFT";
         let paddl1Y = 125;
@@ -65,16 +64,15 @@
         canvasContext.shadowBlur = 15;
         canvasContext.shadowOffsetX = 5;
         canvasContext.shadowOffsetY = 2;
-        const ws = new WebSocket('ws://' + location.host + '/PongTourWs/');
+        let ws = new WebSocket('ws://' + location.host + '/PongTourWs/');
         function ballMove()
         {
           if (xBallPos < 20 || xBallPos > 580)
           {
-            isGameStarted = false;
             ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
-            round = 2;
+            clearTimeout(drawElements);
           }
-          else if (isGameStarted == true)
+          else if (isGameStarted == true && ws.OPEN)
           {
             const ToServer =
             {
@@ -132,7 +130,7 @@
 
         function applyMove(e)
         {
-          if (isGameStarted == true)
+          if (isGameStarted == true && ws.OPEN)
           {
             if (e.key == "ArrowUp" || e.key == "ArrowDown")
             {
@@ -159,7 +157,7 @@
           console.log("User On Game");
         }
 
-        ws.onmessage = function(e)
+        ws.onmessage = function (e)
         {
           const dataPars = JSON.parse(e.data)
           if (isGameStarted == false)
@@ -176,25 +174,53 @@
           }
           else if (isGameStarted == true)
           {
-            if (dataPars.MoveFor == "PADDLES MOVE")
+            if (dataPars.Round == "SemiFinal")
             {
-              if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
-                paddl1Y = dataPars.paddle1;
-              if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
-                paddl2Y = dataPars.paddle2;
+              if (dataPars.MoveFor == "PADDLES MOVE")
+              {
+                if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
+                  paddl1Y = dataPars.paddle1;
+                if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
+                  paddl2Y = dataPars.paddle2;
+              }
+              else
+              {
+                xBallPos = dataPars.Ballx, yBallPos = dataPars.Bally;
+                BallDirection = dataPars.BallDir;
+                BallRoute = dataPars.BallRoute;
+              }
             }
-            else
+            else if (dataPars.Round == "Final")
             {
-              xBallPos = dataPars.Ballx, yBallPos = dataPars.Bally;
-              BallDirection = dataPars.BallDir;
-              BallRoute = dataPars.BallRoute;
+              console.log('The Game Is End, And We Get To The Final Round');
+              isGameStarted == false;
+              clearTimeout(drawElements)
+              const ToServer = 
+              {
+                'gameStatus': "NextRound",
+              }
+              ws.send(JSON.stringify(ToServer))
+            }
+            else if (dataPars.Round == "NoRound")
+            {
+              console.log('shiiiiit, lose situation here');
+              ws.close();
+            }
+            else if (dataPars.Round == "FinalRound")
+            {
+              ws.close()
+              console.log('wooooow, win situation here');
+              ws = new WebSocket('ws://' + location.host + '/PongTourWs/');
+              ws.onopen = function()
+              {
+                console.log("Welcome Again");
+              }
             }
           }
         }
 
         ws.onclose = function()
         {
-          clearTimeout(drawElements);
           isGameStarted = false;
           console.log("BYE FROM SERVER");
           window.stop();
