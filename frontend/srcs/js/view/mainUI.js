@@ -616,10 +616,15 @@ export class Histo extends HTMLElement
   {
     this.setAttribute('id', 'TheHistory');
     const ticData = await auth.getTicHisto();
-    console.log("ticData: ", ticData);
-    const pigData = await auth.getPongHisto();
+    const pongData = await auth.getPongHisto();
     this.root.innerHTML = `
       <style>
+        .wrapper
+        {
+          display: flex;
+          gap: 50px;
+          width: 90%;
+        }
         .container {
             background: var(--dark-purple);
             color: var(--light-olive);
@@ -631,6 +636,7 @@ export class Histo extends HTMLElement
             text-align: left;
             position: relative;
             width: 100%;
+            overflow-y: scroll;
         }
         
         h1 {
@@ -665,10 +671,6 @@ export class Histo extends HTMLElement
             transition: background-color 0.3s;
         }
         
-        tbody tr:hover {
-            background-color: #f9f9f9;
-        }
-        
         tbody tr td
         {
           color: var(--light-olive);
@@ -701,55 +703,78 @@ export class Histo extends HTMLElement
           color: var(--coral);
         }
       </style>
-      <div class="container">
-        <h1>Player Match History</h1>
-        <table>
-            <thead>
-                <tr>
-                    <th>Opponent</th>
-                    <th>Result</th>
-                    <th>Score</th>
-                </tr>
-            </thead>
-            <tbody class="injectHere">
-            </tbody>
-        </table>
-    </div>
+      <div class="wrapper">
+        <div class="container">
+          <h1>Tic-Tac-Toe History</h1>
+          <table>
+              <thead>
+                  <tr>
+                      <th>Opponent</th>
+                      <th>Result</th>
+                      <th>Score</th>
+                  </tr>
+              </thead>
+              <tbody class="tttInjectHere">
+              </tbody>
+          </table>
+        </div>
+        
+        <div class="container">
+          <h1>Pong Match History</h1>
+          <table>
+              <thead>
+                  <tr>
+                      <th>Opponent</th>
+                      <th>Result</th>
+                      <th>Score</th>
+                  </tr>
+              </thead>
+              <tbody class="pongInjectHere">
+              </tbody>
+          </table>
+        </div>
+      </div>
     `;
-    const injectHere = this.root.querySelector('.injectHere');
-    const parsed = JSON.parse(ticData);
-    let elem = '';
-    if ( Object.keys(parsed).length == 0)
+    const tttInjectHere = this.root.querySelector('.tttInjectHere');
+    const pongInjectHere = this.root.querySelector('.pongInjectHere');
+    const createHistoElem = (data) => 
     {
-      elem = `
-        <tr>
-          <td colspan="5" style="text-align:center; color: var(--light-olive); padding: 20px; border-radius: 8px;">
-            No Matches Played Yet!
-          </td>
-        </tr>
-      `
-    }
-    else
-    {
-      let result = '';
-      let what = ''
-      for (const [key, value] of Object.entries(parsed)) {
-        if (value.winner === value.oppenent)
-           result = 'lose';
-        else
-          result = 'win';
-        elem += `
-        <tr>
-          <td class="oppenent">
-            ${value.oppenent}
-          </td>
-          <td class="${result}">
-            ${result}
-          </td>
-        </tr>`;
+      const parsed = JSON.parse(data);
+      let elem = '';
+      if ( Object.keys(parsed).length == 0)
+      {
+        elem = `
+          <tr>
+            <td colspan="5" style="text-align:center; color: var(--light-olive); padding: 20px; border-radius: 8px;">
+              No Matches Played Yet!
+            </td>
+          </tr>
+        `
       }
+      else
+      {
+        let result = '';
+        let what = ''
+        for (const [key, value] of Object.entries(parsed)) {
+          if (value.winner === value.oppenent)
+             result = 'lose';
+          else
+            result = 'win';
+          elem += `
+          <tr>
+            <td class="oppenent">
+              ${value.oppenent}
+            </td>
+            <td class="${result}">
+              ${result}
+            </td>
+          </tr>`;
+        }
+      }
+      return elem;
     }
-    injectHere.innerHTML = elem;
+    tttInjectHere.innerHTML = createHistoElem(ticData);
+    pongInjectHere.innerHTML = createHistoElem(pongData);
   }
 }
 // Platform View
