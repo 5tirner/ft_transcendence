@@ -329,7 +329,6 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
     
     async def connect(self):
         print(f"[-----{self.scope['user']} Try To Connect On Tournement Server].------")
-
         if len(self.tournementGroups) == 0:
             print(f"{self.scope['user']} Is The First One Joined To This Tour")
             self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})

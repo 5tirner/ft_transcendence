@@ -1326,6 +1326,7 @@ export class Pong extends HTMLElement
     const domElm1 = this.root.querySelector("#p1"), domElm2 = this.root.querySelector("#p2");
     let isGameStarted = false;
     let xBallPos = 280, yBallPos = 150;
+    let isFinsih = false;
     let BallDirection = "LEFT";
     let paddl1Y = 125;
     let paddl2Y = 125;
@@ -1343,11 +1344,12 @@ export class Pong extends HTMLElement
     {
       if (xBallPos < 20 || xBallPos > 580)
       {
+        isFinsih = true;
         isGameStarted = false;
         socket.ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
         // clearTimeout(drawElements);
       }
-      else if (isGameStarted == true)
+      else if (isGameStarted == true && isFinsih == false)
       {
         const ToServer =
         {
@@ -1399,13 +1401,13 @@ export class Pong extends HTMLElement
       canvasContext.closePath();
       canvasContext.strokeStyle = "#F0F8FF";
       canvasContext.stroke();
-      if (isGameStarted == true)
+      if (isGameStarted == true && isFinsih == false)
         requestAnimationFrame(drawElements);
     }
 
     function applyMove(e)
     {
-      if (isGameStarted == true)
+      if (isGameStarted == true && isFinsih == false)
       {
         if (e.key == "ArrowUp" || e.key == "ArrowDown")
         {
@@ -1435,7 +1437,7 @@ export class Pong extends HTMLElement
     socket.ws.onmessage = function(e)
     {
       const dataPars = JSON.parse(e.data)
-      if (isGameStarted == false)
+      if (isGameStarted == false && isFinsih == false)
       {
           if (dataPars.player2.length == 0)
           {
@@ -1456,7 +1458,7 @@ export class Pong extends HTMLElement
               requestAnimationFrame(drawElements);
           }
       }
-      else if (isGameStarted == true)
+      else if (isGameStarted == true && isFinsih == false)
       {
         if (dataPars.MoveFor == "PADDLES MOVE")
         {
