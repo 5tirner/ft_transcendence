@@ -133,7 +133,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                         else:
                             BallRoute = "UP"
                     if (BallDirection == "LEFT"):
-                        ballx -= 2
+                        ballx -= 5
                         if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
                             if (bally < paddle1 + 25):
                                 BallRoute = "UP"
@@ -141,7 +141,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                                 BallRoute = "DOWN"
                             BallDirection = "RIGHT"
                     elif (BallDirection == "RIGHT"):
-                        ballx += 2
+                        ballx += 5
                         if ballx == 570 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
                             if (bally < paddle2 + 25):
                                 BallRoute = "UP"
@@ -189,8 +189,6 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                     except:
                         print(f"{thisUser} Not In The Q At All")
             elif dataFromClient.get('gameStatus') == "End":
-                print(f"Player Side {self.playersOnMatchAndItsDeriction.get(thisUser)}")
-                print(f"Goal Side {dataFromClient.get('Side')}")
                 if self.playersOnMatchAndItsDeriction.get(thisUser) == "Left" and dataFromClient.get('Side') == "LEFT":
                     loser = thisUser
                     winner = oppenent
@@ -200,6 +198,10 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                 else:
                     winner = thisUser
                     loser = oppenent
+                if winner is None or loser is None:
+                    return
+                print(f"Player Side {self.playersOnMatchAndItsDeriction.get(thisUser)}")
+                print(f"Goal Side {dataFromClient.get('Side')}")
                 print(f"The Game Is End, {winner} Won {loser}")
                 try:
                     roomId = self.playersOnMatchAndItsRoomId.get(thisUser)
@@ -223,7 +225,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
         except:
             pass
     async def disconnect(self, code):
-        print(f"User {self.scope['user']} Lost Connection")
+        print(f"DISCONNECT: User {self.scope['user']} Lost Connection")
         try:
             roomidForThisUser = self.playersOnMatchAndItsRoomId.get(self.scope["user"])
             player1, player2 = self.scope['user'], self.playersOnMatchAndItsOppenent.get(self.scope['user'])
@@ -236,7 +238,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                             self.playersOnMatchAndItsRoomId, self.playersOnMatchAndItsDeriction, player1, player2)
             if roomidForThisUser is not None:
                 await self.channel_layer.group_discard(roomidForThisUser, self.channel_name)
-            print("Channel Discard")
+                print("Channel Discard")
         except:
             pass
     
@@ -245,7 +247,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
         # print("Sending Data To Clinet...")
         await self.send_json(data['Data'])
     async def endGame(self, data):
-        print(f"WebSocket Will Be Closed Client: {self.scope['user']}")
+        print(f"ENDGAME: WebSocket Will Be Closed Client: {self.scope['user']}")
         await self.close()
 
 class pongLocalServer(AsyncJsonWebsocketConsumer):
@@ -262,21 +264,13 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
             paddle1 = dataFromClient.get('paddle1')
             paddle2 = dataFromClient.get('paddle2')
             if dataFromClient.get('move') == "W":
-                # print(dataFromClient)
                 paddle1 -= 20
-                # print(f"UP From {dataFromClient.get('paddle1')} To {paddle1}")
             elif dataFromClient.get('move') == "S":
-                # print(dataFromClient)
                 paddle1 += 20
-                # print(f"DOWN From {dataFromClient.get('paddle1')} To {paddle1}")
             elif dataFromClient.get('move') == "UP":
-                # print(dataFromClient)
                 paddle2 -= 20
-                # print(f"W From {dataFromClient.get('paddle2')} To {paddle2}")
             elif dataFromClient.get('move') == "DOWN":
-                # print(dataFromClient)
                 paddle2 += 20
-                # print(f"S From {dataFromClient.get('paddle2')} To {paddle2}")
             elif dataFromClient.get('move') == "BALL":
                 if BallRoute == "UP":
                     if bally - self.randomAdd >= 10:
@@ -327,6 +321,7 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
 
 #Need To Hundle Tournement
 class pongTourServer(AsyncJsonWebsocketConsumer):
+    TheWinners = list()
     tournementGroups = list(dict())
     playersOnMatchAndItsRoomId = dict()
     playersOnMatchAndItsOppenent = dict()
@@ -334,7 +329,6 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
     
     async def connect(self):
         print(f"[-----{self.scope['user']} Try To Connect On Tournement Server].------")
-
         if len(self.tournementGroups) == 0:
             print(f"{self.scope['user']} Is The First One Joined To This Tour")
             self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
@@ -356,8 +350,8 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
                 self.playersOnMatchAndItsRoomId[player3] = pongGameInfo.objects.get(login=player1).codeToPlay
                 self.playersOnMatchAndItsOppenent[player1] = player3
                 self.playersOnMatchAndItsOppenent[player3] = player1
-                self.playersOnMatchAndItsDeriction[player1] = "Right"
-                self.playersOnMatchAndItsDeriction[player3]  = "Left"
+                self.playersOnMatchAndItsDeriction[player1] = "Left"
+                self.playersOnMatchAndItsDeriction[player3]  = "Right"
                 await self.channel_layer.group_add(self.playersOnMatchAndItsRoomId.get(player1),
                                              self.tournementGroups[0].get('channel_name'))
                 await self.channel_layer.group_add(self.playersOnMatchAndItsRoomId.get(player1),
@@ -366,8 +360,8 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
                 self.playersOnMatchAndItsRoomId[player4] = pongGameInfo.objects.get(login=player2).codeToPlay
                 self.playersOnMatchAndItsOppenent[player2] = player4
                 self.playersOnMatchAndItsOppenent[player4] = player2
-                self.playersOnMatchAndItsDeriction[player2] = "Right"
-                self.playersOnMatchAndItsDeriction[player4]  = "Left"
+                self.playersOnMatchAndItsDeriction[player2] = "Left"
+                self.playersOnMatchAndItsDeriction[player4]  = "Right"
                 user1 = TournamentInfo(you=player1, player1=player2, player2=player3, player3=player4)
                 user2 = TournamentInfo(you=player2, player1=player1, player2=player3, player3=player4)
                 user3 = TournamentInfo(you=player3, player1=player2, player2=player1, player3=player4)
@@ -443,6 +437,7 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
                                 BallRoute = "DOWN"
                             BallDirection = "LEFT"
                 toFront = {
+                        'Round': 'SemiFinal',
                         'MoveFor': dataFromClient.get('WhatIGiveYou'),
                         'paddle1': paddle1,
                         'paddle2': paddle2,
@@ -481,8 +476,6 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
                     except:
                         print(f"{thisUser} Not In The Q At All")
             elif dataFromClient.get('gameStatus') == "End":
-                print(f"Player Side {self.playersOnMatchAndItsDeriction.get(thisUser)}")
-                print(f"Goal Side {dataFromClient.get('Side')}")
                 if self.playersOnMatchAndItsDeriction.get(thisUser) == "Left" and dataFromClient.get('Side') == "LEFT":
                     loser = thisUser
                     winner = oppenent
@@ -492,7 +485,13 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
                 else:
                     winner = thisUser
                     loser = oppenent
+                if winner is None or loser is None:
+                    return
+                print(f"Player Side {self.playersOnMatchAndItsDeriction.get(thisUser)}")
+                print(f"Goal Side {dataFromClient.get('Side')}")
                 print(f"The Game Is End, {winner} Won {loser}")
+                self.TheWinners.append(winner)
+                print(f"Added To Winners List: {winner}")
                 try:
                     roomId = self.playersOnMatchAndItsRoomId.get(thisUser)
                     Wuser = pongGameInfo.objects.get(login=winner)
@@ -509,19 +508,44 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
                     destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
                                                 self.playersOnMatchAndItsRoomId,
                                                 self.playersOnMatchAndItsDeriction , thisUser, oppenent)
-                    await self.channel_layer.group_send(roomId, {'type': 'endGame', 'Data': 'EMPTY'})
+                    toFront = {
+                        'Round': 'Final',
+                        'Winner': winner,
+                        'Loser': loser,
+                    }
+                    await self.channel_layer.group_send(roomId, {'type': 'FinalRound', 'Data': toFront})
                 except:
                     print(f"{thisUser} Already End And This Match Counted")
+            elif dataFromClient.get('gameStatus') == "NextRound":
+                if self.scope['user'] in self.TheWinners:
+                    await self.send_json({'Round': "FinalRound"})
+                else:
+                    await self.send_json({'Round': "NoRound"})
         except:
             pass
 
 
     async def disconnect(self, code):
-        pass
+        print(f"DISCONNECT: User {self.scope['user']} Lost Connection")
+        try:
+            roomidForThisUser = self.playersOnMatchAndItsRoomId.get(self.scope["user"])
+            player1, player2 = self.scope['user'], self.playersOnMatchAndItsOppenent.get(self.scope['user'])
+            try:
+                self.playerWantsToPlay.remove(self.scope['user'])
+                print(f"{self.scope['user']} Removed From Q")
+            except:
+                print(f"{self.scope['user']} Play And Finish Alraedy")
+            destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+                            self.playersOnMatchAndItsRoomId, self.playersOnMatchAndItsDeriction, player1, player2)
+            if roomidForThisUser is not None:
+                await self.channel_layer.group_discard(roomidForThisUser, self.channel_name)
+                print("Channel Discard")
+        except:
+            pass
 
     async def ToFrontOnConnect(self, data):
         # print("Sending Data To Clinet...")
         await self.send_json(data['Data'])
-    async def endGame(self, data):
-        print(f"WebSocket Will Be Closed Client: {self.scope['user']}")
-        await self.close()
+    
+    async def FinalRound(self, data):
+        await self.send_json(data['Data'])

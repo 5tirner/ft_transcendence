@@ -1311,6 +1311,7 @@ export class Pong extends HTMLElement
     const domElm1 = this.root.querySelector("#p1"), domElm2 = this.root.querySelector("#p2");
     let isGameStarted = false;
     let xBallPos = 280, yBallPos = 150;
+    let isFinsih = false;
     let BallDirection = "LEFT";
     let paddl1Y = 125;
     let paddl2Y = 125;
@@ -1328,10 +1329,12 @@ export class Pong extends HTMLElement
     {
       if (xBallPos < 20 || xBallPos > 580)
       {
+        isFinsih = true;
         isGameStarted = false;
         socket.ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
+        // clearTimeout(drawElements);
       }
-      else if (isGameStarted == true)
+      else if (isGameStarted == true && isFinsih == false)
       {
         const ToServer =
         {
@@ -1349,7 +1352,6 @@ export class Pong extends HTMLElement
 
     async function drawElements()
     {
-      setTimeout(()=>{
       canvasContext.clearRect(0, 0, canvas.width,canvas.height);
       ballMove();
       canvasContext.beginPath();
@@ -1384,14 +1386,13 @@ export class Pong extends HTMLElement
       canvasContext.closePath();
       canvasContext.strokeStyle = "#F0F8FF";
       canvasContext.stroke();
-      if (isGameStarted == true)
-        drawElements();
-      }, 1);
+      if (isGameStarted == true && isFinsih == false)
+        requestAnimationFrame(drawElements);
     }
 
     function applyMove(e)
     {
-      if (isGameStarted == true)
+      if (isGameStarted == true && isFinsih == false)
       {
         if (e.key == "ArrowUp" || e.key == "ArrowDown")
         {
@@ -1421,7 +1422,7 @@ export class Pong extends HTMLElement
     socket.ws.onmessage = function(e)
     {
       const dataPars = JSON.parse(e.data)
-      if (isGameStarted == false)
+      if (isGameStarted == false && isFinsih == false)
       {
           if (dataPars.player2.length == 0)
           {
@@ -1439,10 +1440,10 @@ export class Pong extends HTMLElement
               console.log("RoomId: " + dataPars.roomid)
               domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
               domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-              drawElements();
+              requestAnimationFrame(drawElements);
           }
       }
-      else if (isGameStarted == true)
+      else if (isGameStarted == true && isFinsih == false)
       {
         if (dataPars.MoveFor == "PADDLES MOVE")
         {
@@ -1457,25 +1458,12 @@ export class Pong extends HTMLElement
           BallDirection = dataPars.BallDir;
           BallRoute = dataPars.BallRoute;
         }
-        // {
-        //   // console.log("Paddle1: ", paddl1Y, " -> ", dataPars.paddle1)
-        //   // console.log("Paddle2: ", paddl2Y, " -> ", dataPars.paddle2)
-        //   // console.log(dataPars);
-        //   clearInterval(SaveInterval);
-        //   canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        //   drawElements();
-        //   SaveInterval = setInterval(ballMove, 10);
-        // }
       }
     }
 
     socket.ws.onclose = function()
     {
-      clearTimeout(drawElements);
-      isGameStarted = false;
       console.log("BYE FROM SERVER");
-      window.stop();
-      // clearInterval(SaveInterval);
     }
   }
   disconnectedCallback()
@@ -1551,8 +1539,8 @@ export class PongLocal extends HTMLElement
     {
         if (xBallPos <= 0 || xBallPos >= 600)
         {
-          // clearTimeout(drawElements);
           isGameStarted = false;
+          // clearTimeout(drawElements);
           socket.ws.send(JSON.stringify({'gameStatus': 'End'}));
         }
         else if (isGameStarted == true)
@@ -1571,7 +1559,6 @@ export class PongLocal extends HTMLElement
     this.startBtn.addEventListener('click', start);
     async function drawElements()
     {
-      setTimeout(()=>{
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
         ballMove();
         canvasContext.beginPath();
@@ -1608,8 +1595,7 @@ export class PongLocal extends HTMLElement
         canvasContext.stroke();
         // console.log(isGameStarted);
         if (isGameStarted == true)
-          drawElements();
-      }, 1);
+          requestAnimationFrame(drawElements);
     }
 
     function applyMove(e)
@@ -1643,7 +1629,7 @@ export class PongLocal extends HTMLElement
     function start()
     {
       isGameStarted = true;
-      drawElements();
+      requestAnimationFrame(drawElements);
     }
 
     document.addEventListener("keyup", applyMove);
@@ -1673,9 +1659,7 @@ export class PongLocal extends HTMLElement
 
     socket.ws.onclose = function()
     {
-        clearTimeout(drawElements);
-        // isGameStarted = false;
-        console.log("BYE FROM SERVER");
+      console.log("BYE FROM SERVER");
     }
   }
   disconnectedCallback()
