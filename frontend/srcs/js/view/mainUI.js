@@ -616,106 +616,90 @@ export class Histo extends HTMLElement
   {
     this.setAttribute('id', 'TheHistory');
     const ticData = await auth.getTicHisto();
+    console.log("ticData: ", ticData);
     const pigData = await auth.getPongHisto();
     this.root.innerHTML = `
       <style>
-      .container {
-          background: var(--dark-purple);
+        .container {
+            background: var(--dark-purple);
+            color: var(--light-olive);
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1000px;
+            text-align: left;
+            position: relative;
+            width: 100%;
+        }
+        
+        h1 {
+            color: var(--light-olive);
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 500;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        th {
+            background: var(--dark-purple);
+            color: var(--light-olive);
+            border-bottom: 2px solid #eee;
+        }
+        
+        tbody tr {
+            background: var(--dark-purple);
+            color: var(--light-olive);
+            transition: background-color 0.3s;
+        }
+        
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        tbody tr td
+        {
           color: var(--light-olive);
-          padding: 40px;
-          border-radius: 24px;
-          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
-          width: 90%;
-          max-width: 1000px;
-          text-align: left;
-          position: relative;
-          width: 100%;
-      }
-      
-      h1 {
-          color: var(--light-olive);
-          margin-bottom: 20px;
-          font-size: 24px;
-          font-weight: 500;
-      }
-      
-      table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-top: 20px;
-      }
-      
-      th, td {
-          padding: 15px 20px;
-          text-align: left;
-          font-size: 14px;
-          color: #666;
-      }
-      
-      th {
-          background: var(--dark-purple);
-          color: var(--light-olive);
-          border-bottom: 2px solid #eee;
-      }
-      
-      tbody tr {
-          background: var(--dark-purple);
-          color: var(--light-olive);
-          transition: background-color 0.3s;
-      }
-      
-      tbody tr:hover {
-          background-color: #f9f9f9;
-      }
-      
-      .highlight {
-          background-color: #f0f8ff;
-          font-weight: bold;
-          border-radius: 8px;
-          position: relative;
-      }
-      
-      td.highlight {
-          font-size: 16px;
-          color: #333;
-      }
-      
-      
-      // .highlight::before {
-      //     content: '';
-      //     position: absolute;
-      //     top: -8px;
-      //     bottom: -8px;
-      //     left: -8px;
-      //     right: -8px;
-      //     background-color: rgba(240, 248, 255, 0.8);
-      //     z-index: -1;
-      //     border-radius: 16px;
-      //     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      // }
-      
-      .opponent {
-          display: flex;
-          align-items: center;
-      }
-      
-      .opponent img {
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-          margin-right: 10px;
-      }
-      
-      .win {
-          color: green;
-          font-weight: bold;
-      }
-      
-      .loss {
-          color: red;
-          font-weight: bold;
-      }
+        }
+        
+        .highlight {
+            background-color: #f0f8ff;
+            font-weight: bold;
+            border-radius: 8px;
+            position: relative;
+        }
 
+        .opponent {
+            display: flex;
+            align-items: center;
+        }
+        
+        .opponent img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        .win
+        {
+          color: var(--teal);
+        }
+        .lose
+        {
+          color: var(--coral);
+        }
       </style>
       <div class="container">
         <h1>Player Match History</h1>
@@ -727,44 +711,45 @@ export class Histo extends HTMLElement
                     <th>Score</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td class="opponent">
-                        <img src="https://avatar.iran.liara.run/public" alt="Player B Avatar">
-                        <span>Player B</span>
-                    </td>
-                    <td class="win">Win</td>
-                    <td>3-2</td>
-                </tr>
-                <tr>
-                    <td class="opponent">
-                        <img src="https://avatar.iran.liara.run/public" alt="Player C Avatar">
-                        <span>Player C</span>
-                    </td>
-                    <td class="loss">Loss</td>
-                    <td>1-3</td>
-                </tr>
-                <tr>
-                    <td class="opponent">
-                        <img src="https://avatar.iran.liara.run/public" alt="Player D Avatar">
-                        <span>Player D</span>
-                    </td>
-                    <td class="win">Win</td>
-                    <td>4-1</td>
-                </tr>
-                <tr>
-                    <td class="opponent">
-                        <img src="https://avatar.iran.liara.run/public" alt="Player E Avatar">
-                        <span>Player E</span>
-                    </td>
-                    <td class="win">Win</td>
-                    <td>3-0</td>
-                </tr>
-    
+            <tbody class="injectHere">
             </tbody>
         </table>
     </div>
     `;
+    const injectHere = this.root.querySelector('.injectHere');
+    const parsed = JSON.parse(ticData);
+    let elem = '';
+    if ( Object.keys(parsed).length == 0)
+    {
+      elem = `
+        <tr>
+          <td colspan="5" style="text-align:center; color: var(--light-olive); padding: 20px; border-radius: 8px;">
+            No Matches Played Yet!
+          </td>
+        </tr>
+      `
+    }
+    else
+    {
+      let result = '';
+      let what = ''
+      for (const [key, value] of Object.entries(parsed)) {
+        if (value.winner === value.oppenent)
+           result = 'lose';
+        else
+          result = 'win';
+        elem += `
+        <tr>
+          <td class="oppenent">
+            ${value.oppenent}
+          </td>
+          <td class="${result}">
+            ${result}
+          </td>
+        </tr>`;
+      }
+    }
+    injectHere.innerHTML = elem;
   }
 }
 // Platform View
