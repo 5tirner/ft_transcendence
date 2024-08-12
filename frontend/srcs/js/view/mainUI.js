@@ -767,7 +767,7 @@ export class Histo extends HTMLElement
           elem += `
           <tr>
             <td class="opponent">
-              <img src="${value.pic}" alt="avatar">
+              <img src="${value.pic || "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"}" alt="avatar">
               ${value.oppenent}
             </td>
             <td class="${result}">
