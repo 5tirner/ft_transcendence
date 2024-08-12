@@ -762,7 +762,8 @@ export class Histo extends HTMLElement
             result = 'win';
           elem += `
           <tr>
-            <td class="oppenent">
+            <td class="opponent">
+              <img src="https://avatar.iran.liara.run/public" alt="avatar">
               ${value.oppenent}
             </td>
             <td class="${result}">
@@ -2011,7 +2012,6 @@ export class ConfirmMsg extends HTMLElement
       <div class="wrapper">
         <div class="popup">
           <p>Sure wanna leave?</p>
-          <small>You'll lose a game</small> 
           <div class="text-right">
             <button class="btn btn-cancel">Cancel</button>
             <button class="btn btn-primary">Ok</button>

@@ -64,6 +64,7 @@ body {
     height: 100%;
     flex-basis: 4%;
     flex-shrink: 0;
+    background-color: var(--dark-purple);
 }
 
 #middle-view {
@@ -72,7 +73,10 @@ body {
     padding-top: 30px;
     overflow: hidden;
     font-family: var(--body-font);
-    background-color: var(--light-olive);
+    background-color: var(--dark-purple);
+    /* background-color: #4a1b40; */
+    /* border-left: 1px solid red;
+    border-right: 1px solid red; */
 }
 #TheHistory
 {
@@ -82,7 +86,7 @@ body {
 }
 
 #right-view {
-    background-color: var(--dark-teal);
+    background-color: var(--dark-purple);
     color: var(--light-olive);
     flex-basis: 20%;
     flex-shrink: 0;
@@ -149,7 +153,7 @@ nav a {
 
 .nav {
     /* background-color: var(--deep-blue); */
-    background-color: var(--dark-teal);
+    /* background-color: var(--dark-purple); */
     color: var(--light-olive);
     width: 100%;
     height: 100%;
