@@ -757,6 +757,9 @@ export class Histo extends HTMLElement
         let result = '';
         let what = ''
         for (const [key, value] of Object.entries(parsed)) {
+          console.log("key: ", key);
+          console.log("value: ", value);
+          
           if (value.winner === value.oppenent)
              result = 'lose';
           else
@@ -764,7 +767,7 @@ export class Histo extends HTMLElement
           elem += `
           <tr>
             <td class="opponent">
-              <img src="https://avatar.iran.liara.run/public" alt="avatar">
+              <img src="${value.pic}" alt="avatar">
               ${value.oppenent}
             </td>
             <td class="${result}">
