@@ -7,16 +7,19 @@ class pongGameInfo(models.Model):
     draws = models.IntegerField(default=0)
     gamesPlayed = models.IntegerField(default=0)
     codeToPlay = models.CharField(max_length=10)
-    TourPlayed = models.IntegerField(default=0)
+
+class playerAndHisPic(models.Model):
+    login = models.CharField(max_length=20)
+    pic = models.CharField(max_length=100)
 
 class pongHistory(models.Model):
     you = models.CharField(max_length=20)
     oppenent = models.CharField(max_length=20)
     winner = models.CharField(max_length=20)
 
-class TournamentInfo(models.Model):
-    you = models.CharField(max_length=20)
-    player1 = models.CharField(max_length=20)
-    player2 = models.CharField(max_length=20)
-    player3 = models.CharField(max_length=20)
-    winner = models.CharField(max_length=20)
+# class TournamentInfo(models.Model):
+#     you = models.CharField(max_length=20)
+#     player1 = models.CharField(max_length=20)
+#     player2 = models.CharField(max_length=20)
+#     player3 = models.CharField(max_length=20)
+#     winner = models.CharField(max_length=20)
