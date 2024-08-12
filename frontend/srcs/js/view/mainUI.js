@@ -1528,10 +1528,10 @@ export class PongLocal extends HTMLElement
     let BallRoute = "LINE";
     const canvas = this.root.querySelector('#board');
     const canvasContext = canvas.getContext('2d');
-    canvasContext.shadowColor = "black";
-    canvasContext.shadowBlur = 15;
-    canvasContext.shadowOffsetX = 5;
-    canvasContext.shadowOffsetY = 2;
+    // canvasContext.shadowColor = "black";
+    // canvasContext.shadowBlur = 15;
+    // canvasContext.shadowOffsetX = 5;
+    // canvasContext.shadowOffsetY = 2;
     socket.ws = new WebSocket('ws://' + location.host + '/localGameWs/');
 
     function ballMove()
@@ -1560,13 +1560,13 @@ export class PongLocal extends HTMLElement
     {
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
         ballMove();
-        canvasContext.beginPath();
-        canvasContext.lineWidth = 4;
-        canvasContext.moveTo(300, 0);
-        canvasContext.lineTo(300, 300);
-        canvasContext.closePath();
-        canvasContext.strokeStyle = "rgb(128, 9, 240)";
-        canvasContext.stroke();
+        // canvasContext.beginPath();
+        // canvasContext.lineWidth = 4;
+        // canvasContext.moveTo(300, 0);
+        // canvasContext.lineTo(300, 300);
+        // canvasContext.closePath();
+        // canvasContext.strokeStyle = "rgb(128, 9, 240)";
+        // canvasContext.stroke();
 
         canvasContext.beginPath();
         canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.20);
