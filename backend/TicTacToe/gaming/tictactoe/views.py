@@ -1,7 +1,7 @@
-from .models import gameInfo, onLobby, history
+from .models import gameInfo, history, playerAndHisPic
 from rest_framework import response, status
 from .roomCodes import roomcode
-from .serializer import gameInfoModelSerializer, historyModelSirializer
+from .serializer import gameInfoModelSerializer
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -70,6 +70,7 @@ def historic(req):
     matchNumbers = 1
     for i in history.objects.all().values():
         if i.get('you') == name:
+            i['pic'] = playerAndHisPic.objects.get(login=i.get('oppenent')).pic
             allMatches[f"match{matchNumbers}"] = i
             matchNumbers += 1
     return JsonResponse(json.dumps(allMatches), safe=False)
