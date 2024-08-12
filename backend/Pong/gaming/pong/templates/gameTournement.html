@@ -70,9 +70,8 @@
           if (xBallPos < 20 || xBallPos > 580)
           {
             ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
-            clearTimeout(drawElements);
           }
-          else if (isGameStarted == true && ws.OPEN)
+          else if (isGameStarted == true)
           {
             const ToServer =
             {
@@ -88,7 +87,6 @@
 
         async function drawElements()
         {
-          setTimeout(()=>{
           canvasContext.clearRect(0, 0, canvas.width,canvas.height);
           ballMove();
           canvasContext.beginPath();
@@ -124,13 +122,12 @@
           canvasContext.strokeStyle = "#F0F8FF";
           canvasContext.stroke();
           if (isGameStarted == true)
-            drawElements();
-          }, 1);
+            await requestAnimationFrame(drawElements);
         }
 
         function applyMove(e)
         {
-          if (isGameStarted == true && ws.OPEN)
+          if (isGameStarted == true)
           {
             if (e.key == "ArrowUp" || e.key == "ArrowDown")
             {
@@ -170,7 +167,7 @@
             const domElm2 = document.getElementById("p2");
             domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
             domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-            drawElements();
+            requestAnimationFrame(drawElements);
           }
           else if (isGameStarted == true)
           {
@@ -193,8 +190,6 @@
             else if (dataPars.Round == "Final")
             {
               console.log('The Game Is End, And We Get To The Final Round');
-              isGameStarted == false;
-              clearTimeout(drawElements)
               const ToServer = 
               {
                 'gameStatus': "NextRound",
@@ -204,17 +199,15 @@
             else if (dataPars.Round == "NoRound")
             {
               console.log('shiiiiit, lose situation here');
-              ws.close();
+              isGameStarted = false;
+              // ws.close();
             }
             else if (dataPars.Round == "FinalRound")
             {
-              ws.close()
+              isGameStarted = false;
+              // ws.close()
               console.log('wooooow, win situation here');
-              ws = new WebSocket('ws://' + location.host + '/PongTourWs/');
-              ws.onopen = function()
-              {
-                console.log("Welcome Again");
-              }
+              FinalRoundStart();
             }
           }
         }
@@ -223,7 +216,15 @@
         {
           isGameStarted = false;
           console.log("BYE FROM SERVER");
-          window.stop();
+        }
+  
+        function FinalRoundStart()
+        {
+          const ws2 = new WebSocket('ws://' + location.host + '/PongTourWs/')
+          ws2.onopen = function()
+          {
+            console.log("Welcome To The Final Round");
+          }
         }
     </script>
 </body>
