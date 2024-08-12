@@ -1,6 +1,6 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-from .models import onLobby, gameInfo, history
+from .models import gameInfo, history, playerAndHisPic
 import os
 from .checkClick import isLegalClick
 from .destroyThisGameInfo import destroyThisGameInformations
@@ -41,6 +41,8 @@ class myServerOnGame(AsyncWebsocketConsumer):
             print(f"Welcome To The Game {self.scope['user']}")
             addUserToDb = gameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
             addUserToDb.save()
+            addUserPic = playerAndHisPic(login=self.scope['user'], pic=self.scope['pic'])
+            addUserPic.save()
         if len(self.playerWantsToPlay) == 0:
             player1, player2 = self.scope['user'], ""
             if self.playersOnMatchAndItsOppenent.get(player1) is not None:
