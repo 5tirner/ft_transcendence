@@ -253,7 +253,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
         await self.close()
 
 class pongLocalServer(AsyncJsonWebsocketConsumer):
-    randomAdd = random.choice([1, 2, 5])
+    randomAdd = random.choice([1, 2])
     async def connect(self):
         print(f"{self.scope['user']} Try To Play Local Server")
         await self.accept()
@@ -285,23 +285,23 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
                     else:
                         BallRoute = "UP"
                 if (BallDirection == "LEFT"):
-                    ballx -= 1
+                    ballx -= 2
                     if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
                         if (bally < paddle1 + 25):
                             BallRoute = "UP"
                         elif (bally > paddle1 + 25):
                             BallRoute = "DOWN"
                         BallDirection = "RIGHT"
-                        self.randomAdd = random.choice([1, 2, 5])
+                        self.randomAdd = random.choice([1, 2])
                 elif (BallDirection == "RIGHT"):
-                    ballx += 1
+                    ballx += 2
                     if ballx == 570 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
                         if (bally < paddle2 + 25):
                             BallRoute = "UP"
                         elif (bally > paddle2 + 25):
                             BallRoute = "DOWN"
                         BallDirection = "LEFT"
-                        self.randomAdd = random.choice([1, 2, 5])
+                        self.randomAdd = random.choice([1, 2])
             tofront = {
                 'MoveFor': dataFromClient.get('WhatIGiveYou'),
                 'paddle1': paddle1,

@@ -1553,7 +1553,7 @@ export class PongLocal extends HTMLElement
     let BallDirection = "LEFT";
     let paddl1Y = 125;
     let paddl2Y = 125;
-    // let SaveInterval = 0;
+    var SaveInterval = 0;
     let BallRoute = "LINE";
     const canvas = this.root.querySelector('#board');
     const canvasContext = canvas.getContext('2d');
@@ -1570,6 +1570,7 @@ export class PongLocal extends HTMLElement
           isGameStarted = false;
           // clearTimeout(drawElements);
           socket.ws.send(JSON.stringify({'gameStatus': 'End'}));
+          clearInterval(SaveInterval);
         }
         else if (isGameStarted == true)
         {
@@ -1585,10 +1586,11 @@ export class PongLocal extends HTMLElement
         }
     }
     this.startBtn.addEventListener('click', start);
-    async function drawElements()
+    function drawElements()
     {
-        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+      console.log("All IS Good");
         ballMove();
+        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
         // canvasContext.beginPath();
         // canvasContext.lineWidth = 4;
         // canvasContext.moveTo(300, 0);
@@ -1622,8 +1624,8 @@ export class PongLocal extends HTMLElement
         canvasContext.strokeStyle = "#F0F8FF";
         canvasContext.stroke();
         // console.log(isGameStarted);
-        if (isGameStarted == true)
-          requestAnimationFrame(drawElements);
+        // if (isGameStarted == true)
+        //   requestAnimationFrame(drawElements);
     }
 
     function applyMove(e)
@@ -1657,7 +1659,8 @@ export class PongLocal extends HTMLElement
     function start()
     {
       isGameStarted = true;
-      requestAnimationFrame(drawElements);
+      // console.log("Game Started Now");
+      SaveInterval = setInterval(drawElements, 5);
     }
 
     document.addEventListener("keyup", applyMove);
