@@ -1378,44 +1378,46 @@ export class Pong extends HTMLElement
       }
     }
 
-    async function drawElements()
+    function drawElements()
     {
-      canvasContext.clearRect(0, 0, canvas.width,canvas.height);
-      ballMove();
-      // canvasContext.beginPath();
-      // canvasContext.lineWidth = 4;
-      // canvasContext.moveTo(300, 0);
-      // canvasContext.lineTo(300, 300);
-      // canvasContext.closePath();
-      // canvasContext.strokeStyle = "rgb(128, 9, 240)";
-      // canvasContext.stroke();
-
-      canvasContext.beginPath();
-      canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.20);
-      canvasContext.lineWidth = 0.5;
-      canvasContext.fillStyle = "#F0F8FF";
-      canvasContext.fill();
-      canvasContext.closePath();
-      canvasContext.strokeStyle = "rgb(140, 29, 260)";
-      canvasContext.stroke();
-        
-      canvasContext.beginPath();
-      canvasContext.lineWidth = 8;
-      canvasContext.moveTo(20, paddl1Y)
-      canvasContext.lineTo(20, paddl1Y + 50);
-      canvasContext.closePath();
-      canvasContext.strokeStyle = "#F0F8FF";
-      canvasContext.stroke();
-
-      canvasContext.beginPath();
-      canvasContext.lineWidth = 8;
-      canvasContext.moveTo(580, paddl2Y)
-      canvasContext.lineTo(580, paddl2Y + 50);
-      canvasContext.closePath();
-      canvasContext.strokeStyle = "#F0F8FF";
-      canvasContext.stroke();
       if (isGameStarted == true && isFinsih == false)
+      {
+        canvasContext.clearRect(0, 0, canvas.width,canvas.height);
+        ballMove();
+        // canvasContext.beginPath();
+        // canvasContext.lineWidth = 4;
+        // canvasContext.moveTo(300, 0);
+        // canvasContext.lineTo(300, 300);
+        // canvasContext.closePath();
+        // canvasContext.strokeStyle = "rgb(128, 9, 240)";
+        // canvasContext.stroke();
+
+        canvasContext.beginPath();
+        canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.20);
+        canvasContext.lineWidth = 0.5;
+        canvasContext.fillStyle = "#F0F8FF";
+        canvasContext.fill();
+        canvasContext.closePath();
+        canvasContext.strokeStyle = "rgb(140, 29, 260)";
+        canvasContext.stroke();
+
+        canvasContext.beginPath();
+        canvasContext.lineWidth = 8;
+        canvasContext.moveTo(20, paddl1Y)
+        canvasContext.lineTo(20, paddl1Y + 50);
+        canvasContext.closePath();
+        canvasContext.strokeStyle = "#F0F8FF";
+        canvasContext.stroke();
+
+        canvasContext.beginPath();
+        canvasContext.lineWidth = 8;
+        canvasContext.moveTo(580, paddl2Y)
+        canvasContext.lineTo(580, paddl2Y + 50);
+        canvasContext.closePath();
+        canvasContext.strokeStyle = "#F0F8FF";
+        canvasContext.stroke();
         requestAnimationFrame(drawElements);
+      }
     }
 
     function applyMove(e)

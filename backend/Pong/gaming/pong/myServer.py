@@ -30,20 +30,10 @@ class myPongserver(AsyncJsonWebsocketConsumer):
             player1, player2 = self.scope['user'], ""
             print("Vide Q")
             if self.playersOnMatchAndItsOppenent.get(player1) is not None:
+                self.scope['user'] = "Bad One"
                 await self.accept()
-                player2 = self.playersOnMatchAndItsOppenent.get(player1)
-                destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
-                    self.playersOnMatchAndItsRoomId,
-                    self.playersOnMatchAndItsDeriction, player1, player2)
-                print(f"Can't Add Player {player1} To Q His Already In Match")
-                user1 = pongGameInfo.objects.get(login=player1)
-                user1.loses+=1
-                user1.save()
-                user2 = pongGameInfo.objects.get(login=player2)
-                user2.wins +=1
-                user2.save()
-                print(f"And This Conuted As Lose To {player1} Against {player2}")
                 await self.close()
+                return
             else:
                 roomid = pongGameInfo.objects.get(login=self.scope["user"]).codeToPlay
                 self.playerWantsToPlay.append(self.scope['user'])
@@ -57,27 +47,15 @@ class myPongserver(AsyncJsonWebsocketConsumer):
             player1, player2 = self.playerWantsToPlay[0], self.scope['user']
             print("Player Waiting...")
             if player1 == player2:
+                self.scope['user'] = "Bad One"
                 await self.accept()
-                try:
-                    self.playerWantsToPlay.remove(player1)
-                except:
-                    pass
-                print(f"{player1} Deux Fois")
                 await self.close()
+                return
             elif self.playersOnMatchAndItsRoomId.get(player2) is not None:
+                self.scope['user'] = "Bad One"
                 await self.accept()
-                print(f"Can't Add Player {player2} To Game With {player1} His Alraedy In Match")
-                destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
-                    self.playersOnMatchAndItsRoomId,
-                    self.playersOnMatchAndItsDeriction, player1, player2)
-                user1 = pongGameInfo.objects.get(login=player1)
-                user1.loses+=1
-                user1.save()
-                user2 = pongGameInfo.objects.get(login=player2)
-                user2.wins +=1
-                user2.save()
-                print(f"And This Conuted As Lose To {player1} Against {player2}")
                 await self.close()
+                return
             else:
                 print(f"{self.scope['user']} Will Joinned To The Player {self.playerWantsToPlay[0]}")
                 roomid = pongGameInfo.objects.get(login=self.playerWantsToPlay[0]).codeToPlay
@@ -331,10 +309,22 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
     
     async def connect(self):
         print(f"[-----{self.scope['user']} Try To Connect On Tournement Server].------")
+        if self.playersOnMatchAndItsDeriction.get(self.scope['user']) is not None:
+            print(f"{self.scope['user']} Already In Another Game")
+            self.scope['user'] = "Bad One"
+            await self.accept()
+            await self.close()
+            return
         if len(self.tournementGroups) == 0:
             print(f"{self.scope['user']} Is The First One Joined To This Tour")
             self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
         elif len(self.tournementGroups) < 4:
+            for i in self.tournementGroups:
+                if i.get('name') == self.scope['user']:
+                    self.scope['user'] = "Bad One"
+                    await self.accept()
+                    await self.close()
+                    return
             print(f"{self.scope['user']} Will Joined To This List Of Players:")
             print(f"-> {self.tournementGroups}")
             self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
@@ -364,14 +354,6 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
                 self.playersOnMatchAndItsOppenent[player4] = player2
                 self.playersOnMatchAndItsDeriction[player2] = "Left"
                 self.playersOnMatchAndItsDeriction[player4]  = "Right"
-                # user1 = TournamentInfo(you=player1, player1=player2, player2=player3, player3=player4)
-                # user2 = TournamentInfo(you=player2, player1=player1, player2=player3, player3=player4)
-                # user3 = TournamentInfo(you=player3, player1=player2, player2=player1, player3=player4)
-                # user4 = TournamentInfo(you=player4, player1=player2, player2=player3, player3=player1)
-                # user1.save()
-                # user2.save()
-                # user3.save()
-                # user4.save()
                 await self.channel_layer.group_add(self.playersOnMatchAndItsRoomId.get(player2),
                                              self.tournementGroups[1].get('channel_name'))
                 await self.channel_layer.group_add(self.playersOnMatchAndItsRoomId.get(player2),
