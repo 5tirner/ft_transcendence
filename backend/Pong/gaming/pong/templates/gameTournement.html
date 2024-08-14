@@ -220,11 +220,12 @@
   
         function FinalRoundStart()
         {
-          const ws2 = new WebSocket('ws://' + location.host + '/PongTourWs/')
-          ws2.onopen = function()
-          {
-            console.log("Welcome To The Final Round");
-          }
+          // const ws2 = new WebSocket('ws://' + location.host + '/PongTourWs/')
+          // ws2.onopen = function()
+          // {
+          //   console.log("Welcome To The Final Round");
+          // }
+          location.href = "http://127.0.0.1:8000/PongPong/Final/";
         }
     </script>
 </body>

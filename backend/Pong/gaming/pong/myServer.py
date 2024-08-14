@@ -552,3 +552,11 @@ class pongTourServer(AsyncJsonWebsocketConsumer):
     
     async def FinalRound(self, data):
         await self.send_json(data['Data'])
+
+class Finalist(AsyncJsonWebsocketConsumer):
+    async def connect(self):
+        await self.accept()
+    async def receive(self, text_data=None, bytes_data=None):
+        print(f"Clinet: {self.scope['user']}\nData: {text_data}")
+    async def disconnect(self, code):
+        await self.close()
