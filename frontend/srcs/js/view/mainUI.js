@@ -1591,7 +1591,6 @@ export class PongLocal extends HTMLElement
     this.startBtn.addEventListener('click', start);
     function drawElements()
     {
-      console.log("All IS Good");
         ballMove();
         canvasContext.clearRect(0, 0, canvas.width, canvas.height);
         // canvasContext.beginPath();
@@ -1670,7 +1669,7 @@ export class PongLocal extends HTMLElement
 
     socket.ws.onopen = function()
     {
-        console.log("User On Game");
+      console.log("User On Game");
     }
 
     socket.ws.onmessage = function(e)

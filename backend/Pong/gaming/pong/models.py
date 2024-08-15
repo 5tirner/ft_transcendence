@@ -16,3 +16,6 @@ class pongHistory(models.Model):
     you = models.CharField(max_length=20)
     oppenent = models.CharField(max_length=20)
     winner = models.CharField(max_length=20)
+
+class WinnerList(models.Model):
+    login=models.CharField(max_length=20)
