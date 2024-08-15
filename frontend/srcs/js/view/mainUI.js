@@ -1492,6 +1492,8 @@ export class Pong extends HTMLElement
 
     socket.ws.onclose = function()
     {
+      isFinsih = true;
+      isGameStarted = false;
       console.log("BYE FROM SERVER");
     }
   }

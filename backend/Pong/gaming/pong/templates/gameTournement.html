@@ -85,7 +85,7 @@
           }
         }
 
-        async function drawElements()
+        function drawElements()
         {
           canvasContext.clearRect(0, 0, canvas.width,canvas.height);
           ballMove();
@@ -122,7 +122,7 @@
           canvasContext.strokeStyle = "#F0F8FF";
           canvasContext.stroke();
           if (isGameStarted == true)
-            await requestAnimationFrame(drawElements);
+            requestAnimationFrame(drawElements);
         }
 
         function applyMove(e)
