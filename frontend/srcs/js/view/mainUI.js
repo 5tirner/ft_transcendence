@@ -1226,19 +1226,18 @@ export class TTT extends HTMLElement
             domElem.classList.add("squareO");
           }
           // // console.log("Index", board.indexOf("."),  "->" , board[board.indexOf(".")]);
-          if (board.indexOf(".") == -1)
-          {
-            // console.log("Setting The Result Of This Game On Data Base");
-            const toServer = { 'gameStatus': "draw", 'position': -1, 'board': board};
-            socket.ws.send(JSON.stringify(toServer));
-          }
-
-
           if (isGameEnd(dataPars.x_o, board) == true)
           {
             // console.log("Setting The Result Of This Game On Data Base");
             const toServer = { 'gameStatus': "winner", 'position': -1, 'board': board,
                             'winner': dataPars.user, 'loser': dataPars.oppenent};
+            socket.ws.send(JSON.stringify(toServer));
+          }
+  
+          else if (board.indexOf(".") == -1)
+          {
+            // console.log("Setting The Result Of This Game On Data Base");
+            const toServer = { 'gameStatus': "draw", 'position': -1, 'board': board};
             socket.ws.send(JSON.stringify(toServer));
           }
         }
@@ -1378,44 +1377,46 @@ export class Pong extends HTMLElement
       }
     }
 
-    async function drawElements()
+    function drawElements()
     {
-      canvasContext.clearRect(0, 0, canvas.width,canvas.height);
-      ballMove();
-      // canvasContext.beginPath();
-      // canvasContext.lineWidth = 4;
-      // canvasContext.moveTo(300, 0);
-      // canvasContext.lineTo(300, 300);
-      // canvasContext.closePath();
-      // canvasContext.strokeStyle = "rgb(128, 9, 240)";
-      // canvasContext.stroke();
-
-      canvasContext.beginPath();
-      canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.20);
-      canvasContext.lineWidth = 0.5;
-      canvasContext.fillStyle = "#F0F8FF";
-      canvasContext.fill();
-      canvasContext.closePath();
-      canvasContext.strokeStyle = "rgb(140, 29, 260)";
-      canvasContext.stroke();
-        
-      canvasContext.beginPath();
-      canvasContext.lineWidth = 8;
-      canvasContext.moveTo(20, paddl1Y)
-      canvasContext.lineTo(20, paddl1Y + 50);
-      canvasContext.closePath();
-      canvasContext.strokeStyle = "#F0F8FF";
-      canvasContext.stroke();
-
-      canvasContext.beginPath();
-      canvasContext.lineWidth = 8;
-      canvasContext.moveTo(580, paddl2Y)
-      canvasContext.lineTo(580, paddl2Y + 50);
-      canvasContext.closePath();
-      canvasContext.strokeStyle = "#F0F8FF";
-      canvasContext.stroke();
       if (isGameStarted == true && isFinsih == false)
+      {
+        canvasContext.clearRect(0, 0, canvas.width,canvas.height);
+        ballMove();
+        // canvasContext.beginPath();
+        // canvasContext.lineWidth = 4;
+        // canvasContext.moveTo(300, 0);
+        // canvasContext.lineTo(300, 300);
+        // canvasContext.closePath();
+        // canvasContext.strokeStyle = "rgb(128, 9, 240)";
+        // canvasContext.stroke();
+
+        canvasContext.beginPath();
+        canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.20);
+        canvasContext.lineWidth = 0.5;
+        canvasContext.fillStyle = "#F0F8FF";
+        canvasContext.fill();
+        canvasContext.closePath();
+        canvasContext.strokeStyle = "rgb(140, 29, 260)";
+        canvasContext.stroke();
+
+        canvasContext.beginPath();
+        canvasContext.lineWidth = 8;
+        canvasContext.moveTo(20, paddl1Y)
+        canvasContext.lineTo(20, paddl1Y + 50);
+        canvasContext.closePath();
+        canvasContext.strokeStyle = "#F0F8FF";
+        canvasContext.stroke();
+
+        canvasContext.beginPath();
+        canvasContext.lineWidth = 8;
+        canvasContext.moveTo(580, paddl2Y)
+        canvasContext.lineTo(580, paddl2Y + 50);
+        canvasContext.closePath();
+        canvasContext.strokeStyle = "#F0F8FF";
+        canvasContext.stroke();
         requestAnimationFrame(drawElements);
+      }
     }
 
     function applyMove(e)
@@ -1491,6 +1492,8 @@ export class Pong extends HTMLElement
 
     socket.ws.onclose = function()
     {
+      isFinsih = true;
+      isGameStarted = false;
       console.log("BYE FROM SERVER");
     }
   }
@@ -1553,7 +1556,7 @@ export class PongLocal extends HTMLElement
     let BallDirection = "LEFT";
     let paddl1Y = 125;
     let paddl2Y = 125;
-    // let SaveInterval = 0;
+    var SaveInterval = 0;
     let BallRoute = "LINE";
     const canvas = this.root.querySelector('#board');
     const canvasContext = canvas.getContext('2d');
@@ -1570,6 +1573,7 @@ export class PongLocal extends HTMLElement
           isGameStarted = false;
           // clearTimeout(drawElements);
           socket.ws.send(JSON.stringify({'gameStatus': 'End'}));
+          clearInterval(SaveInterval);
         }
         else if (isGameStarted == true)
         {
@@ -1585,10 +1589,10 @@ export class PongLocal extends HTMLElement
         }
     }
     this.startBtn.addEventListener('click', start);
-    async function drawElements()
+    function drawElements()
     {
-        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
         ballMove();
+        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
         // canvasContext.beginPath();
         // canvasContext.lineWidth = 4;
         // canvasContext.moveTo(300, 0);
@@ -1622,8 +1626,8 @@ export class PongLocal extends HTMLElement
         canvasContext.strokeStyle = "#F0F8FF";
         canvasContext.stroke();
         // console.log(isGameStarted);
-        if (isGameStarted == true)
-          requestAnimationFrame(drawElements);
+        // if (isGameStarted == true)
+        //   requestAnimationFrame(drawElements);
     }
 
     function applyMove(e)
@@ -1657,14 +1661,15 @@ export class PongLocal extends HTMLElement
     function start()
     {
       isGameStarted = true;
-      requestAnimationFrame(drawElements);
+      // console.log("Game Started Now");
+      SaveInterval = setInterval(drawElements, 5);
     }
 
     document.addEventListener("keyup", applyMove);
 
     socket.ws.onopen = function()
     {
-        console.log("User On Game");
+      console.log("User On Game");
     }
 
     socket.ws.onmessage = function(e)

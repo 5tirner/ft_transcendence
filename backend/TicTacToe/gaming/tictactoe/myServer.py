@@ -63,8 +63,6 @@ class myServerOnGame(AsyncWebsocketConsumer):
                 print(f"{self.scope['user']} Alone In The Q, He Waiting")
                 await self.channel_layer.group_add(roomid, self.channel_name)
                 await self.accept()
-                if player1 == "ysabr":
-                    player1 = "M9ayam Sba3"
                 toFronEnd = json.dumps({'player1': player1, 'player2': player2, 'roomid': roomid})
                 print(f"Player1: {player1}, Player2: {player2}, RoomId: {roomid}")
                 await self.channel_layer.group_send(roomid, {'type': 'ToFrontOnConnect', 'Data': toFronEnd})
@@ -144,9 +142,9 @@ class myServerOnGame(AsyncWebsocketConsumer):
             elif dataFromClient.get("gameStatus") == "winner":
                 thisUser = dataFromClient.get('winner')
                 hisOppenent = self.playersOnMatchAndItsOppenent.get(thisUser)
+                if thisUser is None or hisOppenent is None:
+                    return
                 print(f"{thisUser} Won {hisOppenent}")
-                if hisOppenent is None:
-                    print(f"This Match already Counted")
                 roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
                 Winner, loser = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)
                 print(f"Winner {Winner.login}: Wins: {Winner.wins} + 1")

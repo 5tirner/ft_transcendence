@@ -108,6 +108,7 @@ const API = {
 	},
 
 	makeGetRequest: async (url) => {
+		console.log(url);
 		const headers = {
 			"Content-Type": "application/json"
 		};

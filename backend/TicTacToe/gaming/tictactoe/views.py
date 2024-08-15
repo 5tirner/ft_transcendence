@@ -4,7 +4,6 @@ from .roomCodes import roomcode
 from .serializer import gameInfoModelSerializer
 from rest_framework.decorators import api_view
 from django.http import JsonResponse
-from django.shortcuts import render
 from .isAuthUser import isAuthUser
 import json
 

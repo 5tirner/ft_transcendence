@@ -85,7 +85,7 @@
           }
         }
 
-        async function drawElements()
+        function drawElements()
         {
           canvasContext.clearRect(0, 0, canvas.width,canvas.height);
           ballMove();
@@ -122,7 +122,7 @@
           canvasContext.strokeStyle = "#F0F8FF";
           canvasContext.stroke();
           if (isGameStarted == true)
-            await requestAnimationFrame(drawElements);
+            requestAnimationFrame(drawElements);
         }
 
         function applyMove(e)
@@ -220,11 +220,12 @@
   
         function FinalRoundStart()
         {
-          const ws2 = new WebSocket('ws://' + location.host + '/PongTourWs/')
-          ws2.onopen = function()
-          {
-            console.log("Welcome To The Final Round");
-          }
+          // const ws2 = new WebSocket('ws://' + location.host + '/PongTourWs/')
+          // ws2.onopen = function()
+          // {
+          //   console.log("Welcome To The Final Round");
+          // }
+          location.href = "http://127.0.0.1:8000/PongPong/Final/";
         }
     </script>
 </body>
