@@ -1226,19 +1226,18 @@ export class TTT extends HTMLElement
             domElem.classList.add("squareO");
           }
           // // console.log("Index", board.indexOf("."),  "->" , board[board.indexOf(".")]);
-          if (board.indexOf(".") == -1)
-          {
-            // console.log("Setting The Result Of This Game On Data Base");
-            const toServer = { 'gameStatus': "draw", 'position': -1, 'board': board};
-            socket.ws.send(JSON.stringify(toServer));
-          }
-
-
           if (isGameEnd(dataPars.x_o, board) == true)
           {
             // console.log("Setting The Result Of This Game On Data Base");
             const toServer = { 'gameStatus': "winner", 'position': -1, 'board': board,
                             'winner': dataPars.user, 'loser': dataPars.oppenent};
+            socket.ws.send(JSON.stringify(toServer));
+          }
+  
+          else if (board.indexOf(".") == -1)
+          {
+            // console.log("Setting The Result Of This Game On Data Base");
+            const toServer = { 'gameStatus': "draw", 'position': -1, 'board': board};
             socket.ws.send(JSON.stringify(toServer));
           }
         }

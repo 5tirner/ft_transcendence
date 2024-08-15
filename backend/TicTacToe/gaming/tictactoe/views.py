@@ -122,3 +122,10 @@ def historic(req):
 #         return response.Response(status=status.HTTP_200_OK)
 #     except:
 #         return response.Response(status=status.HTTP_204_NO_CONTENT)
+@api_view(["PUT"])
+def updateUser(req):
+    if req.data:
+        element = gameInfoModelSerializer(data=req.data)
+        if element.is_valid():
+            element.save()
+            return response.Response(status=status.HTTP_202_ACCEPTED)
