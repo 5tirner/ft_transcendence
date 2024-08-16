@@ -52,11 +52,13 @@ class MessageSerializer(serializers.ModelSerializer):
 
 class ChatRoomSerializer(serializers.ModelSerializer):
     username = serializers.CharField(write_only=True)
+    user = serializers.SerializerMethodField()
+    last_message = serializers.SerializerMethodField()
 
     class Meta:
         model = ChatRoom
-        fields = ["user_a", "user_b", "created_at", "username"]
-        read_only_fields = ["user_a", "user_b", "created_at"]
+        fields = ["id", "name", "user", "last_message", "username"]
+        read_only_fields = ["id", "name", "user", "last_message"]
 
     def create(self, validated_data):
         user_a = self.context["request"].user
@@ -67,7 +69,7 @@ class ChatRoomSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("User B does not exist")
 
         if user_a == user_b:
-            raise serializers.ValidationError("can't create room with yourself")
+            raise serializers.ValidationError("Can't create a room with yourself")
 
         # Check if a chat room already exists between the two users
         chat_room = ChatRoom.objects.filter(
@@ -81,6 +83,37 @@ class ChatRoomSerializer(serializers.ModelSerializer):
             name=f"{user_a.username}&{user_b.username}", user_a=user_a, user_b=user_b
         )
         return chat_room
+
+    def get_user(self, obj):
+        # Get the other user in the chat room
+        request_user = self.context["request"].user
+        user_b = obj.user_b if obj.user_a == request_user else obj.user_a
+        return {
+            "id": user_b.id,
+            "username": user_b.username,
+            "avatar": user_b.avatar,  # Assuming Player model has an avatar_url field
+        }
+
+    def get_last_message(self, obj):
+        # Assuming there is a Message model with a foreign key to ChatRoom
+        last_message = obj.messages.order_by(
+            "-timestamp"
+        ).first()  # Replace 'messages' with the related name if it's different
+        if last_message:
+            return {
+                "content": last_message.content,
+                "timestamp": last_message.timestamp,
+                "unreaded": last_message.unreaded,  # Assuming there's an unreaded field
+            }
+        return {
+            "content": None,
+            "timestamp": obj.created_at,  # Using the chat room creation time as a fallback
+            "unreaded": None,
+        }
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        return data
 
 
 class SubmitMessageSerializer(serializers.ModelSerializer):

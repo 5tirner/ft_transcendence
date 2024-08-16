@@ -75,6 +75,7 @@ export class ConvElement extends HTMLLIElement {
 	}
 
 	updateDOM() {
+		console.log(this._data);
 		if (this._data) {
 			this.userData.image.src = this._data.user.avatar;
 			this.userData.username.textContent = this._data.user.username;

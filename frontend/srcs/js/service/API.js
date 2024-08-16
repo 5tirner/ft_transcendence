@@ -4,31 +4,25 @@ const API = {
 	friendshipEndpoint: "http://127.0.0.1:8000/api/friendship",
 	tttStatEndpoint: "http://127.0.0.1:8000/TicTacToe/myProfile/",
 	tttHistoEndpoint: "http://127.0.0.1:8000/TicTacToe/History",
-	pongStatEndpoint:"http://127.0.0.1:8000/PongPong/myProfile",
+	pongStatEndpoint: "http://127.0.0.1:8000/PongPong/myProfile",
 	pongHistoEndpoint: "http://127.0.0.1:8000/PongPong/History",
 
 	// ADD HERE ALL THE OTHER API FUNCTIONS
-	commonPostFunc: async (endPoint, userData ) => {
-		try
-		{
-			const res = await API.makePostRequest( endPoint, userData );
+	commonPostFunc: async (endPoint, userData) => {
+		try {
+			const res = await API.makePostRequest(endPoint, userData);
 			return res;
-		}
-		catch ( err )
-		{
+		} catch (err) {
 			console.log("Error: ", err);
 			return null;
 		}
 	},
 
-	commonGetFunc: async ( endPoint ) => {
-		try
-		{
-			const res = await API.makeGetRequest( endPoint );
+	commonGetFunc: async (endPoint) => {
+		try {
+			const res = await API.makeGetRequest(endPoint);
 			return res;
-		}
-		catch ( err )
-		{
+		} catch (err) {
 			console.log("Error: ", err);
 			return null;
 		}
@@ -36,15 +30,17 @@ const API = {
 
 	// Function Make a POST request
 	login: (userData) => {
-		return API.commonPostFunc( `${API.authEndpoint}logins/`, userData );
+		return API.commonPostFunc(`${API.authEndpoint}logins/`, userData);
 	},
 
 	register: (userData) => {
-		return API.commonPostFunc( `${API.authEndpoint}signups/`, userData );
+		return API.commonPostFunc(`${API.authEndpoint}signups/`, userData);
 	},
 
 	createChatRoom: (username) => {
-		return API.commonPostFunc(`${API.authEndpoint}create/`, { username: username });
+		return API.commonPostFunc(`${API.chatEndpoint}create/`, {
+			username: username
+		});
 	},
 
 	// Function Make a GET request
@@ -57,44 +53,40 @@ const API = {
 	},
 
 	getUser: () => {
-		return API.commonGetFunc( `${API.authEndpoint}userData/` );
+		return API.commonGetFunc(`${API.authEndpoint}userData/`);
 	},
 
 	getFriends: () => {
-		return API.commonGetFunc( `${API.friendshipEndpoint}?type=friends` );
+		return API.commonGetFunc(`${API.friendshipEndpoint}?type=friends`);
 	},
 
-	getConversatons:  () => {
-		return API.commonGetFunc( API.chatEndpoint );
+	getConversatons: () => {
+		return API.commonGetFunc(API.chatEndpoint);
 	},
 
-	getConvMessages:  (room_id) => {
-		return API.commonGetFunc( `${API.chatEndpoint}${room_id}` );
+	getConvMessages: (room_id) => {
+		return API.commonGetFunc(`${API.chatEndpoint}${room_id}`);
 	},
-	getTicTacToeStat: () =>
-	{
-    console.log("Fetching Tic user stats");
-    return API.commonGetFunc(`${API.tttStatEndpoint}`);
+	getTicTacToeStat: () => {
+		console.log("Fetching Tic user stats");
+		return API.commonGetFunc(`${API.tttStatEndpoint}`);
 	},
-	getTicTacToeHistory: () =>
-	{
-    console.log("Fetching Tic user History");
-    return API.commonGetFunc(`${API.tttHistoEndpoint}`);
+	getTicTacToeHistory: () => {
+		console.log("Fetching Tic user History");
+		return API.commonGetFunc(`${API.tttHistoEndpoint}`);
 	},
-	getPigPagPogStat: () =>
-	{
-    console.log("Fetching Pong user stats");
-    return API.commonGetFunc(`${API.pongStatEndpoint}`);
+	getPigPagPogStat: () => {
+		console.log("Fetching Pong user stats");
+		return API.commonGetFunc(`${API.pongStatEndpoint}`);
 	},
-	getPigPagPogHistory: () =>
-	{
-    console.log("Fetching Pong user History");
-    return API.commonGetFunc(`${API.pongHistoEndpoint}`);
+	getPigPagPogHistory: () => {
+		console.log("Fetching Pong user History");
+		return API.commonGetFunc(`${API.pongHistoEndpoint}`);
 	},
 	markMessagesAsRead: (room_id) => {
-		API.commonGetFunc( `${API.chatEndpoint}read/${room_id}/` );
+		API.commonGetFunc(`${API.chatEndpoint}read/${room_id}/`);
 	},
-	
+
 	makePostRequest: async (url, data) => {
 		const headers = {
 			"Content-Type": "application/json"
