@@ -1,6 +1,6 @@
 import { router } from "./service/router.js";
 import { MainUI, Sidebar, Game, Home, TTT, Login, Pong, ConfirmMsg,
-         AbortButton, PongLocal, Platform, Stats, Histo, PongTour } from "./view/mainUI.js";
+         AbortButton, PongLocal, Platform, Stats, Histo, PongTour, ResultMsg } from "./view/mainUI.js";
 
 window.prevState  = null;
 window.router     = router;
@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () =>
   customElements.define('stat-ics', Stats);
   customElements.define('history-view', Histo);
   customElements.define('tournament-view', PongTour);
+  customElements.define('result-msg', ResultMsg);
 
   window.component = {
     home: document.querySelector("home-view"),

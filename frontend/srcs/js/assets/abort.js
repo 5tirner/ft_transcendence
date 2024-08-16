@@ -1,5 +1,6 @@
 export const aborting = (ws, game) => {
   console.log("Game aborted Good Bye");
+  console.log("from aborting function game name: ", game);
   const self = document.getElementById(`${game}-view`);
   if ( self )
     self.remove();
