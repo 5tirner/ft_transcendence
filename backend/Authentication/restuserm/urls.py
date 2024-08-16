@@ -6,8 +6,6 @@ from restauthe import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    # path('', Home.as_view()),
-    # path('signin/', views.login_view, name='signin'),
     path("login/", views.UserLogin.as_view(), name="api_login"),
     path("logout/", views.logout, name="api_logout"),
     path("signup/", views.UserSignup.as_view(), name="api_signup"),

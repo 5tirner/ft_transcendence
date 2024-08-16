@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Final Pong Tour</title>
+</head>
+<body>
+    Welcome To The Final Round Of The Tourenement
+    <script>
+        const ws = new WebSocket('ws://' + location.host + '/finalPongTour/');
+        ws.onopen = function()
+        {
+            console.log("Welcome To The Finale Game");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PONG-GAME</title>
+    <link rel="icon" type="image/x-icon" href="https://e7.pngegg.com/pngimages/947/598/png-clipart-pong-paddle-sprite-video-game-paddle-text-rectangle.png">
+</head>
+
+<style>
+    canvas
+    {
+        display: block;
+        margin: 0 auto;
+        background-color: #ccb4e2b0;
+        border-color: rgb(128, 9, 240);
+        border-width: thin;
+        border-style: solid;
+        border-block-width: 10px;
+        border-radius: 5px;
+        filter: brightness(80%);
+    }
+
+    body
+    {
+        background-color: rgb(220, 186, 240);
+    }
+
+    .player1name
+    {
+        position: absolute;
+        left: 0%;
+        top: 80%;
+        color: #421152;
+    }
+    
+    .player2name
+    {
+        position: absolute;
+        left: 72%;
+        top: 80%;
+        color: #421152;
+    }
+</style>
+
+<body>
+
+    <div style="margin-bottom: 200px;">
+        <h1 style="text-align: center; color: rgb(128, 9, 240);">PONG-PONG-PONG</h1>
+    </div>
+
+    <div style="margin-bottom: 50px;">
+        <canvas id="board" width="800" height="350">myCNV</canvas>
+    </div>
+
+    <h1 class="player1name" id="p1"></h1>
+    <h1 class="player2name" id="p2"></h1>
+
+    <script>
+        let isGameStarted = false;
+        let round = 1;
+        let paddl1Y = 150;
+        let paddl2Y = 150;
+        const ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
+
+        ws.onopen = function()
+        {
+            console.log("User On Game");
+        }
+
+        ws.onmessage = function(e)
+        {
+            console.log("Data From Server");
+            console.log(e.data);
+            const dataPars = JSON.parse(e.data)
+            if (isGameStarted == false)
+            {
+                if (dataPars.player2.length == 0)
+                {
+                    console.log("Player1: " + dataPars.player1);
+                    console.log("Player2: " + dataPars.player2)
+                    console.log("RoomId: " + dataPars.roomid)
+                    const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
+                    domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+                    domElm2.innerHTML = "PLAYER2: Wait...";
+                }
+                else if (dataPars.player2.length != 0)
+                {
+                    isGameStarted = true;
+                    console.log("Player1: " + dataPars.player1);
+                    console.log("Player2: " + dataPars.player2)
+                    console.log("RoomId: " + dataPars.roomid)
+                    const domElm1 = document.getElementById("p1"), domElm2 = document.getElementById("p2");
+                    domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+                    domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+                }
+            }
+        }
+
+        window.onbeforeunload = function()
+        {
+            const toSerever = {'gameStat': "closed"};
+            ws.send(JSON.stringify(toSerever));
+        }
+
+        ws.onclose = function()
+        {
+            console.log("BYE FROM SERVER")
+        }
+
+        const canvas = document.getElementById("board");
+        console.log("My Canvas", canvas);
+        function DrawElments()
+        {
+            const canvasContext = canvas.getContext("2d");
+            console.log("My Context", canvasContext);
+            let Lineheight = 5;
+            while (Lineheight < 345)
+            {
+                canvasContext.beginPath();
+                canvasContext.lineWidth = 3;
+                canvasContext.moveTo(400, Lineheight);
+                canvasContext.lineTo(400, Lineheight + 5);
+                canvasContext.closePath();
+                canvasContext.strokeStyle = "rgb(128, 9, 240)";
+                canvasContext.stroke();
+                Lineheight += 15;
+            }
+
+            // canvasContext.beginPath();
+            // canvasContext.arc(380, 350/2, 15, 0, 3.14*2);
+            // canvasContext.lineWidth = 1;
+            // canvasContext.fillStyle = "white";
+            // canvasContext.fill();
+            // canvasContext.closePath();
+            // canvasContext.strokeStyle = "rgb(140, 29, 260)";
+            // canvasContext.stroke();
+
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 8;
+            canvasContext.lineStyle = "around";
+            canvasContext.moveTo(20, paddl1Y)
+            canvasContext.lineTo(20, paddl1Y + 50);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "gray";
+            canvasContext.stroke();
+
+            canvasContext.beginPath();
+            canvasContext.lineWidth = 8;
+            canvasContext.moveTo(780, paddl2Y)
+            canvasContext.lineTo(780, paddl2Y + 50);
+            canvasContext.closePath();
+            canvasContext.strokeStyle = "gray";
+            canvasContext.stroke();
+        }
+        function applyDown(e)
+        {
+            if (isGameStarted == true)
+            {
+                if (e.key == "ArrowUp")
+                {
+                    console.log("GO UP");
+                    const ToServer = {'move': "UP", 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                    ws.send(JSON.stringify(ToServer));
+                }
+                else if (e.key == "ArrowDown")
+                {
+                    console.log("GO DOWN");
+                    const ToServer = {'move': "DOWN" , 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                    ws.send(JSON.stringify(ToServer));
+                }
+                else
+                    console.log("Do NOTHING");
+            }
+            else
+                console.log("Game Not Start Yet");
+        }
+        function ballMove()
+        {
+            if (isGameStarted == true)
+            {
+                const ToServer = {'move': "" , 'paddle1': paddl1Y, 'paddle2': paddl2Y}
+                ws.send(JSON.stringify(ToServer));
+            }
+        }
+        window.addEventListener("load", DrawElments);
+        document.addEventListener("keydown", applyDown);
+    </script>
+    
+</body>
+</html>

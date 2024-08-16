@@ -5,10 +5,10 @@ IMG = $(shell docker images -a -q)
 .PHONY:  up upd start down stop re  ps clean fclean
 
 upd:
-	@$(DC) up -d
+	@$(DC) up --no-attach server --no-attach postgres_db --no-attach auth --build --force-recreate -d
 
-up : create_data_dir
-	@$(DC) up --build --force-recreate
+up : down create_data_dir
+	@$(DC) up --no-attach server --no-attach postgres_db --no-attach auth --build --force-recreate
 
 
 down : stop
@@ -26,8 +26,7 @@ ps :
 ls :
 	@docker images
 
-re: down
-	@$(DC) up --build -d
+re: down upd
 
 create_data_dir:
 	[ -d ${HOME}/data/www ] || mkdir -p ${HOME}/data/www

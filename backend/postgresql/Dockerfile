@@ -1,4 +1,4 @@
-FROM postgres:16
+FROM postgres:16-alpine
 
 ARG POSTGRES_DB \
     POSTGRES_USER \

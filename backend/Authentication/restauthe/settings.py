@@ -181,10 +181,10 @@ PUBLIC_PLAYER_URL = "http://localhost:8000/static/media/zakaria.jpg"
 # 42/Google authentication variables
 
 FORTYTWO_CLIENT_ID = (
-    "u-s4t2ud-db14b8587806baa84b8f084b304145389a8a1142e7cab4c595ba83fec2556268"
+    "u-s4t2ud-89a1bfaa6c231cf611987c1beb3ebd9e1a4a6d34f94c68d02913fcb941486235"
 )
 FORTYTWO_CLIENT_SECRET = (
-    "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"
+    "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"
 )
 # FORTYTWO_REDIRECT_URI = 'https://api.intra.42.fr/oauth/authorize'
 FORTYTWO_REDIRECT_URI = "http://127.0.0.1:8000/api/oauth/callback/"
