@@ -960,7 +960,7 @@ export class Platform extends HTMLElement {
 				gameSection.appendChild(
 					document.createElement(`${gameToAppend}-view`)
 				);
-			window.router.redirecto("/game");
+			window.router.goto("/game");
 		};
 		this.poLocal.addEventListener("click", () =>
 			manipulateGameSection("po-local")

@@ -95,16 +95,6 @@ class ChatRoomSerializer(serializers.ModelSerializer):
         }
 
     def get_last_message(self, obj):
-        # Assuming there is a Message model with a foreign key to ChatRoom
-        last_message = obj.messages.order_by(
-            "-timestamp"
-        ).first()  # Replace 'messages' with the related name if it's different
-        if last_message:
-            return {
-                "content": last_message.content,
-                "timestamp": last_message.timestamp,
-                "unreaded": last_message.unreaded,  # Assuming there's an unreaded field
-            }
         return {
             "content": None,
             "timestamp": obj.created_at,  # Using the chat room creation time as a fallback

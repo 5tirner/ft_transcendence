@@ -15,7 +15,6 @@ export class ChatComponent extends HTMLElement {
 		this.className = "right-window";
 	}
 	connectedCallback() {
-		console.log("create chat");
 		this.setAttribute("id", "chat");
 		this.innerHTML = `
 			<div class="nav-convs">
