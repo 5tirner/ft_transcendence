@@ -7,7 +7,6 @@ import API from "../../service/API.js";
 class convTimeAndNotifElem extends HTMLElement {
 	constructor() {
 		super();
-		this._data = null; // Private property to hold the data object
 		this.date = document.createElement("div");
 		this.date.className = "time";
 		this.notif = document.createElement("div");
@@ -16,16 +15,6 @@ class convTimeAndNotifElem extends HTMLElement {
 		this.appendChild(this.date);
 		this.appendChild(this.notif);
 	}
-
-	set data(value) {
-		console.log(value);
-	}
-
-	get data() {
-		return this._data;
-	}
-
-	updateDOM() {}
 
 	connectedCallback() {}
 
@@ -37,7 +26,6 @@ customElements.define("cp-conv-time-notif", convTimeAndNotifElem);
 class convUserElem extends HTMLElement {
 	constructor() {
 		super();
-		this._data = null; // Private property to hold the data object
 		// avatar
 		this.userAvatar = document.createElement("div");
 		this.userAvatar.className = "profile-container";
@@ -57,16 +45,6 @@ class convUserElem extends HTMLElement {
 		this.appendChild(this.userAvatar);
 		this.appendChild(this.userInfo);
 	}
-
-	set data(value) {
-		console.log(value);
-	}
-
-	get data() {
-		return this._data;
-	}
-
-	updateDOM() {}
 
 	connectedCallback() {}
 
@@ -98,7 +76,6 @@ export class ConvElement extends HTMLLIElement {
 
 	updateDOM() {
 		if (this._data) {
-			console.log(this._data);
 			this.userData.image.src = this._data.user.avatar;
 			this.userData.username.textContent = this._data.user.username;
 			this.userData.userLastMsg.textContent =

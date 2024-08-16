@@ -8,13 +8,14 @@ export async function render_chat() {
 	init_socket();
 }
 
-export class ChatComponent extends HTMLDivElement {
+export class ChatComponent extends HTMLElement {
 	constructor() {
 		super();
 
 		this.className = "right-window";
 	}
 	connectedCallback() {
+		console.log("create chat");
 		this.setAttribute("id", "chat");
 		this.innerHTML = `
 			<div class="nav-convs">

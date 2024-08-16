@@ -1,5 +1,6 @@
 import { auth } from "../auth/Authentication.js";
 import { aborting } from "../assets/abort.js";
+import { ChatComponent } from "./chat/chat.js";
 const socket = {
 	ws: null
 };
