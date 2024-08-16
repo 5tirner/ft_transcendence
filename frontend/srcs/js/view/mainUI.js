@@ -1,15 +1,18 @@
-import { auth } from '../auth/Authentication.js';
-import { aborting } from '../assets/abort.js';
+import { auth } from "../auth/Authentication.js";
+import { aborting } from "../assets/abort.js";
 const socket = {
-  ws: null
-}
+	ws: null
+};
 // Login View
 export class Login extends HTMLElement {
-  constructor() { super('foo'); this.root = this.attachShadow({ mode: 'open' }); }
-  connectedCallback() {
-    this.setAttribute("id", "login-view");
-    this.setAttribute('hidden', '');
-    this.root.innerHTML += `
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.setAttribute("id", "login-view");
+		this.setAttribute("hidden", "");
+		this.root.innerHTML += `
     <style>
       a {
         text-decoration: none;
@@ -145,29 +148,29 @@ export class Login extends HTMLElement {
 			</div>
 		</div>
     `;
-    this.root.querySelector('.bluer').addEventListener('click', () => {
-      this.setAttribute('hidden', '');
-    });
-    const links = this.root.querySelectorAll("a");
-    links.forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        window.Auth.loginIntra()
-      });
-    });
-  }
-  // onclick="window.Auth.loginIntra()"
-  // onclick="window.Auth.loginGoogle()"
+		this.root.querySelector(".bluer").addEventListener("click", () => {
+			this.setAttribute("hidden", "");
+		});
+		const links = this.root.querySelectorAll("a");
+		links.forEach((link) => {
+			link.addEventListener("click", (e) => {
+				e.preventDefault();
+				window.Auth.loginIntra();
+			});
+		});
+	}
+	// onclick="window.Auth.loginIntra()"
+	// onclick="window.Auth.loginGoogle()"
 }
 // Home View
-export class Home extends HTMLElement
-{
-  constructor() { super('foo') };
-  connectedCallback()
-  {
-    this.setAttribute("id", "home-view");
-    this.setAttribute('hidden', '');
-    this.innerHTML += `
+export class Home extends HTMLElement {
+	constructor() {
+		super("foo");
+	}
+	connectedCallback() {
+		this.setAttribute("id", "home-view");
+		this.setAttribute("hidden", "");
+		this.innerHTML += `
       <login-view></login-view>
       <nav class="d-flex navbar justify-content-between">
           <a class="navbar-brand" href="/">Pong.me</a>
@@ -186,34 +189,29 @@ export class Home extends HTMLElement
           </a>
       </main>
     `;
-    this.anchors();
-  }
-  anchors()
-  {
-    const links = this.querySelectorAll("a");
-    links.forEach((link) => {
-      link.addEventListener("click", (e) => {
-        e.preventDefault();
-        // console.log("clicked");
-        this.querySelector('login-view').removeAttribute('hidden');
-      });
-    });
-  }
+		this.anchors();
+	}
+	anchors() {
+		const links = this.querySelectorAll("a");
+		links.forEach((link) => {
+			link.addEventListener("click", (e) => {
+				e.preventDefault();
+				// console.log("clicked");
+				this.querySelector("login-view").removeAttribute("hidden");
+			});
+		});
+	}
 }
 // Sidebar View
-export class Sidebar extends HTMLElement
-{
-    constructor()
-    {
-        super('foo');
-    }
-    // skipcq: JS-0057
-    connectedCallback()
-    {
-        this.setAttribute("id", "sidebar-view");
+export class Sidebar extends HTMLElement {
+	constructor() {
+		super("foo");
+	}
+	// skipcq: JS-0057
+	connectedCallback() {
+		this.setAttribute("id", "sidebar-view");
 
-        this.innerHTML +=
-        `
+		this.innerHTML += `
             <nav export class="nav">
                 <a href="/platform" export class="nav_logo">
                   <i export class="bx bx-grid-alt nav_icon"></i>
@@ -237,45 +235,40 @@ export class Sidebar extends HTMLElement
 				</a>
 			</nav>
         `;
-        this.doSomeThing();
-    }
-    doSomeThing()
-    {
-        const arr = this.querySelectorAll("a");
-        arr.forEach(elem => {
-            elem.addEventListener("click", (e) => {
-              e.preventDefault();
-              const href = e.currentTarget.getAttribute("href");
-              if (href === '/profile')
-              {
-                const component = document.querySelector("#TheStat");
-                const holder = document.querySelector("#components-holder");
-                if (component)
-                  component.remove();
-                holder.appendChild(document.createElement('stat-ics'));
-              }
-              if (href === '/history')
-              {
-                const component = document.querySelector('#TheHistory')
-                const holder = document.querySelector('#middle-view');
-                if (component)
-                  component.remove();
-                holder.appendChild(document.createElement('history-view'));
-              }
-              window.router.goto(href);
-            });
-        });
-    }
+		this.doSomeThing();
+	}
+	doSomeThing() {
+		const arr = this.querySelectorAll("a");
+		arr.forEach((elem) => {
+			elem.addEventListener("click", (e) => {
+				e.preventDefault();
+				const href = e.currentTarget.getAttribute("href");
+				if (href === "/profile") {
+					const component = document.querySelector("#TheStat");
+					const holder = document.querySelector("#components-holder");
+					if (component) component.remove();
+					holder.appendChild(document.createElement("stat-ics"));
+				}
+				if (href === "/history") {
+					const component = document.querySelector("#TheHistory");
+					const holder = document.querySelector("#middle-view");
+					if (component) component.remove();
+					holder.appendChild(document.createElement("history-view"));
+				}
+				window.router.goto(href);
+			});
+		});
+	}
 }
 // Game View
-export class Game extends HTMLElement
-{
-    constructor() { super('foo'); }
-    connectedCallback()
-    {
-        this.setAttribute("id", "game-view");
-        this.setAttribute("hidden", "");
-        this.innerHTML += `
+export class Game extends HTMLElement {
+	constructor() {
+		super("foo");
+	}
+	connectedCallback() {
+		this.setAttribute("id", "game-view");
+		this.setAttribute("hidden", "");
+		this.innerHTML += `
             <style>
                 #ttt-view
                 {
@@ -363,39 +356,37 @@ export class Game extends HTMLElement
               </button>
             </div>
         `;
-     
-        if ( document.fullscreenEnabled )
-        {
-            const button = this.querySelector("button");
-            button.addEventListener("click", toggleFscreen);
-        }
-        function toggleFscreen()
-        {
-            // console.log("clicked: ", document.body.getAttribute("fullscreen"));
-            if (document.body.getAttribute("fullscreen") === null) {
-                document.body.setAttribute("fullscreen","");
-                window.component.middle.setAttribute('style', "flex-basis: 100%");
-            } else {
-                document.body.removeAttribute("fullscreen");
-                window.component.middle.removeAttribute('style');
-            }
-        }
-    }
+
+		if (document.fullscreenEnabled) {
+			const button = this.querySelector("button");
+			button.addEventListener("click", toggleFscreen);
+		}
+		function toggleFscreen() {
+			// console.log("clicked: ", document.body.getAttribute("fullscreen"));
+			if (document.body.getAttribute("fullscreen") === null) {
+				document.body.setAttribute("fullscreen", "");
+				window.component.middle.setAttribute(
+					"style",
+					"flex-basis: 100%"
+				);
+			} else {
+				document.body.removeAttribute("fullscreen");
+				window.component.middle.removeAttribute("style");
+			}
+		}
+	}
 }
 // User Profile View
-export class Profile extends HTMLElement
-{
-    constructor()
-    {
-      super('foo');
-      // this.root = this.attachShadow({ mode: "open" });
-    }
-    // connected call back
-    connectedCallback()
-    {
-      this.setAttribute("id", "profile-view");
-      this.setAttribute("hidden", "");
-      this.innerHTML = `
+export class Profile extends HTMLElement {
+	constructor() {
+		super("foo");
+		// this.root = this.attachShadow({ mode: "open" });
+	}
+	// connected call back
+	connectedCallback() {
+		this.setAttribute("id", "profile-view");
+		this.setAttribute("hidden", "");
+		this.innerHTML = `
         <style>
         .user-info {
             background-color: var(--dark-purple);
@@ -472,24 +463,21 @@ export class Profile extends HTMLElement
         <div id="components-holder"></div>
         <!-- <tic-tac-toe-stat></tic-tac-toe-stat> -->
       `;
-    }
+	}
 }
 
 // Statistics Component
-export class Stats extends HTMLElement
-{
-  constructor()
-  {
-    super('foo');
-    this.root = this.attachShadow({ mode: "open" });
-  }
-  async connectedCallback()
-  {
-    this.setAttribute('id', 'TheStat');
-    this.setAttribute('game', 'Tic-Tac-Toe');
-    const ticData = await auth.getTicStat();
-    const pigData = await auth.getPongStat();
-    this.root.innerHTML = `
+export class Stats extends HTMLElement {
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	async connectedCallback() {
+		this.setAttribute("id", "TheStat");
+		this.setAttribute("game", "Tic-Tac-Toe");
+		const ticData = await auth.getTicStat();
+		const pigData = await auth.getPongStat();
+		this.root.innerHTML = `
       <style>
         .stats {
           background-color: var(--dark-purple);
@@ -602,23 +590,20 @@ export class Stats extends HTMLElement
         </section>
       </div>
     `;
-  }
+	}
 }
 // Game History
-export class Histo extends HTMLElement
-{
-  constructor()
-  {
-    super('foo');
-    this.root = this.attachShadow({ mode: "open" });
-  }
-  async connectedCallback()
-  {
-    this.setAttribute('id', 'TheHistory');
-    this.setAttribute('hidden', '')
-    const ticData = await auth.getTicHisto();
-    const pongData = await auth.getPongHisto();
-    this.root.innerHTML = `
+export class Histo extends HTMLElement {
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	async connectedCallback() {
+		this.setAttribute("id", "TheHistory");
+		this.setAttribute("hidden", "");
+		const ticData = await auth.getTicHisto();
+		const pongData = await auth.getPongHisto();
+		this.root.innerHTML = `
       <style>
         .wrapper
         {
@@ -736,35 +721,29 @@ export class Histo extends HTMLElement
         </div>
       </div>
     `;
-    const tttInjectHere = this.root.querySelector('.tttInjectHere');
-    const pongInjectHere = this.root.querySelector('.pongInjectHere');
-    const createHistoElem = (data) => 
-    {
-      const parsed = JSON.parse(data);
-      let elem = '';
-      if ( Object.keys(parsed).length == 0)
-      {
-        elem = `
+		const tttInjectHere = this.root.querySelector(".tttInjectHere");
+		const pongInjectHere = this.root.querySelector(".pongInjectHere");
+		const createHistoElem = (data) => {
+			const parsed = JSON.parse(data);
+			let elem = "";
+			if (Object.keys(parsed).length == 0) {
+				elem = `
           <tr>
             <td colspan="5" style="text-align:center; color: var(--light-olive); padding: 20px; border-radius: 8px;">
               No Matches Played Yet!
             </td>
           </tr>
-        `
-      }
-      else
-      {
-        let result = '';
-        let what = ''
-        for (const [key, value] of Object.entries(parsed)) {
-          console.log("key: ", key);
-          console.log("value: ", value);
-          
-          if (value.winner === value.oppenent)
-             result = 'lose';
-          else
-            result = 'win';
-          elem += `
+        `;
+			} else {
+				let result = "";
+				let what = "";
+				for (const [key, value] of Object.entries(parsed)) {
+					console.log("key: ", key);
+					console.log("value: ", value);
+
+					if (value.winner === value.oppenent) result = "lose";
+					else result = "win";
+					elem += `
           <tr>
             <td class="opponent">
               <img src="${value.pic}" alt="avatar">
@@ -774,27 +753,24 @@ export class Histo extends HTMLElement
               ${result}
             </td>
           </tr>`;
-        }
-      }
-      return elem;
-    }
-    tttInjectHere.innerHTML = createHistoElem(ticData);
-    pongInjectHere.innerHTML = createHistoElem(pongData);
-  }
+				}
+			}
+			return elem;
+		};
+		tttInjectHere.innerHTML = createHistoElem(ticData);
+		pongInjectHere.innerHTML = createHistoElem(pongData);
+	}
 }
 // Platform View
-export class Platform extends HTMLElement
-{
-  constructor()
-  {
-    super('foo');
-    this.root = this.attachShadow({mode:"open"});
-  }
-  connectedCallback()
-  {
-    this.setAttribute('id', 'platform-view');
-    this.setAttribute('hidden', '');
-    this.root.innerHTML += `
+export class Platform extends HTMLElement {
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.setAttribute("id", "platform-view");
+		this.setAttribute("hidden", "");
+		this.root.innerHTML += `
     <style>
       :host
       {
@@ -966,61 +942,57 @@ export class Platform extends HTMLElement
         </div>
     </div>
     `;
-    this.startGame = this.root.querySelectorAll(".common");
-    this.poLocal = this.root.querySelector('.po-local');
-    this.startGame.forEach(elem => {
-      elem.addEventListener("click", (e) => {
-        e.preventDefault();
-        const game = e.target.getAttribute("game");
-        manipulateGameSection(game);
-      });
-    });
-    const manipulateGameSection = ( gameToAppend ) =>
-    {
-      const gameSection = document.querySelector('.game-section');
-      const gameElem    = document.querySelector(`#${gameToAppend}-view`);
-      if (gameElem !== null)
-        gameElem.remove();
-      else
-        gameSection.appendChild(document.createElement(`${gameToAppend}-view`));
-      window.router.redirecto("/game");
-    }
-    this.poLocal.addEventListener('click', () => manipulateGameSection('po-local'));
-    window.onpopstate = (e) => {
-      window.router.goto(e.state.path);
-    };
-    
-    const renderPlayersCard = () => 
-    {
-      // get number of rankder player from database and based on the number create components sma3ti
-      const slider = this.root.querySelector('.slide');
-      const card = document.createElement('rank-pl');
-    
-    }
-  }
-  
-  disconnectedCallback()
-  {
-    this.startGame.forEach(elem => {
-      elem.removeEventListener("click", (e) => {
-        e.preventDefault();
-        const game = e.target.getAttribute("game");
-        manipulateGameSection(game);
-      });
-    });
-  }
+		this.startGame = this.root.querySelectorAll(".common");
+		this.poLocal = this.root.querySelector(".po-local");
+		this.startGame.forEach((elem) => {
+			elem.addEventListener("click", (e) => {
+				e.preventDefault();
+				const game = e.target.getAttribute("game");
+				manipulateGameSection(game);
+			});
+		});
+		const manipulateGameSection = (gameToAppend) => {
+			const gameSection = document.querySelector(".game-section");
+			const gameElem = document.querySelector(`#${gameToAppend}-view`);
+			if (gameElem !== null) gameElem.remove();
+			else
+				gameSection.appendChild(
+					document.createElement(`${gameToAppend}-view`)
+				);
+			window.router.redirecto("/game");
+		};
+		this.poLocal.addEventListener("click", () =>
+			manipulateGameSection("po-local")
+		);
+		window.onpopstate = (e) => {
+			window.router.goto(e.state.path);
+		};
+
+		const renderPlayersCard = () => {
+			// get number of rankder player from database and based on the number create components sma3ti
+			const slider = this.root.querySelector(".slide");
+			const card = document.createElement("rank-pl");
+		};
+	}
+
+	disconnectedCallback() {
+		this.startGame.forEach((elem) => {
+			elem.removeEventListener("click", (e) => {
+				e.preventDefault();
+				const game = e.target.getAttribute("game");
+				manipulateGameSection(game);
+			});
+		});
+	}
 }
 // Rank players
-export class RankPlayers extends HTMLElement
-{
-  constructor()
-  {
-    super('foo');
-    this.root = this.attachShadow({mode:'open'})
-  }
-  connectedCallback()
-  {
-    this.root.innerHTML = `
+export class RankPlayers extends HTMLElement {
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.root.innerHTML = `
       <style>
         .avatar {
             width: 110px;
@@ -1071,20 +1043,18 @@ export class RankPlayers extends HTMLElement
           <div class="name">${auth.fullname}</div>
           <div class="points">${auth.wins} wins</div>
       </div>
-    `
-  }
+    `;
+	}
 }
 // TicTacToe View
-export class TTT extends HTMLElement
-{
-  constructor()
-  {
-    super('foo');
-    this.root = this.attachShadow({mode: 'open'});
-  }
-  connectedCallback() {
-    this.setAttribute('id', 'ttt-view');
-    this.root.innerHTML += `
+export class TTT extends HTMLElement {
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.setAttribute("id", "ttt-view");
+		this.root.innerHTML += `
       <style>
         :host {
           display: block;
@@ -1155,138 +1125,142 @@ export class TTT extends HTMLElement
       <abort-btn></abort-btn>
       <confirm-msg game="ttt"></confirm-msg>
     `;
-    
-    const domElm1 = this.root.getElementById("p1");
-    const domElm2 = this.root.getElementById("p2");
-    this.square  = this.root.querySelectorAll(".square");
 
-    this.square.forEach(elem => {
-      elem.addEventListener('click', (e) => {
-        e.preventDefault();
-        sendDataToServer(e.target.getAttribute('data'));
-      });
-    });
-    
+		const domElm1 = this.root.getElementById("p1");
+		const domElm2 = this.root.getElementById("p2");
+		this.square = this.root.querySelectorAll(".square");
 
-    socket.ws = new WebSocket('ws://' + location.host + '/GameWS/');
-    let board = '.........';
-    let isGameStarted = false;
+		this.square.forEach((elem) => {
+			elem.addEventListener("click", (e) => {
+				e.preventDefault();
+				sendDataToServer(e.target.getAttribute("data"));
+			});
+		});
 
-    function isGameEnd(x_o, board) {
-      if ((board[0] == x_o && board[1] == x_o && board[2] == x_o)
-        || (board[3] == x_o && board[4] == x_o && board[5] == x_o)
-        || (board[6] == x_o && board[7] == x_o && board[8] == x_o)
-        || (board[0] == x_o && board[3] == x_o && board[6] == x_o)
-        || (board[1] == x_o && board[4] == x_o && board[7] == x_o)
-        || (board[2] == x_o && board[5] == x_o && board[8] == x_o)
-        || (board[0] == x_o && board[4] == x_o && board[8] == x_o)
-        || (board[2] == x_o && board[4] == x_o && board[6] == x_o))
-        return true;
-      return false;
-    }
-    
-    socket.ws.onopen = function () {
-      // console.log("User On Game");
-    }
-    
-    socket.ws.onmessage = (e) => {
-      const dataPars = JSON.parse(e.data)
-      if (isGameStarted == false) {
-        if (dataPars.player2.length == 0) {
-          // console.log("Player1: " + dataPars.player1);
-          // console.log("Player2: " + dataPars.player2)
-          // console.log("RoomId: " + dataPars.roomid)
+		socket.ws = new WebSocket("ws://" + location.host + "/GameWS/");
+		let board = ".........";
+		let isGameStarted = false;
 
-          domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-          domElm2.innerHTML = "PLAYER2: Wait...";
-        }
-        else if (dataPars.player2.length != 0) {
-          isGameStarted = true;
-          // console.log("Player1: " + dataPars.player1);
-          // console.log("Player2: " + dataPars.player2)
-          // console.log("RoomId: " + dataPars.roomid)
-          domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-          domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-        }
-      }
-      else {
-        if (dataPars.etat == "PLAYING") {
-          // console.log('Game On Progress');
-          // console.log(e.data);
-          board = dataPars.board;
-          const position = dataPars.position;
-          const domElem = this.root.getElementById(`square${position}`);
-          if (dataPars.x_o == "X") {
-            domElem.innerHTML = "X";
-            domElem.classList.add("squareX");
-          }
-          else if (dataPars.x_o == "O")
-          {
-            domElem.innerHTML = "O";
-            domElem.classList.add("squareO");
-          }
-          // // console.log("Index", board.indexOf("."),  "->" , board[board.indexOf(".")]);
-          if (isGameEnd(dataPars.x_o, board) == true)
-          {
-            // console.log("Setting The Result Of This Game On Data Base");
-            const toServer = { 'gameStatus': "winner", 'position': -1, 'board': board,
-                            'winner': dataPars.user, 'loser': dataPars.oppenent};
-            socket.ws.send(JSON.stringify(toServer));
-          }
-  
-          else if (board.indexOf(".") == -1)
-          {
-            // console.log("Setting The Result Of This Game On Data Base");
-            const toServer = { 'gameStatus': "draw", 'position': -1, 'board': board};
-            socket.ws.send(JSON.stringify(toServer));
-          }
-        }
-      }
-    }
-    
-    function sendDataToServer(squareNbr)
-    {
-      if (isGameStarted == true)
-      {
-        const position = Number(squareNbr);
-        if (board[position] != '.')
-          console.log('The Square Already Filled By: ', board[position]);
-        else {
-          const toServer = { 'gameStatus': "onprogress", 'position': position, 'board': board };
-          socket.ws.send(JSON.stringify(toServer));
-        }
-      }
-      else
-        console.log('Game Not Start Yet');
-    }
-    socket.ws.onclose = function () {
-      // console.log("Socket closed BYE BYE");
-    }
-    window.onbeforeunload = function () {
-      aborting(socket.ws, 'ttt');
-    }
-  }
-  disconnectedCallback()
-  {
-    this.square.forEach(elem => {
-      elem.removeEventListener('click', (e) => {
-        e.preventDefault();
-        sendDataToServer(e.target.getAttribute('data'));
-      });
-    });
-  }
+		function isGameEnd(x_o, board) {
+			if (
+				(board[0] == x_o && board[1] == x_o && board[2] == x_o) ||
+				(board[3] == x_o && board[4] == x_o && board[5] == x_o) ||
+				(board[6] == x_o && board[7] == x_o && board[8] == x_o) ||
+				(board[0] == x_o && board[3] == x_o && board[6] == x_o) ||
+				(board[1] == x_o && board[4] == x_o && board[7] == x_o) ||
+				(board[2] == x_o && board[5] == x_o && board[8] == x_o) ||
+				(board[0] == x_o && board[4] == x_o && board[8] == x_o) ||
+				(board[2] == x_o && board[4] == x_o && board[6] == x_o)
+			)
+				return true;
+			return false;
+		}
+
+		socket.ws.onopen = function () {
+			// console.log("User On Game");
+		};
+
+		socket.ws.onmessage = (e) => {
+			const dataPars = JSON.parse(e.data);
+			if (isGameStarted == false) {
+				if (dataPars.player2.length == 0) {
+					// console.log("Player1: " + dataPars.player1);
+					// console.log("Player2: " + dataPars.player2)
+					// console.log("RoomId: " + dataPars.roomid)
+
+					domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+					domElm2.innerHTML = "PLAYER2: Wait...";
+				} else if (dataPars.player2.length != 0) {
+					isGameStarted = true;
+					// console.log("Player1: " + dataPars.player1);
+					// console.log("Player2: " + dataPars.player2)
+					// console.log("RoomId: " + dataPars.roomid)
+					domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+					domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+				}
+			} else {
+				if (dataPars.etat == "PLAYING") {
+					// console.log('Game On Progress');
+					// console.log(e.data);
+					board = dataPars.board;
+					const position = dataPars.position;
+					const domElem = this.root.getElementById(
+						`square${position}`
+					);
+					if (dataPars.x_o == "X") {
+						domElem.innerHTML = "X";
+						domElem.classList.add("squareX");
+					} else if (dataPars.x_o == "O") {
+						domElem.innerHTML = "O";
+						domElem.classList.add("squareO");
+					}
+					// // console.log("Index", board.indexOf("."),  "->" , board[board.indexOf(".")]);
+					if (isGameEnd(dataPars.x_o, board) == true) {
+						// console.log("Setting The Result Of This Game On Data Base");
+						const toServer = {
+							gameStatus: "winner",
+							position: -1,
+							board: board,
+							winner: dataPars.user,
+							loser: dataPars.oppenent
+						};
+						socket.ws.send(JSON.stringify(toServer));
+					} else if (board.indexOf(".") == -1) {
+						// console.log("Setting The Result Of This Game On Data Base");
+						const toServer = {
+							gameStatus: "draw",
+							position: -1,
+							board: board
+						};
+						socket.ws.send(JSON.stringify(toServer));
+					}
+				}
+			}
+		};
+
+		function sendDataToServer(squareNbr) {
+			if (isGameStarted == true) {
+				const position = Number(squareNbr);
+				if (board[position] != ".")
+					console.log(
+						"The Square Already Filled By: ",
+						board[position]
+					);
+				else {
+					const toServer = {
+						gameStatus: "onprogress",
+						position: position,
+						board: board
+					};
+					socket.ws.send(JSON.stringify(toServer));
+				}
+			} else console.log("Game Not Start Yet");
+		}
+		socket.ws.onclose = function () {
+			// console.log("Socket closed BYE BYE");
+		};
+		window.onbeforeunload = function () {
+			aborting(socket.ws, "ttt");
+		};
+	}
+	disconnectedCallback() {
+		this.square.forEach((elem) => {
+			elem.removeEventListener("click", (e) => {
+				e.preventDefault();
+				sendDataToServer(e.target.getAttribute("data"));
+			});
+		});
+	}
 }
 // Pong View
-export class Pong extends HTMLElement
-{
-  constructor()
-  {
-    super('foo');
-    this.root = this.attachShadow({mode: 'open'});
-  }
-  connectedCallback() {
-    this.setAttribute('id', 'pong-view');
-    this.root.innerHTML = `
+export class Pong extends HTMLElement {
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.setAttribute("id", "pong-view");
+		this.root.innerHTML = `
       <style>
           canvas
           {
@@ -1336,183 +1310,169 @@ export class Pong extends HTMLElement
       <confirm-msg game="pong"></confirm-msg>
     `;
 
-    const domElm1 = this.root.querySelector("#p1"), domElm2 = this.root.querySelector("#p2");
-    let isGameStarted = false;
-    let xBallPos = 280, yBallPos = 150;
-    let isFinsih = false;
-    let BallDirection = "LEFT";
-    let paddl1Y = 125;
-    let paddl2Y = 125;
-    let BallRoute = "LINE";
-    const canvas = this.root.querySelector("#board");
-    const canvasContext = canvas.getContext('2d');
-    // canvasContext.shadowColor = "black";
-    // canvasContext.shadowBlur = 15;
-    // canvasContext.shadowOffsetX = 5;
-    // canvasContext.shadowOffsetY = 2;
-    socket.ws = new WebSocket('ws://' + location.host + '/PongGameWs/');
+		const domElm1 = this.root.querySelector("#p1"),
+			domElm2 = this.root.querySelector("#p2");
+		let isGameStarted = false;
+		let xBallPos = 280,
+			yBallPos = 150;
+		let isFinsih = false;
+		let BallDirection = "LEFT";
+		let paddl1Y = 125;
+		let paddl2Y = 125;
+		let BallRoute = "LINE";
+		const canvas = this.root.querySelector("#board");
+		const canvasContext = canvas.getContext("2d");
+		// canvasContext.shadowColor = "black";
+		// canvasContext.shadowBlur = 15;
+		// canvasContext.shadowOffsetX = 5;
+		// canvasContext.shadowOffsetY = 2;
+		socket.ws = new WebSocket("ws://" + location.host + "/PongGameWs/");
 
-    function ballMove()
-    {
-      if (xBallPos < 20 || xBallPos > 580)
-      {
-        isFinsih = true;
-        isGameStarted = false;
-        socket.ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
-        // clearTimeout(drawElements);
-      }
-      else if (isGameStarted == true && isFinsih == false)
-      {
-        const ToServer =
-        {
-          'WhatIGiveYou': "BALL MOVE",
-          'gameStatus': "onprogress", 'move': "BALL",
-          'paddle1': paddl1Y, 'paddle2': paddl2Y,
-          'ballx': xBallPos, 'bally': yBallPos,
-          'BallDir': BallDirection, 'BallRoute': BallRoute,
-        }
-        socket.ws.send(JSON.stringify(ToServer));
-        // canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        // drawElements();
-      }
-    }
+		function ballMove() {
+			if (xBallPos < 20 || xBallPos > 580) {
+				isFinsih = true;
+				isGameStarted = false;
+				socket.ws.send(
+					JSON.stringify({ gameStatus: "End", Side: BallDirection })
+				);
+				// clearTimeout(drawElements);
+			} else if (isGameStarted == true && isFinsih == false) {
+				const ToServer = {
+					WhatIGiveYou: "BALL MOVE",
+					gameStatus: "onprogress",
+					move: "BALL",
+					paddle1: paddl1Y,
+					paddle2: paddl2Y,
+					ballx: xBallPos,
+					bally: yBallPos,
+					BallDir: BallDirection,
+					BallRoute: BallRoute
+				};
+				socket.ws.send(JSON.stringify(ToServer));
+				// canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+				// drawElements();
+			}
+		}
 
-    function drawElements()
-    {
-      if (isGameStarted == true && isFinsih == false)
-      {
-        canvasContext.clearRect(0, 0, canvas.width,canvas.height);
-        ballMove();
-        // canvasContext.beginPath();
-        // canvasContext.lineWidth = 4;
-        // canvasContext.moveTo(300, 0);
-        // canvasContext.lineTo(300, 300);
-        // canvasContext.closePath();
-        // canvasContext.strokeStyle = "rgb(128, 9, 240)";
-        // canvasContext.stroke();
+		function drawElements() {
+			if (isGameStarted == true && isFinsih == false) {
+				canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+				ballMove();
+				// canvasContext.beginPath();
+				// canvasContext.lineWidth = 4;
+				// canvasContext.moveTo(300, 0);
+				// canvasContext.lineTo(300, 300);
+				// canvasContext.closePath();
+				// canvasContext.strokeStyle = "rgb(128, 9, 240)";
+				// canvasContext.stroke();
 
-        canvasContext.beginPath();
-        canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.20);
-        canvasContext.lineWidth = 0.5;
-        canvasContext.fillStyle = "#F0F8FF";
-        canvasContext.fill();
-        canvasContext.closePath();
-        canvasContext.strokeStyle = "rgb(140, 29, 260)";
-        canvasContext.stroke();
+				canvasContext.beginPath();
+				canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.2);
+				canvasContext.lineWidth = 0.5;
+				canvasContext.fillStyle = "#F0F8FF";
+				canvasContext.fill();
+				canvasContext.closePath();
+				canvasContext.strokeStyle = "rgb(140, 29, 260)";
+				canvasContext.stroke();
 
-        canvasContext.beginPath();
-        canvasContext.lineWidth = 8;
-        canvasContext.moveTo(20, paddl1Y)
-        canvasContext.lineTo(20, paddl1Y + 50);
-        canvasContext.closePath();
-        canvasContext.strokeStyle = "#F0F8FF";
-        canvasContext.stroke();
+				canvasContext.beginPath();
+				canvasContext.lineWidth = 8;
+				canvasContext.moveTo(20, paddl1Y);
+				canvasContext.lineTo(20, paddl1Y + 50);
+				canvasContext.closePath();
+				canvasContext.strokeStyle = "#F0F8FF";
+				canvasContext.stroke();
 
-        canvasContext.beginPath();
-        canvasContext.lineWidth = 8;
-        canvasContext.moveTo(580, paddl2Y)
-        canvasContext.lineTo(580, paddl2Y + 50);
-        canvasContext.closePath();
-        canvasContext.strokeStyle = "#F0F8FF";
-        canvasContext.stroke();
-        requestAnimationFrame(drawElements);
-      }
-    }
+				canvasContext.beginPath();
+				canvasContext.lineWidth = 8;
+				canvasContext.moveTo(580, paddl2Y);
+				canvasContext.lineTo(580, paddl2Y + 50);
+				canvasContext.closePath();
+				canvasContext.strokeStyle = "#F0F8FF";
+				canvasContext.stroke();
+				requestAnimationFrame(drawElements);
+			}
+		}
 
-    function applyMove(e)
-    {
-      if (isGameStarted == true && isFinsih == false)
-      {
-        if (e.key == "ArrowUp" || e.key == "ArrowDown")
-        {
-          const ToServer =
-          {
-            'WhatIGiveYou': "PADDLES MOVE",
-            'gameStatus': "onprogress", 'move': "",
-            'paddle1': paddl1Y, 'paddle2': paddl2Y,
-            'ballx': xBallPos, 'bally': yBallPos,
-            'BallDir': BallDirection, 'BallRoute': BallRoute,
-          }
-          if (e.key == "ArrowUp")
-            console.log("GO UP"), ToServer.move = "UP";
-          else
-            console.log("GO DOWN"), ToServer.move = "DOWN";
-          socket.ws.send(JSON.stringify(ToServer));
-        }
-      }
-    }
+		function applyMove(e) {
+			if (isGameStarted == true && isFinsih == false) {
+				if (e.key == "ArrowUp" || e.key == "ArrowDown") {
+					const ToServer = {
+						WhatIGiveYou: "PADDLES MOVE",
+						gameStatus: "onprogress",
+						move: "",
+						paddle1: paddl1Y,
+						paddle2: paddl2Y,
+						ballx: xBallPos,
+						bally: yBallPos,
+						BallDir: BallDirection,
+						BallRoute: BallRoute
+					};
+					if (e.key == "ArrowUp")
+						console.log("GO UP"), (ToServer.move = "UP");
+					else console.log("GO DOWN"), (ToServer.move = "DOWN");
+					socket.ws.send(JSON.stringify(ToServer));
+				}
+			}
+		}
 
-    document.addEventListener("keyup", applyMove);
+		document.addEventListener("keyup", applyMove);
 
-    socket.ws.onopen = function(){
-      console.log("User On Game");
-    }
+		socket.ws.onopen = function () {
+			console.log("User On Game");
+		};
 
-    socket.ws.onmessage = function(e)
-    {
-      const dataPars = JSON.parse(e.data)
-      if (isGameStarted == false && isFinsih == false)
-      {
-          if (dataPars.player2.length == 0)
-          {
-              console.log("Player1: " + dataPars.player1);
-              console.log("Player2: " + dataPars.player2)
-              console.log("RoomId: " + dataPars.roomid)
-              domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-              domElm2.innerHTML = "PLAYER2: Wait...";
-          }
-          else if (dataPars.player2.length != 0)
-          {
-              isGameStarted = true;
-              console.log("Player1: " + dataPars.player1);
-              console.log("Player2: " + dataPars.player2)
-              console.log("RoomId: " + dataPars.roomid)
-              domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-              domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-              requestAnimationFrame(drawElements);
-          }
-      }
-      else if (isGameStarted == true && isFinsih == false)
-      {
-        if (dataPars.MoveFor == "PADDLES MOVE")
-        {
-          if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
-            paddl1Y = dataPars.paddle1;
-          if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
-            paddl2Y = dataPars.paddle2;
-        }
-        else
-        {
-          xBallPos = dataPars.Ballx, yBallPos = dataPars.Bally;
-          BallDirection = dataPars.BallDir;
-          BallRoute = dataPars.BallRoute;
-        }
-      }
-    }
+		socket.ws.onmessage = function (e) {
+			const dataPars = JSON.parse(e.data);
+			if (isGameStarted == false && isFinsih == false) {
+				if (dataPars.player2.length == 0) {
+					console.log("Player1: " + dataPars.player1);
+					console.log("Player2: " + dataPars.player2);
+					console.log("RoomId: " + dataPars.roomid);
+					domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+					domElm2.innerHTML = "PLAYER2: Wait...";
+				} else if (dataPars.player2.length != 0) {
+					isGameStarted = true;
+					console.log("Player1: " + dataPars.player1);
+					console.log("Player2: " + dataPars.player2);
+					console.log("RoomId: " + dataPars.roomid);
+					domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+					domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+					requestAnimationFrame(drawElements);
+				}
+			} else if (isGameStarted == true && isFinsih == false) {
+				if (dataPars.MoveFor == "PADDLES MOVE") {
+					if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
+						paddl1Y = dataPars.paddle1;
+					if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
+						paddl2Y = dataPars.paddle2;
+				} else {
+					(xBallPos = dataPars.Ballx), (yBallPos = dataPars.Bally);
+					BallDirection = dataPars.BallDir;
+					BallRoute = dataPars.BallRoute;
+				}
+			}
+		};
 
-    socket.ws.onclose = function()
-    {
-      isFinsih = true;
-      isGameStarted = false;
-      console.log("BYE FROM SERVER");
-    }
-  }
-  disconnectedCallback()
-  {
-    document.removeEventListener("keyup", this.applyDown);
-  }
+		socket.ws.onclose = function () {
+			isFinsih = true;
+			isGameStarted = false;
+			console.log("BYE FROM SERVER");
+		};
+	}
+	disconnectedCallback() {
+		document.removeEventListener("keyup", this.applyDown);
+	}
 }
 // Pong View
-export class PongLocal extends HTMLElement
-{
-  constructor()
-  {
-    super('foo');
-    this.root = this.attachShadow({mode: 'open'});
-  }
-  connectedCallback() {
-    this.setAttribute('id', 'pong-view');
-    this.root.innerHTML = `
+export class PongLocal extends HTMLElement {
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.setAttribute("id", "pong-view");
+		this.root.innerHTML = `
       <style>
           canvas
           {
@@ -1550,167 +1510,156 @@ export class PongLocal extends HTMLElement
       <abort-btn></abort-btn>
       <confirm-msg game="pong"></confirm-msg>
     `;
-    this.startBtn = this.root.querySelector('.start-btn');
-    let isGameStarted = false;
-    let xBallPos = 380, yBallPos = 150;
-    let BallDirection = "LEFT";
-    let paddl1Y = 125;
-    let paddl2Y = 125;
-    var SaveInterval = 0;
-    let BallRoute = "LINE";
-    const canvas = this.root.querySelector('#board');
-    const canvasContext = canvas.getContext('2d');
-    // canvasContext.shadowColor = "black";
-    // canvasContext.shadowBlur = 15;
-    // canvasContext.shadowOffsetX = 5;
-    // canvasContext.shadowOffsetY = 2;
-    socket.ws = new WebSocket('ws://' + location.host + '/localGameWs/');
+		this.startBtn = this.root.querySelector(".start-btn");
+		let isGameStarted = false;
+		let xBallPos = 380,
+			yBallPos = 150;
+		let BallDirection = "LEFT";
+		let paddl1Y = 125;
+		let paddl2Y = 125;
+		var SaveInterval = 0;
+		let BallRoute = "LINE";
+		const canvas = this.root.querySelector("#board");
+		const canvasContext = canvas.getContext("2d");
+		// canvasContext.shadowColor = "black";
+		// canvasContext.shadowBlur = 15;
+		// canvasContext.shadowOffsetX = 5;
+		// canvasContext.shadowOffsetY = 2;
+		socket.ws = new WebSocket("ws://" + location.host + "/localGameWs/");
 
-    function ballMove()
-    {
-        if (xBallPos <= 0 || xBallPos >= 600)
-        {
-          isGameStarted = false;
-          // clearTimeout(drawElements);
-          socket.ws.send(JSON.stringify({'gameStatus': 'End'}));
-          clearInterval(SaveInterval);
-        }
-        else if (isGameStarted == true)
-        {
-            const ToServer =
-            {
-                'WhatIGiveYou': "BALL MOVE",
-                'gameStatus': "onprogress", 'move': "BALL",
-                'paddle1': paddl1Y, 'paddle2': paddl2Y,
-                'ballx': xBallPos, 'bally': yBallPos,
-                'BallDir': BallDirection, 'BallRoute': BallRoute,
-            }
-          socket.ws.send(JSON.stringify(ToServer));
-        }
-    }
-    this.startBtn.addEventListener('click', start);
-    function drawElements()
-    {
-        ballMove();
-        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        // canvasContext.beginPath();
-        // canvasContext.lineWidth = 4;
-        // canvasContext.moveTo(300, 0);
-        // canvasContext.lineTo(300, 300);
-        // canvasContext.closePath();
-        // canvasContext.strokeStyle = "rgb(128, 9, 240)";
-        // canvasContext.stroke();
+		function ballMove() {
+			if (xBallPos <= 0 || xBallPos >= 600) {
+				isGameStarted = false;
+				// clearTimeout(drawElements);
+				socket.ws.send(JSON.stringify({ gameStatus: "End" }));
+				clearInterval(SaveInterval);
+			} else if (isGameStarted == true) {
+				const ToServer = {
+					WhatIGiveYou: "BALL MOVE",
+					gameStatus: "onprogress",
+					move: "BALL",
+					paddle1: paddl1Y,
+					paddle2: paddl2Y,
+					ballx: xBallPos,
+					bally: yBallPos,
+					BallDir: BallDirection,
+					BallRoute: BallRoute
+				};
+				socket.ws.send(JSON.stringify(ToServer));
+			}
+		}
+		this.startBtn.addEventListener("click", start);
+		function drawElements() {
+			ballMove();
+			canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+			// canvasContext.beginPath();
+			// canvasContext.lineWidth = 4;
+			// canvasContext.moveTo(300, 0);
+			// canvasContext.lineTo(300, 300);
+			// canvasContext.closePath();
+			// canvasContext.strokeStyle = "rgb(128, 9, 240)";
+			// canvasContext.stroke();
 
-        canvasContext.beginPath();
-        canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.20);
-        canvasContext.lineWidth = 0.5;
-        canvasContext.fillStyle = "#F0F8FF";
-        canvasContext.fill();
-        canvasContext.closePath();
-        canvasContext.strokeStyle = "rgb(140, 29, 260)";
-        canvasContext.stroke();
+			canvasContext.beginPath();
+			canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.2);
+			canvasContext.lineWidth = 0.5;
+			canvasContext.fillStyle = "#F0F8FF";
+			canvasContext.fill();
+			canvasContext.closePath();
+			canvasContext.strokeStyle = "rgb(140, 29, 260)";
+			canvasContext.stroke();
 
-        canvasContext.beginPath();
-        canvasContext.lineWidth = 8;
-        canvasContext.moveTo(20, paddl1Y)
-        canvasContext.lineTo(20, paddl1Y + 50);
-        canvasContext.closePath();
-        canvasContext.strokeStyle = "#F0F8FF";
-        canvasContext.stroke();
-    
-        canvasContext.beginPath();
-        canvasContext.lineWidth = 8;
-        canvasContext.moveTo(580, paddl2Y)
-        canvasContext.lineTo(580, paddl2Y + 50);
-        canvasContext.closePath();
-        canvasContext.strokeStyle = "#F0F8FF";
-        canvasContext.stroke();
-        // console.log(isGameStarted);
-        // if (isGameStarted == true)
-        //   requestAnimationFrame(drawElements);
-    }
+			canvasContext.beginPath();
+			canvasContext.lineWidth = 8;
+			canvasContext.moveTo(20, paddl1Y);
+			canvasContext.lineTo(20, paddl1Y + 50);
+			canvasContext.closePath();
+			canvasContext.strokeStyle = "#F0F8FF";
+			canvasContext.stroke();
 
-    function applyMove(e)
-    {
-        // console.log(e.key);
-        if (isGameStarted == true)
-        {
-          if (e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "w" || e.key == 's')
-          {
-            const ToServer =
-            {
-                'WhatIGiveYou': "PADDLES MOVE",
-                'gameStatus': "onprogress", 'move': "",
-                'paddle1': paddl1Y, 'paddle2': paddl2Y,
-                'ballx': xBallPos, 'bally': yBallPos,
-                'BallDir': BallDirection, 'BallRoute': BallRoute,
-            }
-            if (e.key == "ArrowUp")
-                ToServer.move = "UP";
-            else if (e.key == "ArrowDown")
-                ToServer.move = "DOWN";
-            else if (e.key == 'w')
-                ToServer.move = "W";
-            else if (e.key == 's')
-                ToServer.move = "S";
-            socket.ws.send(JSON.stringify(ToServer));
-          }
-        }
-    }
+			canvasContext.beginPath();
+			canvasContext.lineWidth = 8;
+			canvasContext.moveTo(580, paddl2Y);
+			canvasContext.lineTo(580, paddl2Y + 50);
+			canvasContext.closePath();
+			canvasContext.strokeStyle = "#F0F8FF";
+			canvasContext.stroke();
+			// console.log(isGameStarted);
+			// if (isGameStarted == true)
+			//   requestAnimationFrame(drawElements);
+		}
 
-    function start()
-    {
-      isGameStarted = true;
-      // console.log("Game Started Now");
-      SaveInterval = setInterval(drawElements, 5);
-    }
+		function applyMove(e) {
+			// console.log(e.key);
+			if (isGameStarted == true) {
+				if (
+					e.key == "ArrowUp" ||
+					e.key == "ArrowDown" ||
+					e.key == "w" ||
+					e.key == "s"
+				) {
+					const ToServer = {
+						WhatIGiveYou: "PADDLES MOVE",
+						gameStatus: "onprogress",
+						move: "",
+						paddle1: paddl1Y,
+						paddle2: paddl2Y,
+						ballx: xBallPos,
+						bally: yBallPos,
+						BallDir: BallDirection,
+						BallRoute: BallRoute
+					};
+					if (e.key == "ArrowUp") ToServer.move = "UP";
+					else if (e.key == "ArrowDown") ToServer.move = "DOWN";
+					else if (e.key == "w") ToServer.move = "W";
+					else if (e.key == "s") ToServer.move = "S";
+					socket.ws.send(JSON.stringify(ToServer));
+				}
+			}
+		}
 
-    document.addEventListener("keyup", applyMove);
+		function start() {
+			isGameStarted = true;
+			// console.log("Game Started Now");
+			SaveInterval = setInterval(drawElements, 5);
+		}
 
-    socket.ws.onopen = function()
-    {
-      console.log("User On Game");
-    }
+		document.addEventListener("keyup", applyMove);
 
-    socket.ws.onmessage = function(e)
-    {
-        const dataPars = JSON.parse(e.data)
-        if (dataPars.MoveFor == "PADDLES MOVE")
-        {
-          if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
-            paddl1Y = dataPars.paddle1;
-          if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
-            paddl2Y = dataPars.paddle2;
-        }
-        else
-        {
-          xBallPos = dataPars.Ballx, yBallPos = dataPars.Bally;
-          BallDirection = dataPars.BallDir;
-          BallRoute = dataPars.BallRoute;
-        }
-    }
+		socket.ws.onopen = function () {
+			console.log("User On Game");
+		};
 
-    socket.ws.onclose = function()
-    {
-      console.log("BYE FROM SERVER");
-    }
-  }
-  disconnectedCallback()
-  {
-    document.removeEventListener("keyup", this.applyDown);
-  }
+		socket.ws.onmessage = function (e) {
+			const dataPars = JSON.parse(e.data);
+			if (dataPars.MoveFor == "PADDLES MOVE") {
+				if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
+					paddl1Y = dataPars.paddle1;
+				if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
+					paddl2Y = dataPars.paddle2;
+			} else {
+				(xBallPos = dataPars.Ballx), (yBallPos = dataPars.Bally);
+				BallDirection = dataPars.BallDir;
+				BallRoute = dataPars.BallRoute;
+			}
+		};
+
+		socket.ws.onclose = function () {
+			console.log("BYE FROM SERVER");
+		};
+	}
+	disconnectedCallback() {
+		document.removeEventListener("keyup", this.applyDown);
+	}
 }
 // Pong Tournement
-export class PongTour extends HTMLElement
-{
-  constructor()
-  {
-    super('foo');
-    this.root = this.attachShadow({ mode: 'open' });
-  }
-  connectedCallback()
-  {
-    this.root.innerHTML = `
+export class PongTour extends HTMLElement {
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.root.innerHTML = `
       <style>
           canvas
           {
@@ -1759,197 +1708,180 @@ export class PongTour extends HTMLElement
       <abort-btn></abort-btn>
       <confirm-msg game="pong"></confirm-msg>
     `;
-    const domElm1 = this.root.querySelector("#p1");
-    const domElm2 = this.root.querySelector("#p2");
-    let isGameStarted = false;
-    let xBallPos = 280, yBallPos = 150;
-    let BallDirection = "LEFT";
-    let paddl1Y = 125;
-    let paddl2Y = 125;
-    let BallRoute = "LINE";
-    const canvas = this.root.querySelector("#board");
-    const canvasContext = canvas.getContext('2d');
-    canvasContext.shadowColor = "black";
-    canvasContext.shadowBlur = 15;
-    canvasContext.shadowOffsetX = 5;
-    canvasContext.shadowOffsetY = 2;
-    socket.ws = new WebSocket('ws://' + location.host + '/PongTourWs/');
-    function ballMove()
-    {
-      if (xBallPos < 20 || xBallPos > 580)
-      {
-        socket.ws.send(JSON.stringify({'gameStatus': 'End', 'Side': BallDirection}));
-      }
-      else if (isGameStarted == true)
-      {
-        const ToServer =
-        {
-          'WhatIGiveYou': "BALL MOVE",
-          'gameStatus': "onprogress", 'move': "BALL",
-          'paddle1': paddl1Y, 'paddle2': paddl2Y,
-          'ballx': xBallPos, 'bally': yBallPos,
-          'BallDir': BallDirection, 'BallRoute': BallRoute,
-        }
-        socket.ws.send(JSON.stringify(ToServer));
-      }
-    }
+		const domElm1 = this.root.querySelector("#p1");
+		const domElm2 = this.root.querySelector("#p2");
+		let isGameStarted = false;
+		let xBallPos = 280,
+			yBallPos = 150;
+		let BallDirection = "LEFT";
+		let paddl1Y = 125;
+		let paddl2Y = 125;
+		let BallRoute = "LINE";
+		const canvas = this.root.querySelector("#board");
+		const canvasContext = canvas.getContext("2d");
+		canvasContext.shadowColor = "black";
+		canvasContext.shadowBlur = 15;
+		canvasContext.shadowOffsetX = 5;
+		canvasContext.shadowOffsetY = 2;
+		socket.ws = new WebSocket("ws://" + location.host + "/PongTourWs/");
+		function ballMove() {
+			if (xBallPos < 20 || xBallPos > 580) {
+				socket.ws.send(
+					JSON.stringify({ gameStatus: "End", Side: BallDirection })
+				);
+			} else if (isGameStarted == true) {
+				const ToServer = {
+					WhatIGiveYou: "BALL MOVE",
+					gameStatus: "onprogress",
+					move: "BALL",
+					paddle1: paddl1Y,
+					paddle2: paddl2Y,
+					ballx: xBallPos,
+					bally: yBallPos,
+					BallDir: BallDirection,
+					BallRoute: BallRoute
+				};
+				socket.ws.send(JSON.stringify(ToServer));
+			}
+		}
 
-    async function drawElements()
-    {
-      canvasContext.clearRect(0, 0, canvas.width,canvas.height);
-      ballMove();
-      canvasContext.beginPath();
-      canvasContext.lineWidth = 4;
-      canvasContext.moveTo(300, 0);
-      canvasContext.lineTo(300, 300);
-      canvasContext.closePath();
-      canvasContext.strokeStyle = "rgb(128, 9, 240)";
-      canvasContext.stroke();
+		async function drawElements() {
+			canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+			ballMove();
+			canvasContext.beginPath();
+			canvasContext.lineWidth = 4;
+			canvasContext.moveTo(300, 0);
+			canvasContext.lineTo(300, 300);
+			canvasContext.closePath();
+			canvasContext.strokeStyle = "rgb(128, 9, 240)";
+			canvasContext.stroke();
 
-      canvasContext.beginPath();
-      canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.20);
-      canvasContext.lineWidth = 0.5;
-      canvasContext.fillStyle = "#F0F8FF";
-      canvasContext.fill();
-      canvasContext.closePath();
-      canvasContext.strokeStyle = "rgb(140, 29, 260)";
-      canvasContext.stroke();
+			canvasContext.beginPath();
+			canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.2);
+			canvasContext.lineWidth = 0.5;
+			canvasContext.fillStyle = "#F0F8FF";
+			canvasContext.fill();
+			canvasContext.closePath();
+			canvasContext.strokeStyle = "rgb(140, 29, 260)";
+			canvasContext.stroke();
 
-      canvasContext.beginPath();
-      canvasContext.lineWidth = 8;
-      canvasContext.moveTo(20, paddl1Y)
-      canvasContext.lineTo(20, paddl1Y + 50);
-      canvasContext.closePath();
-      canvasContext.strokeStyle = "#F0F8FF";
-      canvasContext.stroke();
+			canvasContext.beginPath();
+			canvasContext.lineWidth = 8;
+			canvasContext.moveTo(20, paddl1Y);
+			canvasContext.lineTo(20, paddl1Y + 50);
+			canvasContext.closePath();
+			canvasContext.strokeStyle = "#F0F8FF";
+			canvasContext.stroke();
 
-      canvasContext.beginPath();
-      canvasContext.lineWidth = 8;
-      canvasContext.moveTo(580, paddl2Y)
-      canvasContext.lineTo(580, paddl2Y + 50);
-      canvasContext.closePath();
-      canvasContext.strokeStyle = "#F0F8FF";
-      canvasContext.stroke();
-      if (isGameStarted == true)
-        await requestAnimationFrame(drawElements);
-    }
+			canvasContext.beginPath();
+			canvasContext.lineWidth = 8;
+			canvasContext.moveTo(580, paddl2Y);
+			canvasContext.lineTo(580, paddl2Y + 50);
+			canvasContext.closePath();
+			canvasContext.strokeStyle = "#F0F8FF";
+			canvasContext.stroke();
+			if (isGameStarted == true)
+				await requestAnimationFrame(drawElements);
+		}
 
-    function applyMove(e)
-    {
-      if (isGameStarted == true)
-      {
-        if (e.key == "ArrowUp" || e.key == "ArrowDown")
-        {
-          const ToServer =
-          {
-            'WhatIGiveYou': "PADDLES MOVE",
-            'gameStatus': "onprogress", 'move': "",
-            'paddle1': paddl1Y, 'paddle2': paddl2Y,
-            'ballx': xBallPos, 'bally': yBallPos,
-            'BallDir': BallDirection, 'BallRoute': BallRoute,
-          }
-          if (e.key == "ArrowUp")
-            console.log("GO UP"), ToServer.move = "UP";
-          else
-            console.log("GO DOWN"), ToServer.move = "DOWN";
-          socket.ws.send(JSON.stringify(ToServer));
-        }
-      }
-    }
+		function applyMove(e) {
+			if (isGameStarted == true) {
+				if (e.key == "ArrowUp" || e.key == "ArrowDown") {
+					const ToServer = {
+						WhatIGiveYou: "PADDLES MOVE",
+						gameStatus: "onprogress",
+						move: "",
+						paddle1: paddl1Y,
+						paddle2: paddl2Y,
+						ballx: xBallPos,
+						bally: yBallPos,
+						BallDir: BallDirection,
+						BallRoute: BallRoute
+					};
+					if (e.key == "ArrowUp")
+						console.log("GO UP"), (ToServer.move = "UP");
+					else console.log("GO DOWN"), (ToServer.move = "DOWN");
+					socket.ws.send(JSON.stringify(ToServer));
+				}
+			}
+		}
 
-    document.addEventListener("keyup", applyMove);
+		document.addEventListener("keyup", applyMove);
 
-    socket.ws.onopen = function(){
-      console.log("User On Game");
-    }
+		socket.ws.onopen = function () {
+			console.log("User On Game");
+		};
 
-    socket.ws.onmessage = function (e)
-    {
-      const dataPars = JSON.parse(e.data)
-      if (isGameStarted == false)
-      {
-        isGameStarted = true;
-        console.log("Player1: " + dataPars.player1);
-        console.log("Player2: " + dataPars.player2)
-        console.log("RoomId: " + dataPars.roomid)
-        domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-        domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-        requestAnimationFrame(drawElements);
-      }
-      else if (isGameStarted == true)
-      {
-        if (dataPars.Round == "SemiFinal")
-        {
-          if (dataPars.MoveFor == "PADDLES MOVE")
-          {
-            if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
-              paddl1Y = dataPars.paddle1;
-            if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
-              paddl2Y = dataPars.paddle2;
-          }
-          else
-          {
-            xBallPos = dataPars.Ballx, yBallPos = dataPars.Bally;
-            BallDirection = dataPars.BallDir;
-            BallRoute = dataPars.BallRoute;
-          }
-        }
-        else if (dataPars.Round == "Final")
-        {
-          console.log('The Game Is End, And We Get To The Final Round');
-          const ToServer = 
-          {
-            'gameStatus': "NextRound",
-          }
-          socket.ws.send(JSON.stringify(ToServer))
-        }
-        else if (dataPars.Round == "NoRound")
-        {
-          console.log('shiiiiit, lose situation here');
-          isGameStarted = false;
-          // ws.close();
-        }
-        else if (dataPars.Round == "FinalRound")
-        {
-          isGameStarted = false;
-          // ws.close()
-          console.log('wooooow, win situation here');
-          FinalRoundStart();
-        }
-      }
-    }
+		socket.ws.onmessage = function (e) {
+			const dataPars = JSON.parse(e.data);
+			if (isGameStarted == false) {
+				isGameStarted = true;
+				console.log("Player1: " + dataPars.player1);
+				console.log("Player2: " + dataPars.player2);
+				console.log("RoomId: " + dataPars.roomid);
+				domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+				domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+				requestAnimationFrame(drawElements);
+			} else if (isGameStarted == true) {
+				if (dataPars.Round == "SemiFinal") {
+					if (dataPars.MoveFor == "PADDLES MOVE") {
+						if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
+							paddl1Y = dataPars.paddle1;
+						if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
+							paddl2Y = dataPars.paddle2;
+					} else {
+						(xBallPos = dataPars.Ballx),
+							(yBallPos = dataPars.Bally);
+						BallDirection = dataPars.BallDir;
+						BallRoute = dataPars.BallRoute;
+					}
+				} else if (dataPars.Round == "Final") {
+					console.log(
+						"The Game Is End, And We Get To The Final Round"
+					);
+					const ToServer = {
+						gameStatus: "NextRound"
+					};
+					socket.ws.send(JSON.stringify(ToServer));
+				} else if (dataPars.Round == "NoRound") {
+					console.log("shiiiiit, lose situation here");
+					isGameStarted = false;
+					// ws.close();
+				} else if (dataPars.Round == "FinalRound") {
+					isGameStarted = false;
+					// ws.close()
+					console.log("wooooow, win situation here");
+					FinalRoundStart();
+				}
+			}
+		};
 
-    socket.ws.onclose = function()
-    {
-      isGameStarted = false;
-      console.log("BYE FROM SERVER");
-    }
+		socket.ws.onclose = function () {
+			isGameStarted = false;
+			console.log("BYE FROM SERVER");
+		};
 
-    function FinalRoundStart()
-    {
-      const ws2 = new WebSocket('ws://' + location.host + '/PongTourWs/')
-      ws2.onopen = function()
-      {
-        console.log("Welcome To The Final Round");
-      }
-    }
-  }
-  disconnectedCallback()
-  {
-    document.removeEventListener("keyup", this.applyDown);
-  }
+		function FinalRoundStart() {
+			const ws2 = new WebSocket("ws://" + location.host + "/PongTourWs/");
+			ws2.onopen = function () {
+				console.log("Welcome To The Final Round");
+			};
+		}
+	}
+	disconnectedCallback() {
+		document.removeEventListener("keyup", this.applyDown);
+	}
 }
 // Setting View
-export class Setting extends HTMLElement
-{
-  constructor() {
-    super('foo');
-    // this.root = this.attachShadow({ mode: "open" });
-  }
-  connectedCallback() {
-    this.setAttribute('id', 'setting-view');
-    this.setAttribute('hidden', '');
-    this.innerHTML = `
+export class Setting extends HTMLElement {
+	constructor() {
+		super("foo");
+		// this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.setAttribute("id", "setting-view");
+		this.setAttribute("hidden", "");
+		this.innerHTML = `
       <style>
         .profile-card {
           display: flex;
@@ -2144,59 +2076,53 @@ export class Setting extends HTMLElement
 				</div>
 			</div> 
     `;
-    this.render();
-  }
-  render()
-  {
-    const float = this.querySelector("#float");
-    const editBtn = this.querySelector(".edit-btn");
-    const profileCard = this.querySelector(".profile-card .section");
-    const input = this.querySelector("#input-fullname");
-    const editImg = this.querySelector(".edit-image");
+		this.render();
+	}
+	render() {
+		const float = this.querySelector("#float");
+		const editBtn = this.querySelector(".edit-btn");
+		const profileCard = this.querySelector(".profile-card .section");
+		const input = this.querySelector("#input-fullname");
+		const editImg = this.querySelector(".edit-image");
 
-    editBtn.addEventListener("click", (e) => {
-      profileCard.classList.add("blur");
-      float.setAttribute("style", "display: flex");
-      float.addEventListener("click", (e) => {
-        e.preventDefault();
-        if (e.target.getAttribute("name") === "Save") {
-          if (input.value.length == 0) {
-            // console.log("Please enter some shit");
-          }
-          else {
-            float.setAttribute("style", "display: none");
-            profileCard.classList.remove("blur");
-          }
-          // post data to the backend for changing the user fullname
-        }
-        // console.log("target: ", e.target)
-        // console.log("current target: ", e.currentTarget)
-        if (e.target === float)
-        {
-          float.setAttribute("style", "display: none");
-          profileCard.classList.remove("blur");
-        }
-      });
-    });
-    // editImg.addEventListener('click', listener);
-    // const listener = () => {
-      
-    // }
-  }
+		editBtn.addEventListener("click", (e) => {
+			profileCard.classList.add("blur");
+			float.setAttribute("style", "display: flex");
+			float.addEventListener("click", (e) => {
+				e.preventDefault();
+				if (e.target.getAttribute("name") === "Save") {
+					if (input.value.length == 0) {
+						// console.log("Please enter some shit");
+					} else {
+						float.setAttribute("style", "display: none");
+						profileCard.classList.remove("blur");
+					}
+					// post data to the backend for changing the user fullname
+				}
+				// console.log("target: ", e.target)
+				// console.log("current target: ", e.currentTarget)
+				if (e.target === float) {
+					float.setAttribute("style", "display: none");
+					profileCard.classList.remove("blur");
+				}
+			});
+		});
+		// editImg.addEventListener('click', listener);
+		// const listener = () => {
+
+		// }
+	}
 }
 // confirm Message component
-export class ConfirmMsg extends HTMLElement
-{
-  constructor()
-  {
-    super('foor');
-    this.root = this.attachShadow({ mode: 'open' });
-  }
-  connectedCallback()
-  {
-    this.setAttribute('id', 'confirm-msg')
-    this.setAttribute('style', 'display: none');
-    this.root.innerHTML = `
+export class ConfirmMsg extends HTMLElement {
+	constructor() {
+		super("foor");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.setAttribute("id", "confirm-msg");
+		this.setAttribute("style", "display: none");
+		this.root.innerHTML = `
       <style>
         :host
         {
@@ -2265,54 +2191,54 @@ export class ConfirmMsg extends HTMLElement
         </div>
       </div>
     `;
-    const game = this.getAttribute('game');
-    this.cancel = this.root.querySelector('.btn-cancel');
-    this.leave  = this.root.querySelector('.btn-primary');
-    
-    window.onpopstate = () => {
-      history.replaceState({ path: '/game' }, null, location.origin + '/game');
-      // console.log(`${game} popState triggered!`);
-      this.setAttribute('style', 'display: block');
-    }
-    this.fcancel = () => {
-      // console.log("canceling");
-      this.setAttribute('style', 'display: none');
-    }
-    this.fleave = () => {
-      // console.log("leaving");
-      this.setAttribute('style', 'display: none');
-      console.log("whiche game would be removed: ", game);
-      aborting(socket.ws, game);
-      window.router.goto('/platform');
-    }
-    this.cancel.addEventListener("click", this.fcancel);
-    this.leave.addEventListener("click", this.fleave);
+		const game = this.getAttribute("game");
+		this.cancel = this.root.querySelector(".btn-cancel");
+		this.leave = this.root.querySelector(".btn-primary");
 
-    window.onbeforeunload = function()
-    {
-      aborting(socket.ws, game);
-    }
-  }
-  disconnectedCallback()
-  {
-    // console.log("confirm masg removed");
-    this.cancel.removeEventListener("click", this.fcancel);
-    this.leave.removeEventListener("click", this.fleave);
-    window.onpopstate = null;
-    window.onbeforeunload = null;
-  }
+		window.onpopstate = () => {
+			history.replaceState(
+				{ path: "/game" },
+				null,
+				location.origin + "/game"
+			);
+			// console.log(`${game} popState triggered!`);
+			this.setAttribute("style", "display: block");
+		};
+		this.fcancel = () => {
+			// console.log("canceling");
+			this.setAttribute("style", "display: none");
+		};
+		this.fleave = () => {
+			// console.log("leaving");
+			this.setAttribute("style", "display: none");
+			console.log("whiche game would be removed: ", game);
+			aborting(socket.ws, game);
+			window.router.goto("/platform");
+		};
+		this.cancel.addEventListener("click", this.fcancel);
+		this.leave.addEventListener("click", this.fleave);
+
+		window.onbeforeunload = function () {
+			aborting(socket.ws, game);
+		};
+	}
+	disconnectedCallback() {
+		// console.log("confirm masg removed");
+		this.cancel.removeEventListener("click", this.fcancel);
+		this.leave.removeEventListener("click", this.fleave);
+		window.onpopstate = null;
+		window.onbeforeunload = null;
+	}
 }
 // Abort Game Button
-export class AbortButton extends HTMLElement
-{
-  constructor() {
-    super();
-    // this.root = this.attachShadow({ mode: 'open' });
-  }
-  connectedCallback() {
-    this.setAttribute('class', 'abort');
-    this.confirm = 
-    this.innerHTML = `
+export class AbortButton extends HTMLElement {
+	constructor() {
+		super();
+		// this.root = this.attachShadow({ mode: 'open' });
+	}
+	connectedCallback() {
+		this.setAttribute("class", "abort");
+		this.confirm = this.innerHTML = `
       <style>
         .abort {
           font-size: 14px;
@@ -2334,56 +2260,53 @@ export class AbortButton extends HTMLElement
       </style>
       EXIT
     `;
-    const parent = this.parentNode;
-    const confirmMsg = parent.querySelector('confirm-msg');
-    this.cancel = confirmMsg.querySelector(".btn-cancel");
-    this.leave = confirmMsg.querySelector(".btn-primary");
-    this.listener = () => {
-      confirmMsg.setAttribute('style', 'display: block');
-    }
-    this.addEventListener('click', this.listener);
-  }
+		const parent = this.parentNode;
+		const confirmMsg = parent.querySelector("confirm-msg");
+		this.cancel = confirmMsg.querySelector(".btn-cancel");
+		this.leave = confirmMsg.querySelector(".btn-primary");
+		this.listener = () => {
+			confirmMsg.setAttribute("style", "display: block");
+		};
+		this.addEventListener("click", this.listener);
+	}
 }
+
 // Main UI View
-export class MainUI extends HTMLElement
-{
-    constructor()
-    {
-        super('foo');
-    }
-    connectedCallback()
-    {
-        const home      = document.createElement("home-view");
-        const left      = document.createElement("div");
-        const right     = document.createElement("div");
-        const middle    = document.createElement("div");
-        const chat      = document.createElement("chat-view");
-        const game      = document.createElement("game-view");
-        const sidebar   = document.createElement("sidebar-view");
-        const profile   = document.createElement("profile-view");
-        const setting   = document.createElement("setting-view");
-        const platform  = document.createElement("platform-view");
+export class MainUI extends HTMLElement {
+	constructor() {
+		super("foo");
+	}
+	connectedCallback() {
+		const home = document.createElement("home-view");
+		const left = document.createElement("div");
+		const right = document.createElement("div");
+		const middle = document.createElement("div");
+		const chat = document.createElement("chat-view");
+		const game = document.createElement("game-view");
+		const sidebar = document.createElement("sidebar-view");
+		const profile = document.createElement("profile-view");
+		const setting = document.createElement("setting-view");
+		const platform = document.createElement("platform-view");
 
-        this.setAttribute("id", "main-ui");
-        left.setAttribute("id", "left-view");
-        left.setAttribute("hidden", '');
-        right.setAttribute("id", "right-view");
-        right.setAttribute("hidden", '');
-        middle.setAttribute("id", "middle-view");
-        middle.setAttribute("hidden", '');
+		this.setAttribute("id", "main-ui");
+		left.setAttribute("id", "left-view");
+		left.setAttribute("hidden", "");
+		right.setAttribute("id", "right-view");
+		right.setAttribute("hidden", "");
+		middle.setAttribute("id", "middle-view");
+		middle.setAttribute("hidden", "");
 
-        right.appendChild(chat);
-        left.appendChild(sidebar);
+		right.appendChild(chat);
+		left.appendChild(sidebar);
 
-        middle.appendChild(game);
-        middle.appendChild(profile);
-        middle.appendChild(setting);
-        middle.appendChild(platform);
-        
-        
-        this.appendChild(home);
-        this.appendChild(left);
-        this.appendChild(middle);
-        this.appendChild(right);
-    }
+		middle.appendChild(game);
+		middle.appendChild(profile);
+		middle.appendChild(setting);
+		middle.appendChild(platform);
+
+		this.appendChild(home);
+		this.appendChild(left);
+		this.appendChild(middle);
+		this.appendChild(right);
+	}
 }

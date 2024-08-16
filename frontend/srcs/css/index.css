@@ -1,4 +1,4 @@
-/* @import "./chat_style.css"; */
+@import "./chat_style.css";
 
 @font-face {
     font-family: 'Press Start 2P';
@@ -20,6 +20,7 @@
     --dark-teal: #1b958d;
     --deep-blue: #105390;
 }
+
 *,
 *::before,
 *::after {
@@ -78,8 +79,8 @@ body {
     /* border-left: 1px solid red;
     border-right: 1px solid red; */
 }
-#TheHistory
-{
+
+#TheHistory {
     display: flex;
     width: 100%;
     justify-content: center;
@@ -91,6 +92,7 @@ body {
     flex-basis: 20%;
     flex-shrink: 0;
 }
+
 /* ------------------------- Main UIs End -------------------------*/
 
 nav {
@@ -127,8 +129,7 @@ nav a {
     font-size: 14px;
 }
 
-.login-btn
-{
+.login-btn {
     padding: 8px 30px !important;
     background: none;
     font-size: 12px;
