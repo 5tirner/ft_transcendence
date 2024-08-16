@@ -1,4 +1,4 @@
-import API from "../../services/API.js";
+import API from "../../service/API.js";
 import { ConvElement } from "./convComponent.js";
 
 async function makeChatRoom(user) {

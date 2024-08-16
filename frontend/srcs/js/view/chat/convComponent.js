@@ -2,7 +2,7 @@ import { formatListDate } from "./chatList.js";
 import { convHeader } from "./conv_head.js";
 import { updateNotif } from "./chatList.js";
 import { loadMessages } from "./messages_loader.js";
-import API from "../../services/API.js";
+import API from "../../service/API.js";
 
 class convTimeAndNotifElem extends HTMLElement {
 	constructor() {

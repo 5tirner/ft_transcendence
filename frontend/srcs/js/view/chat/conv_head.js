@@ -14,7 +14,7 @@ export function convHeader(userData, roomId) {
 	});
 	arrowIcon.classList.add("frame-icon");
 	arrowIcon.alt = "";
-	arrowIcon.src = "./imgs/arrow.svg";
+	arrowIcon.src = "js/view/src/img/arrow.svg";
 	conversationHeader.appendChild(arrowIcon);
 
 	// Create the user avatar
@@ -34,7 +34,7 @@ export function convHeader(userData, roomId) {
 	const controllerIcon = document.createElement("img");
 	controllerIcon.classList.add("controler-icon");
 	controllerIcon.alt = "";
-	controllerIcon.src = "./imgs/GameController.svg";
+	controllerIcon.src = "js/view/src/img/GameController.svg";
 	conversationHeader.appendChild(controllerIcon);
 
 	return conversationHeader;

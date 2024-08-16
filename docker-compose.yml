@@ -2,10 +2,10 @@ networks:
     Net:
         name: network
 
-volumes:
-    esdata:
-        driver: local
-        name: esdata
+# volumes:
+#     esdata:
+#         driver: local
+#         name: esdata
 
 services:
     # -------------- ELASTIC ----------------#

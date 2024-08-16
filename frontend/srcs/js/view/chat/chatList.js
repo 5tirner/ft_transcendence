@@ -1,4 +1,4 @@
-import API from "../../services/API.js";
+import API from "../../service/API.js";
 import { convHeader } from "./conv_head.js";
 import { formatTime, loadMessages } from "./messages_loader.js";
 import { ConvElement } from "./convComponent.js";

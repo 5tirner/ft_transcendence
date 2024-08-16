@@ -1,4 +1,4 @@
-import API from "../../services/API.js";
+import API from "../../service/API.js";
 import { formatListDate, updateNotif } from "./chatList.js";
 import { createMessageBuble } from "./messages_loader.js";
 
