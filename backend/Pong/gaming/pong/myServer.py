@@ -8,6 +8,11 @@ import random
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
+async def saveData(self):
+    addUserToDB = pongGameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
+    addUserToDB.save()
+    addUserPic = playerAndHisPic(login=self.scope['user'], pic=self.scope['pic'])
+    addUserPic.save()
 class myPongserver(AsyncJsonWebsocketConsumer):
     playerWantsToPlay = list()
     playersOnMatchAndItsRoomId = dict()
@@ -20,10 +25,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
             print(f"Welcome Back {self.scope['user']}.")
         except:
             print(f"It's Your First Time Here {self.scope['user']}! Welcome.")
-            addUserToDB = pongGameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
-            addUserToDB.save()
-            addUserPic = playerAndHisPic(login=self.scope['user'], pic=self.scope['pic'])
-            addUserPic.save()
+            await saveData(self)
             # print(f"{self.scope['user']} Avatar: {self.scope['pic']}")
             print(f"{self.scope['user']} Added Succusfully")
         if len(self.playerWantsToPlay) == 0:

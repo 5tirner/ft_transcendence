@@ -7,31 +7,17 @@ from .destroyThisGameInfo import destroyThisGameInformations
 from .roomCodes import roomcode
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
-# class myServerOnLobby(AsyncWebsocketConsumer):
-#     async def connect(self):
-#         print(f'----------User On Lobby Is: {self.scope["user"]}-------')
-#         await self.accept()
-#     async def receive(self, text_data, bytes_data=0):
-#         print(f'----------Data Come From User: {self.scope["user"]}-------')
-#         print(f"Data: {text_data}")
-#         await self.send(self.scope["user"])
-#         print("DONE!")
-#     async def disconnect(self, code):
-#         print(f"Connection Of User: {self.scope['user']} Lost")
-#         try:
-#             userinLobby = onLobby.objects.get(login=self.scope['user'])
-#             userinLobby.delete()
-#             print("User Out Of Lobby")
-#         except:
-#             print("Already Out Of Lobby")
-#         await self.close()
 
+async def saveData(self):
+    addUserToDb = gameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
+    addUserToDb.save()
+    addUserPic = playerAndHisPic(login=self.scope['user'], pic=self.scope['pic'])
+    addUserPic.save()
 class myServerOnGame(AsyncWebsocketConsumer):
     playerWantsToPlay = list()
     playersOnMatchAndItsRoomId = dict()
     playersOnMatchAndItsOppenent = dict()
     playersOnMatchAndItsRole = dict()
-
     async def connect(self):
         print(f'----------User On Game Is: {self.scope["user"]}-------')
         try:
@@ -39,10 +25,7 @@ class myServerOnGame(AsyncWebsocketConsumer):
             print(f"Welcome Back {self.scope['user']}")
         except:
             print(f"Welcome To The Game {self.scope['user']}")
-            addUserToDb = gameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
-            addUserToDb.save()
-            addUserPic = playerAndHisPic(login=self.scope['user'], pic=self.scope['pic'])
-            addUserPic.save()
+            await saveData(self)
         if len(self.playerWantsToPlay) == 0:
             player1, player2 = self.scope['user'], ""
             if self.playersOnMatchAndItsOppenent.get(player1) is not None:

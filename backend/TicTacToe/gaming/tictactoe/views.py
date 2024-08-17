@@ -69,6 +69,7 @@ def historic(req):
     matchNumbers = 1
     for i in history.objects.all().values():
         if i.get('you') == name:
+            print(f"--------------{i}---------------")
             i['pic'] = playerAndHisPic.objects.get(login=i.get('oppenent')).pic
             allMatches[f"match{matchNumbers}"] = i
             matchNumbers += 1
