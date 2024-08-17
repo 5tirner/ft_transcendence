@@ -8,7 +8,7 @@ export async function render_chat() {
 	init_socket();
 }
 
-export class ChatComponent extends HTMLDivElement {
+export class ChatComponent extends HTMLElement {
 	constructor() {
 		super();
 

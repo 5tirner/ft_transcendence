@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	customElements.define("history-view", Histo);
 	customElements.define("tournament-view", PongTour);
 	customElements.define("result-msg", ResultMsg);
-	customElements.define("chat-view", ChatComponent, { extends: "div" });
+	customElements.define("chat-view", ChatComponent);
 
 	window.component = {
 		home: document.querySelector("home-view"),

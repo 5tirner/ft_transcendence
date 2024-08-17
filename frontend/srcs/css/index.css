@@ -63,21 +63,16 @@ body {
 
 #left-view {
     height: 100%;
-    flex-basis: 4%;
-    flex-shrink: 0;
+    width: 50px;
     background-color: var(--dark-purple);
 }
 
 #middle-view {
-    flex-basis: 76%;
-    flex-shrink: 0;
+    flex: 1;
     padding-top: 30px;
     overflow: hidden;
     font-family: var(--body-font);
     background-color: var(--dark-purple);
-    /* background-color: #4a1b40; */
-    /* border-left: 1px solid red;
-    border-right: 1px solid red; */
 }
 
 #TheHistory {
@@ -89,8 +84,7 @@ body {
 #right-view {
     background-color: var(--dark-purple);
     color: var(--light-olive);
-    flex-basis: 20%;
-    flex-shrink: 0;
+    width: 250px;
 }
 
 /* ------------------------- Main UIs End -------------------------*/

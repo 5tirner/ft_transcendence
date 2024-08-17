@@ -1,5 +1,6 @@
 import { auth } from "../auth/Authentication.js";
 import { aborting } from "../assets/abort.js";
+import { ChatComponent } from "./chat/chat.js";
 const socket = {
 	ws: null
 };
@@ -201,234 +202,6 @@ export class Home extends HTMLElement {
 			});
 		});
 	}
-}
-// Platform View
-export class Platform extends HTMLElement
-{
-  constructor()
-  {
-    super('foo');
-    this.root = this.attachShadow({mode:"open"});
-  }
-  connectedCallback()
-  {
-    this.setAttribute('id', 'platform-view');
-    this.setAttribute('hidden', '');
-    this.root.innerHTML += `
-    <style>
-      :host
-      {
-          width: 100%;
-          height: 100%;
-      }
-      a
-      {
-          text-decoration: none;
-      }
-      .container
-      {
-          width: 100%;
-          height: 35%;
-          display: flex;
-          flex-direction: row;
-      }
-      .wrapper
-      {
-          margin: 0 auto;
-          display: flex;
-          gap: 150px;
-          width: 80%;
-          height: 100%;
-      }
-      .pong, .xo
-      {
-          width: 100%;
-          position: relative;
-      }
-      .xo
-      {
-          justify-content: start !important;
-      }
-      .pong img, .xo img
-      {
-          border-radius: 12px;
-          width: 100%;
-          height: 100%;
-      }
-      .btn-wrapper
-      {
-          width: 100%;
-          position: absolute;
-          bottom: 24px;
-          left: 0;
-          display: flex;
-          justify-content: space-around;
-      }
-      .button 
-      {
-        font-size: 10px;
-        font-weight: 300;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        border: none;
-        cursor: pointer;
-        display: inline-block;
-        padding: 2.5% 6%;
-        border-radius: 8px;
-        background-color: var(--dark-teal);
-        color: var(--light-olive);
-        box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
-        transition: all 0.1s ease, background 0.3s ease;
-        font-family: "Press Start 2P", sans-serif !important;
-      }
-      .po-local
-      {
-          background: var(--coral) !important;
-      }
-      .local-xo
-      {
-          background: var(--light-olive) !important;
-          color: var(--coral);
-      }
-      .button:hover,
-      .button:focus
-      {
-          background: #df6108;
-      }
-      .rank
-      {
-          margin-top: 80px;
-          width: 100%;
-          height: 55%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-      }
-      .rank-title
-      {
-          padding: 10px 0;
-          width: 100%;
-          text-align: center;
-          color: var(--dark-purple);
-      }
-      
-      .rank:hover .slide
-      {
-          animation-play-state: paused;
-      }
-      @keyframes sliding
-      {
-          from{ transform: translateX(80%); }
-          to{ transform: translateX(-100%); }
-      }
-      .slide
-      {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          flex-direction: row;
-          justify-content: center;
-          gap: 2.5rem;
-          animation: 20s sliding infinite linear;
-      }
-      @media screen and (max-width: 900px) {
-        .container {
-          width: 100%;
-          height: 35%;
-          display: flex;
-          flex-direction: column;
-        }
-        .wrapper
-        {
-          display: flex;
-          flex-direction: column;
-          gap: 40px;
-        }
-        .rank
-        {
-          display: none;
-        }
-      }
-    </style>
-    <div class="container">
-        <div class="wrapper">
-            <div class="pong">
-                <img src="js/view/src/img/pong.gif">
-                <div class="btn-wrapper">
-                <a href="/game" class="button po-btn multi common" game="pong">
-                  Multiplayer
-                </a>
-                    <button class="button po-local">Local</button>
-                </div>
-            </div>
-            <div class="xo">
-                <img src="js/view/src/img/xo-teal.gif">
-                <div class="btn-wrapper">
-                  <a href="/game" class="button xo-btn multi common" game="ttt">
-                    Multiplayer
-                  </a>
-                  <button class="button local-xo">Local</button>
-                </div>
-            </div>
-            <div class="pong">
-                <div class="btn-wrapper">
-                <a href="/game" class="button po-btn-tour multi common" game="tournament">
-                  Tournament
-                </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="rank">
-        <div class="rank-title">Players Rank</div>
-        <div class="slide">
-            
-        </div>
-    </div>
-    `;
-    this.startGame = this.root.querySelectorAll(".common");
-    this.poLocal = this.root.querySelector('.po-local');
-    this.startGame.forEach(elem => {
-      elem.addEventListener("click", (e) => {
-        e.preventDefault();
-        const game = e.target.getAttribute("game");
-        manipulateGameSection(game);
-      });
-    });
-    const manipulateGameSection = ( gameToAppend ) =>
-    {
-      const gameSection = document.querySelector('.game-section');
-      console.log("Game: ", gameToAppend);
-      const gameElem    = document.querySelector(`#${gameToAppend}-view`);
-      if (gameElem !== null)
-        gameElem.remove();
-      gameSection.appendChild(document.createElement(`${gameToAppend}-view`));
-      window.router.redirecto("/game");
-    }
-    this.poLocal.addEventListener('click', () => manipulateGameSection('po-local'));
-    window.onpopstate = (e) => {
-      window.router.goto(e.state.path);
-    };
-    
-    const renderPlayersCard = () => 
-    {
-      // get number of rankder player from database and based on the number create components sma3ti
-      const slider = this.root.querySelector('.slide');
-      const card = document.createElement('rank-pl');
-    
-    }
-  }
-  
-  disconnectedCallback()
-  {
-    this.startGame.forEach(elem => {
-      elem.removeEventListener("click", (e) => {
-        e.preventDefault();
-        const game = e.target.getAttribute("game");
-        manipulateGameSection(game);
-      });
-    });
-  }
 }
 // Sidebar View
 export class Sidebar extends HTMLElement {
@@ -851,6 +624,9 @@ export class Histo extends HTMLElement {
             width: 100%;
             overflow-y: scroll;
         }
+        .container::-webkit-scrollbar {
+            display: none;
+        }
         
         h1 {
             color: var(--light-olive);
@@ -988,6 +764,230 @@ export class Histo extends HTMLElement {
 		pongInjectHere.innerHTML = createHistoElem(pongData);
 	}
 }
+// Platform View
+export class Platform extends HTMLElement {
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.setAttribute("id", "platform-view");
+		this.setAttribute("hidden", "");
+		this.root.innerHTML += `
+    <style>
+      :host
+      {
+          width: 100%;
+          height: 100%;
+      }
+      a
+      {
+          text-decoration: none;
+      }
+      .container
+      {
+          width: 100%;
+          height: 35%;
+          display: flex;
+          flex-direction: row;
+      }
+      .wrapper
+      {
+          margin: 0 auto;
+          display: flex;
+          gap: 150px;
+          width: 80%;
+          height: 100%;
+      }
+      .pong, .xo
+      {
+          width: 100%;
+          position: relative;
+      }
+      .xo
+      {
+          justify-content: start !important;
+      }
+      .pong img, .xo img
+      {
+          border-radius: 12px;
+          width: 100%;
+          height: 100%;
+      }
+      .btn-wrapper
+      {
+          width: 100%;
+          position: absolute;
+          bottom: 24px;
+          left: 0;
+          display: flex;
+          justify-content: space-around;
+      }
+      .button 
+      {
+        font-size: 10px;
+        font-weight: 300;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        border: none;
+        cursor: pointer;
+        display: inline-block;
+        padding: 2.5% 6%;
+        border-radius: 8px;
+        background-color: var(--dark-teal);
+        color: var(--light-olive);
+        box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
+        transition: all 0.1s ease, background 0.3s ease;
+        font-family: "Press Start 2P", sans-serif !important;
+      }
+      .po-local
+      {
+          background: var(--coral) !important;
+      }
+      .local-xo
+      {
+          background: var(--light-olive) !important;
+          color: var(--coral);
+      }
+      .button:hover,
+      .button:focus
+      {
+          background: #df6108;
+      }
+      .rank
+      {
+          margin-top: 80px;
+          width: 100%;
+          height: 55%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+      }
+      .rank-title
+      {
+          padding: 10px 0;
+          width: 100%;
+          text-align: center;
+          color: var(--dark-purple);
+      }
+      
+      .rank:hover .slide
+      {
+          animation-play-state: paused;
+      }
+      @keyframes sliding
+      {
+          from{ transform: translateX(80%); }
+          to{ transform: translateX(-100%); }
+      }
+      .slide
+      {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+          gap: 2.5rem;
+          animation: 20s sliding infinite linear;
+      }
+      @media screen and (max-width: 900px) {
+        .container {
+          width: 100%;
+          height: 35%;
+          display: flex;
+          flex-direction: column;
+        }
+        .wrapper
+        {
+          display: flex;
+          flex-direction: column;
+          gap: 40px;
+        }
+        .rank
+        {
+          display: none;
+        }
+      }
+    </style>
+    <div class="container">
+        <div class="wrapper">
+            <div class="pong">
+                <img src="js/view/src/img/pong.gif">
+                <div class="btn-wrapper">
+                <a href="/game" class="button po-btn multi common" game="pong">
+                  Multiplayer
+                </a>
+                    <button class="button po-local">Local</button>
+                </div>
+            </div>
+            <div class="xo">
+                <img src="js/view/src/img/xo-teal.gif">
+                <div class="btn-wrapper">
+                  <a href="/game" class="button xo-btn multi common" game="ttt">
+                    Multiplayer
+                  </a>
+                  <button class="button local-xo">Local</button>
+                </div>
+            </div>
+            <div class="pong">
+                <div class="btn-wrapper">
+                <a href="/game" class="button po-btn-tour multi common" game="tournament">
+                  Tournament
+                </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="rank">
+        <div class="rank-title">Players Rank</div>
+        <div class="slide">
+            
+        </div>
+    </div>
+    `;
+		this.startGame = this.root.querySelectorAll(".common");
+		this.poLocal = this.root.querySelector(".po-local");
+		this.startGame.forEach((elem) => {
+			elem.addEventListener("click", (e) => {
+				e.preventDefault();
+				const game = e.target.getAttribute("game");
+				manipulateGameSection(game);
+			});
+		});
+		const manipulateGameSection = (gameToAppend) => {
+			const gameSection = document.querySelector(".game-section");
+			const gameElem = document.querySelector(`#${gameToAppend}-view`);
+			if (gameElem !== null) gameElem.remove();
+			else
+				gameSection.appendChild(
+					document.createElement(`${gameToAppend}-view`)
+				);
+			window.router.goto("/game");
+		};
+		this.poLocal.addEventListener("click", () =>
+			manipulateGameSection("po-local")
+		);
+		window.onpopstate = (e) => {
+			window.router.goto(e.state.path);
+		};
+
+		const renderPlayersCard = () => {
+			// get number of rankder player from database and based on the number create components sma3ti
+			const slider = this.root.querySelector(".slide");
+			const card = document.createElement("rank-pl");
+		};
+	}
+
+	disconnectedCallback() {
+		this.startGame.forEach((elem) => {
+			elem.removeEventListener("click", (e) => {
+				e.preventDefault();
+				const game = e.target.getAttribute("game");
+				manipulateGameSection(game);
+			});
+		});
+	}
+}
 // Rank players
 export class RankPlayers extends HTMLElement {
 	constructor() {
@@ -1049,16 +1049,13 @@ export class RankPlayers extends HTMLElement {
     `;
 	}
 }
-export class ResultMsg extends HTMLElement
-{
-  constructor()
-  {
-    super('foo');
-    this.root = this.attachShadow({mode: 'open'});
-  }
-  connectedCallback()
-  {
-    this.root.innerHTML = `
+export class ResultMsg extends HTMLElement {
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.root.innerHTML = `
     <style>
       .container {
           backdrop-filter: blur(5px);
@@ -1179,17 +1176,14 @@ export class ResultMsg extends HTMLElement
         </div>
     </div>
     `;
-    const game = this.getAttribute('game');
-    const returnHome = this.root.querySelector('.home-button');
-    returnHome.addEventListener('click', (e) => {
-      e.preventDefault();
-      aborting( socket.ws, game );
-    });
-  }
-  disconnectedCallback()
-  {
-    
-  }
+		const game = this.getAttribute("game");
+		const returnHome = this.root.querySelector(".home-button");
+		returnHome.addEventListener("click", (e) => {
+			e.preventDefault();
+			aborting(socket.ws, game);
+		});
+	}
+	disconnectedCallback() {}
 }
 // TicTacToe View
 export class TTT extends HTMLElement {
@@ -1271,19 +1265,18 @@ export class TTT extends HTMLElement {
       <confirm-msg game="ttt"></confirm-msg>
       <div class="result"></div>
     `;
-    
-    const domElm1 = this.root.getElementById("p1");
-    const domElm2 = this.root.getElementById("p2");
-    this.square  = this.root.querySelectorAll(".square");
-    this.result = this.root.querySelector(".result");
 
-    this.square.forEach(elem => {
-      elem.addEventListener('click', (e) => {
-        e.preventDefault();
-        sendDataToServer(e.target.getAttribute('data'));
-      });
-    });
-    
+		const domElm1 = this.root.getElementById("p1");
+		const domElm2 = this.root.getElementById("p2");
+		this.square = this.root.querySelectorAll(".square");
+		this.result = this.root.querySelector(".result");
+
+		this.square.forEach((elem) => {
+			elem.addEventListener("click", (e) => {
+				e.preventDefault();
+				sendDataToServer(e.target.getAttribute("data"));
+			});
+		});
 
 		this.square.forEach((elem) => {
 			elem.addEventListener("click", (e) => {
@@ -1392,11 +1385,11 @@ export class TTT extends HTMLElement {
 			} else console.log("Game Not Start Yet");
 		}
 		socket.ws.onclose = () => {
-      console.log("Socket closed BYE BYE");
-      const resultComp = document.createElement('result-msg');
-      resultComp.setAttribute('game', 'ttt');
-      this.result.appendChild(resultComp);
-    }
+			console.log("Socket closed BYE BYE");
+			const resultComp = document.createElement("result-msg");
+			resultComp.setAttribute("game", "ttt");
+			this.result.appendChild(resultComp);
+		};
 		window.onbeforeunload = function () {
 			aborting(socket.ws, "ttt");
 		};
@@ -1811,17 +1804,14 @@ export class PongLocal extends HTMLElement {
 	}
 }
 // Pong Tournement
-export class PongTour extends HTMLElement
-{
-  constructor()
-  {
-    super('foo');
-    this.root = this.attachShadow({ mode: 'open' });
-  }
-  connectedCallback()
-  {
-    this.setAttribute('id', 'tournament-view');
-    this.root.innerHTML = `
+export class PongTour extends HTMLElement {
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.setAttribute("id", "tournament-view");
+		this.root.innerHTML = `
       <style>
           canvas
           {
@@ -2353,27 +2343,31 @@ export class ConfirmMsg extends HTMLElement {
         </div>
       </div>
     `;
-    const game = this.getAttribute('game');
-    this.cancel = this.root.querySelector('.btn-cancel');
-    this.leave  = this.root.querySelector('.btn-primary');
-    
-    window.onpopstate = () => {
-      history.replaceState({ path: '/game' }, null, location.origin + '/game');
-      // console.log(`${game} popState triggered!`);
-      this.setAttribute('style', 'display: block');
-    }
-    this.fcancel = () => {
-      // console.log("canceling");
-      this.setAttribute('style', 'display: none');
-    }
-    this.fleave = () => {
-      this.setAttribute('style', 'display: none');
-      console.log("which game would be removed: ", game);
-      aborting(socket.ws, game);
-      window.router.goto('/platform');
-    }
-    this.cancel.addEventListener("click", this.fcancel);
-    this.leave.addEventListener("click", this.fleave);
+		const game = this.getAttribute("game");
+		this.cancel = this.root.querySelector(".btn-cancel");
+		this.leave = this.root.querySelector(".btn-primary");
+
+		window.onpopstate = () => {
+			history.replaceState(
+				{ path: "/game" },
+				null,
+				location.origin + "/game"
+			);
+			// console.log(`${game} popState triggered!`);
+			this.setAttribute("style", "display: block");
+		};
+		this.fcancel = () => {
+			// console.log("canceling");
+			this.setAttribute("style", "display: none");
+		};
+		this.fleave = () => {
+			this.setAttribute("style", "display: none");
+			console.log("which game would be removed: ", game);
+			aborting(socket.ws, game);
+			window.router.goto("/platform");
+		};
+		this.cancel.addEventListener("click", this.fcancel);
+		this.leave.addEventListener("click", this.fleave);
 
 		window.onpopstate = () => {
 			history.replaceState(

@@ -32,23 +32,24 @@ def get_auth_cookie(user):
     return cooki
 
 
-def create_chatrooms():
-    # print(2 * "\t", "================= create chatrooms ====================")
-
-    user = {"username": ""}
-
-    for id in range(USER_NUMBER):
-        user_mail = f"user{id}@user.com"
-        cookie = get_auth_cookie(user_mail)
-        for i in range(USER_NUMBER):
-            user["username"] = f"user{i}"
-            res = requests.post(creatChatroomAPI, data=user, cookies=cookie)
-            # print(f"user{i} respons ==>", res.json(), res.status_code)
-
-        user["username"] = "belkarto"
-        res = requests.post(creatChatroomAPI, data=user, cookies=cookie)
-
-    # print(2 * "\t", "=======================================================")
+# def create_chatrooms():
+#     # print(2 * "\t", "================= create chatrooms ====================")
+#
+#     user = {"username": ""}
+#
+#     for id in range(USER_NUMBER):
+#         user_mail = f"user{id}@user.com"
+#         cookie = get_auth_cookie(user_mail)
+#         for i in range(USER_NUMBER):
+#             user["username"] = f"user{i}"
+#             res = requests.post(creatChatroomAPI, data=user, cookies=cookie)
+#             # print(f"user{i} respons ==>", res.json(), res.status_code)
+#
+#         user["username"] = "belkarto"
+#         res = requests.post(creatChatroomAPI, data=user, cookies=cookie)
+#
+#     # print(2 * "\t", "=======================================================")
+#
 
 
 def create_friendship():
@@ -62,9 +63,15 @@ def create_friendship():
             res = requests.post(friendshipAPI, data=friend, cookies=cookie)
             # print(f"user{i} respons ==>", res.json(), res.status_code)
 
+    cookie = {
+        "jwt_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiMmZhIjpmYWxzZSwiZXhwIjoxNzIzODkyNjU4LCJpYXQiOjE3MjM4MDYyNTh9.z8JSA7HmXfY_XZqhqjYuwQMvF-lH-zmsb0gkGxTadbI",
+    }
+    for i in range(USER_NUMBER):
+        friend["id_target"] = i + 1
+        res = requests.post(friendshipAPI, data=friend, cookies=cookie)
     # print(2 * "\t", "=======================================================")
 
 
 create_users()
-create_chatrooms()
+# create_chatrooms()
 create_friendship()
