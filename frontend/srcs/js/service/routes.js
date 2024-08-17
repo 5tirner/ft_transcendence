@@ -8,6 +8,7 @@ export const routes = (previousLocation, currentLocation) => {
       case "/setting":
       case "/history":
       case "/game":
+      case "/friend":
       {
         const currentView   = document.querySelector(`${currentLocation.substring(1)}-view`);
         if ( previousLocation )

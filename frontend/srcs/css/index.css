@@ -35,7 +35,7 @@ html {
 }
 
 body {
-    background-color: var(--dark-teal) !important;
+    background-color: var(--dark-purple) !important;
     color: var(--dark-purple);
     font-family: var(--body-font);
     height: 100vh;
@@ -56,23 +56,23 @@ body {
 }
 
 #home-view {
-    background-color: var(--dark-teal);
+    background-color: var(--dark-purple);
     width: 70%;
     height: 100%;
 }
 
 #left-view {
     height: 100%;
-    width: 50px;
-    background-color: var(--dark-purple);
+    width: 95px;
 }
 
 #middle-view {
-    flex: 1;
     padding-top: 30px;
-    overflow: hidden;
+    width: 100%;
+    /* overflow: hidden; */
     font-family: var(--body-font);
-    background-color: var(--dark-purple);
+    border-left: 1px solid rgba(100, 100, 100, 0.25) !important;
+    border-right: 1px solid rgba(100, 100, 100, 0.25) !important;
 }
 
 #TheHistory {
@@ -84,8 +84,7 @@ body {
 #right-view {
     background-color: var(--dark-purple);
     color: var(--light-olive);
-    max-width: 250px;
-    width: 10%;
+    min-width: 250px;
 }
 
 /* ------------------------- Main UIs End -------------------------*/
@@ -225,7 +224,8 @@ nav a {
 
 /* Platform View */
 #platform-view {
-    display: block;
+    display: flex;
+    justify-content: center;
     width: 100%;
     height: 100%;
 }

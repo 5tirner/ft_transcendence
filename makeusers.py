@@ -64,7 +64,7 @@ def create_friendship():
             # print(f"user{i} respons ==>", res.json(), res.status_code)
 
     cookie = {
-        "jwt_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiMmZhIjpmYWxzZSwiZXhwIjoxNzIzODkyNjU4LCJpYXQiOjE3MjM4MDYyNTh9.z8JSA7HmXfY_XZqhqjYuwQMvF-lH-zmsb0gkGxTadbI",
+        "jwt_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwiMmZhIjpmYWxzZSwiZXhwIjoxNzIzOTgzMTkwLCJpYXQiOjE3MjM4OTY3OTB9.hF8BN6qXrX7P6B9HR8UlZe7MG2bSx2kHS2WucyuyY38",
     }
     for i in range(USER_NUMBER):
         friend["id_target"] = i + 1
