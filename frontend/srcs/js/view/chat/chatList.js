@@ -60,3 +60,17 @@ export async function getConversations() {
 		});
 	}
 }
+
+export function findUserInList(username) {
+	const listItems = document.querySelectorAll(".list-group-item");
+	if (!listItems) return null;
+
+	// Loop through each list item
+	for (const li of listItems) {
+		const user = li.querySelector(".username");
+		if (user.textContent == username) {
+			return li;
+		}
+	}
+	return null;
+}

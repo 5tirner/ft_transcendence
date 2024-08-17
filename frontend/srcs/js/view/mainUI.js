@@ -625,6 +625,9 @@ export class Histo extends HTMLElement {
             width: 100%;
             overflow-y: scroll;
         }
+        .container::-webkit-scrollbar {
+            display: none;
+        }
         
         h1 {
             color: var(--light-olive);

@@ -1,21 +1,23 @@
 import API from "../../service/API.js";
+import { findUserInList } from "./chatList.js";
 import { ConvElement } from "./convComponent.js";
 
-// TODO:
-//  check if room already exist if not send request for it else
-//  open the already existing room
 async function makeChatRoom(user) {
-	const ulElement = document.querySelector(".list-group");
-	console.log("make makeChatRoom");
-	console.log(ulElement);
-	let respone = await API.createChatRoom(user);
-	if (respone.ok) {
-		respone = await respone.json();
-		let conv = new ConvElement();
-		conv.data = respone;
-		console.log(conv);
-		ulElement.appendChild(conv);
-		ulElement.insertBefore(conv, ulElement.firstChild);
+	const userLi = findUserInList(user);
+	if (userLi) {
+		userLi.click();
+	} else {
+		const ulElement = document.querySelector(".list-group");
+
+		let respone = await API.createChatRoom(user);
+		if (respone.ok) {
+			respone = await respone.json();
+			let conv = new ConvElement();
+			conv.data = respone;
+			ulElement.appendChild(conv);
+			ulElement.insertBefore(conv, ulElement.firstChild);
+			conv.click();
+		}
 	}
 }
 
