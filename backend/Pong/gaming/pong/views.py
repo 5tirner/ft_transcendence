@@ -91,12 +91,15 @@ def historic(req):
     matchNumbers = 1
     for i in pongHistory.objects.all().values():
         if i.get('you') == name:
-            # print(f"-----------{i}--------")
-            avatar = playerAndHisPic.objects.get(login=i.get('oppenent')).pic
-            i['pic'] = avatar
-            allMatches[f"match{matchNumbers}"] = i
-            matchNumbers += 1
-    return JsonResponse(json.dumps(allMatches), safe=False)
+            print(f"-----------{i}--------")
+            try:
+                avatar = playerAndHisPic.objects.get(login=i.get('oppenent')).pic
+                i['pic'] = avatar
+                allMatches[f"match{matchNumbers}"] = i
+                matchNumbers += 1
+                return JsonResponse(json.dumps(allMatches), safe=False)
+            except:
+                return response.Response(status=status.HTTP_204_NO_CONTENT)
 
 # @api_view(['GET'])
 # def TournamentHistory(req):

@@ -1471,6 +1471,7 @@ export class Pong extends HTMLElement {
 		let paddl1Y = 125;
 		let paddl2Y = 125;
 		let BallRoute = "LINE";
+    var saveInterval = 0;
 		const canvas = this.root.querySelector("#board");
 		const canvasContext = canvas.getContext("2d");
 		// canvasContext.shadowColor = "black";
@@ -1486,7 +1487,7 @@ export class Pong extends HTMLElement {
 				socket.ws.send(
 					JSON.stringify({ gameStatus: "End", Side: BallDirection })
 				);
-				// clearTimeout(drawElements);
+				clearInterval(saveInterval);
 			} else if (isGameStarted == true && isFinsih == false) {
 				const ToServer = {
 					WhatIGiveYou: "BALL MOVE",
@@ -1507,8 +1508,8 @@ export class Pong extends HTMLElement {
 
 		function drawElements() {
 			if (isGameStarted == true && isFinsih == false) {
+        ballMove();
 				canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-				ballMove();
 				// canvasContext.beginPath();
 				// canvasContext.lineWidth = 4;
 				// canvasContext.moveTo(300, 0);
@@ -1541,7 +1542,7 @@ export class Pong extends HTMLElement {
 				canvasContext.closePath();
 				canvasContext.strokeStyle = "#F0F8FF";
 				canvasContext.stroke();
-				requestAnimationFrame(drawElements);
+				// requestAnimationFrame(drawElements);
 			}
 		}
 
@@ -1589,7 +1590,7 @@ export class Pong extends HTMLElement {
 					console.log("RoomId: " + dataPars.roomid);
 					domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
 					domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-					requestAnimationFrame(drawElements);
+					saveInterval = setInterval(drawElements, 70);
 				}
 			} else if (isGameStarted == true && isFinsih == false) {
 				if (dataPars.MoveFor == "PADDLES MOVE") {
