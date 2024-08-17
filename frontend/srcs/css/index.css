@@ -84,7 +84,8 @@ body {
 #right-view {
     background-color: var(--dark-purple);
     color: var(--light-olive);
-    width: 250px;
+    max-width: 250px;
+    width: 10%;
 }
 
 /* ------------------------- Main UIs End -------------------------*/

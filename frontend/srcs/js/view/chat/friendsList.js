@@ -21,37 +21,49 @@ async function makeChatRoom(user) {
 	}
 }
 
-export async function fillFriensList(params) {
+export async function fillFriensList(popup) {
 	let response = await API.getFriends();
-	const dropDown = document.querySelector(".dropdown-content");
-	dropDown.innerHTML = "";
+	const popupSubDiv = popup.querySelector(".pop-up");
+	popupSubDiv.innerHTML = "";
 	if (response.ok) {
 		response = await response.json();
-		console.log(response);
 		const { friendships } = response;
+		console.log(friendships);
 		friendships.forEach((elem) => {
 			const userElem = document.createElement("div");
 			userElem.addEventListener("click", async (event) => {
 				await makeChatRoom(event.target.textContent);
+				popup.remove();
 			});
 			userElem.textContent = elem.username;
-			dropDown.appendChild(userElem);
+			popupSubDiv.appendChild(userElem);
 		});
 	}
 }
 
-window.addEventListener("click", async (event) => {
-	let drop_down_menu = document.querySelector(".dropdown-content");
-	if (!event.target.matches(".add-message-icon i")) {
-		if (drop_down_menu.classList.contains("show")) {
-			drop_down_menu.classList.remove("show");
-		}
-	} else {
-		if (drop_down_menu.classList.contains("show")) {
-			drop_down_menu.classList.remove("show");
-		} else {
-			await fillFriensList();
-			drop_down_menu.classList.add("show");
-		}
+export class PopupFriendList extends HTMLElement {
+	constructor() {
+		super();
 	}
-});
+
+	connectedCallback() {
+		this.setAttribute("id", "friends-list");
+		this.innerHTML = `
+			<div class="pop-up">
+                this is some text
+			</div>`;
+	}
+}
+customElements.define("pop-up-friend-list", PopupFriendList);
+
+export async function handlAddChatRoom(event) {
+	console.log("click click");
+	let popup = document.querySelector("pop-up-friend-list");
+	if (popup) {
+		popup.remove();
+	} else {
+		popup = document.createElement("pop-up-friend-list");
+		document.querySelector("body").appendChild(popup);
+		fillFriensList(popup);
+	}
+}
