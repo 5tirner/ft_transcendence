@@ -25,4 +25,3 @@ export const routes = (previousLocation, currentLocation) => {
 		}
 	}
 };
-

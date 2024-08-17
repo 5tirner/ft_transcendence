@@ -1,13 +1,13 @@
 import { auth } from "../auth/Authentication.js";
 import { aborting } from "../assets/abort.js";
-import { ChatComponent } from "./chat/chat.js";
+// import { ChatComponent } from "./chat/chat.js";
 const socket = {
 	ws: null
 };
 // Login View
 export class Login extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -166,7 +166,7 @@ export class Login extends HTMLElement {
 // Home View
 export class Home extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 	}
 	connectedCallback() {
 		this.setAttribute("id", "home-view");
@@ -206,7 +206,7 @@ export class Home extends HTMLElement {
 // Sidebar View
 export class Sidebar extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 	}
 	// skipcq: JS-0057
 	connectedCallback() {
@@ -264,7 +264,7 @@ export class Sidebar extends HTMLElement {
 // Game View
 export class Game extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 	}
 	connectedCallback() {
 		this.setAttribute("id", "game-view");
@@ -380,7 +380,7 @@ export class Game extends HTMLElement {
 // User Profile View
 export class Profile extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		// this.root = this.attachShadow({ mode: "open" });
 	}
 	// connected call back
@@ -469,7 +469,7 @@ export class Profile extends HTMLElement {
 // Statistics Component
 export class Stats extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	async connectedCallback() {
@@ -595,7 +595,7 @@ export class Stats extends HTMLElement {
 // Game History
 export class Histo extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	async connectedCallback() {
@@ -764,10 +764,168 @@ export class Histo extends HTMLElement {
 		pongInjectHere.innerHTML = createHistoElem(pongData);
 	}
 }
+// Pong animation
+export class PongAnimation extends HTMLElement {
+  constructor() {
+    super();
+    this.root = this.attachShadow({ mode: "open" });
+  }
+  connectedCallback() {
+    const title = this.getAttribute("title");
+    this.root.innerHTML = `
+      <style>
+        :host {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          justify-content: center;
+          align-items: center;
+        }
+        .pong-container {
+          position: relative;
+          margin: 0 auto;
+          width: 75%;
+          height: 75%;
+          color: var(--light-olive);
+        }
+        
+        .paddle-left, .paddle-right {
+          position: absolute;
+          width: 5px;
+          height: 40px;
+          background-color: white;
+        }
+        
+        .paddle-left {
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          animation: movePaddleLeft 2s infinite alternate ease-in-out;
+        }
+        
+        .paddle-right {
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          animation: movePaddleRight 2s infinite alternate ease-in-out;
+        }
+        
+        .ball {
+          position: absolute;
+          width: 12px;
+          height: 12px;
+          background-color: white;
+          border-radius: 50%;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          animation: moveBall 4s infinite linear;
+        }
+        
+        @keyframes movePaddleLeft {
+          0% { top: 30%; }
+          100% { top: 70%; }
+        }
+        
+        @keyframes movePaddleRight {
+          0% { top: 70%; }
+          100% { top: 30%; }
+        }
+        
+        @keyframes moveBall {
+          0%, 100% { left: 10%; top: 30%; }
+          25% { left: 90%; top: 50%; }
+          50% { left: 10%; top: 70%; }
+          75% { left: 90%; top: 50%; }
+        }
+      </style>
+      <div class="pong-container">
+        <div class="title">${title}</div>
+        <div class="paddle-left"></div>
+        <div class="paddle-right"></div>
+        <div class="ball"></div>
+      </div>
+    `
+  }
+}
+// Tic-Tac-Toe Animation
+export class TicTacToeAnimation extends HTMLElement {
+  constructor() {
+    super();
+    this.root = this.attachShadow({ mode: "open" });
+  }
+  connectedCallback() {
+    const title = this.getAttribute("title");
+    this.root.innerHTML = `
+      <style>
+        .tic-tac-toe-container {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            grid-template-rows: repeat(3, 60px);
+            gap: 5px;
+            margin-top: 20px;
+        }
+        
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--light-olive);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .x-swing, .o-swing {
+            animation: swing 2s infinite ease-in-out;
+        }
+        
+        @keyframes swing {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-15deg); }
+            100% { transform: rotate(0deg); }
+        }
+      </style>
+      <div>${title}</div>
+      <div class="tic-tac-toe-container">
+        <div class="cell">
+            <div class="x-swing">X</div>
+        </div>
+        <div class="cell">
+            <div class="o-swing">O</div>
+        </div>
+        <div class="cell">
+            <div class="x-swing">X</div>
+        </div>
+        <div class="cell">
+            <div class="o-swing">O</div>
+        </div>
+        <div class="cell">
+            <div class="x-swing">X</div>
+        </div>
+        <div class="cell">
+            <div class="o-swing">O</div>
+        </div>
+        <div class="cell">
+            <div class="x-swing">X</div>
+        </div>
+        <div class="cell">
+            <div class="o-swing">O</div>
+        </div>
+        <div class="cell">
+            <div class="x-swing">X</div>
+        </div>
+    </div>
+    `
+  }
+}
 // Platform View
 export class Platform extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -775,44 +933,45 @@ export class Platform extends HTMLElement {
 		this.setAttribute("hidden", "");
 		this.root.innerHTML += `
     <style>
-      :host
-      {
-          width: 100%;
-          height: 100%;
-      }
       a
       {
           text-decoration: none;
       }
       .container
       {
-          width: 100%;
-          height: 35%;
-          display: flex;
-          flex-direction: row;
+        width: 100%;
+        height: 50%;
       }
       .wrapper
       {
-          margin: 0 auto;
-          display: flex;
-          gap: 150px;
-          width: 80%;
-          height: 100%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+        height: 80%;
       }
-      .pong, .xo
+      .pong, .xo, .tour
       {
-          width: 100%;
-          position: relative;
+        display: flex;
+        align-items: center;
+        width: 330px;
+        position: relative;
+        background-color: var(--dark-purple);
+        color: var(--light-olive);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+      }
+      .pong
+      {
+        
+        text-align: center;
+        justify-content: center;
+        
       }
       .xo
       {
-          justify-content: start !important;
-      }
-      .pong img, .xo img
-      {
-          border-radius: 12px;
-          width: 100%;
-          height: 100%;
+        flex-direction: column;
+        padding-top: 45px;
       }
       .btn-wrapper
       {
@@ -865,10 +1024,10 @@ export class Platform extends HTMLElement {
       }
       .rank-title
       {
-          padding: 10px 0;
-          width: 100%;
-          text-align: center;
-          color: var(--dark-purple);
+        padding: 10px 0;
+        width: 100%;
+        text-align: center;
+        color: var(--dark-purple);
       }
       
       .rank:hover .slide
@@ -890,17 +1049,20 @@ export class Platform extends HTMLElement {
           gap: 2.5rem;
           animation: 20s sliding infinite linear;
       }
-      @media screen and (max-width: 900px) {
+      @media screen and (max-width: 1300px) {
         .container {
-          width: 100%;
-          height: 35%;
-          display: flex;
-          flex-direction: column;
+          // width: 100%;
+          // height: 35%;
+          // display: flex;
+          // flex-direction: column;
+          // justify-content: center;
+          // align-items: center;
         }
         .wrapper
         {
           display: flex;
           flex-direction: column;
+          align-items: center;
           gap: 40px;
         }
         .rank
@@ -908,28 +1070,30 @@ export class Platform extends HTMLElement {
           display: none;
         }
       }
+      
+     
     </style>
     <div class="container">
         <div class="wrapper">
             <div class="pong">
-                <img src="js/view/src/img/pong.gif">
+                <pong-animation title="PONG"></pong-animation>
                 <div class="btn-wrapper">
-                <a href="/game" class="button po-btn multi common" game="pong">
-                  Multiplayer
-                </a>
-                    <button class="button po-local">Local</button>
+                  <a href="/game" class="button po-btn multi common" game="pong">
+                    Multiplayer
+                  </a>
+                  <button class="button po-local">Local</button>
                 </div>
             </div>
             <div class="xo">
-                <img src="js/view/src/img/xo-teal.gif">
-                <div class="btn-wrapper">
+              <tic-tac-toe-anim title="TIC TAC TOE"></tic-tac-toe-anim>
+              <div class="btn-wrapper">
                   <a href="/game" class="button xo-btn multi common" game="ttt">
                     Multiplayer
                   </a>
-                  <button class="button local-xo">Local</button>
-                </div>
+              </div>
             </div>
-            <div class="pong">
+            <div class="tour">
+                <pong-animation title="PONG TOURNAMENT"></pong-animation>
                 <div class="btn-wrapper">
                 <a href="/game" class="button po-btn-tour multi common" game="tournament">
                   Tournament
@@ -938,11 +1102,11 @@ export class Platform extends HTMLElement {
             </div>
         </div>
     </div>
-    <div class="rank">
+    <!-- <div class="rank">
         <div class="rank-title">Players Rank</div>
         <div class="slide">
             
-        </div>
+        </div> -->
     </div>
     `;
 		this.startGame = this.root.querySelectorAll(".common");
@@ -991,7 +1155,7 @@ export class Platform extends HTMLElement {
 // Rank players
 export class RankPlayers extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -1051,7 +1215,7 @@ export class RankPlayers extends HTMLElement {
 }
 export class ResultMsg extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -1188,7 +1352,7 @@ export class ResultMsg extends HTMLElement {
 // TicTacToe View
 export class TTT extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -1406,7 +1570,7 @@ export class TTT extends HTMLElement {
 // Pong View
 export class Pong extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -1618,7 +1782,7 @@ export class Pong extends HTMLElement {
 // Pong View
 export class PongLocal extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -1806,7 +1970,7 @@ export class PongLocal extends HTMLElement {
 // Pong Tournement
 export class PongTour extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -2027,7 +2191,7 @@ export class PongTour extends HTMLElement {
 // Setting View
 export class Setting extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		// this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -2447,7 +2611,7 @@ export class AbortButton extends HTMLElement {
 // Main UI View
 export class MainUI extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 	}
 	connectedCallback() {
 		const home = document.createElement("home-view");
