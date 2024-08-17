@@ -1,23 +1,38 @@
-#middle-view>friend-view>div>p {
+friend-view {}
+
+#middle-view>friend-view>p {
     color: var(--light-olive);
     margin: 0 auto;
-    padding: 30px;
+    padding: 0 30px 30px 30px;
     font-size: large;
     border-bottom: 1px solid rgba(100, 100, 100, 0.25);
+    margin-bottom: 30px;
+    text-align: center;
 }
 
 .friend-container {
+    height: 100%;
+    overflow-y: scroll;
     display: flex;
-    flex-direction: column;
-    max-width: 1000px;
-    width: 100%;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: space-between;
+    margin: 0 3%;
+    padding-bottom: 150px;
 }
 
+.friend-container::-webkit-scrollbar {
+    display: none;
+}
+
+
 .friend-card {
-    width: 200px;
+    flex: 1 1 calc(50% - 10px);
+    box-sizing: border-box;
+    text-align: center;
+    padding: 20px;
     background-color: var(--dark-teal);
     color: var(--light-olive);
     box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
     border-radius: 8px;
-    padding: 10px;
 }
