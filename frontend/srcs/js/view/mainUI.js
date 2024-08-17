@@ -1,5 +1,6 @@
 import { auth } from "../auth/Authentication.js";
 import { aborting } from "../assets/abort.js";
+import { ChatComponent } from "./chat/chat.js";
 const socket = {
 	ws: null
 };
@@ -465,7 +466,6 @@ export class Profile extends HTMLElement {
       `;
 	}
 }
-
 // Statistics Component
 export class Stats extends HTMLElement {
 	constructor() {
@@ -624,6 +624,9 @@ export class Histo extends HTMLElement {
             width: 100%;
             overflow-y: scroll;
         }
+        .container::-webkit-scrollbar {
+            display: none;
+        }
         
         h1 {
             color: var(--light-olive);
@@ -746,7 +749,7 @@ export class Histo extends HTMLElement {
 					elem += `
           <tr>
             <td class="opponent">
-              <img src="${value.pic}" alt="avatar">
+              <img src="${value.pic || "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"}" alt="avatar">
               ${value.oppenent}
             </td>
             <td class="${result}">
@@ -959,7 +962,7 @@ export class Platform extends HTMLElement {
 				gameSection.appendChild(
 					document.createElement(`${gameToAppend}-view`)
 				);
-			window.router.redirecto("/game");
+			window.router.goto("/game");
 		};
 		this.poLocal.addEventListener("click", () =>
 			manipulateGameSection("po-local")
@@ -1046,6 +1049,142 @@ export class RankPlayers extends HTMLElement {
     `;
 	}
 }
+export class ResultMsg extends HTMLElement {
+	constructor() {
+		super("foo");
+		this.root = this.attachShadow({ mode: "open" });
+	}
+	connectedCallback() {
+		this.root.innerHTML = `
+    <style>
+      .container {
+          backdrop-filter: blur(5px);
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: row;
+      }
+      
+      .player {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+      
+      .winner {
+      }
+      
+      .loser {
+      }
+      
+      .avatar {
+          width: 80px;
+          height: 80px;
+          border-radius: 50%;
+          margin-right: 15px;
+          margin-bottom: 10px;
+      }
+      
+      .info h2 {
+        margin: 0 0 10px 0;
+        color: #333;
+      }
+      
+      .info .result {
+        margin: 0;
+        color: #555;
+      }
+      
+      .home-button {
+          font-size: 14px;
+          font-weight: 300;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          border: none;
+          cursor: pointer;
+          display: inline-block;
+          cursor: pointer;
+          padding: 10px 60px;
+          border-radius: 8px;
+          background-color: var(--teal);
+          color: var(--light-olive);
+          text-decoration: none;
+          box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
+          transition: all 0.1s ease, background 0.3s ease;
+          font-family: "Press Start 2P", sans-serif !important;
+          position: absolute;
+          left: 50%;
+          bottom: 220px;
+          transform: translate(-50%, 0);
+      }
+      
+      .home-button:hover {
+            background-color: #0056b3;
+        }
+        
+        @media (max-width: 768px) {
+            .player {
+                width: 100%;
+                max-width: 400px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .player {
+                flex-direction: column;
+                width: 100%;
+                max-width: none;
+            }
+        
+            .avatar {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+        
+            .container {
+                padding: 10px;
+            }
+        
+            .home-button {
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+      </style>
+      <div class="container">
+        <div class="player winner">  
+          <img src="https://avatar.iran.liara.run/public" alt="Winner Avatar" class="avatar">
+            <div class="info">
+                <h2>Winner</h2>
+                <p class="result">Congratulations! You won!</p>
+            </div>
+        </div>
+        <a href="/paltform" class="home-button">Back</a>
+        <div class="player loser">
+            <img src="https://avatar.iran.liara.run/public" alt="Loser Avatar" class="avatar">
+            <div class="info">
+                <h2>Loser</h2>
+                <p class="result">Better luck next time!</p>
+            </div>
+        </div>
+    </div>
+    `;
+		const game = this.getAttribute("game");
+		const returnHome = this.root.querySelector(".home-button");
+		returnHome.addEventListener("click", (e) => {
+			e.preventDefault();
+			aborting(socket.ws, game);
+		});
+	}
+	disconnectedCallback() {}
+}
 // TicTacToe View
 export class TTT extends HTMLElement {
 	constructor() {
@@ -1124,11 +1263,20 @@ export class TTT extends HTMLElement {
       </div>
       <abort-btn></abort-btn>
       <confirm-msg game="ttt"></confirm-msg>
+      <div class="result"></div>
     `;
 
 		const domElm1 = this.root.getElementById("p1");
 		const domElm2 = this.root.getElementById("p2");
 		this.square = this.root.querySelectorAll(".square");
+		this.result = this.root.querySelector(".result");
+
+		this.square.forEach((elem) => {
+			elem.addEventListener("click", (e) => {
+				e.preventDefault();
+				sendDataToServer(e.target.getAttribute("data"));
+			});
+		});
 
 		this.square.forEach((elem) => {
 			elem.addEventListener("click", (e) => {
@@ -1236,8 +1384,11 @@ export class TTT extends HTMLElement {
 				}
 			} else console.log("Game Not Start Yet");
 		}
-		socket.ws.onclose = function () {
-			// console.log("Socket closed BYE BYE");
+		socket.ws.onclose = () => {
+			console.log("Socket closed BYE BYE");
+			const resultComp = document.createElement("result-msg");
+			resultComp.setAttribute("game", "ttt");
+			this.result.appendChild(resultComp);
 		};
 		window.onbeforeunload = function () {
 			aborting(socket.ws, "ttt");
@@ -1659,6 +1810,7 @@ export class PongTour extends HTMLElement {
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
+		this.setAttribute("id", "tournament-view");
 		this.root.innerHTML = `
       <style>
           canvas
@@ -1706,7 +1858,7 @@ export class PongTour extends HTMLElement {
       <h1 class="player1name" id="p1"></h1>
       <h1 class="player2name" id="p2"></h1>
       <abort-btn></abort-btn>
-      <confirm-msg game="pong"></confirm-msg>
+      <confirm-msg game="tournament"></confirm-msg>
     `;
 		const domElm1 = this.root.querySelector("#p1");
 		const domElm2 = this.root.querySelector("#p2");
@@ -2209,6 +2361,28 @@ export class ConfirmMsg extends HTMLElement {
 			this.setAttribute("style", "display: none");
 		};
 		this.fleave = () => {
+			this.setAttribute("style", "display: none");
+			console.log("which game would be removed: ", game);
+			aborting(socket.ws, game);
+			window.router.goto("/platform");
+		};
+		this.cancel.addEventListener("click", this.fcancel);
+		this.leave.addEventListener("click", this.fleave);
+
+		window.onpopstate = () => {
+			history.replaceState(
+				{ path: "/game" },
+				null,
+				location.origin + "/game"
+			);
+			// console.log(`${game} popState triggered!`);
+			this.setAttribute("style", "display: block");
+		};
+		this.fcancel = () => {
+			// console.log("canceling");
+			this.setAttribute("style", "display: none");
+		};
+		this.fleave = () => {
 			// console.log("leaving");
 			this.setAttribute("style", "display: none");
 			console.log("whiche game would be removed: ", game);
@@ -2270,7 +2444,6 @@ export class AbortButton extends HTMLElement {
 		this.addEventListener("click", this.listener);
 	}
 }
-
 // Main UI View
 export class MainUI extends HTMLElement {
 	constructor() {

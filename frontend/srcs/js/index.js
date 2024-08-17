@@ -13,7 +13,8 @@ import {
 	Platform,
 	Stats,
 	Histo,
-	PongTour
+	PongTour,
+	ResultMsg
 } from "./view/mainUI.js";
 
 import { ChatComponent } from "./view/chat/chat.js";
@@ -38,7 +39,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	customElements.define("stat-ics", Stats);
 	customElements.define("history-view", Histo);
 	customElements.define("tournament-view", PongTour);
-	customElements.define("chat-view", ChatComponent, { extends: "div" });
+	customElements.define("result-msg", ResultMsg);
+	customElements.define("chat-view", ChatComponent);
 
 	window.component = {
 		home: document.querySelector("home-view"),

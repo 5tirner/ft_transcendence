@@ -1,19 +1,12 @@
 import API from "../../service/API.js";
-import { formatListDate, updateNotif } from "./chatList.js";
+import { findUserInList, formatListDate, updateNotif } from "./chatList.js";
 import { createMessageBuble } from "./messages_loader.js";
 
 function moveConvListTop(username) {
-	const listItems = document.querySelectorAll(".list-group-item");
-
-	// Loop through each list item
-	for (const li of listItems) {
-		const user = li.querySelector(".username");
-		if (user.textContent == username) {
-			console.log(li);
-			const ul = li.parentNode;
-			ul.prepend(li);
-			break;
-		}
+	const li = findUserInList(username);
+	if (li) {
+		const ul = li.parentNode;
+		ul.prepend(li);
 	}
 }
 

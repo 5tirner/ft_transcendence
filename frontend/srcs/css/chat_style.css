@@ -227,6 +227,10 @@ li.list-group-item:last-child {
     font-size: var(--font-size-xs);
 }
 
+.messages::-webkit-scrollbar {
+    display: none;
+}
+
 
 .sent-message-con {
     /* position: absolute; */
@@ -295,6 +299,10 @@ li.list-group-item:last-child {
     overflow: auto;
 }
 
+.input-bar::-webkit-scrollbar {
+    display: none;
+}
+
 .message-input {
     display: flex;
     align-items: center;
@@ -330,3 +338,23 @@ li.list-group-item:last-child {
     border-radius: 50%;
     right: 16px;
 }
+
+/* /* width */
+/* ::-webkit-scrollbar { */
+/*     width: 10px; */
+/* } */
+/**/
+/* /* Track */
+/* ::-webkit-scrollbar-track { */
+/*     background: #f1f1f1; */
+/* } */
+/**/
+/* /* Handle */
+/* ::-webkit-scrollbar-thumb { */
+/*     background: #888; */
+/* } */
+/**/
+/* /* Handle on hover */
+/* ::-webkit-scrollbar-thumb:hover { */
+/*     background: #555; */
+/* } */
