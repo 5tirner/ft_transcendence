@@ -19,7 +19,7 @@ export function init_socket() {
 		const msgdata = {};
 		const mesgsElem = document.querySelector(".messages");
 		const chatUser = document.querySelector(".username-conv");
-		console.log(data);
+		// console.log(data);
 		if (data.msg_type) {
 			if ((chatUser && data.user == chatUser.textContent) || data.sent) {
 				msgdata.content = data.message;

@@ -14,7 +14,9 @@ import {
 	Stats,
 	Histo,
 	PongTour,
-	ResultMsg
+	ResultMsg,
+	PongAnimation,
+	TicTacToeAnimation
 } from "./view/mainUI.js";
 
 import { ChatComponent } from "./view/chat/chat.js";
@@ -41,6 +43,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	customElements.define("tournament-view", PongTour);
 	customElements.define("result-msg", ResultMsg);
 	customElements.define("chat-view", ChatComponent);
+	customElements.define("pong-animation", PongAnimation);
+	customElements.define("tic-tac-toe-anim", TicTacToeAnimation);
 
 	window.component = {
 		home: document.querySelector("home-view"),

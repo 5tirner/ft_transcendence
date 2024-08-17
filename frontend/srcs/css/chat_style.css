@@ -8,11 +8,6 @@
     --font-size-xs: 10px;
 }
 
-#right-view {
-    min-width: 250px;
-    border-left: 1px solid rgba(100, 100, 100, 0.25) !important;
-}
-
 
 .right-window {
     position: relative;
@@ -47,44 +42,6 @@
 
 .add-message-icon i {
     cursor: pointer;
-}
-
-.dropdown {
-    position: absolute;
-    display: inline-block;
-    top: 30px;
-    left: -4px;
-    width: 250px;
-    margin: 0;
-    padding: 0;
-    z-index: 1;
-}
-
-.dropdown-content {
-    display: none;
-    background-color: #2f303f;
-    min-width: 250px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    margin: 0;
-}
-
-.dropdown-content.show {
-    display: block;
-}
-
-.dropdown-content div {
-    color: #fff;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-.dropdown-content div:hover {
-    background-color: #008c5f;
-}
-
-.conv-display-con {
-    height: 20px;
 }
 
 
@@ -339,22 +296,21 @@ li.list-group-item:last-child {
     right: 16px;
 }
 
-/* /* width */
-/* ::-webkit-scrollbar { */
-/*     width: 10px; */
-/* } */
-/**/
-/* /* Track */
-/* ::-webkit-scrollbar-track { */
-/*     background: #f1f1f1; */
-/* } */
-/**/
-/* /* Handle */
-/* ::-webkit-scrollbar-thumb { */
-/*     background: #888; */
-/* } */
-/**/
-/* /* Handle on hover */
-/* ::-webkit-scrollbar-thumb:hover { */
-/*     background: #555; */
-/* } */
+.pop-up {
+    width: 30%;
+    max-width: 300px;
+    position: absolute;
+    z-index: 1;
+    background-color: var(--dark-teal);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
+    text-align: center;
+}
+
+.pop-up>div:hover {
+    background-color: var(--light-olive);
+}
