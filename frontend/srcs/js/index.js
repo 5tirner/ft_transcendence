@@ -18,6 +18,7 @@ import {
 } from "./view/mainUI.js";
 
 import { ChatComponent } from "./view/chat/chat.js";
+import { FriendView } from "./view/friendUI.js";
 
 window.prevState = null;
 window.router = router;
@@ -41,6 +42,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	customElements.define("tournament-view", PongTour);
 	customElements.define("result-msg", ResultMsg);
 	customElements.define("chat-view", ChatComponent);
+	customElements.define("friend-view", FriendView);
 
 	window.component = {
 		home: document.querySelector("home-view"),
@@ -49,5 +51,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		right: document.getElementById("right-view")
 	};
 
-	router.redirecto("/platform");
+	// NOTE: revert this back to default /platform
+	router.redirecto("/friend");
 });

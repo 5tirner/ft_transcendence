@@ -1,0 +1,23 @@
+#middle-view>friend-view>div>p {
+    color: var(--light-olive);
+    margin: 0 auto;
+    padding: 30px;
+    font-size: large;
+    border-bottom: 1px solid rgba(100, 100, 100, 0.25);
+}
+
+.friend-container {
+    display: flex;
+    flex-direction: column;
+    max-width: 1000px;
+    width: 100%;
+}
+
+.friend-card {
+    width: 200px;
+    background-color: var(--dark-teal);
+    color: var(--light-olive);
+    box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
+    border-radius: 8px;
+    padding: 10px;
+}

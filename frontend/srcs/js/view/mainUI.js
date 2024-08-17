@@ -2460,6 +2460,7 @@ export class MainUI extends HTMLElement {
 		const profile = document.createElement("profile-view");
 		const setting = document.createElement("setting-view");
 		const platform = document.createElement("platform-view");
+		const friend = document.createElement("friend-view");
 
 		this.setAttribute("id", "main-ui");
 		left.setAttribute("id", "left-view");
@@ -2476,6 +2477,7 @@ export class MainUI extends HTMLElement {
 		middle.appendChild(profile);
 		middle.appendChild(setting);
 		middle.appendChild(platform);
+		middle.append(friend);
 
 		this.appendChild(home);
 		this.appendChild(left);
