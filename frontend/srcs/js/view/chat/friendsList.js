@@ -57,7 +57,6 @@ export class PopupFriendList extends HTMLElement {
 customElements.define("pop-up-friend-list", PopupFriendList);
 
 export async function handlAddChatRoom(event) {
-	console.log("click click");
 	let popup = document.querySelector("pop-up-friend-list");
 	if (popup) {
 		popup.remove();
@@ -67,3 +66,13 @@ export async function handlAddChatRoom(event) {
 		fillFriensList(popup);
 	}
 }
+
+window.addEventListener("click", (event) => {
+	const addChatRoom = document.querySelector(
+		"#chat > div.nav-convs > div > div > div > i"
+	);
+	const popup = document.querySelector("pop-up-friend-list");
+	if (popup && !popup.contains(event.target) && event.target != addChatRoom) {
+		popup.remove();
+	}
+});
