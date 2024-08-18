@@ -105,19 +105,19 @@ export default class Pong extends HTMLElement
 	
 	initializeGame()
 	{
-    console.log("Game Initialized");
-    this.canvas = this.root.querySelector("#board");
-    this.canvasContext = this.canvas.getContext("2d");
-  	this.domElm1 = this.root.querySelector("#p1");
-    this.domElm2 = this.root.querySelector("#p2");
-    this.isGameStarted = false;
-    this.isFinsih = false;
-    this.xBallPos = 280;
-    this.yBallPos = 150;
-    this.BallDirection = "LEFT";
-    this.paddl1Y = 125;
-    this.paddl2Y = 125;
-    this.BallRoute = "LINE";
+    	console.log("Game Initialized");
+    	this.canvas = this.root.querySelector("#board");
+    	this.canvasContext = this.canvas.getContext("2d");
+  		this.domElm1 = this.root.querySelector("#p1");
+    	this.domElm2 = this.root.querySelector("#p2");
+    	this.isGameStarted = false;
+    	this.isFinsih = false;
+    	this.xBallPos = 280;
+    	this.yBallPos = 150;
+    	this.BallDirection = "LEFT";
+    	this.paddl1Y = 125;
+    	this.paddl2Y = 125;
+    	this.BallRoute = "LINE";
 	}
 	
 	setupWebSocket()
