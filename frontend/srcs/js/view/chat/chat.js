@@ -1,6 +1,6 @@
 import API from "../../service/API.js";
 import { getConversations } from "./chatList.js";
-import { fillFriensList } from "./friendsList.js";
+import { fillFriensList, handlAddChatRoom } from "./friendsList.js";
 import { init_socket } from "./socketConnection.js";
 
 export async function render_chat() {
@@ -25,11 +25,6 @@ export class ChatComponent extends HTMLElement {
 						<div class="add-message-icon position-absolute">
 							<i class="bi bi-plus-circle-fill"></i>
 						</div>
-						<div class="dropdown">
-							<div class="dropdown-content">
-								<div>user</div>
-							</div>
-						</div>
 					</div>
 				</div>
 				<!-- INFO:list of friends -->
@@ -47,5 +42,9 @@ export class ChatComponent extends HTMLElement {
 				</div>
 			</div>
 		`;
+
+		const addChatRoom = this.querySelector(".add-message-icon");
+		if (addChatRoom)
+			addChatRoom.addEventListener("click", handlAddChatRoom);
 	}
 }

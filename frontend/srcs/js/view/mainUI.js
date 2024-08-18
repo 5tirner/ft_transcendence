@@ -7,7 +7,7 @@ const socket = {
 // Login View
 export class Login extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -166,7 +166,7 @@ export class Login extends HTMLElement {
 // Home View
 export class Home extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 	}
 	connectedCallback() {
 		this.setAttribute("id", "home-view");
@@ -206,7 +206,7 @@ export class Home extends HTMLElement {
 // Sidebar View
 export class Sidebar extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 	}
 	// skipcq: JS-0057
 	connectedCallback() {
@@ -264,7 +264,7 @@ export class Sidebar extends HTMLElement {
 // Game View
 export class Game extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 	}
 	connectedCallback() {
 		this.setAttribute("id", "game-view");
@@ -380,7 +380,7 @@ export class Game extends HTMLElement {
 // User Profile View
 export class Profile extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		// this.root = this.attachShadow({ mode: "open" });
 	}
 	// connected call back
@@ -469,7 +469,7 @@ export class Profile extends HTMLElement {
 // Statistics Component
 export class Stats extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	async connectedCallback() {
@@ -595,7 +595,7 @@ export class Stats extends HTMLElement {
 // Game History
 export class Histo extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	async connectedCallback() {
@@ -764,10 +764,168 @@ export class Histo extends HTMLElement {
 		pongInjectHere.innerHTML = createHistoElem(pongData);
 	}
 }
+// Pong animation
+export class PongAnimation extends HTMLElement {
+  constructor() {
+    super();
+    this.root = this.attachShadow({ mode: "open" });
+  }
+  connectedCallback() {
+    const title = this.getAttribute("title");
+    this.root.innerHTML = `
+      <style>
+        :host {
+          display: flex;
+          width: 100%;
+          height: 100%;
+          justify-content: center;
+          align-items: center;
+        }
+        .pong-container {
+          position: relative;
+          margin: 0 auto;
+          width: 75%;
+          height: 75%;
+          color: var(--light-olive);
+        }
+        
+        .paddle-left, .paddle-right {
+          position: absolute;
+          width: 5px;
+          height: 40px;
+          background-color: white;
+        }
+        
+        .paddle-left {
+          left: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          animation: movePaddleLeft 2s infinite alternate ease-in-out;
+        }
+        
+        .paddle-right {
+          right: 0;
+          top: 50%;
+          transform: translateY(-50%);
+          animation: movePaddleRight 2s infinite alternate ease-in-out;
+        }
+        
+        .ball {
+          position: absolute;
+          width: 12px;
+          height: 12px;
+          background-color: white;
+          border-radius: 50%;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          animation: moveBall 4s infinite linear;
+        }
+        
+        @keyframes movePaddleLeft {
+          0% { top: 30%; }
+          100% { top: 70%; }
+        }
+        
+        @keyframes movePaddleRight {
+          0% { top: 70%; }
+          100% { top: 30%; }
+        }
+        
+        @keyframes moveBall {
+          0%, 100% { left: 10%; top: 30%; }
+          25% { left: 90%; top: 50%; }
+          50% { left: 10%; top: 70%; }
+          75% { left: 90%; top: 50%; }
+        }
+      </style>
+      <div class="pong-container">
+        <div class="title">${title}</div>
+        <div class="paddle-left"></div>
+        <div class="paddle-right"></div>
+        <div class="ball"></div>
+      </div>
+    `
+  }
+}
+// Tic-Tac-Toe Animation
+export class TicTacToeAnimation extends HTMLElement {
+  constructor() {
+    super();
+    this.root = this.attachShadow({ mode: "open" });
+  }
+  connectedCallback() {
+    const title = this.getAttribute("title");
+    this.root.innerHTML = `
+      <style>
+        .tic-tac-toe-container {
+            display: grid;
+            grid-template-columns: repeat(3, 60px);
+            grid-template-rows: repeat(3, 60px);
+            gap: 5px;
+            margin-top: 20px;
+        }
+        
+        .cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--light-olive);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .x-swing, .o-swing {
+            animation: swing 2s infinite ease-in-out;
+        }
+        
+        @keyframes swing {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(0deg); }
+            75% { transform: rotate(-15deg); }
+            100% { transform: rotate(0deg); }
+        }
+      </style>
+      <div>${title}</div>
+      <div class="tic-tac-toe-container">
+        <div class="cell">
+            <div class="x-swing">X</div>
+        </div>
+        <div class="cell">
+            <div class="o-swing">O</div>
+        </div>
+        <div class="cell">
+            <div class="x-swing">X</div>
+        </div>
+        <div class="cell">
+            <div class="o-swing">O</div>
+        </div>
+        <div class="cell">
+            <div class="x-swing">X</div>
+        </div>
+        <div class="cell">
+            <div class="o-swing">O</div>
+        </div>
+        <div class="cell">
+            <div class="x-swing">X</div>
+        </div>
+        <div class="cell">
+            <div class="o-swing">O</div>
+        </div>
+        <div class="cell">
+            <div class="x-swing">X</div>
+        </div>
+    </div>
+    `
+  }
+}
 // Platform View
 export class Platform extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -775,44 +933,46 @@ export class Platform extends HTMLElement {
 		this.setAttribute("hidden", "");
 		this.root.innerHTML += `
     <style>
-      :host
-      {
-          width: 100%;
-          height: 100%;
-      }
       a
       {
           text-decoration: none;
       }
       .container
       {
-          width: 100%;
-          height: 35%;
-          display: flex;
-          flex-direction: row;
+        width: 100%;
+        height: 50%;
       }
       .wrapper
       {
-          margin: 0 auto;
-          display: flex;
-          gap: 150px;
-          width: 80%;
-          height: 100%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        width: 80%;
+        height: 80%;
       }
-      .pong, .xo
+      .pong, .xo, .tour
       {
-          width: 100%;
-          position: relative;
+        display: flex;
+        align-items: center;
+        width: 330px;
+        position: relative;
+        background-color: var(--dark-purple);
+        
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        border-radius: 12px;
+      }
+      .pong
+      {
+        
+        text-align: center;
+        justify-content: center;
+        
       }
       .xo
       {
-          justify-content: start !important;
-      }
-      .pong img, .xo img
-      {
-          border-radius: 12px;
-          width: 100%;
-          height: 100%;
+        flex-direction: column;
+        padding-top: 45px;
+        color: var(--light-olive);
       }
       .btn-wrapper
       {
@@ -865,10 +1025,10 @@ export class Platform extends HTMLElement {
       }
       .rank-title
       {
-          padding: 10px 0;
-          width: 100%;
-          text-align: center;
-          color: var(--dark-purple);
+        padding: 10px 0;
+        width: 100%;
+        text-align: center;
+        color: var(--dark-purple);
       }
       
       .rank:hover .slide
@@ -890,17 +1050,20 @@ export class Platform extends HTMLElement {
           gap: 2.5rem;
           animation: 20s sliding infinite linear;
       }
-      @media screen and (max-width: 900px) {
+      @media screen and (max-width: 1300px) {
         .container {
-          width: 100%;
-          height: 35%;
-          display: flex;
-          flex-direction: column;
+          // width: 100%;
+          // height: 35%;
+          // display: flex;
+          // flex-direction: column;
+          // justify-content: center;
+          // align-items: center;
         }
         .wrapper
         {
           display: flex;
           flex-direction: column;
+          align-items: center;
           gap: 40px;
         }
         .rank
@@ -908,28 +1071,30 @@ export class Platform extends HTMLElement {
           display: none;
         }
       }
+      
+     
     </style>
     <div class="container">
         <div class="wrapper">
             <div class="pong">
-                <img src="js/view/src/img/pong.gif">
+                <pong-animation title="PONG"></pong-animation>
                 <div class="btn-wrapper">
-                <a href="/game" class="button po-btn multi common" game="pong">
-                  Multiplayer
-                </a>
-                    <button class="button po-local">Local</button>
+                  <a href="/game" class="button po-btn multi common" game="pong">
+                    Multiplayer
+                  </a>
+                  <button class="button po-local">Local</button>
                 </div>
             </div>
             <div class="xo">
-                <img src="js/view/src/img/xo-teal.gif">
-                <div class="btn-wrapper">
+              <tic-tac-toe-anim title="TIC TAC TOE"></tic-tac-toe-anim>
+              <div class="btn-wrapper">
                   <a href="/game" class="button xo-btn multi common" game="ttt">
                     Multiplayer
                   </a>
-                  <button class="button local-xo">Local</button>
-                </div>
+              </div>
             </div>
-            <div class="pong">
+            <div class="tour">
+                <pong-animation title="PONG TOURNAMENT"></pong-animation>
                 <div class="btn-wrapper">
                 <a href="/game" class="button po-btn-tour multi common" game="tournament">
                   Tournament
@@ -938,11 +1103,11 @@ export class Platform extends HTMLElement {
             </div>
         </div>
     </div>
-    <div class="rank">
+    <!-- <div class="rank">
         <div class="rank-title">Players Rank</div>
         <div class="slide">
             
-        </div>
+        </div> -->
     </div>
     `;
 		this.startGame = this.root.querySelectorAll(".common");
@@ -988,10 +1153,199 @@ export class Platform extends HTMLElement {
 		});
 	}
 }
+
+export class Pong2 extends HTMLElement {
+	constructor() {
+		super();
+		this.root = this.attachShadow({ mode: "open" });
+	}
+
+	connectedCallback() {
+		this.render();
+		this.initializeGame();
+		this.setupWebSocket();
+	}
+
+	disconnectedCallback() {
+		document.removeEventListener("keyup", this.applyMove);
+		if (this.saveInterval) clearInterval(this.saveInterval);
+	}
+
+	render() {
+		this.root.innerHTML = `
+      <style>
+          :host {
+              display: block;
+              text-align: center;
+              margin: 0 auto;
+              font-family: var(--body-font);
+          }
+          canvas {
+              display: block;
+              margin: 20px auto;
+              background-color: #ccb4e2b0;
+              border: 2px solid #8009F0;
+              border-radius: 10px;
+              filter: brightness(90%);
+          }
+          h1 {
+              color: #8009F0;
+          }
+          .player-name {
+              position: absolute;
+              color: #421152;
+          }
+          .player1 {
+              left: 10px;
+              bottom: 10px;
+          }
+          .player2 {
+              right: 10px;
+              bottom: 10px;
+          }
+      </style>
+      
+      <h1>PONG GAME</h1>
+      <canvas id="board" width="600" height="300">Your browser does not support canvas</canvas>
+      <h2 class="player-name player1" id="p1"></h2>
+      <h2 class="player-name player2" id="p2"></h2>
+      <abort-btn></abort-btn>
+      <confirm-msg game="pong"></confirm-msg>
+    `;
+	}
+	
+	setupWebSocket()
+	{
+		socket.ws = new WebSocket("ws://" + location.host + "/PongGameWs/");
+
+		socket.ws.onopen = () => console.log("Connected to Game Server");
+		socket.ws.onmessage = (e) => this.handleServerMessage(e);
+		socket.ws.onclose = () => {
+			this.isFinished = true;
+			this.isGameStarted = false;
+			console.log("Disconnected from Game Server");
+		};
+
+		document.addEventListener("keyup", (e) => this.applyMove(e));
+	}
+	
+	initializeGame() {
+		this.canvas = this.root.querySelector("#board");
+		this.ctx = this.canvas.getContext("2d");
+		this.domPlayer1 = this.root.querySelector("#p1");
+		this.domPlayer2 = this.root.querySelector("#p2");
+
+		this.isGameStarted = false;
+		this.isFinished = false;
+		this.ballPos = { x: 280, y: 150 };
+		this.ballDirection = "LEFT";
+		this.paddle1Y = 125;
+		this.paddle2Y = 125;
+		this.ballRoute = "LINE";
+	}
+
+	handleServerMessage(event) {
+		const data = JSON.parse(event.data);
+
+		if (!this.isGameStarted && !this.isFinished) {
+			this.handleGameStart(data);
+		} else if (this.isGameStarted && !this.isFinished) {
+			this.updateGameState(data);
+		}
+	}
+
+	handleGameStart(data) {
+		if (!data.player2) {
+			this.domPlayer1.textContent = `PLAYER1: ${data.player1}`;
+			this.domPlayer2.textContent = "PLAYER2: Wait...";
+		} else {
+			this.isGameStarted = true;
+			this.domPlayer1.textContent = `PLAYER1: ${data.player1}`;
+			this.domPlayer2.textContent = `PLAYER2: ${data.player2}`;
+			this.saveInterval = setInterval(() => this.drawElements(), 70);
+		}
+	}
+
+	updateGameState(data) {
+		if (data.MoveFor === "PADDLES MOVE") {
+			this.paddle1Y = this.clamp(data.paddle1, -5, 255);
+			this.paddle2Y = this.clamp(data.paddle2, -5, 255);
+		} else {
+			this.ballPos.x = data.Ballx;
+			this.ballPos.y = data.Bally;
+			this.ballDirection = data.BallDir;
+			this.ballRoute = data.BallRoute;
+		}
+	}
+
+	clamp(value, min, max) {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	applyMove(event) {
+		if (!this.isGameStarted || this.isFinished) return;
+
+		let moveDirection = "";
+
+		if (event.key === "ArrowUp") {
+			moveDirection = "UP";
+		} else if (event.key === "ArrowDown") {
+			moveDirection = "DOWN";
+		}
+
+		if (moveDirection) {
+			socket.ws.send(
+				JSON.stringify({
+					WhatIGiveYou: "PADDLES MOVE",
+					gameStatus: "onprogress",
+					move: moveDirection,
+					paddle1: this.paddle1Y,
+					paddle2: this.paddle2Y,
+					ballx: this.ballPos.x,
+					bally: this.ballPos.y,
+					BallDir: this.ballDirection,
+					BallRoute: this.ballRoute
+				})
+			);
+		}
+	}
+
+	drawElements() {
+		if (!this.isGameStarted || this.isFinished) return;
+
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+		this.drawBall();
+		this.drawPaddles();
+	}
+
+	drawBall() {
+		this.ctx.beginPath();
+		this.ctx.arc(this.ballPos.x, this.ballPos.y, 10, 0, 2 * Math.PI);
+		this.ctx.fillStyle = "#F0F8FF";
+		this.ctx.fill();
+		this.ctx.strokeStyle = "#8C1DD4";
+		this.ctx.stroke();
+	}
+
+	drawPaddles() {
+		this.drawPaddle(20, this.paddle1Y);
+		this.drawPaddle(580, this.paddle2Y);
+	}
+
+	drawPaddle(x, y) {
+		this.ctx.beginPath();
+		this.ctx.moveTo(x, y);
+		this.ctx.lineTo(x, y + 50);
+		this.ctx.lineWidth = 8;
+		this.ctx.strokeStyle = "#F0F8FF";
+		this.ctx.stroke();
+	}
+}
 // Rank players
 export class RankPlayers extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -1051,7 +1405,7 @@ export class RankPlayers extends HTMLElement {
 }
 export class ResultMsg extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -1188,7 +1542,7 @@ export class ResultMsg extends HTMLElement {
 // TicTacToe View
 export class TTT extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -1406,220 +1760,216 @@ export class TTT extends HTMLElement {
 // Pong View
 export class Pong extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
+	
 	connectedCallback() {
-		this.setAttribute("id", "pong-view");
+		// this.setAttribute("id", "pong-view");
+		this.render();
+		this.initializeGame();
+		this.setupWebSocket();
+	}
+	
+	disconnectedCallback()
+	{
+  	document.removeEventListener("keyup", this.applyMove);
+	}
+	
+	drawElements()
+	{
+		if (this.isGameStarted == true && this.isFinsih == false ) {
+			this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			this.ballMove();
+
+			this.canvasContext.beginPath();
+			this.canvasContext.arc(this.xBallPos, this.yBallPos, 10, 0, 6.2);
+			this.canvasContext.lineWidth = 0.5;
+			this.canvasContext.fillStyle = "#F0F8FF";
+			this.canvasContext.fill();
+			this.canvasContext.closePath();
+			this.canvasContext.strokeStyle = "rgb(140, 29, 260)";
+			this.canvasContext.stroke();
+
+			this.canvasContext.beginPath();
+			this.canvasContext.lineWidth = 8;
+			this.canvasContext.moveTo(20, this.paddl1Y);
+			this.canvasContext.lineTo(20, this.paddl1Y + 50);
+			this.canvasContext.closePath();
+			this.canvasContext.strokeStyle = "#F0F8FF";
+			this.canvasContext.stroke();
+
+			this.canvasContext.beginPath();
+			this.canvasContext.lineWidth = 8;
+			this.canvasContext.moveTo(580, this.paddl2Y);
+			this.canvasContext.lineTo(580, this.paddl2Y + 50);
+			this.canvasContext.closePath();
+			this.canvasContext.strokeStyle = "#F0F8FF";
+			this.canvasContext.stroke();
+			requestAnimationFrame(this.drawElements.bind(this));
+		}
+	}
+
+	render() {
 		this.root.innerHTML = `
       <style>
-          canvas
-          {
+          :host {
               display: block;
+              text-align: center;
               margin: 0 auto;
+              font-family: var(--body-font);
+          }
+          canvas {
+              display: block;
+              margin: 20px auto;
               background-color: #ccb4e2b0;
-              border-color: rgb(128, 9, 240);
-              border-width: thin;
-              border-style: solid;
-              border-block-width: 10px;
-              border-radius: 5px;
-              filter: brightness(80%);
+              border: 2px solid #8009F0;
+              border-radius: 10px;
+              filter: brightness(90%);
           }
-      
-          body
-          {
-              background-color: rgb(220, 186, 240);
+          h1 {
+              color: #8009F0;
           }
-      
-          .player1name
-          {
+          .player-name {
               position: absolute;
-              left: 0%;
-              top: 80%;
               color: #421152;
           }
-          
-          .player2name
-          {
-              position: absolute;
-              left: 72%;
-              top: 80%;
-              color: #421152;
+          .player1 {
+              left: 10px;
+              bottom: 10px;
+          }
+          .player2 {
+              right: 10px;
+              bottom: 10px;
           }
       </style>
-      <div style="margin-bottom: 100px;">
-          <h1 style="text-align: center; color: rgb(128, 9, 240);">PONG-PONG-PONG</h1>
-      </div>
-  
-      <div style="margin-bottom: 50px;">
-        <canvas id="board" width="600" height="300">myCNV</canvas>
-      </div>
-  
-      <h1 class="player1name" id="p1"></h1>
-      <h1 class="player2name" id="p2"></h1>
+      
+      <h1>PONG GAME</h1>
+      <canvas id="board" width="600" height="300">Your browser does not support canvas</canvas>
+      <h2 class="player-name player1" id="p1"></h2>
+      <h2 class="player-name player2" id="p2"></h2>
       <abort-btn></abort-btn>
       <confirm-msg game="pong"></confirm-msg>
     `;
-
-		const domElm1 = this.root.querySelector("#p1"),
-			domElm2 = this.root.querySelector("#p2");
-		let isGameStarted = false;
-		let xBallPos = 280,
-			yBallPos = 150;
-		let isFinsih = false;
-		let BallDirection = "LEFT";
-		let paddl1Y = 125;
-		let paddl2Y = 125;
-		let BallRoute = "LINE";
-    var saveInterval = 0;
-		const canvas = this.root.querySelector("#board");
-		const canvasContext = canvas.getContext("2d");
-		// canvasContext.shadowColor = "black";
-		// canvasContext.shadowBlur = 15;
-		// canvasContext.shadowOffsetX = 5;
-		// canvasContext.shadowOffsetY = 2;
+	}
+	
+	initializeGame()
+	{
+    console.log("Game Initialized");
+    this.canvas = this.root.querySelector("#board");
+    this.canvasContext = this.canvas.getContext("2d");
+  	this.domElm1 = this.root.querySelector("#p1");
+    this.domElm2 = this.root.querySelector("#p2");
+    this.isGameStarted = false;
+    this.isFinsih = false;
+    this.xBallPos = 280;
+    this.yBallPos = 150;
+    this.BallDirection = "LEFT";
+    this.paddl1Y = 125;
+    this.paddl2Y = 125;
+    this.BallRoute = "LINE";
+	}
+	
+	setupWebSocket()
+	{
 		socket.ws = new WebSocket("ws://" + location.host + "/PongGameWs/");
 
-		function ballMove() {
-			if (xBallPos < 20 || xBallPos > 580) {
-				isFinsih = true;
-				isGameStarted = false;
-				socket.ws.send(
-					JSON.stringify({ gameStatus: "End", Side: BallDirection })
-				);
-				clearInterval(saveInterval);
-			} else if (isGameStarted == true && isFinsih == false) {
-				const ToServer = {
-					WhatIGiveYou: "BALL MOVE",
-					gameStatus: "onprogress",
-					move: "BALL",
-					paddle1: paddl1Y,
-					paddle2: paddl2Y,
-					ballx: xBallPos,
-					bally: yBallPos,
-					BallDir: BallDirection,
-					BallRoute: BallRoute
-				};
-				socket.ws.send(JSON.stringify(ToServer));
-				// canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-				// drawElements();
-			}
-		}
-
-		function drawElements() {
-			if (isGameStarted == true && isFinsih == false) {
-        ballMove();
-				canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-				// canvasContext.beginPath();
-				// canvasContext.lineWidth = 4;
-				// canvasContext.moveTo(300, 0);
-				// canvasContext.lineTo(300, 300);
-				// canvasContext.closePath();
-				// canvasContext.strokeStyle = "rgb(128, 9, 240)";
-				// canvasContext.stroke();
-
-				canvasContext.beginPath();
-				canvasContext.arc(xBallPos, yBallPos, 10, 0, 6.2);
-				canvasContext.lineWidth = 0.5;
-				canvasContext.fillStyle = "#F0F8FF";
-				canvasContext.fill();
-				canvasContext.closePath();
-				canvasContext.strokeStyle = "rgb(140, 29, 260)";
-				canvasContext.stroke();
-
-				canvasContext.beginPath();
-				canvasContext.lineWidth = 8;
-				canvasContext.moveTo(20, paddl1Y);
-				canvasContext.lineTo(20, paddl1Y + 50);
-				canvasContext.closePath();
-				canvasContext.strokeStyle = "#F0F8FF";
-				canvasContext.stroke();
-
-				canvasContext.beginPath();
-				canvasContext.lineWidth = 8;
-				canvasContext.moveTo(580, paddl2Y);
-				canvasContext.lineTo(580, paddl2Y + 50);
-				canvasContext.closePath();
-				canvasContext.strokeStyle = "#F0F8FF";
-				canvasContext.stroke();
-				// requestAnimationFrame(drawElements);
-			}
-		}
-
-		function applyMove(e) {
-			if (isGameStarted == true && isFinsih == false) {
-				if (e.key == "ArrowUp" || e.key == "ArrowDown") {
-					const ToServer = {
-						WhatIGiveYou: "PADDLES MOVE",
-						gameStatus: "onprogress",
-						move: "",
-						paddle1: paddl1Y,
-						paddle2: paddl2Y,
-						ballx: xBallPos,
-						bally: yBallPos,
-						BallDir: BallDirection,
-						BallRoute: BallRoute
-					};
-					if (e.key == "ArrowUp")
-						console.log("GO UP"), (ToServer.move = "UP");
-					else console.log("GO DOWN"), (ToServer.move = "DOWN");
-					socket.ws.send(JSON.stringify(ToServer));
-				}
-			}
-		}
-
-		document.addEventListener("keyup", applyMove);
-
-		socket.ws.onopen = function () {
-			console.log("User On Game");
+		socket.ws.onopen = () => console.log("Connected to Game Server");
+		socket.ws.onmessage = (e) => this.handleServerMessage(e);
+		socket.ws.onclose = () => {
+			this.isFinished = true;
+			this.isGameStarted = false;
+			console.log("Disconnected from Game Server");
 		};
 
-		socket.ws.onmessage = function (e) {
-			const dataPars = JSON.parse(e.data);
-			if (isGameStarted == false && isFinsih == false) {
-				if (dataPars.player2.length == 0) {
-					console.log("Player1: " + dataPars.player1);
-					console.log("Player2: " + dataPars.player2);
-					console.log("RoomId: " + dataPars.roomid);
-					domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-					domElm2.innerHTML = "PLAYER2: Wait...";
-				} else if (dataPars.player2.length != 0) {
-					isGameStarted = true;
-					console.log("Player1: " + dataPars.player1);
-					console.log("Player2: " + dataPars.player2);
-					console.log("RoomId: " + dataPars.roomid);
-					domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-					domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-					saveInterval = setInterval(drawElements, 70);
-				}
-			} else if (isGameStarted == true && isFinsih == false) {
-				if (dataPars.MoveFor == "PADDLES MOVE") {
-					if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
-						paddl1Y = dataPars.paddle1;
-					if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
-						paddl2Y = dataPars.paddle2;
-				} else {
-					(xBallPos = dataPars.Ballx), (yBallPos = dataPars.Bally);
-					BallDirection = dataPars.BallDir;
-					BallRoute = dataPars.BallRoute;
-				}
-			}
-		};
-
-		socket.ws.onclose = function () {
-			isFinsih = true;
-			isGameStarted = false;
-			console.log("BYE FROM SERVER");
-		};
+		document.addEventListener("keyup", (e) => this.applyMove(e));
 	}
-	disconnectedCallback() {
-		document.removeEventListener("keyup", this.applyDown);
+	
+	ballMove() {
+		if (this.xBallPos < 20 || this.xBallPos > 580) {
+			this.isFinsih = true;
+			this.isGameStarted = false;
+			socket.ws.send(
+				JSON.stringify({ gameStatus: "End", Side: this.BallDirection })
+			);
+		} else if (this.isGameStarted == true && this.isFinsih == false) {
+			const ToServer = {
+				WhatIGiveYou: "BALL MOVE",
+				gameStatus: "onprogress",
+				move: "BALL",
+				paddle1: this.paddl1Y,
+				paddle2: this.paddl2Y,
+				ballx: this.xBallPos,
+				bally: this.yBallPos,
+				BallDir: this.BallDirection,
+				BallRoute: this.BallRoute
+			};
+			socket.ws.send(JSON.stringify(ToServer));
+		}
+	}
+	
+	applyMove(e)
+	{
+		if (this.isGameStarted == true && this.isFinsih == false) {
+			if (e.key == "ArrowUp" || e.key == "ArrowDown") {
+				const ToServer = {
+					WhatIGiveYou: "PADDLES MOVE",
+					gameStatus: "onprogress",
+					move: "",
+					paddle1: this.paddl1Y,
+					paddle2: this.paddl2Y,
+					ballx: this.xBallPos,
+					bally: this.yBallPos,
+					BallDir: this.BallDirection,
+					BallRoute: this.BallRoute
+				};
+				if (e.key == "ArrowUp")
+				  ToServer.move = "UP";
+				else 
+				  ToServer.move = "DOWN";
+				socket.ws.send(JSON.stringify(ToServer));
+			}
+		}
+	}
+	
+	handleServerMessage(e)
+	{
+    const dataPars = JSON.parse(e.data);
+  	if (this.isGameStarted == false && this.isFinsih == false) {
+  		if (dataPars.player2.length == 0) {
+  			console.log("Player1: " + dataPars.player1);
+  			console.log("Player2: " + dataPars.player2);
+  			console.log("RoomId: " + dataPars.roomid);
+  			this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+  			this.domElm2.innerHTML = "PLAYER2: Wait...";
+  		} else if (dataPars.player2.length != 0) {
+  			this.isGameStarted = true;
+  			console.log("Player1: " + dataPars.player1);
+  			console.log("Player2: " + dataPars.player2);
+  			console.log("RoomId: " + dataPars.roomid);
+  			this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+  			this.domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+  			requestAnimationFrame(this.drawElements.bind(this));
+  		}
+  	} else if (this.isGameStarted == true && this.isFinsih == false) {
+  		if (dataPars.MoveFor == "PADDLES MOVE") {
+  			if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
+  				this.paddl1Y = dataPars.paddle1;
+  			if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
+  				this.paddl2Y = dataPars.paddle2;
+  		} else {
+  			(this.xBallPos = dataPars.Ballx), (this.yBallPos = dataPars.Bally);
+  			this.BallDirection = dataPars.BallDir;
+  			this.BallRoute = dataPars.BallRoute;
+  		}
+  	}
 	}
 }
-// Pong View
+
+// Pong Local View
 export class PongLocal extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -1807,7 +2157,7 @@ export class PongLocal extends HTMLElement {
 // Pong Tournement
 export class PongTour extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -2028,7 +2378,7 @@ export class PongTour extends HTMLElement {
 // Setting View
 export class Setting extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 		// this.root = this.attachShadow({ mode: "open" });
 	}
 	connectedCallback() {
@@ -2448,7 +2798,7 @@ export class AbortButton extends HTMLElement {
 // Main UI View
 export class MainUI extends HTMLElement {
 	constructor() {
-		super("foo");
+		super();
 	}
 	connectedCallback() {
 		const home = document.createElement("home-view");
