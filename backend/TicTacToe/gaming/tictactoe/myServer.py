@@ -5,10 +5,11 @@ import os
 from .checkClick import isLegalClick
 from .destroyThisGameInfo import destroyThisGameInformations
 from .roomCodes import roomcode
+import threading
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 
-async def saveData(self):
+def saveData(self):
     addUserToDb = gameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
     addUserToDb.save()
     addUserPic = playerAndHisPic(login=self.scope['user'], pic=self.scope['pic'])
@@ -25,7 +26,9 @@ class myServerOnGame(AsyncWebsocketConsumer):
             print(f"Welcome Back {self.scope['user']}")
         except:
             print(f"Welcome To The Game {self.scope['user']}")
-            await saveData(self)
+            addUserToDbs = threading.Thread(target=saveData(self))
+            addUserToDbs.start()
+            addUserToDbs.join()
         if len(self.playerWantsToPlay) == 0:
             player1, player2 = self.scope['user'], ""
             if self.playersOnMatchAndItsOppenent.get(player1) is not None:
@@ -148,6 +151,8 @@ class myServerOnGame(AsyncWebsocketConsumer):
                     print("ERROR HAPPENED WHEN DESTROY GAME")
                 await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
             elif dataFromClient.get("gameStatus") == "draw":
+                if thisUser is None or hisOppenent is None:
+                    return
                 print(f"Draw Between {thisUser} and {hisOppenent} ")
                 roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
                 p1, p2 = gameInfo.objects.get(login=thisUser), gameInfo.objects.get(login=hisOppenent)

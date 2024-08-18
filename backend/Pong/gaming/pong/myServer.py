@@ -4,11 +4,12 @@ import os
 from .destroyGameInfo import destroyThisGameInformations
 from .generateCode import roomcode
 import random
+import threading
 # from asyncio import sleep
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
-async def saveData(self):
+def saveData(self):
     addUserToDB = pongGameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
     addUserToDB.save()
     addUserPic = playerAndHisPic(login=self.scope['user'], pic=self.scope['pic'])
@@ -25,8 +26,9 @@ class myPongserver(AsyncJsonWebsocketConsumer):
             print(f"Welcome Back {self.scope['user']}.")
         except:
             print(f"It's Your First Time Here {self.scope['user']}! Welcome.")
-            await saveData(self)
-            # print(f"{self.scope['user']} Avatar: {self.scope['pic']}")
+            addUserToDbs = threading.Thread(target=saveData(self))
+            addUserToDbs.start()
+            addUserToDbs.join()
             print(f"{self.scope['user']} Added Succusfully")
         if len(self.playerWantsToPlay) == 0:
             player1, player2 = self.scope['user'], ""
