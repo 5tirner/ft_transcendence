@@ -162,10 +162,11 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                                                 self.playersOnMatchAndItsRoomId,
                                                 self.playersOnMatchAndItsDeriction, thisUser, oppenent)
                     print(f"Data For {thisUser} Destroyed")
+
                     toFront = {'MoveFor': 'end', 'winner': Win.login, 'loser': leftedGame.login,
-                        'winnerPic': playerAndHisPic.objects(login=Win.login),
-                        'loserPic': playerAndHisPic.objects.get(login=leftedGame.login)}
-                    print(toFront)
+                            'winnerPic': playerAndHisPic.objects.get(login=Win.login).pic,
+                            'loserPic': playerAndHisPic.objects.get(login=leftedGame.login).pic}
+                    print(f"=> {toFront}")
                     await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': toFront})
                 else:
                     try:
@@ -177,6 +178,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                     except:
                         print(f"{thisUser} Not In The Q At All")
             elif dataFromClient.get('gameStatus') == "End":
+                print("ENDING....")
                 if self.playersOnMatchAndItsDeriction.get(thisUser) == "Left" and dataFromClient.get('Side') == "LEFT":
                     loser = thisUser
                     winner = oppenent
@@ -208,8 +210,8 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                                                 self.playersOnMatchAndItsRoomId,
                                                 self.playersOnMatchAndItsDeriction , thisUser, oppenent)
                     toFront = {'MoveFor': 'end', 'winner': winner, 'loser': loser,
-                        'winnerPic': playerAndHisPic.objects(login=winner),
-                        'loserPic': playerAndHisPic.objects.get(login=loser)}
+                        'winnerPic': playerAndHisPic.objects.get(login=winner).pic,
+                        'loserPic': playerAndHisPic.objects.get(login=loser).pic}
                     print(f"=> {toFront}")
                     await self.channel_layer.group_send(roomId, {'type': 'endGame', 'Data': toFront})
                 except:
@@ -276,7 +278,7 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
                     else:
                         BallRoute = "UP"
                 if (BallDirection == "LEFT"):
-                    ballx -= 2
+                    ballx -= 5
                     if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
                         if (bally < paddle1 + 25):
                             BallRoute = "UP"
@@ -285,7 +287,7 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
                         BallDirection = "RIGHT"
                         self.randomAdd = random.choice([1, 2])
                 elif (BallDirection == "RIGHT"):
-                    ballx += 2
+                    ballx += 5
                     if ballx == 570 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
                         if (bally < paddle2 + 25):
                             BallRoute = "UP"
