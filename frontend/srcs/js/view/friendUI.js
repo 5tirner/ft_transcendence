@@ -179,4 +179,39 @@ export class FriendView extends HTMLElement {
 		</div>
 `;
 	}
+
+	disconnectedCallback() {
+		console.log("remove component from dom");
+	}
 }
+
+export class FriendElement extends HTMLLIElement {
+	constructor() {
+		super();
+		this._data = null;
+	}
+
+	set data(value) {
+		this._data = value;
+		this.updateDOM();
+	}
+
+	get data() {
+		return this._data;
+	}
+
+	updateDOM() {}
+
+	connectedCallback() {
+		const clickHandler = () => {};
+		this.addEventListener("click", clickHandler);
+		this._clickListener = clickHandler;
+	}
+	disconnectedCallback() {
+		if (this._clickListener) {
+			this.removeEventListener("click", this._clickListener);
+		}
+	}
+}
+
+customElements.define("friend-li", FriendElement, { extends: "li" });

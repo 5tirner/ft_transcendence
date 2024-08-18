@@ -154,8 +154,8 @@ services:
             - .env
         networks:
             - Net
-        # volumes:
-        #     - postgres_db:/var/lib/postgresql/data
+        volumes:
+            - postgres_db:/var/lib/postgresql/data
         restart: always
 
     auth:
@@ -169,6 +169,8 @@ services:
             - .env
         networks:
             - Net
+        volumes:
+            - ./backend/Authentication:/app
         depends_on:
             - postgres_db
         restart: always

@@ -41,19 +41,6 @@ import urllib.parse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 
-# from rest_framework.permissions import IsAuthenticated
-# from rest_framework_simplejwt.authentication import JWTAuthentication
-
-
-# def login_view(request):
-#     return render(request, 'login.html')
-
-
-def home(request):
-    username = request.GET.get("username")
-
-    return render(request, "index.html", {"username": username})
-
 
 @api_view(["GET"])
 @authentication_classes([])  # Remove all authentication classes
@@ -210,9 +197,10 @@ def callback_google(request):
 
             jwt_token = jwt_generation(player.id, player.two_factor)
             response = redirect(
-                f"http://127.0.0.1:8000/", permanent=True,
-                #f"http://127.0.0.1:8000/{'tfa' if player.two_factor else 'api/home'}/",
-                #permanent=True,
+                f"http://127.0.0.1:8000/",
+                permanent=True,
+                # f"http://127.0.0.1:8000/{'tfa' if player.two_factor else 'api/home'}/",
+                # permanent=True,
             )
             response.set_cookie(
                 "jwt_token", value=jwt_token, httponly=True, secure=True

@@ -1,7 +1,7 @@
 from django.urls import path
 
 # from .views import UserLogin, UserSignup, PlayerUploadAvatar, PlayerInfos, PlayerGameMatch, MatchesHistory, Match
-from . import views
+from . import views, friends_management
 from restauthe import settings
 from django.conf.urls.static import static
 
@@ -15,7 +15,6 @@ urlpatterns = [
     path("google/callback/", views.callback_google, name="googlebackview"),
     path("TFA/codeqr/", views.tfa_qrcode, name="two_factor_qrcode"),
     path("TFA/verify/", views.tfa_verification, name="two_factor_verify"),
-    path("home/", views.home, name="home"),
     path("avatar/", views.PlayerUploadAvatar.as_view(), name="upload_avatar"),
     path("", views.PlayerInfos.as_view(), name="playerinfo"),
     path("matches/", views.MatchesHistory.as_view(), name="matcheHistory"),
@@ -24,6 +23,7 @@ urlpatterns = [
     path("logins/", views.user_login, name="login"),
     path("logouts/", views.user_logout, name="logout"),
     path("usercheck/", views.check_user),
+    path("players/", friends_management.ListAllUsersView.as_view()),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
