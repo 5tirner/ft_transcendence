@@ -1454,6 +1454,7 @@ export class TTT extends HTMLElement {
 		socket.ws = new WebSocket("ws://" + location.host + "/GameWS/");
 		let board = ".........";
 		let isGameStarted = false;
+    let isDone = false;
 
 		function isGameEnd(x_o, board) {
 			if (
@@ -1536,6 +1537,7 @@ export class TTT extends HTMLElement {
 							loser: dataPars.oppenent
 						};
 						socket.ws.send(JSON.stringify(toServer));
+            isDone = true;
 					} else if (board.indexOf(".") == -1) {
 						// console.log("Setting The Result Of This Game On Data Base");
 						const toServer = {
@@ -1544,6 +1546,7 @@ export class TTT extends HTMLElement {
 							board: board
 						};
 						socket.ws.send(JSON.stringify(toServer));
+            isDone = true;
 					}
 				}
 			}
@@ -1594,7 +1597,7 @@ export class Pong extends HTMLElement {
 	}
 	
 	connectedCallback() {
-		// this.setAttribute("id", "pong-view");
+		this.setAttribute("id", "pong-view");
 		this.render();
 		this.initializeGame();
 		this.setupWebSocket();
@@ -1661,7 +1664,7 @@ export class Pong extends HTMLElement {
           }
           .player-name {
               position: absolute;
-              color: #421152;
+              color: #8009F0;
           }
           .player1 {
               left: 10px;
@@ -1848,7 +1851,7 @@ export class PongLocal extends HTMLElement {
 		let BallDirection = "LEFT";
 		let paddl1Y = 125;
 		let paddl2Y = 125;
-		var SaveInterval = 0;
+		// var SaveInterval = 0;
 		let BallRoute = "LINE";
 		const canvas = this.root.querySelector("#board");
 		const canvasContext = canvas.getContext("2d");
@@ -1863,7 +1866,7 @@ export class PongLocal extends HTMLElement {
 				isGameStarted = false;
 				// clearTimeout(drawElements);
 				socket.ws.send(JSON.stringify({ gameStatus: "End" }));
-				clearInterval(SaveInterval);
+				// clearInterval(SaveInterval);
 			} else if (isGameStarted == true) {
 				const ToServer = {
 					WhatIGiveYou: "BALL MOVE",
@@ -1915,9 +1918,8 @@ export class PongLocal extends HTMLElement {
 			canvasContext.closePath();
 			canvasContext.strokeStyle = "#F0F8FF";
 			canvasContext.stroke();
-			// console.log(isGameStarted);
-			// if (isGameStarted == true)
-			//   requestAnimationFrame(drawElements);
+			if (isGameStarted == true)
+			  requestAnimationFrame(drawElements);
 		}
 
 		function applyMove(e) {
@@ -1952,7 +1954,7 @@ export class PongLocal extends HTMLElement {
 		function start() {
 			isGameStarted = true;
 			// console.log("Game Started Now");
-			SaveInterval = setInterval(drawElements, 5);
+			requestAnimationFrame(drawElements);
 		}
 
 		document.addEventListener("keyup", applyMove);

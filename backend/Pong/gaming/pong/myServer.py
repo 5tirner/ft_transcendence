@@ -267,7 +267,7 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
                     else:
                         BallRoute = "UP"
                 if (BallDirection == "LEFT"):
-                    ballx -= 2
+                    ballx -= 5
                     if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
                         if (bally < paddle1 + 25):
                             BallRoute = "UP"
@@ -276,7 +276,7 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
                         BallDirection = "RIGHT"
                         self.randomAdd = random.choice([1, 2])
                 elif (BallDirection == "RIGHT"):
-                    ballx += 2
+                    ballx += 5
                     if ballx == 570 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
                         if (bally < paddle2 + 25):
                             BallRoute = "UP"
