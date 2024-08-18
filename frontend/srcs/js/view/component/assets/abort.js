@@ -6,6 +6,7 @@ export const aborting = (ws, game) => {
     self.remove();
   const toServer = { 'gameStatus': "closed", 'position': -1 };
   console.log(ws.CLOSED)
-  ws.send(JSON.stringify(toServer));
+  if ( ws != null && (ws.readyState !== ws.CLOSED) )
+    ws.send(JSON.stringify(toServer));
   window.router.goto("/platform");
 }

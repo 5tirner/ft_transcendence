@@ -160,7 +160,11 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                                                 self.playersOnMatchAndItsRoomId,
                                                 self.playersOnMatchAndItsDeriction, thisUser, oppenent)
                     print(f"Data For {thisUser} Destroyed")
-                    await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
+                    toFront = {'MoveFor': 'end', 'winner': Win.login, 'loser': leftedGame.login,
+                        'winnerPic': playerAndHisPic.objects(login=Win.login),
+                        'loserPic': playerAndHisPic.objects.get(login=leftedGame.login)}
+                    print(toFront)
+                    await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': toFront})
                 else:
                     try:
                         self.playerWantsToPlay.remove(thisUser)
@@ -201,7 +205,11 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                     destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
                                                 self.playersOnMatchAndItsRoomId,
                                                 self.playersOnMatchAndItsDeriction , thisUser, oppenent)
-                    await self.channel_layer.group_send(roomId, {'type': 'endGame', 'Data': 'EMPTY'})
+                    toFront = {'MoveFor': 'end', 'winner': winner, 'loser': loser,
+                        'winnerPic': playerAndHisPic.objects(login=winner),
+                        'loserPic': playerAndHisPic.objects.get(login=loser)}
+                    print(f"=> {toFront}")
+                    await self.channel_layer.group_send(roomId, {'type': 'endGame', 'Data': toFront})
                 except:
                     print(f"{thisUser} Already End And This Match Counted")
         except:
@@ -230,6 +238,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
         await self.send_json(data['Data'])
     async def endGame(self, data):
         print(f"ENDGAME: WebSocket Will Be Closed Client: {self.scope['user']}")
+        await self.send_json(data['Data'])
         await self.close()
 
 class pongLocalServer(AsyncJsonWebsocketConsumer):
