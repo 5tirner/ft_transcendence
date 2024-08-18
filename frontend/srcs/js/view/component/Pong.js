@@ -18,7 +18,7 @@ export default class Pong extends HTMLElement
 	
 	disconnectedCallback()
 	{
-    console.log("Component is removed man0");
+    console.log("Component was removed");
   	document.removeEventListener("keyup", this.applyMove);
     this.isGameStarted = false;
     this.isFinsih = true;
@@ -134,14 +134,14 @@ export default class Pong extends HTMLElement
 	setupWebSocket()
 	{
 		socket.ws = new WebSocket("ws://" + location.host + "/PongGameWs/");
-
-		socket.ws.onopen = () => console.log("Connected to Game Server");
-		socket.ws.onmessage = (e) => this.handleServerMessage(e);
 		socket.ws.onclose = () => {
 			this.isFinsih = true;
 			this.isGameStarted = false;
 			console.log("Disconnected from Game Server");
 		};
+		socket.ws.onopen = () => console.log("Connected to Game Server");
+		socket.ws.onmessage = (e) => this.handleServerMessage(e);
+		
 
 		document.addEventListener("keyup", (e) => this.applyMove(e));
 	}
