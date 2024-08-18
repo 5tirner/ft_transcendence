@@ -149,7 +149,11 @@ class myServerOnGame(AsyncWebsocketConsumer):
                                                 self.playersOnMatchAndItsRole, thisUser, hisOppenent)
                 except:
                     print("ERROR HAPPENED WHEN DESTROY GAME")
-                await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
+                toFrontEnd = json.dumps({
+                    'etat': 'announce', 'winner': thisUser, 'loser': hisOppenent,
+                    'winnerPic': playerAndHisPic.objects.get(login=thisUser).pic,
+                    'loserPic': playerAndHisPic.objects.get(login=hisOppenent).pic})
+                await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': toFrontEnd})
             elif dataFromClient.get("gameStatus") == "draw":
                 if thisUser is None or hisOppenent is None:
                     return
@@ -170,7 +174,7 @@ class myServerOnGame(AsyncWebsocketConsumer):
                                                 self.playersOnMatchAndItsRole, thisUser, hisOppenent)
                 except:
                     print("ERROR HAPPENED WHEN DESTROY GAME")
-                await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
+                await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': json.dumps({})})
             elif dataFromClient.get("gameStatus") == "closed":
                 if self.playersOnMatchAndItsOppenent.get(thisUser) is not None:
                     print(f"{thisUser} Will Lose The Match Cuase He Left The Game")
@@ -189,7 +193,11 @@ class myServerOnGame(AsyncWebsocketConsumer):
                                                 self.playersOnMatchAndItsRoomId,
                                                 self.playersOnMatchAndItsRole, thisUser, hisOppenent)
                     print(f"Data For {thisUser} Destroyed")
-                    await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
+                    toFrontEnd = json.dumps({
+                    'etat': 'announce', 'winner': hisOppenent, 'loser': thisUser,
+                    'winnerPic': playerAndHisPic.objects.get(login=hisOppenent).pic,
+                    'loserPic': playerAndHisPic.objects.get(login=thisUser).pic})
+                    await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': toFrontEnd})
                 else:
                     try:
                         self.playerWantsToPlay.remove(thisUser)
@@ -227,5 +235,6 @@ class myServerOnGame(AsyncWebsocketConsumer):
         print("Sending Data To Clinet...")
         await self.send(data['Data'])
     async def endGame(self, data):
+        await self.send(data['Data'])
         print(f"WebSocker Will Be Closed Client = {self.scope['user']}")
         await self.close()

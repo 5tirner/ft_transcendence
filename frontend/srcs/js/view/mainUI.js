@@ -1154,194 +1154,6 @@ export class Platform extends HTMLElement {
 	}
 }
 
-export class Pong2 extends HTMLElement {
-	constructor() {
-		super();
-		this.root = this.attachShadow({ mode: "open" });
-	}
-
-	connectedCallback() {
-		this.render();
-		this.initializeGame();
-		this.setupWebSocket();
-	}
-
-	disconnectedCallback() {
-		document.removeEventListener("keyup", this.applyMove);
-		if (this.saveInterval) clearInterval(this.saveInterval);
-	}
-
-	render() {
-		this.root.innerHTML = `
-      <style>
-          :host {
-              display: block;
-              text-align: center;
-              margin: 0 auto;
-              font-family: var(--body-font);
-          }
-          canvas {
-              display: block;
-              margin: 20px auto;
-              background-color: #ccb4e2b0;
-              border: 2px solid #8009F0;
-              border-radius: 10px;
-              filter: brightness(90%);
-          }
-          h1 {
-              color: #8009F0;
-          }
-          .player-name {
-              position: absolute;
-              color: #421152;
-          }
-          .player1 {
-              left: 10px;
-              bottom: 10px;
-          }
-          .player2 {
-              right: 10px;
-              bottom: 10px;
-          }
-      </style>
-      
-      <h1>PONG GAME</h1>
-      <canvas id="board" width="600" height="300">Your browser does not support canvas</canvas>
-      <h2 class="player-name player1" id="p1"></h2>
-      <h2 class="player-name player2" id="p2"></h2>
-      <abort-btn></abort-btn>
-      <confirm-msg game="pong"></confirm-msg>
-    `;
-	}
-	
-	setupWebSocket()
-	{
-		socket.ws = new WebSocket("ws://" + location.host + "/PongGameWs/");
-
-		socket.ws.onopen = () => console.log("Connected to Game Server");
-		socket.ws.onmessage = (e) => this.handleServerMessage(e);
-		socket.ws.onclose = () => {
-			this.isFinished = true;
-			this.isGameStarted = false;
-			console.log("Disconnected from Game Server");
-		};
-
-		document.addEventListener("keyup", (e) => this.applyMove(e));
-	}
-	
-	initializeGame() {
-		this.canvas = this.root.querySelector("#board");
-		this.ctx = this.canvas.getContext("2d");
-		this.domPlayer1 = this.root.querySelector("#p1");
-		this.domPlayer2 = this.root.querySelector("#p2");
-
-		this.isGameStarted = false;
-		this.isFinished = false;
-		this.ballPos = { x: 280, y: 150 };
-		this.ballDirection = "LEFT";
-		this.paddle1Y = 125;
-		this.paddle2Y = 125;
-		this.ballRoute = "LINE";
-	}
-
-	handleServerMessage(event) {
-		const data = JSON.parse(event.data);
-
-		if (!this.isGameStarted && !this.isFinished) {
-			this.handleGameStart(data);
-		} else if (this.isGameStarted && !this.isFinished) {
-			this.updateGameState(data);
-		}
-	}
-
-	handleGameStart(data) {
-		if (!data.player2) {
-			this.domPlayer1.textContent = `PLAYER1: ${data.player1}`;
-			this.domPlayer2.textContent = "PLAYER2: Wait...";
-		} else {
-			this.isGameStarted = true;
-			this.domPlayer1.textContent = `PLAYER1: ${data.player1}`;
-			this.domPlayer2.textContent = `PLAYER2: ${data.player2}`;
-			this.saveInterval = setInterval(() => this.drawElements(), 70);
-		}
-	}
-
-	updateGameState(data) {
-		if (data.MoveFor === "PADDLES MOVE") {
-			this.paddle1Y = this.clamp(data.paddle1, -5, 255);
-			this.paddle2Y = this.clamp(data.paddle2, -5, 255);
-		} else {
-			this.ballPos.x = data.Ballx;
-			this.ballPos.y = data.Bally;
-			this.ballDirection = data.BallDir;
-			this.ballRoute = data.BallRoute;
-		}
-	}
-
-	clamp(value, min, max) {
-		return Math.min(Math.max(value, min), max);
-	}
-
-	applyMove(event) {
-		if (!this.isGameStarted || this.isFinished) return;
-
-		let moveDirection = "";
-
-		if (event.key === "ArrowUp") {
-			moveDirection = "UP";
-		} else if (event.key === "ArrowDown") {
-			moveDirection = "DOWN";
-		}
-
-		if (moveDirection) {
-			socket.ws.send(
-				JSON.stringify({
-					WhatIGiveYou: "PADDLES MOVE",
-					gameStatus: "onprogress",
-					move: moveDirection,
-					paddle1: this.paddle1Y,
-					paddle2: this.paddle2Y,
-					ballx: this.ballPos.x,
-					bally: this.ballPos.y,
-					BallDir: this.ballDirection,
-					BallRoute: this.ballRoute
-				})
-			);
-		}
-	}
-
-	drawElements() {
-		if (!this.isGameStarted || this.isFinished) return;
-
-		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-		this.drawBall();
-		this.drawPaddles();
-	}
-
-	drawBall() {
-		this.ctx.beginPath();
-		this.ctx.arc(this.ballPos.x, this.ballPos.y, 10, 0, 2 * Math.PI);
-		this.ctx.fillStyle = "#F0F8FF";
-		this.ctx.fill();
-		this.ctx.strokeStyle = "#8C1DD4";
-		this.ctx.stroke();
-	}
-
-	drawPaddles() {
-		this.drawPaddle(20, this.paddle1Y);
-		this.drawPaddle(580, this.paddle2Y);
-	}
-
-	drawPaddle(x, y) {
-		this.ctx.beginPath();
-		this.ctx.moveTo(x, y);
-		this.ctx.lineTo(x, y + 50);
-		this.ctx.lineWidth = 8;
-		this.ctx.strokeStyle = "#F0F8FF";
-		this.ctx.stroke();
-	}
-}
 // Rank players
 export class RankPlayers extends HTMLElement {
 	constructor() {
@@ -1664,15 +1476,19 @@ export class TTT extends HTMLElement {
 
 		socket.ws.onmessage = (e) => {
 			const dataPars = JSON.parse(e.data);
-			if (isGameStarted == false) {
-				if (dataPars.player2.length == 0) {
+			if (isGameStarted == false)
+      {
+				if (dataPars.player2.length == 0) 
+        {
 					// console.log("Player1: " + dataPars.player1);
 					// console.log("Player2: " + dataPars.player2)
 					// console.log("RoomId: " + dataPars.roomid)
 
 					domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
 					domElm2.innerHTML = "PLAYER2: Wait...";
-				} else if (dataPars.player2.length != 0) {
+				}
+        else if (dataPars.player2.length != 0)
+        {
 					isGameStarted = true;
 					// console.log("Player1: " + dataPars.player1);
 					// console.log("Player2: " + dataPars.player2)
@@ -1680,8 +1496,18 @@ export class TTT extends HTMLElement {
 					domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
 					domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
 				}
-			} else {
-				if (dataPars.etat == "PLAYING") {
+			}
+      else if (dataPars.etat == "announce")
+      {
+        if (dataPars.length == 0)
+          console.log("DRAW")
+        else
+          console.log(dataPars)
+      }
+      else
+      {
+				if (dataPars.etat == "PLAYING")
+        {
 					// console.log('Game On Progress');
 					// console.log(e.data);
 					board = dataPars.board;
@@ -1689,10 +1515,13 @@ export class TTT extends HTMLElement {
 					const domElem = this.root.getElementById(
 						`square${position}`
 					);
-					if (dataPars.x_o == "X") {
+					if (dataPars.x_o == "X")
+          {
 						domElem.innerHTML = "X";
 						domElem.classList.add("squareX");
-					} else if (dataPars.x_o == "O") {
+					}
+          else if (dataPars.x_o == "O")
+          {
 						domElem.innerHTML = "O";
 						domElem.classList.add("squareO");
 					}
