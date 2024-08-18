@@ -1,5 +1,3 @@
-const component = './view/component/';
-const aux = './view/component/auxiliar';
 import { router } from "./service/router.js";
 import MainUI from "./view/mainUI.js";
 import Sidebar from './view/component/Sidebar.js';

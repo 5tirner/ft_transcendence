@@ -3,7 +3,8 @@ import { socket } from "../assets/socket.js";
 
 export default class ResultMsg extends HTMLElement
 {
-	constructor() {
+	constructor()
+	{
 		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
@@ -139,6 +140,7 @@ export default class ResultMsg extends HTMLElement
         </div>
       </div>
     `;
+    
     const game = this.getAttribute("game");
     const returnHome = this.root.querySelector(".home-button");
    	returnHome.addEventListener("click", (e) => {
@@ -150,6 +152,5 @@ export default class ResultMsg extends HTMLElement
   initialize()
   {
     this.data = JSON.parse( this.getAttribute("data"));
-    // console.log("data: ", this.data);
   }
 }
