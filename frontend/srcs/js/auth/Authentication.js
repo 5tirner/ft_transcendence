@@ -1,6 +1,9 @@
 import API from "../service/API.js";
 import { render_chat } from "../view/chat/chat.js";
-import { Profile, RankPlayers, Setting } from "../view/mainUI.js";
+// import { Profile, RankPlayers, Setting } from "../view/mainUI.js";
+import Profile from '../view/component/Profile.js';
+// import RankPlayers from './view/component/RankPlayers.js';
+import Setting from '../view/component/Setting.js';
 export const auth = {
 	user: null,
 	avatar: null,
@@ -29,8 +32,8 @@ export const auth = {
 				customElements.define("profile-view", Profile);
 			if (!customElements.get("setting-view"))
 				customElements.define("setting-view", Setting);
-			if (!customElements.get("rank-pl"))
-				customElements.define("rank-pl", RankPlayers);
+			// if (!customElements.get("rank-pl"))
+			// 	customElements.define("rank-pl", RankPlayers);
 			render_chat();
 			return isLoged;
 		}

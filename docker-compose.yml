@@ -109,6 +109,8 @@ services:
             - auth
             - tictactoe
             - pong
+            - chat
+            - ws_chat
     pong:
         init: true
         image: pongimage
