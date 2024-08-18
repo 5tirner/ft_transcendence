@@ -15,3 +15,11 @@ def destroyThisGameInformations(playersOnMatchAndItsOppenent, playersOnMatchAndI
         playersOnMatchAndItsRoomId.pop(p2)
     except:
         pass
+    try:
+        playersOnMatchAndItsDeriction.pop(p1)
+    except:
+        pass
+    try:
+        playersOnMatchAndItsDeriction.pop(p2)
+    except:
+        pass
