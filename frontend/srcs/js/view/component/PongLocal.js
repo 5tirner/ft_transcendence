@@ -18,7 +18,7 @@ export default class PongLocal extends HTMLElement
 	disconnectedCallback()
 	{
 		console.log("Component was removed");
-  	document.removeEventListener("keyup", this.applyDown);
+  	document.removeEventListener("keyup", this.applyMove.bind(this));
     this.isGameStarted = false;
     socket.ws.removeEventListener("message", this.handleServerMessage);
     clearInterval(this.SaveInterval);
@@ -113,7 +113,7 @@ export default class PongLocal extends HTMLElement
 	
 	drawElements()
 	{
-    console.log("Start Drawing Elements");
+    // console.log("Start Drawing Elements");
     if (!this.isGameStarted) return;
 		this.ballMove();
 		this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -171,17 +171,17 @@ export default class PongLocal extends HTMLElement
 	
 	ballMove()
 	{
-    console.log("Start Moving The Ball");
+    // console.log("Start Moving The Ball");
 		if (this.xBallPos <= 0 || this.xBallPos >= 600)
 		{
-		  console.log("Sus 1");
+		  // console.log("Sus 1");
 			this.isGameStarted = false;
 			socket.ws.send(JSON.stringify({ gameStatus: "End" }));
 			clearInterval(this.SaveInterval);
 		}
 		else if (this.isGameStarted == true)
 		{
-		  console.log("Sus 2");
+		  // console.log("Sus 2");
 			const ToServer =
 			{
 				WhatIGiveYou: "BALL MOVE",
