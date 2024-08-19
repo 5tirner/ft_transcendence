@@ -92,7 +92,7 @@ export default class Pong extends HTMLElement
           }
           .player-name {
               position: absolute;
-              color: #421152;
+              color: #8009F0;
           }
           .player1 {
               left: 10px;
