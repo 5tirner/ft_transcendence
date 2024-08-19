@@ -117,9 +117,17 @@ const API = {
 		}
 		return null;
 	},
-	uploadAvatar: async () => 
+	uploadAvatar: async (image) => 
 	{
-	  let header = 
+	   const formData = new FormData();
+		formData.append('avatar', image)
+      console.log("Format Data: ", formData);
+		const opts = {
+		   method: 'post',
+			body: formData
+		}
+      const response = await fetch(API.authEndpoint, opts);
+      console.log(response)
 	}
 };
 

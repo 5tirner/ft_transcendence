@@ -1,5 +1,5 @@
 import { auth } from "../../auth/Authentication.js";
-
+import API from "../../service/API.js"
 export default class Setting extends HTMLElement
 {
 	constructor() { super(); }
@@ -297,19 +297,20 @@ export default class Setting extends HTMLElement
 	handleSubmit (event)
 	{
 	   let file = this.querySelector('#file');
-				
+		let form = this.querySelector('#updateimage');		
 		event.preventDefault();
 		if (!file.value.length) return;
 
-		let uri = URL.createObjectURL(file.files[0]);
-		// let img = document.createElement('img');
-		// img.src = uri;
-		// app.append(img);
-		console.log(uri);
+      API.uploadAvatar(file.files[0]);
+		// let uri = URL.createObjectURL(file.files[0]);
+		// // let img = document.createElement('img');
+		// // img.src = uri;
+		// // app.append(img);
+		// console.log(uri);
 
-		// reader.onload = logFile;
+		// // reader.onload = logFile;
 
-		// reader.readAsDataURL(file.files[0]);
+		// // reader.readAsDataURL(file.files[0]);
 
 }
 }
