@@ -51,16 +51,48 @@ export class FriendElement extends HTMLLIElement {
 	updateDOM() {
 		if (!this._data) return;
 
+		const addAndAcceptEventHandler = async () => {
+			const res = await API.sendAndAcceptFriendRequest(
+				this._data.data.id
+			);
+		};
+		const blockEventHandler = async () => {
+			console.log("block user ", this._data.data.id);
+		};
+		const unfriendEventHandler = async () => {
+			const res = await API.removeFriend(this._data.data.id);
+		};
 		this.avatar.src = this._data.data.avatar;
 		this.username.textContent = this._data.data.username;
-		if (this._data.type === "friends") {
+		if (this._data.type === "all") {
+			this.firstButton.addEventListener(
+				"click",
+				addAndAcceptEventHandler
+			);
+			this._clickListener1 = addAndAcceptEventHandler;
+			this.secondButton.addEventListener("click", blockEventHandler);
+			this._clickListener2 = blockEventHandler;
+		} else if (this._data.type === "friends") {
 			this.firstButton.className = "icon-button remove-friend";
 			this.firstButtonIcon.className = "bi bi-person-dash-fill";
 			this.firstButton.title = "remove friend";
+			//event handlers
+			this.firstButton.addEventListener("click", unfriendEventHandler);
+			this._clickListener1 = addAndAcceptEventHandler;
+			this.secondButton.addEventListener("click", blockEventHandler);
+			this._clickListener2 = blockEventHandler;
 		} else if (this._data.type === "requests") {
 			this.firstButton.className = "icon-button accept-friend";
 			this.firstButtonIcon.className = "bi bi-person-check-fill";
 			this.firstButton.title = "Accept request";
+			// event handlers
+			this.firstButton.addEventListener(
+				"click",
+				addAndAcceptEventHandler
+			);
+			this._clickListener1 = addAndAcceptEventHandler;
+			this.secondButton.addEventListener("click", blockEventHandler);
+			this._clickListener2 = blockEventHandler;
 		} else if (this._data.type === "blocked") {
 			this.secondButton.className = "icon-button unblock-user";
 			this.secondButtonIcon.className = "bi bi-person-dash";
@@ -122,11 +154,16 @@ export class FriendCardComponent extends HTMLDivElement {
 			UsersList.id = "blocked";
 		}
 
-		this._data.data.forEach((elem) => {
-			const li = new FriendElement();
-			li.data = { data: elem, type: this.data.type };
-			UsersList.appendChild(li);
-		});
+		if (this._data.data.length == 0) {
+			UsersList.innerHTML =
+				"<p style='font-size:10px;color: var(--deep-blue);'>-- list is empty --</p>";
+		} else {
+			this._data.data.forEach((elem) => {
+				const li = new FriendElement();
+				li.data = { data: elem, type: this.data.type };
+				UsersList.appendChild(li);
+			});
+		}
 		this.appendChild(UsersList);
 	}
 
@@ -173,11 +210,19 @@ export class FriendView extends HTMLElement {
 			this.allUsers = await res.json();
 		}
 	}
+
+	async getRequests() {
+		const res = await API.getFriendRequest();
+		if (res.ok) {
+			this.friendRequests = await res.json();
+			this.friendRequests = this.friendRequests.friendships;
+		}
+	}
+
 	async connectedCallback() {
 		await this.getAllUsers();
 		await this.getFriends();
-		console.log(this.allUsers);
-		console.log(this.friends);
+		await this.getRequests();
 
 		// create list of users
 		const allUsersCard = new FriendCardComponent();
@@ -196,14 +241,14 @@ export class FriendView extends HTMLElement {
 
 		const requestsCard = new FriendCardComponent();
 		requestsCard.data = {
-			data: this.friends,
+			data: this.friendRequests,
 			type: "requests"
 		};
 		this.mainContent.appendChild(requestsCard);
 
 		const blockedCard = new FriendCardComponent();
 		blockedCard.data = {
-			data: this.friends,
+			data: [],
 			type: "blocked"
 		};
 		this.mainContent.appendChild(blockedCard);
@@ -213,57 +258,3 @@ export class FriendView extends HTMLElement {
 		console.log("remove component from dom");
 	}
 }
-
-// <div class="friend-card" id="friends-list">
-// 	<p>Friends List</p>
-// 	<ul id="friends">
-//                  <li class='user-item'>
-//                      <img src="https://cdn.intra.42.fr/users/7e57e4d04af367214c4a7e33fa9aa6bc/belkarto.JPG" alt="User Avatar" class="avatar">
-//                      <span class="username">belkarto</span>
-//                      <div class="action-buttons">
-//                          <button type="button" class="icon-button remove-friend" title="remove frind">
-//                              <i class="bi bi-person-dash-fill"></i>
-//                          </button>
-//                          <button type="button" class="icon-button block-user" title="Block user">
-//                              <i class="bi bi-person-x"></i>
-//                          </button>
-//                      </div>
-//                  </li>
-//              </ul>
-// </div>
-//
-// <div class="friend-card" id="received-requests">
-// 	<p>Received Friend Requests</p>
-// 	<ul id="requests">
-//                  <li class='user-item'>
-//                      <img src="https://cdn.intra.42.fr/users/7e57e4d04af367214c4a7e33fa9aa6bc/belkarto.JPG" alt="User Avatar" class="avatar">
-//                      <span class="username">belkarto</span>
-//                      <div class="action-buttons">
-//                          <button type="button" class="icon-button accept-friend" title="Accept friend">
-//                              <i class="bi bi-person-check-fill"></i>
-//                          </button>
-//                          <button type="button" class="icon-button block-user" title="Block user">
-//                              <i class="bi bi-person-x"></i>
-//                          </button>
-//                      </div>
-//                  </li>
-//              </ul>
-// </div>
-//
-// <div class="friend-card" id="blocked-users">
-// 	<p>Blocked Users</p>
-// 	<ul id="blocked">
-//                  <li class='user-item'>
-//                      <img src="https://cdn.intra.42.fr/users/7e57e4d04af367214c4a7e33fa9aa6bc/belkarto.JPG" alt="User Avatar" class="avatar">
-//                      <span class="username">belkarto</span>
-//                      <div class="action-buttons">
-//                          <button type="button" class="icon-button add-friend" title="Add friend">
-//                              <i class="bi bi-person-plus-fill"></i>
-//                          </button>
-//                          <button type="button" class="icon-button unblock-user" title="Unblock user">
-//                              <i class="bi bi-person-dash"></i>
-//                          </button>
-//                      </div>
-//                  </li>
-//              </ul>
-// </div>

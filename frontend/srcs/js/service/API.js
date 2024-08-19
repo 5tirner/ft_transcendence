@@ -1,7 +1,7 @@
 const API = {
 	authEndpoint: "http://127.0.0.1:8000/api/",
 	chatEndpoint: "http://127.0.0.1:8000/api/chat/",
-	friendshipEndpoint: "http://127.0.0.1:8000/api/friendship",
+	friendshipEndpoint: "http://127.0.0.1:8000/api/friendship/",
 	tttStatEndpoint: "http://127.0.0.1:8000/TicTacToe/myProfile/",
 	tttHistoEndpoint: "http://127.0.0.1:8000/TicTacToe/History",
 	pongStatEndpoint: "http://127.0.0.1:8000/PongPong/myProfile",
@@ -61,6 +61,27 @@ const API = {
 		return API.commonGetFunc(`${API.friendshipEndpoint}?type=friends`);
 	},
 
+	getFriendRequest: () => {
+		return API.commonGetFunc(`${API.friendshipEndpoint}?type=invites`);
+	},
+
+	getSentRequests: () => {
+		return API.commonGetFunc(`${API.friendshipEndpoint}?type=requests`);
+	},
+
+	sendAndAcceptFriendRequest: (user_id) => {
+		console.log(user_id);
+		return API.commonPostFunc(API.friendshipEndpoint, {
+			id_target: user_id
+		});
+	},
+
+	removeFriend: (user_id) => {
+		return API.makeDeleteRequest(API.friendshipEndpoint, {
+			id_target: user_id
+		});
+	},
+
 	getConversatons: () => {
 		return API.commonGetFunc(API.chatEndpoint);
 	},
@@ -87,6 +108,7 @@ const API = {
 	markMessagesAsRead: (room_id) => {
 		API.commonGetFunc(`${API.chatEndpoint}read/${room_id}/`);
 	},
+
 	getPlayers: () => {
 		return API.commonGetFunc(API.playersEndpoint);
 	},
@@ -102,7 +124,17 @@ const API = {
 		});
 		return response;
 	},
-
+	makeDeleteRequest: async (url, data) => {
+		const headers = {
+			"Content-Type": "application/json"
+		};
+		const response = await fetch(url, {
+			method: "DELETE",
+			headers,
+			body: JSON.stringify(data)
+		});
+		return response;
+	},
 	makeGetRequest: async (url) => {
 		const headers = {
 			"Content-Type": "application/json"
