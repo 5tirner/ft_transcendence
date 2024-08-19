@@ -1,14 +1,28 @@
 import { auth } from "../../auth/Authentication.js";
 
-export default class Setting extends HTMLElement {
-	constructor() {
-		super();
-		// this.root = this.attachShadow({ mode: "open" });
+export default class Setting extends HTMLElement
+{
+	constructor() { super(); }
+	
+	connectedCallback()
+	{
+      this.setAttribute("id", "setting-view");
+      this.setAttribute("hidden", "");
+		
+      this.render();
+      this.initialize();
+      this.changeProfileImage();
+      this.changeUserName();
 	}
-	connectedCallback() {
-		this.setAttribute("id", "setting-view");
-		this.setAttribute("hidden", "");
-		this.innerHTML = `
+	
+	disconnectedCallback()
+	{
+	
+	}
+	
+	render()
+	{
+	  this.innerHTML = `
       <style>
         .profile-card {
           display: flex;
@@ -20,18 +34,14 @@ export default class Setting extends HTMLElement {
         }
         .profile-card .section {
           border-radius: 20px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
           padding: 20px;
           width: 500px;
           height: 350px;
           text-align: center;
-          background-color: var(--teal);
+          background-color: var(--dark-purple);
           position: relative;
-        }
-        #float form {
-          width: 500px;
-          height: 350px;
-          
+          border: 2px solid var(--light-olive);
         }
         .profile-card img {
           border-radius: 50%;
@@ -39,6 +49,7 @@ export default class Setting extends HTMLElement {
           height: 100px;
           object-fit: cover;
           position: relative;
+          border: 2px solid var(--light-olive);
         }
         .profile-card .edit-image {
           position: absolute;
@@ -46,6 +57,7 @@ export default class Setting extends HTMLElement {
           right: 200px;
           border: none;
           border-radius: 50%;
+          border: 2px solid var(--light-olive);
           width: 30px;
           height: 30px;
           cursor: pointer;
@@ -53,7 +65,7 @@ export default class Setting extends HTMLElement {
           justify-content: center;
           align-items: center;
           text-decoration: none;
-          background-color: var(--peach);
+          background-color: var(--dark-purple);
           color: var(--light-olive) !important;
         }
         .profile-card .fullname {
@@ -64,15 +76,6 @@ export default class Setting extends HTMLElement {
         .profile-card p {
           margin-bottom: 10px;
           color: gray;
-        }
-        .profile-card .badge {
-          display: inline-block;
-          padding: 5px 10px;
-          background: #d4f4d2;
-          color: #34a853;
-          border-radius: 12px;
-          font-size: 12px;
-          margin-bottom: 10px;
         }
         .profile-card .info {
           display: flex;
@@ -89,14 +92,7 @@ export default class Setting extends HTMLElement {
           margin: 3px 0;
           font-size: 14px;
         }
-        .blur
-        {
-          -webkit-filter: blur(10px); 
-          -moz-filter: blur(10px);
-          -o-filter: blur(10px);
-          -ms-filter: blur(10px); 
-        }
-        #float
+        .common
         {
           position: absolute;
           top: 0;
@@ -107,35 +103,44 @@ export default class Setting extends HTMLElement {
           justify-content: center;
           text-align: center;
           align-items: center;
+          backdrop-filter: blur(10px);
+          display: flex;
         }
-        #float form
+        .updateUsername form, .uploadProfileImage form
         {
+          width: 500px;
+          height: 350px;
           display: flex;
           justify-content: center;
           align-items: center;
           flex-direction: column;
           gap: 1rem;
-          background: transparent;
         }
-        #float form input
+       
+        .updateUsername form input
         {
           color: white;
-          border: 2px solid var(--peach);
+          border: 2px solid var(--light-olive);
           border-radius: 10px;
-          padding: 10px;
+          padding: 15px 10px;
           background: transparent;
           width: 80%;
+          font-size: 10px;
         }
-        #float form input::placeholder
+        .updateUsername form input::placeholder
         {
           color: var(--light-olive);
+          font-size: 10px;
         }
-        .input:active {
-          border: none;
+        .updateUsername form input:active {
           outline: none;
         }
         
-        .profile-card .section .edit-btn, .save-btn
+        .updateUsername form input:focus {
+          outline: none;
+        }
+        
+        .profile-card .section .edit-btn, .save-btn, #updateimage button
         {
           font-size: 10px;
           text-transform: uppercase;
@@ -158,85 +163,163 @@ export default class Setting extends HTMLElement {
         .edit-btn
         {
           height: 30px;
+          liene-height: 1rem;
         }
+        
+        #updateimage
+        {
+         color: var(--light-olive);
+         display: flex;
+         flex-direction: column;
+         gap: 40px;
+         font-size: 12px;
+         border: 2px solid var(--light-olive);
+         border-radius: 20px;
+        }
+        
+        #updateimage input[type=file]::file-selector-button {
+          margin-right: 20px;
+          border: none;
+          background: var(--dark-teal);
+          padding: 10px 20px;
+          border-radius: 10px;
+          color: var(--light-olive);
+          cursor: pointer;
+          transition: background .2s ease-in-out;
+        }
+        
+        #updateimage input[type=file]::file-selector-button:hover {
+          background: var(--teal);
+        }
+        // #updateimage form button
+        // {
+        // color: var(--light-olive);
+        // display: flex;
+        // flex-direction: column;
+        // gap: 40px;
+        // font-size: 12px;
+        // border: 2px solid var(--light-olive);
+        // border-radius: 20px;
+        // }
       </style>  
       <div class="profile-card">
-				<div class="section">
-					<img
-						src="${auth.avatar || "https://i.imgur.com/8bXZb8e.png"}"
-						alt="Profile Picture"
-						id="profileImage"
-					/>
-					<input
-						type="file"
-						id="fileInput"
-						style="display: none"
-						accept="image/*"
-						onchange="changeProfileImage(event)"
-						class="bx bx-pencil"
-					/>
-					
-					<a class="edit-image"> <i class='bx bx-pencil'></i> </a>
-					
-					<h4 class="fullname">${auth.fullname}</h4>
-					<p username="username">${auth.user}</p>
-					<div class="badge">LVL 8</div>
-					<div class="info">
-						<div>
-							<p>Name</p>
-							<p class="fullname">${auth.fullname}</p>
-						</div>
-						<button class="edit-btn">Edit</button>
+			<div class="section">
+				<img
+					src="${auth.avatar || "https://i.imgur.com/8bXZb8e.png"}"
+					alt="Profile Picture"
+					id="profileImage"
+				/>
+				<input
+					type="file"
+					id="fileInput"
+					style="display: none"
+					accept="image/*"
+					onchange="changeProfileImage(event)"
+					class="bx bx-pencil"
+				/>
+				
+				<a class="edit-image"> <i class='bx bx-pencil'></i> </a>
+				
+				<h4 class="fullname">${auth.fullname}</h4>
+				<p username="username">${auth.user}</p>
+				<div class="info">
+					<div>
+						<p>Name</p>
+						<p class="fullname">${auth.fullname}</p>
 					</div>
+					<button class="edit-btn">Edit</button>
 				</div>
-				<div id="float" style="display: none">
-					<form action="" method="post" name="special-name">
-						<input
-							type="text"
-							name="fullname"
-							id="input-fullname"
-							placeholder="Edit your name.."
-							required
-						/>
-						<button name="Save" class="save-btn">Save</button>
-					</form>
-				</div>
-			</div> 
+			</div>
+			
+			<div class="uploadProfileImage common" hidden>
+            <form id="updateimage">
+          		<label for="file">File to upload</label>
+          		<input type="file" id="file" accept="image/*">
+          		<button type="submit">Upload</button>
+        	   </form>
+			</div>
+			
+			<div class="updateUsername common" hidden="">
+				<form id="updateusername">
+					<input
+						type="text"
+						name="fullname"
+						id="input-fullname"
+						placeholder="Edit your name.."
+						required
+					/>
+					<button type="submit" name="Save" class="save-btn">Save</button>
+				</form>
+			</div>
+		</div> 
     `;
-		this.render();
 	}
-	render() {
-		const float = this.querySelector("#float");
-		const editBtn = this.querySelector(".edit-btn");
-		const profileCard = this.querySelector(".profile-card .section");
-		const input = this.querySelector("#input-fullname");
-		const editImg = this.querySelector(".edit-image");
-
-		editBtn.addEventListener("click", (e) => {
-			profileCard.classList.add("blur");
-			float.setAttribute("style", "display: flex");
-			float.addEventListener("click", (e) => {
-				e.preventDefault();
-				if (e.target.getAttribute("name") === "Save") {
-					if (input.value.length == 0) {
-						// console.log("Please enter some shit");
-					} else {
-						float.setAttribute("style", "display: none");
-						profileCard.classList.remove("blur");
-					}
-					// post data to the backend for changing the user fullname
-				}
-				// console.log("target: ", e.target)
-				// console.log("current target: ", e.currentTarget)
-				if (e.target === float) {
-					float.setAttribute("style", "display: none");
-					profileCard.classList.remove("blur");
-				}
-			});
-		});
-		// editImg.addEventListener('click', listener);
-		// const listener = () => {
-
-		// }
+	
+	initialize()
+	{
+      this.editIamgeButton = this.querySelector(".edit-image");
+   	this.editUsernameButton = this.querySelector(".edit-btn");
+		
+      this.changeImageDiv = this.querySelector('.uploadProfileImage');
+      this.changeUsernameDiv = this.querySelector(".updateUsername");
+		
+      this.uploadImageForm = this.querySelector('#updateimage');
+      this.uploadImageForm = this.querySelector('#updateusername');
+      
+      this.toggleDiv(this.editIamgeButton, this.changeImageDiv);
+      this.toggleDiv(this.editUsernameButton, this.changeUsernameDiv);
 	}
+	
+	changeProfileImage()
+	{
+      let form = this.querySelector('#updateimage');
+
+      form.addEventListener('submit', this.handleSubmit);
+      
+	}
+	
+	changeUserName()
+	{
+	 
+	}
+	
+	toggleDiv(btn, div)
+	{
+      btn.addEventListener("click", (e) => {
+         div.removeAttribute('hidden');
+         div.addEventListener("click", (e) => {
+            if (e.target === div)
+               div.setAttribute('hidden', '');
+         });
+      });
+	}
+	
+	handleSubmit (event)
+	{
+	   let file = this.querySelector('#file');
+				
+		event.preventDefault();
+		if (!file.value.length) return;
+
+		let uri = URL.createObjectURL(file.files[0]);
+		// let img = document.createElement('img');
+		// img.src = uri;
+		// app.append(img);
+		console.log(uri);
+
+		// reader.onload = logFile;
+
+		// reader.readAsDataURL(file.files[0]);
+
 }
+}
+
+
+// this.input = this.querySelector("#input-fullname");
+// if (e.target.getAttribute("name") === "Save")
+// {
+// 	if (input.value.length == 0)
+// 		console.log("Please enter some shit");
+// 	else
+// 		div.setAttribute('hidden', '');
+// }

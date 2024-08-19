@@ -51,6 +51,6 @@ document.addEventListener("DOMContentLoaded", () =>
 		middle: document.getElementById("middle-view"),
 		right: document.getElementById("right-view")
 	};
-
-	router.redirecto("/platform");
+   console.log("path: ", window.location.pathname);
+	router.redirecto(window.location.pathname);
 });

@@ -18,7 +18,9 @@ export default class PongLocal extends HTMLElement
 	disconnectedCallback()
 	{
 		console.log("Component was removed");
+		
     document.removeEventListener("keyup", this.applyMove);
+
     this.isGameStarted = false;
     socket.ws.removeEventListener("message", this.handleServerMessage);
     this.startBtn.removeEventListener("click", (e) => this.start(e));
@@ -79,18 +81,18 @@ export default class PongLocal extends HTMLElement
 	
 	initialize()
 	{
-	  socket.ws = new WebSocket("ws://" + location.host + "/localGameWs/");
-    this.startBtn = this.root.querySelector(".start-btn");
-  	this.isGameStarted = false;
-    this.xBallPos = 380;
-  	this.yBallPos = 150;
-  	this.BallDirection = "LEFT";
-  	this.paddl1Y = 125;
-  	this.paddl2Y = 125;
-  	this.SaveInterval = 0;
-  	this.BallRoute = "LINE";
-  	this.canvas = this.root.querySelector("#board");
-  	this.canvasContext = this.canvas.getContext("2d");
+		socket.ws = new WebSocket("ws://" + location.host + "/localGameWs/");
+    	this.startBtn = this.root.querySelector(".start-btn");
+  		this.isGameStarted = false;
+    	this.xBallPos = 380;
+  		this.yBallPos = 150;
+  		this.BallDirection = "LEFT";
+  		this.paddl1Y = 125;
+  		this.paddl2Y = 125;
+  		this.SaveInterval = 0;
+  		this.BallRoute = "LINE";
+  		this.canvas = this.root.querySelector("#board");
+  		this.canvasContext = this.canvas.getContext("2d");
 	}
 	
 	setupWebSocket()
@@ -100,11 +102,15 @@ export default class PongLocal extends HTMLElement
 			console.log("BYE FROM SERVER");
 			clearInterval(this.SaveInterval);
 		};
-		
 		socket.ws.onopen = function () {
 			console.log("User On Game");
 		};
-
+			
+		socket.ws.onclose = function () {
+		  this.isGameStarted = false;
+			console.log("BYE FROM SERVER");
+			clearInterval(this.SaveInterval);
+		};
 		socket.ws.onmessage = (e) => this.handleServerMessage(e);
 		
 		this.startBtn.addEventListener("click", (e) => this.start(e));
@@ -114,7 +120,8 @@ export default class PongLocal extends HTMLElement
 	drawElements()
 	{
     // console.log("Start Drawing Elements");
-    if (!this.isGameStarted) return;
+    if (this.isGameStarted == true)
+	{
 		this.ballMove();
 		this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -143,12 +150,13 @@ export default class PongLocal extends HTMLElement
 		this.canvasContext.strokeStyle = "#F0F8FF";
 		this.canvasContext.stroke();
 	}
+	}
 	
 	start()
 	{
 		this.isGameStarted = true;
 		console.log("Game Started Now");
-		this.SaveInterval = setInterval(this.drawElements.bind(this), 5);
+		this.SaveInterval = setInterval(this.drawElements.bind(this), 20);
 	}
 	
 	handleServerMessage(e)
@@ -174,14 +182,15 @@ export default class PongLocal extends HTMLElement
     // console.log("Start Moving The Ball");
 		if (this.xBallPos <= 0 || this.xBallPos >= 600)
 		{
-		  // console.log("Sus 1");
+		  	console.log("Sus 1");
+			this.removeEventListener('keyup', (e) => this.applyMove(e))
 			this.isGameStarted = false;
 			socket.ws.send(JSON.stringify({ gameStatus: "End" }));
 			clearInterval(this.SaveInterval);
 		}
 		else if (this.isGameStarted == true)
 		{
-		  // console.log("Sus 2");
+		//   console.log("Sus 2");
 			const ToServer =
 			{
 				WhatIGiveYou: "BALL MOVE",
@@ -200,9 +209,9 @@ export default class PongLocal extends HTMLElement
 	
 	applyMove(e)
 	{
-    console.log("Apply Moves");
 		if (this.isGameStarted == true)
 		{
+			// console.log("Apply Moves");
 			if ( e.key == "ArrowUp" || e.key == "ArrowDown" || e.key == "w" || e.key == "s" )
 			{
 				const ToServer =
@@ -219,8 +228,8 @@ export default class PongLocal extends HTMLElement
 				};
 				if (e.key == "ArrowUp") ToServer.move = "UP";
 				else if (e.key == "ArrowDown") ToServer.move = "DOWN";
-				else if (e.key == "w") ToServer.move = "W";
-				else if (e.key == "s") ToServer.move = "S";
+				else if (e.key == "w" || e.key == "W") ToServer.move = "W";
+				else if (e.key == "s" || e.key == "S") ToServer.move = "S";
 				socket.ws.send(JSON.stringify(ToServer));
 			}
 		}

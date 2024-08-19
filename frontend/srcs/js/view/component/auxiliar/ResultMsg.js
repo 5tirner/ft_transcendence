@@ -49,11 +49,12 @@ export default class ResultMsg extends HTMLElement
       }
       
       .avatar {
-          width: 80px;
-          height: 80px;
-          border-radius: 50%;
-          margin-right: 15px;
-          margin-bottom: 10px;
+         border-radius: 50%;
+         width: 80px;
+         height: 80px;
+         object-fit: cover;
+         position: relative;
+         border: 2px solid var(--light-olive);
       }
       
       .info h2 {

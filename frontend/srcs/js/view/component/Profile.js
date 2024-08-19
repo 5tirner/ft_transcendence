@@ -23,11 +23,12 @@ export default class Profile extends HTMLElement
         }
         
         .user-info .avatar {
+            border-radius: 50%;
             width: 150px;
             height: 150px;
-            border-radius: 50%;
-            margin-right: 2rem;
-            border: 3px solid #4CAF50;
+            object-fit: cover;
+            position: relative;
+            border: 2px solid var(--light-olive);
         }
         
         .user-info .info {

@@ -45,7 +45,7 @@ export default class History extends HTMLElement
           <tr>
             <td class="opponent">
               <img src="${value.pic || "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"}" alt="avatar">
-              ${value.oppenent}
+               ${value.oppenent}
             </td>
             <td class="${result}">
               ${result}
@@ -72,14 +72,14 @@ export default class History extends HTMLElement
         .container {
             background: var(--dark-purple);
             color: var(--light-olive);
-            padding: 40px;
+            padding: 20px 20px;
             border-radius: 24px;
             box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
             width: 90%;
             max-width: 1000px;
             text-align: left;
             position: relative;
-            width: 100%;
+            height: fit-content;
             overflow-y: scroll;
         }
         .container::-webkit-scrollbar {
@@ -132,14 +132,17 @@ export default class History extends HTMLElement
 
         .opponent {
             display: flex;
+            gap: 10px;
             align-items: center;
         }
         
         .opponent img {
-            width: 30px;
-            height: 30px;
             border-radius: 50%;
-            margin-right: 10px;
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            position: relative;
+            border: 2px solid var(--light-olive);
         }
         .win
         {

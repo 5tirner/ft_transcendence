@@ -116,6 +116,10 @@ const API = {
 			console.log(e);
 		}
 		return null;
+	},
+	uploadAvatar: async () => 
+	{
+	  let header = 
 	}
 };
 
