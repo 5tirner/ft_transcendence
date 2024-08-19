@@ -1,3 +1,4 @@
+import { socket } from './assets/socket.js'
 export default class PongTour extends HTMLElement {
 	constructor() {
 		super();

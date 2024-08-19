@@ -77,7 +77,7 @@ export default class PongAnim extends HTMLElement
         }
       </style>
       <div class="pong-container">
-        <div class="title">${title}</div>
+        <div class="title">${title || 'title'}</div>
         <div class="paddle-left"></div>
         <div class="paddle-right"></div>
         <div class="ball"></div>

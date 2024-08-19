@@ -127,7 +127,7 @@ export default class ResultMsg extends HTMLElement
           <img src="${this.data.winnerPic}" alt="Winner Avatar" class="avatar">
             <div class="info">
                 <h2>${this.data.winner}</h2>
-                <p class="result">Congratulations! You won!</p>
+                <p class="result">${this.winnerMsg}</p>
             </div>
         </div>
         <a href="/paltform" class="home-button">Back</a>
@@ -135,7 +135,7 @@ export default class ResultMsg extends HTMLElement
             <img src="${this.data.loserPic}" alt="Loser Avatar" class="avatar">
             <div class="info">
                 <h2>${this.data.loser}</h2>
-                <p class="result">Better luck next time!</p>
+                <p class="result">${this.loserMsg}</p>
             </div>
         </div>
       </div>
@@ -152,5 +152,9 @@ export default class ResultMsg extends HTMLElement
   initialize()
   {
     this.data = JSON.parse( this.getAttribute("data"));
+    this.winnerMsg = 'Congratulations! You won!';
+    this.loserMsg = 'Better luck next time!';
+    if ( this.data.res && this.data.res === 'DRAW' )
+      this.winnerMsg = 'DRAW', this.loserMsg = 'DRAW'
   }
 }

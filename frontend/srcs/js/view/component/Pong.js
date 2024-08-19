@@ -22,10 +22,11 @@ export default class Pong extends HTMLElement
   	document.removeEventListener("keyup", this.applyMove);
     this.isGameStarted = false;
     this.isFinsih = true;
-    // socket.ws.removeEventListener("message", this.handleServerMessage);
-    // socket.ws.onopen = null;
-    // socket.ws.onclose = null;
-    // socket.ws.onmessage = null;
+    socket.ws.removeEventListener("message", this.handleServerMessage);
+    socket.ws.onopen = null;
+    socket.ws.onclose = null;
+    socket.ws.onmessage = null;
+    cancelAnimationFrame(window);
 	}
 	
 	drawElements()
@@ -33,7 +34,6 @@ export default class Pong extends HTMLElement
 		if (this.isGameStarted == true && this.isFinsih == false ) {
 			this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			this.ballMove();
-      // console.log("sus 3");
 			this.canvasContext.beginPath();
 			this.canvasContext.arc(this.xBallPos, this.yBallPos, 10, 0, 6.2);
 			this.canvasContext.lineWidth = 0.5;
@@ -129,6 +129,7 @@ export default class Pong extends HTMLElement
     	this.paddl1Y = 125;
     	this.paddl2Y = 125;
     	this.BallRoute = "LINE";
+    this.result = this.root.querySelector('.result');
 	}
 	
 	setupWebSocket()
@@ -137,6 +138,7 @@ export default class Pong extends HTMLElement
 		socket.ws.onclose = () => {
 			this.isFinsih = true;
 			this.isGameStarted = false;
+      cancelAnimationFrame(window);
 			console.log("Disconnected from Game Server");
 		};
 		socket.ws.onopen = () => console.log("Connected to Game Server");
@@ -149,14 +151,12 @@ export default class Pong extends HTMLElement
 	ballMove()
 	{
 		if (this.xBallPos < 20 || this.xBallPos > 580) {
-      // console.log("sus 1");
 			this.isFinsih = true;
 			this.isGameStarted = false;
 			socket.ws.send(
 				JSON.stringify({ gameStatus: "End", Side: this.BallDirection })
 			);
 		} else if (this.isGameStarted == true && this.isFinsih == false) {
-		//   console.log("sus 2");
 			const ToServer = {
 				WhatIGiveYou: "BALL MOVE",
 				gameStatus: "onprogress",
@@ -219,7 +219,11 @@ export default class Pong extends HTMLElement
     else if (dataPars.MoveFor == 'end')
     {
       this.isFinsih == true;
-      console.log('Data:', dataPars);
+      console.log("Game ended: ", dataPars);
+      const resultComp = document.createElement("result-msg");
+			resultComp.setAttribute("game", "pong");
+      resultComp.setAttribute('data', e.data);
+			this.result.appendChild(resultComp);
     }
     else if (this.isGameStarted == true && this.isFinsih == false) {
       if (dataPars.MoveFor == "PADDLES MOVE")

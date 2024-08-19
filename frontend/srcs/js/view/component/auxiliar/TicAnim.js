@@ -41,7 +41,7 @@ export default class TicAnim extends HTMLElement
             100% { transform: rotate(0deg); }
         }
       </style>
-      <div>${title}</div>
+      <div>${title || 'title'}</div>
       <div class="tic-tac-toe-container">
         <div class="cell">
             <div class="x-swing">X</div>
@@ -71,6 +71,6 @@ export default class TicAnim extends HTMLElement
             <div class="x-swing">X</div>
         </div>
     </div>
-    `
+    `;
   }
 }

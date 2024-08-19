@@ -20,7 +20,7 @@ export default class TicTacToe extends HTMLElement
 	disconnectedCallback()
 	{
 		this.square.forEach((elem) => {
-			elem.removeEventListener("click", (e) => {sendDataToServer});
+			elem.removeEventListener("click", this.sendDataToServer);
 		});
 	}
 	
@@ -138,9 +138,6 @@ export default class TicTacToe extends HTMLElement
     socket.ws.onclose = () =>
     {
 			console.log("Socket closed BYE BYE");
-			// const resultComp = document.createElement("result-msg");
-			// resultComp.setAttribute("game", "ttt");
-			// this.result.appendChild(resultComp);
 		};
     
     window.onbeforeunload = () => {
