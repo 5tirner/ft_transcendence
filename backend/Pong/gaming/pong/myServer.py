@@ -162,7 +162,6 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                                                 self.playersOnMatchAndItsRoomId,
                                                 self.playersOnMatchAndItsDeriction, thisUser, oppenent)
                     print(f"Data For {thisUser} Destroyed")
-
                     toFront = {'MoveFor': 'end', 'winner': Win.login, 'loser': leftedGame.login,
                             'winnerPic': playerAndHisPic.objects.get(login=Win.login).pic,
                             'loserPic': playerAndHisPic.objects.get(login=leftedGame.login).pic}

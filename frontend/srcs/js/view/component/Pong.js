@@ -126,8 +126,13 @@ export default class Pong extends HTMLElement
 
 		socket.ws.onopen = () => console.log("Connected to Game Server");
 		socket.ws.onmessage = (e) => this.handleServerMessage(e);
+		socket.ws.onbeforeunload = function()
+		{
+			this.isFinsih = true;
+			this.isGameStarted = false;
+		}
 		socket.ws.onclose = () => {
-			this.isFinished = true;
+			this.isFinsih = true;
 			this.isGameStarted = false;
 			console.log("Disconnected from Game Server");
 		};
