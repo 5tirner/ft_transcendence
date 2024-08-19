@@ -99,7 +99,7 @@ export default class PongLocal extends HTMLElement
 		};
 			
 		socket.ws.onclose = function () {
-		  this.isGameStarted == false;
+		  this.isGameStarted = false;
 			console.log("BYE FROM SERVER");
 			clearInterval(this.SaveInterval);
 		};
