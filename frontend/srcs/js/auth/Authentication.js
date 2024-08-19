@@ -18,7 +18,6 @@ export const auth = {
 		window.location.href = "http://127.0.0.1:8000/api/google/";
 	},
 	isAuth: async () => {
-		console.log("=====================>check auth");
 		const response = await API.isLogedIn();
 		if (response && response.ok) {
 			const res = await response.json();
