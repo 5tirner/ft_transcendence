@@ -18,9 +18,10 @@ export default class PongLocal extends HTMLElement
 	disconnectedCallback()
 	{
 		console.log("Component was removed");
-  	document.removeEventListener("keyup", this.applyMove.bind(this));
+    document.removeEventListener("keyup", this.applyMove);
     this.isGameStarted = false;
     socket.ws.removeEventListener("message", this.handleServerMessage);
+    this.startBtn.removeEventListener("click", (e) => this.start(e));
     clearInterval(this.SaveInterval);
     socket.ws.onopen = null;
     socket.ws.onclose = null;
@@ -95,7 +96,7 @@ export default class PongLocal extends HTMLElement
 	setupWebSocket()
 	{
 		socket.ws.onclose = function () {
-		  this.isGameStarted == false;
+		  this.isGameStarted = false;
 			console.log("BYE FROM SERVER");
 			clearInterval(this.SaveInterval);
 		};
