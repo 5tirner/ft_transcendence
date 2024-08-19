@@ -161,9 +161,6 @@ export default class TicTacToe extends HTMLElement
   			this.domElm2.innerHTML = "PLAYER2: Wait...";
   		} else if (dataPars.player2.length != 0) {
   			this.isGameStarted = true;
-  			// console.log("Player1: " + dataPars.player1);
-  			// console.log("Player2: " + dataPars.player2)
-  			// console.log("RoomId: " + dataPars.roomid)
   			this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
   			this.domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
   		}

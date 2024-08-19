@@ -18,11 +18,14 @@ export default class Pong extends HTMLElement
 	
 	disconnectedCallback()
 	{
+    console.log("Component was removed");
   	document.removeEventListener("keyup", this.applyMove);
-    socket.ws.removeEventListener("message", this.handleServerMessage);
-    socket.ws.onopen = null;
-    socket.ws.onclose = null;
-    socket.ws.onmessage = null;
+    this.isGameStarted = false;
+    this.isFinsih = true;
+    // socket.ws.removeEventListener("message", this.handleServerMessage);
+    // socket.ws.onopen = null;
+    // socket.ws.onclose = null;
+    // socket.ws.onmessage = null;
 	}
 	
 	drawElements()
@@ -30,7 +33,7 @@ export default class Pong extends HTMLElement
 		if (this.isGameStarted == true && this.isFinsih == false ) {
 			this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			this.ballMove();
-
+      // console.log("sus 3");
 			this.canvasContext.beginPath();
 			this.canvasContext.arc(this.xBallPos, this.yBallPos, 10, 0, 6.2);
 			this.canvasContext.lineWidth = 0.5;
@@ -69,6 +72,13 @@ export default class Pong extends HTMLElement
               margin: 0 auto;
               font-family: var(--body-font);
           }
+          #confirm-msg
+          {
+            backdrop-filter: blur(5px);
+            position: absolute;
+            top: 0;
+            left: 0;
+          }
           canvas {
               display: block;
               margin: 20px auto;
@@ -99,7 +109,8 @@ export default class Pong extends HTMLElement
       <h2 class="player-name player1" id="p1"></h2>
       <h2 class="player-name player2" id="p2"></h2>
       <abort-btn></abort-btn>
-      <confirm-msg game="pong"></confirm-msg>
+      <confirm-msg game="pong" id="confirm-msg"></confirm-msg>
+      <div class="result"></div>
     `;
 	}
 	
@@ -123,19 +134,14 @@ export default class Pong extends HTMLElement
 	setupWebSocket()
 	{
 		socket.ws = new WebSocket("ws://" + location.host + "/PongGameWs/");
-
-		socket.ws.onopen = () => console.log("Connected to Game Server");
-		socket.ws.onmessage = (e) => this.handleServerMessage(e);
-		socket.ws.onbeforeunload = function()
-		{
-			this.isFinsih = true;
-			this.isGameStarted = false;
-		}
 		socket.ws.onclose = () => {
 			this.isFinsih = true;
 			this.isGameStarted = false;
 			console.log("Disconnected from Game Server");
 		};
+		socket.ws.onopen = () => console.log("Connected to Game Server");
+		socket.ws.onmessage = (e) => this.handleServerMessage(e);
+		
 
 		document.addEventListener("keyup", (e) => this.applyMove(e));
 	}
@@ -143,12 +149,14 @@ export default class Pong extends HTMLElement
 	ballMove()
 	{
 		if (this.xBallPos < 20 || this.xBallPos > 580) {
+      // console.log("sus 1");
 			this.isFinsih = true;
 			this.isGameStarted = false;
 			socket.ws.send(
 				JSON.stringify({ gameStatus: "End", Side: this.BallDirection })
 			);
 		} else if (this.isGameStarted == true && this.isFinsih == false) {
+		//   console.log("sus 2");
 			const ToServer = {
 				WhatIGiveYou: "BALL MOVE",
 				gameStatus: "onprogress",
@@ -210,6 +218,7 @@ export default class Pong extends HTMLElement
   	}
     else if (dataPars.MoveFor == 'end')
     {
+      this.isFinsih == true;
       console.log('Data:', dataPars);
     }
     else if (this.isGameStarted == true && this.isFinsih == false) {
