@@ -78,6 +78,7 @@ export default class PongLocal extends HTMLElement
 	
 	initialize()
 	{
+	  socket.ws = new WebSocket("ws://" + location.host + "/localGameWs/");
     this.startBtn = this.root.querySelector(".start-btn");
   	this.isGameStarted = false;
     this.xBallPos = 380;
@@ -93,8 +94,6 @@ export default class PongLocal extends HTMLElement
 	
 	setupWebSocket()
 	{
-	  socket.ws = new WebSocket("ws://" + location.host + "/localGameWs/");
-			
 		socket.ws.onclose = function () {
 		  this.isGameStarted == false;
 			console.log("BYE FROM SERVER");
