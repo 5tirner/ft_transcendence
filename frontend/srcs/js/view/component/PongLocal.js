@@ -78,33 +78,31 @@ export default class PongLocal extends HTMLElement
 	
 	initialize()
 	{
-    this.startBtn = this.root.querySelector(".start-btn");
-  	this.isGameStarted = false;
-    this.xBallPos = 380;
-  	this.yBallPos = 150;
-  	this.BallDirection = "LEFT";
-  	this.paddl1Y = 125;
-  	this.paddl2Y = 125;
-  	this.SaveInterval = 0;
-  	this.BallRoute = "LINE";
-  	this.canvas = this.root.querySelector("#board");
-  	this.canvasContext = this.canvas.getContext("2d");
+		socket.ws = new WebSocket("ws://" + location.host + "/localGameWs/");
+    	this.startBtn = this.root.querySelector(".start-btn");
+  		this.isGameStarted = false;
+    	this.xBallPos = 380;
+  		this.yBallPos = 150;
+  		this.BallDirection = "LEFT";
+  		this.paddl1Y = 125;
+  		this.paddl2Y = 125;
+  		this.SaveInterval = 0;
+  		this.BallRoute = "LINE";
+  		this.canvas = this.root.querySelector("#board");
+  		this.canvasContext = this.canvas.getContext("2d");
 	}
 	
 	setupWebSocket()
 	{
-	  socket.ws = new WebSocket("ws://" + location.host + "/localGameWs/");
+		socket.ws.onopen = function () {
+			console.log("User On Game");
+		};
 			
 		socket.ws.onclose = function () {
 		  this.isGameStarted == false;
 			console.log("BYE FROM SERVER");
-			// clearInterval(this.SaveInterval);
+			clearInterval(this.SaveInterval);
 		};
-		
-		socket.ws.onopen = function () {
-			console.log("User On Game");
-		};
-
 		socket.ws.onmessage = (e) => this.handleServerMessage(e);
 		
 		this.startBtn.addEventListener("click", (e) => this.start(e));
@@ -114,43 +112,43 @@ export default class PongLocal extends HTMLElement
 	drawElements()
 	{
     // console.log("Start Drawing Elements");
-    	if (this.isGameStarted == true)
-		{
-			this.ballMove();
-			this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    if (this.isGameStarted == true)
+	{
+		this.ballMove();
+		this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-			this.canvasContext.beginPath();
-			this.canvasContext.arc(this.xBallPos, this.yBallPos, 10, 0, 6.2);
-			this.canvasContext.lineWidth = 0.5;
-			this.canvasContext.fillStyle = "#F0F8FF";
-			this.canvasContext.fill();
-			this.canvasContext.closePath();
-			this.canvasContext.strokeStyle = "rgb(140, 29, 260)";
-			this.canvasContext.stroke();
+		this.canvasContext.beginPath();
+		this.canvasContext.arc(this.xBallPos, this.yBallPos, 10, 0, 6.2);
+		this.canvasContext.lineWidth = 0.5;
+		this.canvasContext.fillStyle = "#F0F8FF";
+		this.canvasContext.fill();
+		this.canvasContext.closePath();
+		this.canvasContext.strokeStyle = "rgb(140, 29, 260)";
+		this.canvasContext.stroke();
 
-			this.canvasContext.beginPath();
-			this.canvasContext.lineWidth = 8;
-			this.canvasContext.moveTo(20, this.paddl1Y);
-			this.canvasContext.lineTo(20, this.paddl1Y + 50);
-			this.canvasContext.closePath();
-			this.canvasContext.strokeStyle = "#F0F8FF";
-			this.canvasContext.stroke();
+		this.canvasContext.beginPath();
+		this.canvasContext.lineWidth = 8;
+		this.canvasContext.moveTo(20, this.paddl1Y);
+		this.canvasContext.lineTo(20, this.paddl1Y + 50);
+		this.canvasContext.closePath();
+		this.canvasContext.strokeStyle = "#F0F8FF";
+		this.canvasContext.stroke();
 
-			this.canvasContext.beginPath();
-			this.canvasContext.lineWidth = 8;
-			this.canvasContext.moveTo(580, this.paddl2Y);
-			this.canvasContext.lineTo(580, this.paddl2Y + 50);
-			this.canvasContext.closePath();
-			this.canvasContext.strokeStyle = "#F0F8FF";
-			this.canvasContext.stroke();
-		}
+		this.canvasContext.beginPath();
+		this.canvasContext.lineWidth = 8;
+		this.canvasContext.moveTo(580, this.paddl2Y);
+		this.canvasContext.lineTo(580, this.paddl2Y + 50);
+		this.canvasContext.closePath();
+		this.canvasContext.strokeStyle = "#F0F8FF";
+		this.canvasContext.stroke();
 	}
-
+	}
+	
 	start()
 	{
 		this.isGameStarted = true;
 		console.log("Game Started Now");
-		this.SaveInterval = setInterval(this.drawElements.bind(this), 5);
+		this.SaveInterval = setInterval(this.drawElements.bind(this), 20);
 	}
 	
 	handleServerMessage(e)
@@ -222,8 +220,8 @@ export default class PongLocal extends HTMLElement
 				};
 				if (e.key == "ArrowUp") ToServer.move = "UP";
 				else if (e.key == "ArrowDown") ToServer.move = "DOWN";
-				else if (e.key == "w") ToServer.move = "W";
-				else if (e.key == "s") ToServer.move = "S";
+				else if (e.key == "w" || e.key == "W") ToServer.move = "W";
+				else if (e.key == "s" || e.key == "S") ToServer.move = "S";
 				socket.ws.send(JSON.stringify(ToServer));
 			}
 		}
