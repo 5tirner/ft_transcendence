@@ -24,6 +24,7 @@ urlpatterns = [
     path("logouts/", views.user_logout, name="logout"),
     path("usercheck/", views.check_user),
     path("players/", friends_management.ListAllUsersView.as_view()),
+    path("players/block/", friends_management.BlockUserView.as_view()),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

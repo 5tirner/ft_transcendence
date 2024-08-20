@@ -415,21 +415,30 @@ class PlayerInfos(APIView):
             if "username" in player_data:
                 username = player_data["username"].strip()
                 if not username or len(username) > 8:
-                    return Response({"error": "Invalid username", "status": 400})
+                    return Response(
+                        {"error": "Invalid username"},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
                 player_id.username = username
                 change_check = True
 
             if "first_name" in player_data:
                 first_name = player_data["first_name"].strip()
                 if not first_name or len(first_name) > 8:
-                    return Response({"error": "Invalid first name", "status": 400})
+                    return Response(
+                        {"error": "Invalid first name"},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
                 player_id.first_name = first_name
                 change_check = True
 
             if "last_name" in player_data:
                 last_name = player_data["last_name"].strip()
                 if not last_name or len(last_name) > 8:
-                    return Response({"error": "Invalid last name", "status": 400})
+                    return Response(
+                        {"error": "Invalid last name"},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
                 player_id.last_name = last_name
                 change_check = True
 
@@ -539,8 +548,20 @@ class FriendshipRelation(APIView):
 
                 return Response({"friendships": friendship_data})
 
+            elif get_type == "blocks":
+                friendships = Friendships.objects.filter(sender=id, status="BLK")
+                friendship_data = []
+                for friendship in friendships:
+                    friend = friendship.receiver
+                    friend_data = PlayerSerializerInfo(friend).data
+                    friendship_data.append(friend_data)
+
+                return Response({"friendships": friendship_data})
+
             else:
-                return Response({"error": "Invalid request", "status": 400})
+                return Response(
+                    {"error": "Invalid request"}, status=status.HTTP_400_BAD_REQUEST
+                )
 
         except Exception as e:
             return Response({"error": str(e), "status": 500})

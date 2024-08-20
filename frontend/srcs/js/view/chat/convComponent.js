@@ -79,8 +79,16 @@ export class ConvElement extends HTMLLIElement {
 		if (this._data) {
 			this.userData.image.src = this._data.user.avatar;
 			this.userData.username.textContent = this._data.user.username;
-			this.userData.userLastMsg.textContent =
-				this._data.last_message.content;
+			// this.userData.userLastMsg.textContent =
+			// 	this._data.last_message.content;
+
+			const content = this._data.last_message.content;
+			if (content && content.length > 8) {
+				this.userData.userLastMsg.textContent =
+					content.slice(0, 5) + "...";
+			} else {
+				this.userData.userLastMsg.textContent = content;
+			}
 
 			if (this._data.last_message.timestamp == null)
 				this.dateAndNotif.date.textContent = "";

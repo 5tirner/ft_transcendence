@@ -28,7 +28,10 @@ export async function fillFriensList(popup) {
 	if (response.ok) {
 		response = await response.json();
 		const { friendships } = response;
-		console.log(friendships);
+		if (friendships.length == 0) {
+			popupSubDiv.innerHTML = "the friends list is empty";
+			return;
+		}
 		friendships.forEach((elem) => {
 			const userElem = document.createElement("div");
 			userElem.addEventListener("click", async (event) => {
@@ -50,7 +53,6 @@ export class PopupFriendList extends HTMLElement {
 		this.setAttribute("id", "friends-list");
 		this.innerHTML = `
 			<div class="pop-up">
-                this is some text
 			</div>`;
 	}
 }

@@ -14,12 +14,12 @@ export function init_socket() {
 	const chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/chat/");
 	const inputField = document.querySelector(".message-input input");
 
+	document.friendship_ws = chatSocket;
 	chatSocket.onmessage = function (e) {
 		const data = JSON.parse(e.data);
 		const msgdata = {};
 		const mesgsElem = document.querySelector(".messages");
 		const chatUser = document.querySelector(".username-conv");
-		// console.log(data);
 		if (data.msg_type) {
 			if ((chatUser && data.user == chatUser.textContent) || data.sent) {
 				msgdata.content = data.message;
@@ -36,6 +36,9 @@ export function init_socket() {
 				moveConvListTop(data.user);
 				updateNotif(data.user);
 			}
+		} else if (data.status_type) {
+			console.log(data);
+		} else if (data.friendship_type) {
 		}
 	};
 	chatSocket.onclose = function (e) {
@@ -55,7 +58,8 @@ export function init_socket() {
 					JSON.stringify({
 						message: message,
 						user: user,
-						room_id: roomId
+						room_id: roomId,
+						type: "chat"
 					})
 				);
 				inputField.value = "";
@@ -71,7 +75,12 @@ function changeLastDisplayedMessage(data, username) {
 	for (const li of listItems) {
 		const user = li.querySelector(".username");
 		if (user.textContent == username) {
-			li.querySelector(".message").textContent = data.message;
+			const content = data.message;
+			if (content.length > 8)
+				li.querySelector(".message").textContent =
+					content.slice(0, 5) + "...";
+			else li.querySelector(".message").textContent = content;
+
 			li.querySelector(".time").textContent = formatListDate(new Date());
 			break;
 		}
