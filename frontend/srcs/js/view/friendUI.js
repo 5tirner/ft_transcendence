@@ -1,5 +1,13 @@
 import API from "../service/API.js";
-import * as update from "./friendsUpdate.js";
+import { friendUpdate } from "./friendsUpdate.js";
+
+//const variables
+export const ADD = "add";
+export const BLK_USER = "block_u";
+export const BLK_FRND = "block_f";
+export const UNBLOCK = "unblock";
+export const UNFRND = "unfriend";
+export const ACC_REQ = "acc_f";
 
 export class FriendElement extends HTMLLIElement {
 	constructor() {
@@ -59,7 +67,7 @@ export class FriendElement extends HTMLLIElement {
 			const reJson = await res.json();
 			const friendList = document.getElementById("friends-list");
 			if (friendList) friendList.updateDOM();
-			update.acceptFriendUpdate(this._data.data);
+			friendUpdate(this._data.data, ACC_REQ);
 			this.remove();
 		};
 		const addFriendEventHandler = async () => {
@@ -67,7 +75,7 @@ export class FriendElement extends HTMLLIElement {
 				this._data.data.id
 			);
 			const reJson = await res.json();
-			update.addFriendUpdate(this._data.data);
+			friendUpdate(this._data.data, ADD);
 			this.remove();
 		};
 		const blockEventHandler = async () => {
@@ -75,23 +83,23 @@ export class FriendElement extends HTMLLIElement {
 			const blockes = document.getElementById("blocked-users");
 			if (blockes) blockes.updateDOM();
 			if (this.parentNode.id === "users")
-				update.blockUserUpdate(this._data.data);
+				friendUpdate(this._data.data, BLK_USER);
 			else if (this.parentNode.id === "friends")
-				update.addFriendUpdate(this._data.data);
+				friendUpdate(this._data.data, BLK_FRND);
 			this.remove();
 		};
 		const unfriendEventHandler = async () => {
 			const res = await API.removeFriend(this._data.data.id);
 			const allUsers = document.getElementById("all-users");
 			if (allUsers) allUsers.updateDOM();
-			update.unfriendUpdate(this._data.data);
+			friendUpdate(this._data.data, UNFRND);
 			this.remove();
 		};
 		const unblockEventHandler = async () => {
 			const res = await API.removeBlock(this._data.data.id);
 			const allUsers = document.getElementById("all-users");
 			if (allUsers) allUsers.updateDOM();
-			update.unblockUpdate(this._data.data);
+			friendUpdate(this._data.data, UNBLOCK);
 			this.remove();
 		};
 		const addFriendFromBlock = async () => {
@@ -99,7 +107,7 @@ export class FriendElement extends HTMLLIElement {
 			const res1 = await API.sendAndAcceptFriendRequest(
 				this._data.data.id
 			);
-			update.addFriendUpdate(this._data.data);
+			friendUpdate(this._data.data, ADD);
 			this.remove();
 		};
 		this.avatar.src = this._data.data.avatar;
