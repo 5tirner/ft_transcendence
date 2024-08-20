@@ -275,7 +275,6 @@ export default class Setting extends HTMLElement
       let form = this.querySelector('#updateimage');
 
       form.addEventListener('submit', this.handleSubmit);
-      
 	}
 	
 	changeUserName()
@@ -297,11 +296,11 @@ export default class Setting extends HTMLElement
 	handleSubmit (event)
 	{
 	   let file = this.querySelector('#file');
-		let form = this.querySelector('#updateimage');		
 		event.preventDefault();
 		if (!file.value.length) return;
 
       API.uploadAvatar(file.files[0]);
+      console.log("API IMAGE: ", file.files[0]);
 		// let uri = URL.createObjectURL(file.files[0]);
 		// // let img = document.createElement('img');
 		// // img.src = uri;

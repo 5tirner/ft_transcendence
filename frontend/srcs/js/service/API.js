@@ -6,6 +6,7 @@ const API = {
 	tttHistoEndpoint: "http://127.0.0.1:8000/TicTacToe/History",
 	pongStatEndpoint: "http://127.0.0.1:8000/PongPong/myProfile",
 	pongHistoEndpoint: "http://127.0.0.1:8000/PongPong/History",
+	playersEndpoint: "http://127.0.0.1:8000/api/players/",
 
 	// ADD HERE ALL THE OTHER API FUNCTIONS
 	commonPostFunc: async (endPoint, userData) => {
@@ -86,6 +87,9 @@ const API = {
 	markMessagesAsRead: (room_id) => {
 		API.commonGetFunc(`${API.chatEndpoint}read/${room_id}/`);
 	},
+	getPlayers: () => {
+		return API.commonGetFunc(API.playersEndpoint);
+	},
 
 	makePostRequest: async (url, data) => {
 		const headers = {
@@ -127,7 +131,7 @@ const API = {
 			body: formData
 		}
       const response = await fetch(API.authEndpoint, opts);
-      console.log(response)
+      console.log(response);
 	}
 };
 

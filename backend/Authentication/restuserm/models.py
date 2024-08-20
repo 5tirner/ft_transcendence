@@ -47,10 +47,12 @@ class Friendships(AbstractBaseUser):
     class Status(Enum):
         PENDING = "PEN"
         ACCEPTED = "ACP"
+        BLOCKED = "BLK"
 
     STATUS_AVAILABLE = [
         (Status.PENDING.value, "PENDING"),
         (Status.ACCEPTED.value, "ACCEPTED"),
+        (Status.BLOCKED.value, "BLOCKED"),
     ]
 
     id = models.AutoField(primary_key=True)
@@ -130,4 +132,3 @@ class Match(AbstractBaseUser):
 #     display_name = models.CharField(max_length=100)
 #     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
 #     # Add any other fields as needed
-
