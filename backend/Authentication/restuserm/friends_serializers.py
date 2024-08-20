@@ -6,11 +6,7 @@ from restuserm.models import Friendships, Player
 class PlayerSerializerInformation(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = [
-            "id",
-            "username",
-            "avatar",
-        ]
+        fields = ["id", "username", "avatar", "status"]
 
 
 class FriendshipSerializer(serializers.ModelSerializer):
