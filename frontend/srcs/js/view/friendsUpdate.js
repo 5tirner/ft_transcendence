@@ -1,4 +1,11 @@
-import { ADD, BLK_FRND, BLK_USER, UNBLOCK, UNFRND, ACC_REQ } from "./friendUI";
+import {
+	ADD,
+	BLK_FRND,
+	BLK_USER,
+	UNBLOCK,
+	UNFRND,
+	ACC_REQ
+} from "./friendUI.js";
 
 export function friendUpdate(user, event) {
 	const socket = document.friendship_ws;
