@@ -342,7 +342,9 @@ class PlayerUploadAvatar(APIView):
             id = jwt.decode(tokenid, settings.SECRET_KEY, algorithms=["HS256"])["id"]
             avatar_file = request.FILES.get("avatar")
             if not avatar_file:
-                return Response({"error": "No file provided", "statusCode": 400})
+                return Response(
+                    {"error": "No file provided"}, status=status.HTTP_400_BAD_REQUEST
+                )
             filePath = os.path.join(settings.MEDIA_ROOT, avatar_file.name)
             default_storage.save(filePath, ContentFile(avatar_file.read()))
             url_file = urllib.parse.urljoin(
@@ -358,7 +360,9 @@ class PlayerUploadAvatar(APIView):
         except Player.DoesNotExist:
             return Response({"error": "User doesn't exist", "statusCode": 404})
         except Exception as e:
-            return Response({"error": str(e), "statusCode": 500})
+            return Response(
+                {"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 
 @authentication_classes([])  # Remove all authentication classes

@@ -169,6 +169,8 @@ services:
         image: auth:latest
         env_file:
             - .env
+        ports:
+            - "5050:8000"
         networks:
             - Net
         volumes:
