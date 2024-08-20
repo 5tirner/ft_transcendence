@@ -235,4 +235,4 @@ export default class PongLocal extends HTMLElement
 		}
 	}
 }
-customElements.define("po-local-view", PongLocal);
+customElements.define("po-local-game", PongLocal);

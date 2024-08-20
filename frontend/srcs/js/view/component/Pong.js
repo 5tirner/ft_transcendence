@@ -242,4 +242,4 @@ export default class Pong extends HTMLElement
   	}
 	}
 }
-customElements.define("pong-view", Pong);
+customElements.define("pong-game", Pong);

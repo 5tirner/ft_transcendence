@@ -220,4 +220,4 @@ export default class PongTour extends HTMLElement
 		document.removeEventListener("keyup", this.applyDown);
 	}
 }
-customElements.define("tournament-view", PongTour);
+customElements.define("tournament-game", PongTour);
