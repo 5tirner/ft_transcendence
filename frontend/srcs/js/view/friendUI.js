@@ -1,4 +1,5 @@
 import API from "../service/API.js";
+import * as update from "./friendsUpdate.js";
 
 export class FriendElement extends HTMLLIElement {
 	constructor() {
@@ -51,94 +52,85 @@ export class FriendElement extends HTMLLIElement {
 	updateDOM() {
 		if (!this._data) return;
 
-		const addAndAcceptEventHandler = async () => {
+		const acceptFriendEventHanlder = async () => {
 			const res = await API.sendAndAcceptFriendRequest(
 				this._data.data.id
 			);
 			const reJson = await res.json();
-			const allUsers = document.getElementById("all-users");
-			if (allUsers) allUsers.updateDOM();
 			const friendList = document.getElementById("friends-list");
 			if (friendList) friendList.updateDOM();
-			const recv = document.getElementById("received-requests");
-			if (recv) recv.updateDOM();
+			update.acceptFriendUpdate(this._data.data);
+			this.remove();
+		};
+		const addFriendEventHandler = async () => {
+			const res = await API.sendAndAcceptFriendRequest(
+				this._data.data.id
+			);
+			const reJson = await res.json();
+			update.addFriendUpdate(this._data.data);
+			this.remove();
 		};
 		const blockEventHandler = async () => {
 			const res = await API.blockUser(this._data.data.id);
-			const allUsers = document.getElementById("all-users");
-			if (allUsers) allUsers.updateDOM();
-			const friendList = document.getElementById("friends-list");
-			if (friendList) friendList.updateDOM();
-			const recv = document.getElementById("received-requests");
-			if (recv) recv.updateDOM();
 			const blockes = document.getElementById("blocked-users");
 			if (blockes) blockes.updateDOM();
+			if (this.parentNode.id === "users")
+				update.blockUserUpdate(this._data.data);
+			else if (this.parentNode.id === "friends")
+				update.addFriendUpdate(this._data.data);
+			this.remove();
 		};
 		const unfriendEventHandler = async () => {
 			const res = await API.removeFriend(this._data.data.id);
 			const allUsers = document.getElementById("all-users");
 			if (allUsers) allUsers.updateDOM();
-			const friendList = document.getElementById("friends-list");
-			if (friendList) friendList.updateDOM();
+			update.unfriendUpdate(this._data.data);
+			this.remove();
 		};
 		const unblockEventHandler = async () => {
 			const res = await API.removeBlock(this._data.data.id);
 			const allUsers = document.getElementById("all-users");
 			if (allUsers) allUsers.updateDOM();
-			const blockes = document.getElementById("blocked-users");
-			if (blockes) blockes.updateDOM();
+			update.unblockUpdate(this._data.data);
+			this.remove();
 		};
 		const addFriendFromBlock = async () => {
 			const res = await API.removeBlock(this._data.data.id);
 			const res1 = await API.sendAndAcceptFriendRequest(
 				this._data.data.id
 			);
-			const allUsers = document.getElementById("all-users");
-			if (allUsers) allUsers.updateDOM();
-			const blockes = document.getElementById("blocked-users");
-			if (blockes) blockes.updateDOM();
+			update.addFriendUpdate(this._data.data);
+			this.remove();
 		};
 		this.avatar.src = this._data.data.avatar;
 		this.username.textContent = this._data.data.username;
 		if (this._data.type === "all") {
-			this.firstButton.addEventListener(
-				"click",
-				addAndAcceptEventHandler
-			);
-			this._clickListener1 = addAndAcceptEventHandler;
-			this.secondButton.addEventListener("click", blockEventHandler);
+			this._clickListener1 = addFriendEventHandler;
 			this._clickListener2 = blockEventHandler;
 		} else if (this._data.type === "friends") {
 			this.firstButton.className = "icon-button remove-friend";
 			this.firstButtonIcon.className = "bi bi-person-dash-fill";
 			this.firstButton.title = "remove friend";
 			//event handlers
-			this.firstButton.addEventListener("click", unfriendEventHandler);
-			this._clickListener1 = addAndAcceptEventHandler;
-			this.secondButton.addEventListener("click", blockEventHandler);
+			this._clickListener1 = unfriendEventHandler;
 			this._clickListener2 = blockEventHandler;
 		} else if (this._data.type === "requests") {
 			this.firstButton.className = "icon-button accept-friend";
 			this.firstButtonIcon.className = "bi bi-person-check-fill";
 			this.firstButton.title = "Accept request";
 			// event handlers
-			this.firstButton.addEventListener(
-				"click",
-				addAndAcceptEventHandler
-			);
-			this._clickListener1 = addAndAcceptEventHandler;
-			this.secondButton.addEventListener("click", blockEventHandler);
+			this._clickListener1 = acceptFriendEventHanlder;
 			this._clickListener2 = blockEventHandler;
 		} else if (this._data.type === "blocked") {
 			this.secondButton.className = "icon-button unblock-user";
 			this.secondButtonIcon.className = "bi bi-person-dash";
 			this.secondButton.title = "Unblock user";
 			//event handlers
-			this.firstButton.addEventListener("click", addFriendFromBlock);
-			this._clickListener2 = addFriendFromBlock;
-			this.secondButton.addEventListener("click", unblockEventHandler);
+			this._clickListener1 = addFriendFromBlock;
 			this._clickListener2 = unblockEventHandler;
 		}
+		this.firstButton.addEventListener("click", this._clickListener1);
+		this.secondButton.addEventListener("click", this._clickListener2);
 	}
 
 	connectedCallback() {

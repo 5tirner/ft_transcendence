@@ -1,4 +1,5 @@
 import API from "../../service/API.js";
+import { socketResponsHandler } from "../friendsUpdate.js";
 import { findUserInList, formatListDate, updateNotif } from "./chatList.js";
 import { createMessageBuble } from "./messages_loader.js";
 
@@ -39,6 +40,7 @@ export function init_socket() {
 		} else if (data.status_type) {
 			console.log(data);
 		} else if (data.friendship_type) {
+			socketResponsHandler(data);
 		}
 	};
 	chatSocket.onclose = function (e) {

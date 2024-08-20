@@ -48,20 +48,28 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             elif type == "status":
                 pass
             elif type == "friendship":
-                print(content)
+                await self.send_friendship_update(content)
                 # await self.send_friendship_update()
         except Exception as e:
             pass
 
-    async def send_friendship_update(self):
+    async def send_friendship_update(self, content):
+        print(content)
+        user = content["user"]
+        event = content["event"]
+        user_id = content["user_id"]
         await self.channel_layer.group_send(
-            self.GLOBAL_CHANEL,
+            user,
             {
-                "type": "chat.status",
-                "online": True,
+                "type": "friendship.update",
                 "user": self.scope["user"],
+                "event": event,
             },
         )
+
+    async def friendship_update(self, event):
+        data = {"user": event["user"], "event": event["event"], "friendship_type": True}
+        await self.send_json(data)
 
     async def send_message_to_user(self, user, message, is_user):
         if not is_user:

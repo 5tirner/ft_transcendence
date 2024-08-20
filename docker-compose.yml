@@ -156,8 +156,8 @@ services:
             - .env
         networks:
             - Net
-        # volumes:
-        #     - postgres_db:/var/lib/postgresql/data
+        volumes:
+            - postgres_db:/var/lib/postgresql/data
         restart: always
 
     auth:
@@ -214,6 +214,7 @@ services:
         volumes:
             - ./backend/ws_chat:/app
         depends_on:
+            - postgres_db
             - auth
         restart: always
 volumes:
