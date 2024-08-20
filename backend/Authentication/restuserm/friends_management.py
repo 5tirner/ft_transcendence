@@ -37,6 +37,7 @@ class ListAllUsersView(ListAPIView):
             status__in=[
                 Friendships.Status.ACCEPTED.value,
                 Friendships.Status.BLOCKED.value,
+                Friendships.Status.PENDING.value,
             ],
         ).values_list("sender_id", "receiver_id", flat=False)
 
