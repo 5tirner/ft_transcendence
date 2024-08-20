@@ -1,5 +1,6 @@
 import { socket } from './assets/socket.js'
-export default class PongTour extends HTMLElement {
+export default class PongTour extends HTMLElement
+{
 	constructor() {
 		super();
 		this.root = this.attachShadow({ mode: "open" });
@@ -219,3 +220,4 @@ export default class PongTour extends HTMLElement {
 		document.removeEventListener("keyup", this.applyDown);
 	}
 }
+customElements.define("tournament-view", PongTour);

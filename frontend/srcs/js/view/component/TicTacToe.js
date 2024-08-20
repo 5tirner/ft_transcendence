@@ -250,3 +250,4 @@ export default class TicTacToe extends HTMLElement
 		else console.log("Game Not Start Yet");
 	}
 }
+customElements.define("ttt-view", TicTacToe);

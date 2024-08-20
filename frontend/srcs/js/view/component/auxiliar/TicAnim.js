@@ -74,3 +74,4 @@ export default class TicAnim extends HTMLElement
     `;
   }
 }
+customElements.define("tic-tac-toe-anim", TicAnim);

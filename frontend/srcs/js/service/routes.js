@@ -1,23 +1,24 @@
-export const routes = (previousLocation, currentLocation) => {
-	let previousView = null;
+export const routes = (previousLocation = '', currentLocation) =>
+{
+   console.log("current location: ", currentLocation);
 	switch (currentLocation)
 	{
-		case "/platform":
-		case "/profile":
-		case "/setting":
-		case "/history":
-		case "/game":
-		case "/friend":
+		case '/platform':
+		case '/profile':
+		case '/setting':
+		case '/history':
+		case '/game':
+		case '/friend':
 		{
-			const currentView = document.querySelector(`${currentLocation.substring(1)}-view`);
-            if (previousLocation)
-            {
-               previousView = document.querySelector(`${previousLocation.path.substring(1)}-view`);
-            }
+		   // check if the component already exist // not working do somthing else
+         // const component = window.component.midl.querySelector(`${currentLocation.substring(1)}-view`);
+         // if (component)
+         //    return;
          
-			if (previousView) previousView.setAttribute("hidden", "");
-			if (currentView) currentView.removeAttribute("hidden");
-			window.component.middle.removeAttribute("style");
+         const elem = document.createElement(`${currentLocation.substring(1)}-view`);
+         window.component.midl.innerHTML = "";
+         window.component.midl.appendChild(elem);
+         return;
 		}
 		default:
 		{

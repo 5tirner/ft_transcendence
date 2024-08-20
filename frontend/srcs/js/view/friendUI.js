@@ -305,3 +305,4 @@ export class FriendView extends HTMLElement {
 		console.log("remove component from dom");
 	}
 }
+customElements.define("friend-view", FriendView);

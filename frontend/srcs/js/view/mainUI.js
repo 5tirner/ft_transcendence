@@ -1,44 +1,23 @@
 // Main UI View
-export default class MainUI extends HTMLElement
+export default class MainView extends HTMLElement
 {
 	constructor() { super(); }
 	
 	connectedCallback() 
 	{
-	 this.setAttribute("id", "main-ui");
-	
-		const home = document.createElement("home-view");
-		const left = document.createElement("div");
-		const right = document.createElement("div");
-		const middle = document.createElement("div");
-		const chat = document.createElement("chat-view");
-		const game = document.createElement("game-view");
-		const sidebar = document.createElement("sidebar-view");
-		const profile = document.createElement("profile-view");
-		const setting = document.createElement("setting-view");
-		const platform = document.createElement("platform-view");
-		const friend = document.createElement("friend-view");
-
-		
-		left.setAttribute("id", "left-view");
-		left.setAttribute("hidden", "");
-		right.setAttribute("id", "right-view");
-		right.setAttribute("hidden", "");
-		middle.setAttribute("id", "middle-view");
-		middle.setAttribute("hidden", "");
-
-		right.appendChild(chat);
-		left.appendChild(sidebar);
-
-		middle.appendChild(game);
-		middle.appendChild(profile);
-		middle.appendChild(setting);
-		middle.appendChild(platform);
-		middle.append(friend);
-
-		this.appendChild(home);
-		this.appendChild(left);
-		this.appendChild(middle);
-		this.appendChild(right);
+      this.setAttribute("id", "main-view");
+      // side bar container aka left view
+      const sidebar = document.createElement("sidebar-view");
+      const left = document.createElement("div");
+      left.setAttribute('id', 'left-view');
+      left.appendChild(sidebar);
+      // chat container aka right view
+      const right = document.createElement("div");
+      right.setAttribute('id', 'right-view');
+      // Append child to the parent which is the middle view
+      this.appendChild(left);
+      this.appendChild(window.component.midl);
+      this.appendChild(right);
 	}
 }
+customElements.define("main-view", MainView);

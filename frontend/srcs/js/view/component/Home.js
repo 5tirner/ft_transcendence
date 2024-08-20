@@ -8,7 +8,6 @@ export default class Home extends HTMLElement
 	connectedCallback()
 	{
 		this.setAttribute("id", "home-view");
-		this.setAttribute("hidden", "");
 		this.innerHTML += `
       <login-view></login-view>
       <nav class="d-flex navbar justify-content-between">
@@ -42,3 +41,4 @@ export default class Home extends HTMLElement
 		});
 	}
 }
+customElements.define("home-view", Home);

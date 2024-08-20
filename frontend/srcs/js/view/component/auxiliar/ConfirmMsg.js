@@ -127,3 +127,4 @@ export default class ConfirmMsg extends HTMLElement
     `;
   }
 }
+customElements.define("confirm-msg", ConfirmMsg);

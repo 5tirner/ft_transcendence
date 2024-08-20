@@ -11,7 +11,6 @@ export default class History extends HTMLElement
 	async connectedCallback()
 	{
 		this.setAttribute("id", "TheHistory");
-		this.setAttribute("hidden", "");
 		
 		const ticData = await auth.getTicHisto();
 		const pongData = await auth.getPongHisto();
@@ -187,3 +186,4 @@ export default class History extends HTMLElement
     `;
 	}
 }
+customElements.define("history-view", History);

@@ -5,7 +5,6 @@ export default class Platform extends HTMLElement {
 	}
 	connectedCallback() {
 		this.setAttribute("id", "platform-view");
-		this.setAttribute("hidden", "");
 		this.root.innerHTML += `
     <style>
       a
@@ -228,3 +227,4 @@ export default class Platform extends HTMLElement {
 		});
 	}
 }
+customElements.define("platform-view", Platform);

@@ -159,3 +159,4 @@ export default class ResultMsg extends HTMLElement
       this.winnerMsg = 'DRAW', this.loserMsg = 'DRAW'
   }
 }
+customElements.define("result-msg", ResultMsg);

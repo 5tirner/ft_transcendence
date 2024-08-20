@@ -6,9 +6,7 @@ export default class Setting extends HTMLElement
 	
 	connectedCallback()
 	{
-      this.setAttribute("id", "setting-view");
-      this.setAttribute("hidden", "");
-		
+      this.setAttribute("id", "setting-view");		
       this.render();
       this.initialize();
       this.changeProfileImage();
@@ -17,7 +15,6 @@ export default class Setting extends HTMLElement
 	
 	disconnectedCallback()
 	{
-	
 	}
 	
 	render()
@@ -310,16 +307,6 @@ export default class Setting extends HTMLElement
 		// // reader.onload = logFile;
 
 		// // reader.readAsDataURL(file.files[0]);
-
 }
 }
-
-
-// this.input = this.querySelector("#input-fullname");
-// if (e.target.getAttribute("name") === "Save")
-// {
-// 	if (input.value.length == 0)
-// 		console.log("Please enter some shit");
-// 	else
-// 		div.setAttribute('hidden', '');
-// }
+customElements.define("setting-view", Setting);

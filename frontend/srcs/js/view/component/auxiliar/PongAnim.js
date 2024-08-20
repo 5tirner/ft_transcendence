@@ -85,3 +85,4 @@ export default class PongAnim extends HTMLElement
     `
   }
 }
+customElements.define("pong-animation", PongAnim);

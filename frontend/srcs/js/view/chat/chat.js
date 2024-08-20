@@ -8,7 +8,7 @@ export async function render_chat() {
 	init_socket();
 }
 
-export class ChatComponent extends HTMLElement {
+export default class ChatComponent extends HTMLElement {
 	constructor() {
 		super();
 
@@ -48,3 +48,4 @@ export class ChatComponent extends HTMLElement {
 			addChatRoom.addEventListener("click", handlAddChatRoom);
 	}
 }
+customElements.define("chat-view", ChatComponent);
