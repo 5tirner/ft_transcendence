@@ -14,29 +14,26 @@ export class FriendElement extends HTMLLIElement {
 		super();
 		this._data = null;
 		this.className = "user-item";
-		this.avatar = document.createElement("img");
-		this.avatar.className = "avatar";
-		this.avatar.alt = "User avatar";
-		this.appendChild(this.avatar);
-		this.username = document.createElement("span");
-		this.username.className = "username";
-		this.appendChild(this.username);
+		this.avatar = this.createAvatar();
+		this.username = this.createUsername();
 
-		// Create and append the action buttons container
-		this.actionButtonsDiv = document.createElement("div");
-		this.actionButtonsDiv.className = "action-buttons";
-
-		// Create and append the add friend button
+		this.actionButtonsDiv = this.createActionButtonsDiv();
+	}
+	createActionButtonsDiv() {
+		const actionButtonsDiv = document.createElement("div");
+		actionButtonsDiv.className = "action-buttons";
+		this.appendChild(actionButtonsDiv);
+		// // Create and append the add friend button
 		this.firstButton = document.createElement("button");
 		this.firstButton.type = "button";
 		this.firstButton.className = "icon-button add-friend";
-		this.firstButton.title = "Add friend";
 		this.firstButtonIcon = document.createElement("i");
+		this.firstButton.title = "Add friend";
 		this.firstButtonIcon.className = "bi bi-person-plus-fill";
 		this.firstButton.appendChild(this.firstButtonIcon);
-		this.actionButtonsDiv.appendChild(this.firstButton);
+		actionButtonsDiv.appendChild(this.firstButton);
 
-		// Create and append the block user button
+		// // Create and append the block user button
 		this.secondButton = document.createElement("button");
 		this.secondButton.type = "button";
 		this.secondButton.className = "icon-button block-user";
@@ -44,10 +41,22 @@ export class FriendElement extends HTMLLIElement {
 		this.secondButtonIcon = document.createElement("i");
 		this.secondButtonIcon.className = "bi bi-person-x";
 		this.secondButton.appendChild(this.secondButtonIcon);
-		this.actionButtonsDiv.appendChild(this.secondButton);
-		this.appendChild(this.actionButtonsDiv);
+		actionButtonsDiv.appendChild(this.secondButton);
+		return actionButtonsDiv;
 	}
-
+	createUsername() {
+		const username = document.createElement("span");
+		username.className = "username";
+		this.appendChild(username);
+		return username;
+	}
+	createAvatar() {
+		const avatar = document.createElement("img");
+		avatar.className = "avatar";
+		avatar.alt = "User avatar";
+		this.appendChild(avatar);
+		return avatar;
+	}
 	set data(value) {
 		this._data = value;
 		this.updateDOM();
@@ -158,15 +167,13 @@ export class FriendElement extends HTMLLIElement {
 
 customElements.define("friend-li", FriendElement, { extends: "li" });
 
-export class FriendCardComponent extends HTMLDivElement {
+export class CardComponent extends HTMLDivElement {
 	constructor() {
 		super();
 		this._data = null;
 		this.className = "friend-card";
-		this.header = document.createElement("p");
-		this.appendChild(this.header);
-		this.UsersList = document.createElement("ul");
-		this.appendChild(this.UsersList);
+		this.header = this.createHeader();
+		this.UsersList = this.createUserList();
 	}
 
 	set data(value) {
@@ -178,65 +185,71 @@ export class FriendCardComponent extends HTMLDivElement {
 		return this._data;
 	}
 
-	async getAllUsers() {
-		const res = await API.getPlayers();
+	createHeader() {
+		const header = document.createElement("p");
+		this.appendChild(header);
+		return header;
+	}
+
+	createUserList() {
+		const list = document.createElement("ul");
+		this.appendChild(list);
+		return list;
+	}
+
+	async fetchData(apiMethod) {
+		const res = await apiMethod();
 		if (res.ok) {
-			return await res.json();
+			const resJson = await res.json();
+			return resJson.friendships || resJson;
 		}
 		return [];
-	}
-
-	async getFriends() {
-		const res = await API.getFriends();
-		if (res.ok) {
-			const resJson = await res.json();
-			return resJson.friendships;
-		}
-	}
-
-	async getRequests() {
-		const res = await API.getFriendRequest();
-		if (res.ok) {
-			const resJson = await res.json();
-			return resJson.friendships;
-		}
-	}
-
-	async getBlockedUsers() {
-		const res = await API.getBlockedUsers();
-		if (res.ok) {
-			const resJson = await res.json();
-			return resJson.friendships;
-		}
 	}
 
 	async updateDOM() {
 		if (!this._data) return;
 
-		this.UsersList.innerHTML = "";
-		if (this._data.type === "all") {
-			this.id = "all-users";
-			this.header.textContent = "All Users";
-			this._data.data = await this.getAllUsers();
-			this.UsersList.id = "users";
-		} else if (this.data.type === "friends") {
-			this.id = "friends-list";
-			this.header.textContent = "Friends List";
-			this.UsersList.id = "friends";
-			this._data.data = await this.getFriends();
-		} else if (this.data.type === "requests") {
-			this.id = "received-requests";
-			this.header.textContent = "Received Friend Requests";
-			this.UsersList.id = "requests";
-			this._data.data = await this.getRequests();
-		} else if (this.data.type === "blocked") {
-			this.id = "blocked-users";
-			this.header.textContent = "Blocked Users";
-			this.UsersList.id = "blocked";
-			this._data.data = await this.getBlockedUsers();
-		}
+		const config = {
+			all: {
+				id: "all-users",
+				headerText: "All Users",
+				apiMethod: API.getPlayers,
+				listId: "users"
+			},
+			friends: {
+				id: "friends-list",
+				headerText: "Friends List",
+				apiMethod: API.getFriends,
+				listId: "friends"
+			},
+			requests: {
+				id: "received-requests",
+				headerText: "Received Friend Requests",
+				apiMethod: API.getFriendRequest,
+				listId: "requests"
+			},
+			blocked: {
+				id: "blocked-users",
+				headerText: "Blocked Users",
+				apiMethod: API.getBlockedUsers,
+				listId: "blocked"
+			}
+		};
 
-		if (this._data.data.length == 0) {
+		const { id, headerText, apiMethod, listId } = config[this._data.type];
+
+		this.id = id;
+		this.header.textContent = headerText;
+		this.UsersList.id = listId;
+		this._data.data = await this.fetchData(apiMethod);
+
+		this.renderList();
+	}
+
+	renderList() {
+		this.UsersList.innerHTML = "";
+
+		if (!this._data.data || this._data.data.length === 0) {
 			this.UsersList.innerHTML =
 				"<p style='font-size:10px;color: var(--deep-blue);'>-- list is empty --</p>";
 		} else {
@@ -248,60 +261,44 @@ export class FriendCardComponent extends HTMLDivElement {
 		}
 	}
 
-	connectedCallback() {
-		// NOTE: add event listener if clicked show user profile
-		const clickHandler = () => {};
-		this.addEventListener("click", clickHandler);
-		this._clickListener = clickHandler;
-	}
-	disconnectedCallback() {
-		if (this._clickListener) {
-			this.removeEventListener("click", this._clickListener);
-		}
-	}
+	connectedCallback() {}
+	disconnectedCallback() {}
 }
 
-customElements.define("friend-card", FriendCardComponent, { extends: "div" });
+customElements.define("friend-card", CardComponent, { extends: "div" });
 
 export class FriendView extends HTMLElement {
 	constructor() {
 		super();
-		this.header = document.createElement("p");
-		this.header.textContent = "Friends Management";
-		this.appendChild(this.header);
-		this.mainContent = document.createElement("div");
-		this.mainContent.className = "friend-container";
-		this.appendChild(this.mainContent);
+		this.header = this.createHeader("Friends Management");
+		this.mainContent = this.createMainContent();
 	}
 
-	async connectedCallback() {
-		// create list of users
-		const allUsersCard = new FriendCardComponent();
-		allUsersCard.data = {
-			type: "all"
-		};
-		this.mainContent.appendChild(allUsersCard);
-
-		const friendsCard = new FriendCardComponent();
-		friendsCard.data = {
-			type: "friends"
-		};
-		this.mainContent.appendChild(friendsCard);
-
-		const requestsCard = new FriendCardComponent();
-		requestsCard.data = {
-			type: "requests"
-		};
-		this.mainContent.appendChild(requestsCard);
-
-		const blockedCard = new FriendCardComponent();
-		blockedCard.data = {
-			type: "blocked"
-		};
-		this.mainContent.appendChild(blockedCard);
+	connectedCallback() {
+		["all", "friends", "requests", "blocked"].forEach((type) => {
+			this.addCard(type);
+		});
 	}
 
-	disconnectedCallback() {
-		console.log("remove component from dom");
+	createHeader(text) {
+		const header = document.createElement("p");
+		header.textContent = text;
+		this.appendChild(header);
+		return header;
 	}
+
+	createMainContent() {
+		const mainContent = document.createElement("div");
+		mainContent.className = "friend-container";
+		this.appendChild(mainContent);
+		return mainContent;
+	}
+
+	addCard(type) {
+		const card = new CardComponent();
+		card.data = { type };
+		this.mainContent.appendChild(card);
+	}
+
+	disconnectedCallback() {}
 }
