@@ -5,15 +5,17 @@ export const router = {
 		const previousLocation = window.prevState;
 		const currentLocation = path;
 
-		if (currentLocation === "/home") {
-			if (window.component.home) {
+		if (currentLocation === "/home")
+		{
+			if (window.component.home)
+			{
 				window.component.home.removeAttribute("hidden");
 				window.component.left.setAttribute("hidden", "");
 				window.component.right.setAttribute("hidden", "");
 				window.component.middle.setAttribute("hidden", "");
 			}
 		} else {
-			if (currentLocation !== "/game") {
+			if (currentLocation !== "/game"){
 				window.component.right.removeAttribute("hidden");
 				window.component.left.removeAttribute("hidden");
 			} else {
@@ -37,7 +39,7 @@ export const router = {
 		if (path === "/") path = "/home";
 		const userIsLogged = await auth.isAuth();
 		if (userIsLogged) {
-			if (path === "/login" || path === "/home") router.goto("/platform");
+			if (path === "/login" || path === "/home" || path === '/game') router.goto("/platform");
 			else router.goto(path);
 		} else {
 			if (path === "/login") router.goto("/login");
