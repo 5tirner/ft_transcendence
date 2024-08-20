@@ -1,5 +1,7 @@
 import { router } from "./service/router.js";
 
+import ChatComponent from "./view/chat/chat.js";
+import FriendView from "./view/friendUI.js";
 import Game from "./view/component/Game.js";
 import Home from "./view/component/Home.js";
 import Pong from "./view/component/Pong.js";
@@ -18,8 +20,6 @@ import ConfirmMsg from "./view/component/auxiliar/ConfirmMsg.js";
 import AbortButton from "./view/component/auxiliar/AbortButton.js";
 import Setting from './view/component/Setting.js';
 import Profile from './view/component/Profile.js';
-// import ChatComponent from "./view/chat/chat.js";
-// import { FriendView } from "./view/friendUI.js";
 
 import MainView from "./view/mainUI.js";
 

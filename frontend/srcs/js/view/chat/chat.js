@@ -9,12 +9,13 @@ export async function render_chat() {
 }
 
 export default class ChatComponent extends HTMLElement {
-	constructor() {
+	constructor()
+	{
 		super();
-
-		this.className = "right-window";
 	}
-	connectedCallback() {
+	connectedCallback()
+	{
+		this.className = "right-window";
 		this.setAttribute("id", "chat");
 		this.innerHTML = `
 			<div class="nav-convs">

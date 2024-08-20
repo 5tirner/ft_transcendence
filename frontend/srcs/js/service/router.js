@@ -22,9 +22,17 @@ export const router = {
 		{
       if (path === "/") path = "/home";
       if (path !== '/home' && path !== '/login') // 404
-        return;
-      window.component.root.innerHtml = '';
-      window.component.root.appendChild(window.component.home);
+      {
+        const div = document.createElement('div');
+        div.innerHTML = "404 PAGE NOT FOUND";
+        window.component.root.innerHtml = '';
+        window.component.root.appendChild(div);
+      }
+      else
+      {
+        window.component.root.innerHtml = '';
+        window.component.root.appendChild(window.component.home);
+      }
 		}
 	},
 	

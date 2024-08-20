@@ -263,18 +263,18 @@ export class FriendCardComponent extends HTMLDivElement {
 
 customElements.define("friend-card", FriendCardComponent, { extends: "div" });
 
-export class FriendView extends HTMLElement {
+export default class FriendView extends HTMLElement {
 	constructor() {
 		super();
-		this.header = document.createElement("p");
-		this.header.textContent = "Friends Management";
-		this.appendChild(this.header);
-		this.mainContent = document.createElement("div");
-		this.mainContent.className = "friend-container";
-		this.appendChild(this.mainContent);
 	}
 
 	async connectedCallback() {
+    this.header = document.createElement("p");
+  	this.header.textContent = "Friends Management";
+  	this.appendChild(this.header);
+  	this.mainContent = document.createElement("div");
+  	this.mainContent.className = "friend-container";
+  	this.appendChild(this.mainContent);
 		// create list of users
 		const allUsersCard = new FriendCardComponent();
 		allUsersCard.data = {
