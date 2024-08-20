@@ -128,3 +128,4 @@ export default class Statistic extends HTMLElement
     `;
 	}
 }
+customElements.define("stat-ics", Statistic);

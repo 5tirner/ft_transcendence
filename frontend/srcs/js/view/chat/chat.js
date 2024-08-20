@@ -8,13 +8,14 @@ export async function render_chat() {
 	init_socket();
 }
 
-export class ChatComponent extends HTMLElement {
-	constructor() {
+export default class ChatComponent extends HTMLElement {
+	constructor()
+	{
 		super();
-
-		this.className = "right-window";
 	}
-	connectedCallback() {
+	connectedCallback()
+	{
+		this.className = "right-window";
 		this.setAttribute("id", "chat");
 		this.innerHTML = `
 			<div class="nav-convs">
@@ -48,3 +49,4 @@ export class ChatComponent extends HTMLElement {
 			addChatRoom.addEventListener("click", handlAddChatRoom);
 	}
 }
+customElements.define("chat-view", ChatComponent);

@@ -1,6 +1,7 @@
 import { router } from "./service/router.js";
 
-import MainUI from "./view/mainUI.js";
+import ChatComponent from "./view/chat/chat.js";
+import FriendView from "./view/friendUI.js";
 import Game from "./view/component/Game.js";
 import Home from "./view/component/Home.js";
 import Pong from "./view/component/Pong.js";
@@ -17,44 +18,24 @@ import PongAnim from "./view/component/auxiliar/PongAnim.js";
 import ResultMsg from "./view/component/auxiliar/ResultMsg.js";
 import ConfirmMsg from "./view/component/auxiliar/ConfirmMsg.js";
 import AbortButton from "./view/component/auxiliar/AbortButton.js";
+import Setting from './view/component/Setting.js';
+import Profile from './view/component/Profile.js';
 
-import { ChatComponent } from "./view/chat/chat.js";
-import { FriendView } from "./view/friendUI.js";
+import MainView from "./view/mainUI.js";
 
-window.prevState = null;
 window.router = router;
 window.component = {};
-window.goBack = true;
 
 document.addEventListener("DOMContentLoaded", () => {
-	customElements.define("home-view", Home);
-	customElements.define("main-ui", MainUI);
-	customElements.define("platform-view", Platform);
-	customElements.define("login-view", Login);
-	customElements.define("sidebar-view", Sidebar);
-	customElements.define("game-view", Game);
-	customElements.define("ttt-view", TicTacToe);
-	customElements.define("pong-view", Pong);
-	customElements.define("confirm-msg", ConfirmMsg);
-	customElements.define("abort-btn", AbortButton);
-	customElements.define("po-local-view", PongLocal);
-	customElements.define("stat-ics", Statistic);
-	customElements.define("history-view", History);
-	customElements.define("tournament-view", PongTour);
-	customElements.define("result-msg", ResultMsg);
-	customElements.define("chat-view", ChatComponent);
-	customElements.define("pong-animation", PongAnim);
-	customElements.define("tic-tac-toe-anim", TicAnim);
-	customElements.define("friend-view", FriendView);
-
 	window.component = {
-		home: document.querySelector("home-view"),
-		left: document.getElementById("left-view"),
-		middle: document.getElementById("middle-view"),
-		right: document.getElementById("right-view")
+	  root: document.getElementById('root'),
+		home: document.createElement('home-view'),
+		main: document.createElement('main-view'),
+		midl: Object.assign(document.createElement('div'), { id: 'middle-view'})
 	};
-
-   console.log("path: ", window.location.pathname);
 	router.redirecto(window.location.pathname);
-
+	
+	onpopstate = () => {
+    router.goto(window.location.pathname, false);
+	}
 });

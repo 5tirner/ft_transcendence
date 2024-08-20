@@ -1,4 +1,5 @@
-export default class AbortButton extends HTMLElement {
+export default class AbortButton extends HTMLElement
+{
   constructor() {
     super();
   }
@@ -48,3 +49,4 @@ export default class AbortButton extends HTMLElement {
     this.addEventListener("click", this.listener);
   }
 }
+customElements.define("abort-btn", AbortButton);

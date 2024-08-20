@@ -156,3 +156,5 @@ export default class Login extends HTMLElement {
 	// onclick="window.Auth.loginIntra()"
 	// onclick="window.Auth.loginGoogle()"
 }
+
+customElements.define("login-view", Login);

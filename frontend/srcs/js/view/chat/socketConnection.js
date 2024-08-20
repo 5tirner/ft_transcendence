@@ -42,7 +42,7 @@ export function init_socket() {
 		}
 	};
 	chatSocket.onclose = function (e) {
-		console.error("chat socket closed", e.reason);
+		console.error("chat socket closed: ", e);
 		init_socket();
 	};
 	inputField.addEventListener("keydown", (event) => {

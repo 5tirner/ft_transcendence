@@ -4,7 +4,6 @@ export default class Game extends HTMLElement
 	
 	connectedCallback() {
 		this.setAttribute("id", "game-view");
-		this.setAttribute("hidden", "");
     this.render();
 	}
 	
@@ -57,3 +56,4 @@ export default class Game extends HTMLElement
     `;
   }
 }
+customElements.define("game-view", Game);
