@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from restuserm.models import Player
+from restuserm.models import Friendships, Player
 
 
 class PlayerSerializerInformation(serializers.ModelSerializer):
@@ -11,3 +11,9 @@ class PlayerSerializerInformation(serializers.ModelSerializer):
             "username",
             "avatar",
         ]
+
+
+class FriendshipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Friendships
+        fields = ["id", "sender", "receiver", "status"]

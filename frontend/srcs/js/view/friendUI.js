@@ -55,12 +55,18 @@ export class FriendElement extends HTMLLIElement {
 			const res = await API.sendAndAcceptFriendRequest(
 				this._data.data.id
 			);
+			const reJson = await res.json();
+			console.log(reJson);
 		};
 		const blockEventHandler = async () => {
-			console.log("block user ", this._data.data.id);
+			const res = await API.blockUser(this._data.data.id);
+			console.log(reJson);
 		};
 		const unfriendEventHandler = async () => {
 			const res = await API.removeFriend(this._data.data.id);
+		};
+		const unblockEventHandler = async () => {
+			const res = await API.removeBlock(this._data.data.id);
 		};
 		this.avatar.src = this._data.data.avatar;
 		this.username.textContent = this._data.data.username;
@@ -97,6 +103,9 @@ export class FriendElement extends HTMLLIElement {
 			this.secondButton.className = "icon-button unblock-user";
 			this.secondButtonIcon.className = "bi bi-person-dash";
 			this.secondButton.title = "Unblock user";
+			//event handlers
+			this.secondButton.addEventListener("click", unblockEventHandler);
+			this._clickListener2 = unblockEventHandler;
 		}
 	}
 
@@ -219,10 +228,18 @@ export class FriendView extends HTMLElement {
 		}
 	}
 
+	async getBlockedUsers() {
+		const res = await API.getBlockedUsers();
+		if (res.ok) {
+			this.blockedUsers = await res.json();
+			this.blockedUsers = this.blockedUsers.friendships;
+		}
+	}
 	async connectedCallback() {
 		await this.getAllUsers();
 		await this.getFriends();
 		await this.getRequests();
+		await this.getBlockedUsers();
 
 		// create list of users
 		const allUsersCard = new FriendCardComponent();
@@ -248,7 +265,7 @@ export class FriendView extends HTMLElement {
 
 		const blockedCard = new FriendCardComponent();
 		blockedCard.data = {
-			data: [],
+			data: this.blockedUsers,
 			type: "blocked"
 		};
 		this.mainContent.appendChild(blockedCard);

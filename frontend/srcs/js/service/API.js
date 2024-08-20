@@ -69,8 +69,11 @@ const API = {
 		return API.commonGetFunc(`${API.friendshipEndpoint}?type=requests`);
 	},
 
+	getBlockedUsers: () => {
+		return API.commonGetFunc(`${API.friendshipEndpoint}?type=blocks`);
+	},
+
 	sendAndAcceptFriendRequest: (user_id) => {
-		console.log(user_id);
 		return API.commonPostFunc(API.friendshipEndpoint, {
 			id_target: user_id
 		});
@@ -78,6 +81,18 @@ const API = {
 
 	removeFriend: (user_id) => {
 		return API.makeDeleteRequest(API.friendshipEndpoint, {
+			id_target: user_id
+		});
+	},
+
+	removeBlock: (user_id) => {
+		return API.makeDeleteRequest(API.playersEndpoint + "block/", {
+			id_target: user_id
+		});
+	},
+
+	blockUser: (user_id) => {
+		return API.commonPostFunc(API.playersEndpoint + "block/", {
 			id_target: user_id
 		});
 	},
