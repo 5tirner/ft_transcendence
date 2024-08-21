@@ -1,16 +1,19 @@
 import API from "../../service/API.js";
+import { ADD_ROOM } from "../friendUI.js";
+import { friendUpdate } from "../friendsUpdate.js";
 import { findUserInList } from "./chatList.js";
 import { ConvElement } from "./convComponent.js";
 
 async function makeChatRoom(user) {
-	const userLi = findUserInList(user);
+	const userLi = findUserInList(user.username);
 	if (userLi) {
 		userLi.click();
 	} else {
 		const ulElement = document.querySelector(".list-group");
 
-		let respone = await API.createChatRoom(user);
+		let respone = await API.createChatRoom(user.username);
 		if (respone.ok) {
+			friendUpdate(user, ADD_ROOM);
 			respone = await respone.json();
 			let conv = new ConvElement();
 			conv.data = respone;
@@ -34,8 +37,9 @@ export async function fillFriensList(popup) {
 		}
 		friendships.forEach((elem) => {
 			const userElem = document.createElement("div");
+
 			userElem.addEventListener("click", async (event) => {
-				await makeChatRoom(event.target.textContent);
+				await makeChatRoom(elem);
 				popup.remove();
 			});
 			userElem.textContent = elem.username;
