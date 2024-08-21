@@ -12,7 +12,7 @@ export default class ConfirmMsg extends HTMLElement
 	connectedCallback()
 	{
 		this.setAttribute("id", "confirm-msg");
-		// this.setAttribute("style", "display: none");
+		this.setAttribute("style", "display: none");
 		
     this.render();
     
