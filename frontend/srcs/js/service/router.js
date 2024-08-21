@@ -18,6 +18,11 @@ export const router =
 			if (pathname === "/") pathname = "/platform";
 			window.component.root.innerHtml = "";
 			window.component.root.appendChild(window.component.main);
+			// history.replaceState(
+  	// 			null,
+  	// 			null,
+  	// 			location.origin + "/"
+   //    );
 			router.goto(pathname);
 		}
 		else
@@ -28,7 +33,7 @@ export const router =
       // else
       // {
         console.log("Return to home");
-        window.component.root.innerHtml = '';
+        window.component.root.innerHTML = '';
         window.component.root.appendChild(window.component.home);
       // }
 		}
@@ -69,11 +74,17 @@ export const router =
 			{
         const res = API.logout();
         console.log("Return to home");
-        window.component.root.innerHtml = '';
+        window.component.root.innerHTML = '';
         window.component.root.appendChild(window.component.home);
+        history.replaceState(
+  				null,
+  				null,
+  				location.origin + "/"
+       	);
+        return;
 			}
 			default:
-        router.pageNotFound();
+        router.goto('/platform');
     }
    },
    

@@ -45,7 +45,7 @@ export function init_socket() {
 	};
 	chatSocket.onclose = function (e) {
 		console.error("chat socket closed: ", e);
-		init_socket();
+		// init_socket();
 	};
 	inputField.addEventListener("keydown", (event) => {
 		if (event.key == "Enter") {
