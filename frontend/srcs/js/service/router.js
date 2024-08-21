@@ -22,12 +22,7 @@ export const router = {
 		{
       if (path === "/") path = "/home";
       if (path !== '/home' && path !== '/login') // 404
-      {
-        const div = document.createElement('div');
-        div.innerHTML = "404 PAGE NOT FOUND";
-        window.component.root.innerHtml = '';
-        window.component.root.appendChild(div);
-      }
+        router.pageNotFound();
       else
       {
         window.component.root.innerHtml = '';
@@ -62,7 +57,7 @@ export const router = {
         return;
 			}
 			default:
-        console.log("NoT Found 404");
+        router.pageNotFound();
     }
    },
    
@@ -90,6 +85,13 @@ export const router = {
         return;
       }
     }
+	},
+	pageNotFound: () => {
+    const div = Object.assign(document.createElement('div'), {className: 'page-not-found'});
+    // const image = Object.assign(document.createElement('img'), {src: 'js/view/src/img/404.jpg'});
+    // div.appendChild(image);
+    window.component.root.innerHTML = '';
+    window.component.root.appendChild(div);
 	}
 };
 
