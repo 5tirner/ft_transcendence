@@ -1,4 +1,5 @@
 import { auth } from "../auth/Authentication.js";
+import API from "./API.js"
 
 export const router =
 {
@@ -21,14 +22,15 @@ export const router =
 		}
 		else
 		{
-      if (path === "/") path = "/home";
-      if (path !== '/home' && path !== '/login') // 404
-        router.pageNotFound();
-      else
-      {
+      // if (path === "/") path = "/home";
+      // if (path !== '/home' && path !== '/login') // 404
+      //   router.pageNotFound();
+      // else
+      // {
+        console.log("Return to home");
         window.component.root.innerHtml = '';
         window.component.root.appendChild(window.component.home);
-      }
+      // }
 		}
 	},
 
@@ -62,6 +64,13 @@ export const router =
 				window.component.midl.innerHTML = "";
 				window.component.midl.appendChild(elem);
 				return;
+			}
+			case '/logout':
+			{
+        const res = API.logout();
+        console.log("Return to home");
+        window.component.root.innerHtml = '';
+        window.component.root.appendChild(window.component.home);
 			}
 			default:
         router.pageNotFound();

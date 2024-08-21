@@ -1,14 +1,13 @@
 export default class Sidebar extends HTMLElement {
-	constructor() {
-		super();
-	}
+	constructor() { super(); }
+	
 	connectedCallback()
 	{
 		this.setAttribute("id", "sidebar-view");
-
-      this.render();
-		this.doSomeThing();
+    this.render();
+    this.doSomeThing();
 	}
+	
 	render()
 	{
       this.innerHTML += `
@@ -26,7 +25,7 @@ export default class Sidebar extends HTMLElement {
             <a href="/history" class="nav_link">
                <i class='bx bx-history nav_icon'></i>
             </a>
-            <a href="/" class="nav_link">
+            <a href="/logout" class="nav_link">
                <i class="bx bx-log-out nav_icon"></i>
             </a>
          </div>
@@ -36,6 +35,7 @@ export default class Sidebar extends HTMLElement {
       </nav>
    `;
 	}
+	
 	doSomeThing()
 	{
 		const arr = this.querySelectorAll("a");
@@ -43,19 +43,6 @@ export default class Sidebar extends HTMLElement {
 			elem.addEventListener("click", (e) => {
 				e.preventDefault();
 				const href = e.currentTarget.getAttribute("href");
-				// if (href === "/profile") {
-				// 	const component = document.querySelector("#TheStat");
-				// 	const holder = document.querySelector("#components-holder");
-				// 	if (component) component.remove();
-				// 	holder.appendChild(document.createElement("stat-ics"));
-				// }
-				// if (href === "/history") {
-				// 	const component = document.querySelector("#TheHistory");
-				// 	const holder = document.querySelector("#middle-view");
-				// 	if (component) component.remove();
-				// 	const elem = document.createElement("history-view");
-				// 	holder.appendChild(elem);
-				// }
 				window.router.goto(href);
 			});
 		});
