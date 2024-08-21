@@ -10,26 +10,30 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         # Join channel group
         await self.channel_layer.group_add(self.GLOBAL_CHANEL, self.channel_name)
         await self.channel_layer.group_add(self.scope["user"], self.channel_name)
-        await self.channel_layer.group_send(
-            self.GLOBAL_CHANEL,
-            {
-                "type": "chat.status",
-                "online": True,
-                "user": self.scope["user"],
-            },
-        )
+
+        await self.update_player_status("ON", True)
         await self.accept()
 
     async def disconnect(self, close_code):
+
+        await self.update_player_status("OFF", False)
+        await self.channel_layer.group_discard(self.scope["user"], self.channel_name)
+
+    async def update_player_status(self, status, online_status):
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                "http://auth:8000/api/",
+                cookies=self.scope["cookie"],
+                json={"player": {"status": status}},
+            )
         await self.channel_layer.group_send(
             self.GLOBAL_CHANEL,
             {
                 "type": "chat.status",
-                "online": False,
+                "online": online_status,
                 "user": self.scope["user"],
             },
         )
-        await self.channel_layer.group_discard(self.scope["user"], self.channel_name)
 
     async def receive_json(self, content):
         try:

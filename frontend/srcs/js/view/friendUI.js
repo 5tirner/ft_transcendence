@@ -128,6 +128,7 @@ export class FriendElement extends HTMLLIElement {
 		};
 		this.avatar.src = this._data.data.avatar;
 		this.username.textContent = this._data.data.username;
+		console.log(this._data.data);
 		if (this._data.data.status === "OFF") this.classList.add("offline");
 		if (this._data.type === "all") {
 			this._clickListener1 = addFriendEventHandler;
