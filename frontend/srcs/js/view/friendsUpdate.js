@@ -39,3 +39,22 @@ export function socketResponsHandler(data) {
 		friendsList.updateDOM();
 	}
 }
+
+export function updateOnlineStatus(data) {
+	const friendsList = document
+		.getElementById("friends")
+		.getElementsByTagName("li");
+
+	for (let i = 0; i < friendsList.length; i++) {
+		const friendItem = friendsList[i];
+		const friendName = friendItem.querySelector(".username").textContent;
+		if (friendName === data.user) {
+			if (data.online) {
+				friendItem.classList.remove("offline");
+			} else {
+				friendItem.classList.add("offline");
+			}
+			break;
+		}
+	}
+}

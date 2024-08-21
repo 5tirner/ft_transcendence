@@ -1,5 +1,5 @@
 import API from "../../service/API.js";
-import { socketResponsHandler } from "../friendsUpdate.js";
+import { socketResponsHandler, updateOnlineStatus } from "../friendsUpdate.js";
 import { findUserInList, formatListDate, updateNotif } from "./chatList.js";
 import { createMessageBuble } from "./messages_loader.js";
 
@@ -38,14 +38,18 @@ export function init_socket() {
 				updateNotif(data.user);
 			}
 		} else if (data.status_type) {
-			console.log(data);
+			updateOnlineStatus(data);
 		} else if (data.friendship_type) {
 			socketResponsHandler(data);
 		}
 	};
 	chatSocket.onclose = function (e) {
-		console.error("chat socket closed: ", e);
-		init_socket();
+		console.log("the socket is clooooosed");
+		// console.error("chat socket closed: ", e);
+		if (!e.wasClean) {
+			console.log("not clean closing ");
+			init_socket();
+		}
 	};
 	inputField.addEventListener("keydown", (event) => {
 		if (event.key == "Enter") {
