@@ -48,21 +48,6 @@ export function formatListDate(date) {
 	}
 }
 
-export async function getConversations() {
-	const ulElement = document.querySelector('.list-group')
-  console.log("ulelemn",ulElement);
-	let response = await API.getConversatons();
-	if (response.ok) {
-		response = await response.json();
-		response.forEach((chatConv) => {
-		 console.log(response)
-			let conv = new ConvElement();
-			conv.data = chatConv;
-			ulElement.appendChild(conv);
-		});
-	}
-}
-
 export function findUserInList(username) {
 	const listItems = document.querySelectorAll(".list-group-item");
 	if (!listItems) return null;
