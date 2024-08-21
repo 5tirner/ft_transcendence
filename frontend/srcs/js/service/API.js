@@ -54,7 +54,7 @@ const API = {
 	},
 
 	getUser: () => {
-		return API.commonGetFunc(`${API.authEndpoint}userData/`);
+		return API.makeGetRequest(`${API.authEndpoint}`);
 	},
 
 	getFriends: () => {
@@ -168,9 +168,15 @@ const API = {
 		}
 		return null;
 	},
+	
+	updateUserName: async (username) =>
+	{
+    return API.makePostRequest( API.authEndpoint, { player: {username} })
+	},
+	
 	uploadAvatar: async (image) => 
 	{
-	   const formData = new FormData();
+	  const formData = new FormData();
 		formData.append('avatar', image)
       console.log("Format Data: ", formData);
 		const opts = {
