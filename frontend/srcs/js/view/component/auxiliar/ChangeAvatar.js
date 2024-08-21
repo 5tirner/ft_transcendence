@@ -1,11 +1,11 @@
 export default class Setting extends HTMLElement
 {
-	constructor() { super(); }
+	constructor() { super(); this.root = this.attachShadow({mode: 'closed'})}
 	
 	connectedCallback()
 	{
-      this.setAttribute("id", "update-user");		
-      this.render();
+    this.setAttribute("id", "update-avatar");		
+    this.render();
 	}
 	
 	disconnectedCallback()

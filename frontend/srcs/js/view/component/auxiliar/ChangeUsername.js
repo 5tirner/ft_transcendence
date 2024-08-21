@@ -17,6 +17,8 @@ export default class UserUpdate extends HTMLElement
 	
 	disconnectedCallback()
 	{
+	  this.root.removeEventListener('click', this.listner1);
+		this.form.removeEventListener('submit', this.listner2);
 	}
 	
 	render()
@@ -40,14 +42,18 @@ export default class UserUpdate extends HTMLElement
         }
         .updateUsername form
         {
-          width: 500px;
-          height: 350px;
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+          width: 40%;
+          height: 50%;
           display: flex;
+          background: var(--dark-purple);
           justify-content: center;
           align-items: center;
           flex-direction: column;
-          gap: 1rem;
+          gap: 3rem;
           position: relative;
+          border: 2px solid var(--light-olive);
+          border-radius: 20px;
         }
        
         .updateUsername form input
@@ -110,33 +116,39 @@ export default class UserUpdate extends HTMLElement
 	{
 	  this.container = this.root.querySelector('.updateUsername');
     this.form = this.root.querySelector('#usernameform');
-    this.root.addEventListener('click', (e) => {
+    this.listner1 = (e) => {
       if (e.target === this.container)
         this.remove();
-    });
-    
-    this.form.addEventListener('submit', (e) =>{
-      e.preventDefault();
-    })
+    }
+    this.root.addEventListener('click', this.listner1);
 	}
 	
 	changeUserName()
 	{
-    this.form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const value = this.root.querySelector('#input-fullname').value;
-    const updateUserNameResponse = await API.updateUserName(value);
-    const updateUserNameJson = await updateUserNameResponse.json();
-    if (updateUserNameJson.status == 200)
-    {
-      const getUserData = await API.getUser();
-      const username = await getUserData.json();
-      this.target.innerHTML = username.player.username;
-      this.remove();
-      console.log("user updated successfuly");
+	  this.listner2 = async (e) => {
+      e.preventDefault();
+      const value = this.root.querySelector('#input-fullname').value;
+      if (value.lenght == 0)
+      {
+        this.errorMsg();
+        return;
+      }
+      const updateUserNameResponse = await API.updateUserName(value);
+      const updateUserNameJson = await updateUserNameResponse.json();
+      if (updateUserNameJson.status == 200) {
+        const getUserData = await API.getUser();
+        const username = await getUserData.json();
+        this.target.innerHTML = username.player.username;
+        this.remove();
+      }
+      else
+        this.errorMsg();
     }
-    else
-    {
+    this.form.addEventListener('submit', this.listner2);
+	}
+	
+	errorMsg()
+	{
       const errorElem = document.createElement('div');
       errorElem.setAttribute('style', 'position: absolute; top:50px;');
       errorElem.innerHTML = `
@@ -150,8 +162,6 @@ export default class UserUpdate extends HTMLElement
       `
       this.form.insertBefore(errorElem, this.form.firstChild);
       console.log("invalid username");
-    }
-    });
 	}
 }
 customElements.define("update-user", UserUpdate);
