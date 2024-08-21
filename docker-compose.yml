@@ -101,6 +101,7 @@ services:
             - "8000:8000"
         volumes:
             - ./frontend/srcs:/var/www
+            - media_data:/var/www/media
         networks:
             - Net
         restart: always
@@ -175,6 +176,7 @@ services:
             - Net
         volumes:
             - ./backend/Authentication:/app
+            - media_data:/app/media
         depends_on:
             - postgres_db
         restart: always
@@ -218,6 +220,8 @@ services:
             - auth
         restart: always
 volumes:
+    media_data:
+
     postgres_db:
         driver: local
         name: postgres_db
