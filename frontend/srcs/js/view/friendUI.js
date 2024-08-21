@@ -51,10 +51,17 @@ export class FriendElement extends HTMLLIElement {
 		return username;
 	}
 	createAvatar() {
+		const avatarContainer = document.createElement("div");
+		avatarContainer.className = "avatar-container";
 		const avatar = document.createElement("img");
 		avatar.className = "avatar";
 		avatar.alt = "User avatar";
-		this.appendChild(avatar);
+		const statusDiv = document.createElement("div");
+		statusDiv.className = "online-status";
+		avatarContainer.appendChild(avatar);
+		avatarContainer.appendChild(statusDiv);
+		this.appendChild(avatarContainer);
+		this.status = statusDiv;
 		return avatar;
 	}
 	set data(value) {
@@ -121,6 +128,7 @@ export class FriendElement extends HTMLLIElement {
 		};
 		this.avatar.src = this._data.data.avatar;
 		this.username.textContent = this._data.data.username;
+		if (this._data.data.status === "OFF") this.classList.add("offline");
 		if (this._data.type === "all") {
 			this._clickListener1 = addFriendEventHandler;
 			this._clickListener2 = blockEventHandler;
