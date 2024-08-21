@@ -43,6 +43,8 @@ export default class ChatComponent extends HTMLElement {
 				</div>
 			</div>
 		`;
+		this.list_group = this.querySelector("ul")
+		console.log("teeest ",this.list_group)
 
 		const addChatRoom = this.querySelector(".add-message-icon");
 		if (addChatRoom)

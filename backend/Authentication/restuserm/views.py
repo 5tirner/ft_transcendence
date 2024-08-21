@@ -186,7 +186,7 @@ def callback_google(request):
             get_decoded_token = decode_google_id_token(token)
             player_data = {
                 "email": get_decoded_token.get("email"),
-                "username": get_decoded_token.get("name"),
+                "username": get_decoded_token.get("given_name"),
                 "first_name": get_decoded_token.get("given_name"),
                 "last_name": get_decoded_token.get("family_name"),
                 "avatar": get_decoded_token.get("picture"),
@@ -444,6 +444,16 @@ class PlayerInfos(APIView):
                         status=status.HTTP_400_BAD_REQUEST,
                     )
                 player_id.last_name = last_name
+                change_check = True
+
+            if "status" in player_data:
+                status_value = player_data["status"]
+                if status_value not in dict(Player.STATUS_CHOICES):
+                    return Response(
+                        {"error": "Invalid status. Must be 'OFF','ON', OR 'ING'"},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+                player_id.status = status_value
                 change_check = True
 
             if "two_factor" in player_data and player_data["two_factor"] is False:

@@ -1,4 +1,4 @@
-import { render_chat } from "./chat/chat.js";
+import ChatComponent, { render_chat } from "./chat/chat.js";
 
 export default class MainView extends HTMLElement
 {
@@ -19,12 +19,12 @@ export default class MainView extends HTMLElement
     const chat = document.createElement('chat-view');
     right.setAttribute('id', 'right-view');
     right.appendChild(chat);
-    render_chat();
     
     // Append child to the parent which is the middle view
     this.appendChild(left);
     this.appendChild(window.component.midl);
     this.appendChild(right);
+    render_chat();
 	}
 }
 customElements.define("main-view", MainView);

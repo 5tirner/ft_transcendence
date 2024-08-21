@@ -254,17 +254,17 @@ export default class Setting extends HTMLElement
 	
 	initialize()
 	{
-      this.editIamgeButton = this.querySelector(".edit-image");
+    this.editIamgeButton = this.querySelector(".edit-image");
    	this.editUsernameButton = this.querySelector(".edit-btn");
-		
-      this.changeImageDiv = this.querySelector('.uploadProfileImage');
-      this.changeUsernameDiv = this.querySelector(".updateUsername");
-		
-      this.uploadImageForm = this.querySelector('#updateimage');
-      this.uploadImageForm = this.querySelector('#updateusername');
-      
-      this.toggleDiv(this.editIamgeButton, this.changeImageDiv);
-      this.toggleDiv(this.editUsernameButton, this.changeUsernameDiv);
+	
+    this.changeImageDiv = this.querySelector('.uploadProfileImage');
+    this.changeUsernameDiv = this.querySelector(".updateUsername");
+	
+    this.uploadImageForm = this.querySelector('#updateimage');
+    this.uploadImageForm = this.querySelector('#updateusername');
+    
+    this.toggleDiv(this.editIamgeButton, this.changeImageDiv);
+    this.toggleDiv(this.editUsernameButton, this.changeUsernameDiv);
 	}
 	
 	changeProfileImage()

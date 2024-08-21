@@ -149,7 +149,10 @@ export default class Login extends HTMLElement {
 		links.forEach((link) => {
 			link.addEventListener("click", (e) => {
 				e.preventDefault();
-				window.Auth.loginIntra();
+        if (link.getAttribute('name') === 'google')
+          window.Auth.loginGoogle();
+        else
+          window.Auth.loginIntra();
 			});
 		});
 	}

@@ -59,7 +59,7 @@ export class FriendElement extends HTMLLIElement {
 		const statusDiv = document.createElement("div");
 		statusDiv.className = "online-status";
 		avatarContainer.appendChild(avatar);
-		avatarContainer.appendChild(statusDiv);
+		this.avatarCnt = avatarContainer;
 		this.appendChild(avatarContainer);
 		this.status = statusDiv;
 		return avatar;
@@ -128,7 +128,6 @@ export class FriendElement extends HTMLLIElement {
 		};
 		this.avatar.src = this._data.data.avatar;
 		this.username.textContent = this._data.data.username;
-		if (this._data.data.status === "OFF") this.classList.add("offline");
 		if (this._data.type === "all") {
 			this._clickListener1 = addFriendEventHandler;
 			this._clickListener2 = blockEventHandler;
@@ -139,6 +138,9 @@ export class FriendElement extends HTMLLIElement {
 			//event handlers
 			this._clickListener1 = unfriendEventHandler;
 			this._clickListener2 = blockEventHandler;
+			// add status to friends to see there online status
+			if (this._data.data.status === "OFF") this.classList.add("offline");
+			this.avatarCnt.appendChild(this.status);
 		} else if (this._data.type === "requests") {
 			this.firstButton.className = "icon-button accept-friend";
 			this.firstButtonIcon.className = "bi bi-person-check-fill";
