@@ -214,6 +214,7 @@ services:
         volumes:
             - ./backend/ws_chat:/app
         depends_on:
+            - postgres_db
             - auth
         restart: always
 volumes:

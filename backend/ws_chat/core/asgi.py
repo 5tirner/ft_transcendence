@@ -23,7 +23,7 @@ from ws_chat.routing import websocket_urlpatterns
 
 application = ProtocolTypeRouter(
     {
-        # "http": get_asgi_application(),
+        "http": get_asgi_application(),
         "websocket": AllowedHostsOriginValidator(
             JwtAuthenticationMiddleWare(URLRouter(websocket_urlpatterns))
         ),

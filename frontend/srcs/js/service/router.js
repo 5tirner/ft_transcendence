@@ -1,22 +1,23 @@
 import { auth } from "../auth/Authentication.js";
 
-export const router = {
+export const router =
+{
 	goto: (path, push = true) =>
 	{
-    router.routes(path, push);
-    window.scrollTo(0, 0);
+		router.routes(path, push);
+		window.scrollTo(0, 0);
 	},
 
-	redirecto: async (path) => {
+	redirecto: async (path) =>
+	{
 		const userIsLogged = await auth.isAuth();
 		if (userIsLogged)
 		{
-      let pathname = window.location.pathname;
-      if (pathname === '/')
-        pathname = '/platform';
-      window.component.root.innerHtml = '';
-      window.component.root.appendChild(window.component.main);
-      router.goto(pathname);
+			let pathname = window.location.pathname;
+			if (pathname === "/") pathname = "/platform";
+			window.component.root.innerHtml = "";
+			window.component.root.appendChild(window.component.main);
+			router.goto(pathname);
 		}
 		else
 		{
@@ -30,31 +31,37 @@ export const router = {
       }
 		}
 	},
-	
+
 	routes: (currentLocation, push) =>
-   {
- 		switch (currentLocation)
- 		{
-			case '/platform':
-			case '/profile':
-			case '/setting':
-			case '/history':
-			case '/friend':
-			case '/game':
+	{
+		switch (currentLocation)
+		{
+			case "/platform":
+			case "/profile":
+			case "/setting":
+			case "/history":
+			case "/friend":
+			case "/game":
 			{
-        if (currentLocation === '/game')
-          currentLocation = '/platform';
-        
-        //check if the component already exist -> working now but needs more testing
-        const component = window.component.midl.querySelector(`${currentLocation.substring(1)}-view`);
-        if (component)
-          return;
-        if (push)
-          history.pushState(null, null, location.origin + currentLocation);
-        const elem = document.createElement(`${currentLocation.substring(1)}-view`);
-        window.component.midl.innerHTML = "";
-        window.component.midl.appendChild(elem);
-        return;
+				if (currentLocation === "/game") currentLocation = "/platform";
+
+				//check if the component already exist -> working now but needs more testing
+				const component = window.component.midl.querySelector(
+					`${currentLocation.substring(1)}-view`
+				);
+				if (component) return;
+				if (push)
+					history.pushState(
+						null,
+						null,
+						location.origin + currentLocation
+					);
+				const elem = document.createElement(
+					`${currentLocation.substring(1)}-view`
+				);
+				window.component.midl.innerHTML = "";
+				window.component.midl.appendChild(elem);
+				return;
 			}
 			default:
         router.pageNotFound();
@@ -94,5 +101,3 @@ export const router = {
     window.component.root.appendChild(div);
 	}
 };
-
-
