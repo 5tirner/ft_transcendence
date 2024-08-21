@@ -1,42 +1,50 @@
 import { auth } from "../auth/Authentication.js";
 
-export const router = {
-	goto: (path, push = true) => {
+export const router =
+{
+	goto: (path, push = true) =>
+	{
 		router.routes(path, push);
 		window.scrollTo(0, 0);
 	},
 
-	redirecto: async (path) => {
+	redirecto: async (path) =>
+	{
 		const userIsLogged = await auth.isAuth();
-		if (userIsLogged) {
+		if (userIsLogged)
+		{
 			let pathname = window.location.pathname;
 			if (pathname === "/") pathname = "/platform";
 			window.component.root.innerHtml = "";
 			window.component.root.appendChild(window.component.main);
 			router.goto(pathname);
-		} else {
+		}
+		else
+		{
 			if (path === "/") path = "/home";
-			if (path !== "/home" && path !== "/login") {
-				// 404
-				const div = document.createElement("div");
-				div.innerHTML = "404 PAGE NOT FOUND";
-				window.component.root.innerHtml = "";
-				window.component.root.appendChild(div);
-			} else {
+			if (path !== "/home" && path !== "/login")
+			{
+				pageNotFound();
+			}
+			else
+			{
 				window.component.root.innerHtml = "";
 				window.component.root.appendChild(window.component.home);
 			}
 		}
 	},
 
-	routes: (currentLocation, push) => {
-		switch (currentLocation) {
+	routes: (currentLocation, push) =>
+	{
+		switch (currentLocation)
+		{
 			case "/platform":
 			case "/profile":
 			case "/setting":
 			case "/history":
 			case "/friend":
-			case "/game": {
+			case "/game":
+			{
 				if (currentLocation === "/game") currentLocation = "/platform";
 
 				//check if the component already exist -> working now but needs more testing
@@ -58,7 +66,7 @@ export const router = {
 				return;
 			}
 			default:
-				console.log("NoT Found 404");
+				pageNotFound();
 		}
 	},
 
@@ -79,5 +87,12 @@ export const router = {
 				return;
 			}
 		}
+	},
+
+	pageNotFound: () =>
+	{
+		const div = Object.assign(document.createElement('div'), {className: 'page-not-found'});
+		window.component.root.innerHTML = '';
+		window.component.root.appendChild(div);
 	}
 };
