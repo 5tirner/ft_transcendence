@@ -44,10 +44,7 @@ export function init_socket() {
 		}
 	};
 	chatSocket.onclose = function (e) {
-		// console.log("the socket is clooooosed");
-		// console.error("chat socket closed: ", e);
 		if (!e.wasClean) {
-			// console.log("not clean closing ");
 			init_socket();
 		}
 	};

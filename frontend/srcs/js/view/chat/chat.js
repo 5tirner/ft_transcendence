@@ -3,10 +3,6 @@ import { ConvElement } from "./convComponent.js";
 import { fillFriensList, handlAddChatRoom } from "./friendsList.js";
 import { init_socket } from "./socketConnection.js";
 
-export async function render_chat() {
-	init_socket();
-}
-
 export default class ChatComponent extends HTMLElement {
 	constructor() {
 		super();
@@ -42,6 +38,7 @@ export default class ChatComponent extends HTMLElement {
 		`;
 		this.list_group = this.querySelector("ul");
 		this.loadConversations();
+		init_socket();
 
 		const addChatRoom = this.querySelector(".add-message-icon");
 		if (addChatRoom)
@@ -49,7 +46,9 @@ export default class ChatComponent extends HTMLElement {
 	}
 
 	async loadConversations() {
+		console.log("update room");
 		let response = await API.getConversatons();
+		this.list_group.innerHTML = "";
 		if (response.ok) {
 			response = await response.json();
 			response.forEach((chatConv) => {
@@ -61,4 +60,3 @@ export default class ChatComponent extends HTMLElement {
 	}
 }
 customElements.define("chat-view", ChatComponent);
-
