@@ -15,8 +15,8 @@ RUN pip install -r requirements.txt
 
 COPY ./gaming /code/
 
-COPY ./script.sh /bin
+# COPY ./script.sh /bin
 
-RUN chmod +x /bin/script.sh
+# RUN chmod +x /bin/script.sh
 
-CMD [ "script.sh" ]
+# CMD [ "script.sh" ]
