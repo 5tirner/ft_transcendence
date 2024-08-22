@@ -175,30 +175,29 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 # MEDIA_URL is the URL that handles the media served from MEDIA_ROOT
 MEDIA_URL = "/media/"
 
-PUBLIC_PLAYER_URL = "http://localhost:8000/static/media/zakaria.jpg"
+HOST = os.getenv("HOST")
+PORT = os.getenv("PORT")
+TRANSCE_HOST = f"https://{HOST}"
+PUBLIC_PLAYER_URL = f"{TRANSCE_HOST}/static/media/zakaria.jpg"
 
 
 # 42/Google authentication variables
 
 FORTYTWO_CLIENT_ID = (
-    "u-s4t2ud-89a1bfaa6c231cf611987c1beb3ebd9e1a4a6d34f94c68d02913fcb941486235"
+    "u-s4t2ud-b1c2bdb2771df0818d7d0dc87844315b1d77080e0a0050846fe685bca7cdbbb0"
 )
 FORTYTWO_CLIENT_SECRET = (
-    "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"
+    "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"
 )
 # FORTYTWO_REDIRECT_URI = 'https://api.intra.42.fr/oauth/authorize'
-FORTYTWO_REDIRECT_URI = "http://127.0.0.1:8000/api/oauth/callback/"
+FORTYTWO_REDIRECT_URI = f"{TRANSCE_HOST}/api/oauth/callback/"
 
 
 GOOGLE_CLIENT_ID = (
     "1006058625597-bhtls9amhrpcuu5ltdungv65kehm56ch.apps.googleusercontent.com"
 )
 GOOGLE_CLIENT_SECRET = "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"
-GOOGLE_REDIRECT_URI = "http://127.0.0.1:8000/api/google/callback/"
-
-HOST = os.getenv("HOST")
-PORT = os.getenv("PORT")
-TRANSCE_HOST = f"{HOST}:{PORT}/api"
+GOOGLE_REDIRECT_URI = f"{TRANSCE_HOST}/api/google/callback/"
 
 
 # For temporary Users Creation

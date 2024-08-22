@@ -1,6 +1,6 @@
 const API = {
-	authEndpoint: "http://127.0.0.1:8000/api/",
-	chatEndpoint: "http://127.0.0.1:8000/api/chat/",
+	authEndpoint: "https://127.0.0.1/api/",
+	chatEndpoint: "https://127.0.0.1/api/chat/",
 	friendshipEndpoint: "http://127.0.0.1:8000/api/friendship/",
 	tttStatEndpoint: "http://127.0.0.1:8000/TicTacToe/myProfile/",
 	tttHistoEndpoint: "http://127.0.0.1:8000/TicTacToe/History",
@@ -168,23 +168,21 @@ const API = {
 		}
 		return null;
 	},
-	
-	updateUserName: async (username) =>
-	{
-    return API.makePostRequest( API.authEndpoint, { player: {username} })
+
+	updateUserName: async (username) => {
+		return API.makePostRequest(API.authEndpoint, { player: { username } });
 	},
-	
-	uploadAvatar: async (image) => 
-	{
-	  const formData = new FormData();
-		formData.append('avatar', image)
-      console.log("Format Data: ", formData);
+
+	uploadAvatar: async (image) => {
+		const formData = new FormData();
+		formData.append("avatar", image);
+		console.log("Format Data: ", formData);
 		const opts = {
-		   method: 'post',
+			method: "post",
 			body: formData
-		}
-      const response = await fetch(API.authEndpoint, opts);
-      console.log(response);
+		};
+		const response = await fetch(API.authEndpoint, opts);
+		console.log(response);
 	}
 };
 

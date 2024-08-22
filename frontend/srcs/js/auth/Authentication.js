@@ -9,7 +9,7 @@ export const auth = {
 		await API.logout();
 	},
 	loginIntra: () => {
-		window.location.href = "http://127.0.0.1:8000/api/oauth/intra/";
+		window.location.href = "https://127.0.0.1/api/oauth/intra/";
 	},
 	loginGoogle: () => {
 		window.location.href = "http://127.0.0.1:8000/api/google/";
