@@ -4,8 +4,10 @@ import { friendUpdate } from "../friendsUpdate.js";
 import { findUserInList } from "./chatList.js";
 import { ConvElement } from "./convComponent.js";
 
+//NOTE: call here
 async function makeChatRoom(user) {
-	const userLi = findUserInList(user.username);
+	console.log("make chat room", user);
+	const userLi = findUserInList(user);
 	if (userLi) {
 		userLi.click();
 	} else {

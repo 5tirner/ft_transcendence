@@ -23,7 +23,7 @@ export function friendUpdate(user, event) {
 
 export function socketResponsHandler(data) {
 	console.log(data);
-	const { event, user } = data;
+	const { event } = data;
 	const allUsers = document.getElementById("all-users");
 	const friendsList = document.getElementById("friends-list");
 	const friendsRequests = document.getElementById("received-requests");

@@ -28,6 +28,7 @@ export function convHeader(userData, roomId) {
 	const usernameContainer = document.createElement("div");
 	usernameContainer.classList.add("username-conv");
 	usernameContainer.textContent = userData.username; // Assuming username is provided
+	usernameContainer.user_id = userData.id;
 	conversationHeader.appendChild(usernameContainer);
 
 	// Create the controller icon

@@ -9,7 +9,9 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         # Join channel group
         await self.channel_layer.group_add(self.GLOBAL_CHANEL, self.channel_name)
-        await self.channel_layer.group_add(self.scope["user"], self.channel_name)
+        await self.channel_layer.group_add(
+            str(self.scope["user_id"]), self.channel_name
+        )
 
         await self.update_player_status("ON", True)
         await self.accept()
@@ -17,7 +19,9 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def disconnect(self, close_code):
 
         await self.update_player_status("OFF", False)
-        await self.channel_layer.group_discard(self.scope["user"], self.channel_name)
+        await self.channel_layer.group_discard(
+            str(self.scope["user_id"]), self.channel_name
+        )
 
     async def update_player_status(self, status, online_status):
         async with httpx.AsyncClient() as client:
@@ -42,13 +46,14 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 message = content["message"]
                 user = content["user"]
                 room_id = content["room_id"]
+                user_id = content["user_id"]
 
                 # submit message to database
                 await self.submit_message(message, room_id)
                 # send message to the specified user channel
-                await self.send_message_to_user(user, message, False)
+                await self.send_message_to_user(user_id, message, False)
                 # send message to message sender
-                await self.send_message_to_user(user, message, True)
+                await self.send_message_to_user(user_id, message, True)
             elif type == "status":
                 pass
             elif type == "friendship":
@@ -59,33 +64,32 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
 
     async def send_friendship_update(self, content):
         print(content)
-        user = content["user"]
+        user = content["user_id"]
         event = content["event"]
-        user_id = content["user_id"]
         await self.channel_layer.group_send(
-            user,
+            str(user),
             {
                 "type": "friendship.update",
-                "user": self.scope["user"],
                 "event": event,
             },
         )
 
     async def friendship_update(self, event):
-        data = {"user": event["user"], "event": event["event"], "friendship_type": True}
+        data = {"event": event["event"], "friendship_type": True}
         await self.send_json(data)
 
-    async def send_message_to_user(self, user, message, is_user):
+    async def send_message_to_user(self, user_id, message, is_user):
         if not is_user:
-            channel = user
+            channel = str(user_id)
         else:
-            channel = self.scope["user"]
+            channel = str(self.scope["user_id"])
         await self.channel_layer.group_send(
             channel,
             {
                 "type": "chat.message",
                 "message": message,
                 "user": self.scope["user"],
+                "id": self.scope["user_id"],
                 "user_msg": is_user,
             },
         )
@@ -103,6 +107,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     # Receive message from room group
     async def chat_message(self, event):
         data = {
+            "id": event["id"],
             "message": event["message"],
             "user": event["user"],
             "sent": event["user_msg"],
