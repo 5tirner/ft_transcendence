@@ -79,6 +79,16 @@ def userInfos(req, login):
 #         return response.Response(status=status.HTTP_204_NO_CONTENT)
 #     return render(req, 'local.html')
 
+@api_view(['PUT'])
+def updateInfo(req, login):
+    authApiResponse = isAuthUser(req)
+    if authApiResponse is None:
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
+    theRightUser = pongGameInfo.objects.get(login=login)
+    
+    print(req.data)
+    return response.Response(status=status.HTTP_100_CONTINUE)
+
 @api_view(['GET'])
 def historic(req):
     print("-------------------------USER HESTORY----------------------------------")
