@@ -9,6 +9,7 @@ export const UNBLOCK = "unblock";
 export const UNFRND = "unfriend";
 export const ACC_REQ = "acc_f";
 export const ADD_ROOM = "add_room";
+export const GAME_INV = "game_inv";
 
 export class FriendElement extends HTMLLIElement {
 	constructor() {

@@ -5,7 +5,8 @@ import {
 	UNBLOCK,
 	UNFRND,
 	ACC_REQ,
-	ADD_ROOM
+	ADD_ROOM,
+	GAME_INV
 } from "./friendUI.js";
 
 export function friendUpdate(user, event) {
@@ -43,6 +44,8 @@ export function socketResponsHandler(data) {
 		friendsList.updateDOM();
 	} else if (event === ADD_ROOM && list_users) {
 		list_users.loadConversations();
+	} else if (event === GAME_INV) {
+		// got game inv
 	}
 }
 
