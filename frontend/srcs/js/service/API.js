@@ -1,12 +1,12 @@
 const API = {
 	authEndpoint: "https://127.0.0.1/api/",
 	chatEndpoint: "https://127.0.0.1/api/chat/",
-	friendshipEndpoint: "http://127.0.0.1:8000/api/friendship/",
-	tttStatEndpoint: "http://127.0.0.1:8000/TicTacToe/myProfile/",
-	tttHistoEndpoint: "http://127.0.0.1:8000/TicTacToe/History",
-	pongStatEndpoint: "http://127.0.0.1:8000/PongPong/myProfile",
-	pongHistoEndpoint: "http://127.0.0.1:8000/PongPong/History",
-	playersEndpoint: "http://127.0.0.1:8000/api/players/",
+	friendshipEndpoint: "https://127.0.0.1/api/friendship/",
+	tttStatEndpoint: "https://127.0.0.1/TicTacToe/myProfile/",
+	tttHistoEndpoint: "https://127.0.0.1/TicTacToe/History",
+	pongStatEndpoint: "https://127.0.0.1/PongPong/myProfile",
+	pongHistoEndpoint: "https://127.0.0.1/PongPong/History",
+	playersEndpoint: "https://127.0.0.1/api/players/",
 
 	// ADD HERE ALL THE OTHER API FUNCTIONS
 	commonPostFunc: async (endPoint, userData) => {

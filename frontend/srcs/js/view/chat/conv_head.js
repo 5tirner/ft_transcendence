@@ -11,6 +11,7 @@ export function convHeader(userData, roomId) {
 		conv.style.display = "none";
 		document.querySelector(".messages").innerHTML = "";
 		document.querySelector(".username-conv").innerHTML = "";
+		document.querySelector(".username-conv").user_id = -1;
 	});
 	arrowIcon.classList.add("frame-icon");
 	arrowIcon.alt = "";

@@ -23,10 +23,8 @@ export function init_socket() {
 		const msgdata = {};
 		const mesgsElem = document.querySelector(".messages");
 		const chatUser = document.querySelector(".username-conv");
-		console.log("socket ", data);
 		if (data.msg_type) {
 			if ((chatUser && data.id == chatUser.user_id) || data.sent) {
-				console.log("heeere1");
 				msgdata.content = data.message;
 				msgdata.timestamp = new Date().toJSON();
 				createMessageBuble(mesgsElem, msgdata, data.sent);
@@ -38,7 +36,6 @@ export function init_socket() {
 					.getAttribute("data-room-id");
 				API.markMessagesAsRead(roomid);
 			} else {
-				console.log("heeere2");
 				changeLastDisplayedMessage(data, data.user);
 				moveConvListTop(data.id);
 				updateNotif(data.id);

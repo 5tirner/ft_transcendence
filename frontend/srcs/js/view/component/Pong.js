@@ -1,38 +1,38 @@
 import { socket } from "./assets/socket.js";
 
-export default class Pong extends HTMLElement
-{
-	constructor()
-	{
+export default class Pong extends HTMLElement {
+	constructor() {
 		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
-	
-	connectedCallback()
-	{
+
+	connectedCallback() {
 		this.setAttribute("id", "pong-view");
 		this.render();
 		this.initializeGame();
 		this.setupWebSocket();
 	}
-	
-	disconnectedCallback()
-	{
-    console.log("Component was removed");
-  	document.removeEventListener("keyup", this.applyMove);
-    this.isGameStarted = false;
-    this.isFinsih = true;
-    socket.ws.removeEventListener("message", this.handleServerMessage);
-    socket.ws.onopen = null;
-    socket.ws.onclose = null;
-    socket.ws.onmessage = null;
-    cancelAnimationFrame(window);
+
+	disconnectedCallback() {
+		console.log("Component was removed");
+		document.removeEventListener("keyup", this.applyMove);
+		this.isGameStarted = false;
+		this.isFinsih = true;
+		socket.ws.removeEventListener("message", this.handleServerMessage);
+		socket.ws.onopen = null;
+		socket.ws.onclose = null;
+		socket.ws.onmessage = null;
+		cancelAnimationFrame(window);
 	}
-	
-	drawElements()
-	{
-		if (this.isGameStarted == true && this.isFinsih == false ) {
-			this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+	drawElements() {
+		if (this.isGameStarted == true && this.isFinsih == false) {
+			this.canvasContext.clearRect(
+				0,
+				0,
+				this.canvas.width,
+				this.canvas.height
+			);
 			this.ballMove();
 			this.canvasContext.beginPath();
 			this.canvasContext.arc(this.xBallPos, this.yBallPos, 10, 0, 6.2);
@@ -62,8 +62,7 @@ export default class Pong extends HTMLElement
 		}
 	}
 
-	render()
-	{
+	render() {
 		this.root.innerHTML = `
       <style>
           :host {
@@ -113,43 +112,39 @@ export default class Pong extends HTMLElement
       <div class="result"></div>
     `;
 	}
-	
-	initializeGame()
-	{
-    	console.log("Game Initialized");
-    	this.canvas = this.root.querySelector("#board");
-    	this.canvasContext = this.canvas.getContext("2d");
-  		this.domElm1 = this.root.querySelector("#p1");
-    	this.domElm2 = this.root.querySelector("#p2");
-    	this.isGameStarted = false;
-    	this.isFinsih = false;
-    	this.xBallPos = 280;
-    	this.yBallPos = 150;
-    	this.BallDirection = "LEFT";
-    	this.paddl1Y = 125;
-    	this.paddl2Y = 125;
-    	this.BallRoute = "LINE";
-    this.result = this.root.querySelector('.result');
+
+	initializeGame() {
+		console.log("Game Initialized");
+		this.canvas = this.root.querySelector("#board");
+		this.canvasContext = this.canvas.getContext("2d");
+		this.domElm1 = this.root.querySelector("#p1");
+		this.domElm2 = this.root.querySelector("#p2");
+		this.isGameStarted = false;
+		this.isFinsih = false;
+		this.xBallPos = 280;
+		this.yBallPos = 150;
+		this.BallDirection = "LEFT";
+		this.paddl1Y = 125;
+		this.paddl2Y = 125;
+		this.BallRoute = "LINE";
+		this.result = this.root.querySelector(".result");
 	}
-	
-	setupWebSocket()
-	{
-		socket.ws = new WebSocket("ws://" + location.host + "/PongGameWs/");
+
+	setupWebSocket() {
+		socket.ws = new WebSocket("wss://" + location.host + "/PongGameWs/");
 		socket.ws.onclose = () => {
 			this.isFinsih = true;
 			this.isGameStarted = false;
-      cancelAnimationFrame(window);
+			cancelAnimationFrame(window);
 			console.log("Disconnected from Game Server");
 		};
 		socket.ws.onopen = () => console.log("Connected to Game Server");
 		socket.ws.onmessage = (e) => this.handleServerMessage(e);
-		
 
 		document.addEventListener("keyup", (e) => this.applyMove(e));
 	}
-	
-	ballMove()
-	{
+
+	ballMove() {
 		if (this.xBallPos < 20 || this.xBallPos > 580) {
 			this.isFinsih = true;
 			this.isGameStarted = false;
@@ -171,9 +166,8 @@ export default class Pong extends HTMLElement
 			socket.ws.send(JSON.stringify(ToServer));
 		}
 	}
-	
-	applyMove(e)
-	{
+
+	applyMove(e) {
 		if (this.isGameStarted == true && this.isFinsih == false) {
 			if (e.key == "ArrowUp" || e.key == "ArrowDown") {
 				const ToServer = {
@@ -187,59 +181,52 @@ export default class Pong extends HTMLElement
 					BallDir: this.BallDirection,
 					BallRoute: this.BallRoute
 				};
-				if (e.key == "ArrowUp")
-				  ToServer.move = "UP";
-				else 
-				  ToServer.move = "DOWN";
+				if (e.key == "ArrowUp") ToServer.move = "UP";
+				else ToServer.move = "DOWN";
 				socket.ws.send(JSON.stringify(ToServer));
 			}
 		}
 	}
-	
-	handleServerMessage(e)
-	{
-    const dataPars = JSON.parse(e.data);
-  	if (this.isGameStarted == false && this.isFinsih == false) {
-  		if (dataPars.player2.length == 0) {
-  			console.log("Player1: " + dataPars.player1);
-  			console.log("Player2: " + dataPars.player2);
-  			console.log("RoomId: " + dataPars.roomid);
-  			this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-  			this.domElm2.innerHTML = "PLAYER2: Wait...";
-  		} else if (dataPars.player2.length != 0) {
-  			this.isGameStarted = true;
-  			console.log("Player1: " + dataPars.player1);
-  			console.log("Player2: " + dataPars.player2);
-  			console.log("RoomId: " + dataPars.roomid);
-  			this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-  			this.domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-  			requestAnimationFrame(this.drawElements.bind(this));
-  		}
-  	}
-    else if (dataPars.MoveFor == 'end')
-    {
-      this.isFinsih == true;
-      console.log("Game ended: ", dataPars);
-      const resultComp = document.createElement("result-msg");
+
+	handleServerMessage(e) {
+		const dataPars = JSON.parse(e.data);
+		if (this.isGameStarted == false && this.isFinsih == false) {
+			if (dataPars.player2.length == 0) {
+				console.log("Player1: " + dataPars.player1);
+				console.log("Player2: " + dataPars.player2);
+				console.log("RoomId: " + dataPars.roomid);
+				this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+				this.domElm2.innerHTML = "PLAYER2: Wait...";
+			} else if (dataPars.player2.length != 0) {
+				this.isGameStarted = true;
+				console.log("Player1: " + dataPars.player1);
+				console.log("Player2: " + dataPars.player2);
+				console.log("RoomId: " + dataPars.roomid);
+				this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+				this.domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+				requestAnimationFrame(this.drawElements.bind(this));
+			}
+		} else if (dataPars.MoveFor == "end") {
+			this.isFinsih == true;
+			console.log("Game ended: ", dataPars);
+			const resultComp = document.createElement("result-msg");
 			resultComp.setAttribute("game", "pong");
-      resultComp.setAttribute('data', e.data);
+			resultComp.setAttribute("data", e.data);
 			this.result.appendChild(resultComp);
-    }
-    else if (this.isGameStarted == true && this.isFinsih == false) {
-      if (dataPars.MoveFor == "PADDLES MOVE")
-      {
-  			if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
-  				this.paddl1Y = dataPars.paddle1;
-  			if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
-  				this.paddl2Y = dataPars.paddle2;
-  		}
-      else
-      {
-  			(this.xBallPos = dataPars.Ballx), (this.yBallPos = dataPars.Bally);
-  			this.BallDirection = dataPars.BallDir;
-  			this.BallRoute = dataPars.BallRoute;
-  		}
-  	}
+		} else if (this.isGameStarted == true && this.isFinsih == false) {
+			if (dataPars.MoveFor == "PADDLES MOVE") {
+				if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
+					this.paddl1Y = dataPars.paddle1;
+				if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
+					this.paddl2Y = dataPars.paddle2;
+			} else {
+				(this.xBallPos = dataPars.Ballx),
+					(this.yBallPos = dataPars.Bally);
+				this.BallDirection = dataPars.BallDir;
+				this.BallRoute = dataPars.BallRoute;
+			}
+		}
 	}
 }
 customElements.define("pong-game", Pong);
+

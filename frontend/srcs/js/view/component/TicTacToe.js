@@ -1,32 +1,27 @@
 import { socket } from "./assets/socket.js";
 import { aborting } from "./assets/abort.js";
 
-export default class TicTacToe extends HTMLElement
-{
-	constructor()
-	{
+export default class TicTacToe extends HTMLElement {
+	constructor() {
 		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
-	
-	connectedCallback()
-	{
+
+	connectedCallback() {
 		this.setAttribute("id", "ttt-view");
 		this.render();
 		this.initializeGame();
 		this.setupWebSocket();
 	}
-	
-	disconnectedCallback()
-	{
+
+	disconnectedCallback() {
 		this.square.forEach((elem) => {
 			elem.removeEventListener("click", this.sendDataToServer);
 		});
 	}
-	
-	render()
-	{
-    this.root.innerHTML += `
+
+	render() {
+		this.root.innerHTML += `
       <style>
         :host {
           display: block;
@@ -106,114 +101,102 @@ export default class TicTacToe extends HTMLElement
       <div class="result"></div>
     `;
 	}
-	
-	initializeGame()
-	{
-    this.domElm1 = this.root.getElementById("p1");
-  	this.domElm2 = this.root.getElementById("p2");
-  	this.square = this.root.querySelectorAll(".square");
-  	this.result = this.root.querySelector(".result");
-   
-    this.board = ".........";
-    this.isGameStarted = false;
-   
-    this.square.forEach((elem) => {
+
+	initializeGame() {
+		this.domElm1 = this.root.getElementById("p1");
+		this.domElm2 = this.root.getElementById("p2");
+		this.square = this.root.querySelectorAll(".square");
+		this.result = this.root.querySelector(".result");
+
+		this.board = ".........";
+		this.isGameStarted = false;
+
+		this.square.forEach((elem) => {
 			elem.addEventListener("click", (e) => {
 				e.preventDefault();
 				this.sendDataToServer(e.target.getAttribute("data"));
 			});
 		});
 	}
-	
-	setupWebSocket()
-	{
-	  socket.ws = new WebSocket("ws://" + location.host + "/GameWS/");
+
+	setupWebSocket() {
+		socket.ws = new WebSocket("wss://" + location.host + "/GameWS/");
 
 		socket.ws.onopen = () => {
 			console.log("User Joined The Game");
 		};
-		
-    socket.ws.onmessage = (e) => { this.handleServerMessage(e) };
-    
-    socket.ws.onclose = () =>
-    {
+
+		socket.ws.onmessage = (e) => {
+			this.handleServerMessage(e);
+		};
+
+		socket.ws.onclose = () => {
 			console.log("Socket closed BYE BYE");
 		};
-    
-    window.onbeforeunload = () => {
+
+		window.onbeforeunload = () => {
 			aborting(socket.ws, "ttt");
 		};
 	}
-	
-	handleServerMessage(e)
-	{
-  	const dataPars = JSON.parse(e.data);
-  	if (this.isGameStarted == false) {
-  		if (dataPars.player2.length == 0) {
-  			console.log("Player1: " + dataPars.player1);
-  			console.log("Player2: " + dataPars.player2)
-  			console.log("RoomId: " + dataPars.roomid)
-  
-  			this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-  			this.domElm2.innerHTML = "PLAYER2: Wait...";
-  		} else if (dataPars.player2.length != 0) {
-  			this.isGameStarted = true;
-  			this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
-  			this.domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-  		}
-  	}
-    else
-    {
-      if (dataPars.etat === "end")
-      {
-        console.log("Game ended: ", dataPars);
-        const resultComp = document.createElement("result-msg");
-  			resultComp.setAttribute("game", "ttt");
-        resultComp.setAttribute('data', e.data);
-  			this.result.appendChild(resultComp);
-      }
-  		else if (dataPars.etat == "PLAYING")
-      {
-  			this.board = dataPars.board;
-  			const position = dataPars.position;
-  			const domElem = this.root.querySelector( `#square${position}` );
-  			if (dataPars.x_o == "X")
-        {
-  				domElem.innerHTML = "X";
-  				domElem.classList.add("squareX");
-  			}
-        else if (dataPars.x_o == "O")
-        {
-  				domElem.innerHTML = "O";
-  				domElem.classList.add("squareO");
-  			}
-  			// // console.log("Index", board.indexOf("."),  "->" , board[board.indexOf(".")]);
-  			if (this.isGameEnd(dataPars.x_o, this.board) == true)
-       {
-  				// console.log("Setting The Result Of This Game On Data Base");
-  				const toServer = {
-  					gameStatus: "winner",
-  					position: -1,
-  					board: this.board,
-  					winner: dataPars.user,
-  					loser: dataPars.oppenent
-  				};
-  				socket.ws.send(JSON.stringify(toServer));
-  			} else if (this.board.indexOf(".") == -1) {
-  				// console.log("Setting The Result Of This Game On Data Base");
-  				const toServer = {
-  					gameStatus: "draw",
-  					position: -1,
-  					board: this.board
-  				};
-  				socket.ws.send(JSON.stringify(toServer));
-  			}
-  		}
-  	}
+
+	handleServerMessage(e) {
+		const dataPars = JSON.parse(e.data);
+		if (this.isGameStarted == false) {
+			if (dataPars.player2.length == 0) {
+				console.log("Player1: " + dataPars.player1);
+				console.log("Player2: " + dataPars.player2);
+				console.log("RoomId: " + dataPars.roomid);
+
+				this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+				this.domElm2.innerHTML = "PLAYER2: Wait...";
+			} else if (dataPars.player2.length != 0) {
+				this.isGameStarted = true;
+				this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
+				this.domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
+			}
+		} else {
+			if (dataPars.etat === "end") {
+				console.log("Game ended: ", dataPars);
+				const resultComp = document.createElement("result-msg");
+				resultComp.setAttribute("game", "ttt");
+				resultComp.setAttribute("data", e.data);
+				this.result.appendChild(resultComp);
+			} else if (dataPars.etat == "PLAYING") {
+				this.board = dataPars.board;
+				const position = dataPars.position;
+				const domElem = this.root.querySelector(`#square${position}`);
+				if (dataPars.x_o == "X") {
+					domElem.innerHTML = "X";
+					domElem.classList.add("squareX");
+				} else if (dataPars.x_o == "O") {
+					domElem.innerHTML = "O";
+					domElem.classList.add("squareO");
+				}
+				// // console.log("Index", board.indexOf("."),  "->" , board[board.indexOf(".")]);
+				if (this.isGameEnd(dataPars.x_o, this.board) == true) {
+					// console.log("Setting The Result Of This Game On Data Base");
+					const toServer = {
+						gameStatus: "winner",
+						position: -1,
+						board: this.board,
+						winner: dataPars.user,
+						loser: dataPars.oppenent
+					};
+					socket.ws.send(JSON.stringify(toServer));
+				} else if (this.board.indexOf(".") == -1) {
+					// console.log("Setting The Result Of This Game On Data Base");
+					const toServer = {
+						gameStatus: "draw",
+						position: -1,
+						board: this.board
+					};
+					socket.ws.send(JSON.stringify(toServer));
+				}
+			}
+		}
 	}
-	
-	isGameEnd(x_o, board)
-	{
+
+	isGameEnd(x_o, board) {
 		if (
 			(board[0] == x_o && board[1] == x_o && board[2] == x_o) ||
 			(board[3] == x_o && board[4] == x_o && board[5] == x_o) ||
@@ -227,11 +210,9 @@ export default class TicTacToe extends HTMLElement
 			return true;
 		return false;
 	}
-	
-	sendDataToServer(squareNbr)
-	{
-		if (this.isGameStarted == true)
-		{
+
+	sendDataToServer(squareNbr) {
+		if (this.isGameStarted == true) {
 			const position = Number(squareNbr);
 			if (this.board[position] != ".")
 				console.log(
@@ -246,8 +227,8 @@ export default class TicTacToe extends HTMLElement
 				};
 				socket.ws.send(JSON.stringify(toServer));
 			}
-		}
-		else console.log("Game Not Start Yet");
+		} else console.log("Game Not Start Yet");
 	}
 }
 customElements.define("ttt-game", TicTacToe);
+

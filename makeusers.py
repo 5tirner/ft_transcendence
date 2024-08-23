@@ -1,9 +1,12 @@
 import requests
+import urllib3
 
-authAPI = "http://127.0.0.1:8000/api/signups/"
-loginAPI = "http://127.0.0.1:8000/api/logins/"
-creatChatroomAPI = "http://127.0.0.1:8000/api/chat/create/"
-friendshipAPI = "http://127.0.0.1:8000/api/friendship/"
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+authAPI = "https://127.0.0.1/api/signups/"
+loginAPI = "https://127.0.0.1/api/logins/"
+creatChatroomAPI = "https://127.0.0.1/api/chat/create/"
+friendshipAPI = "https://127.0.0.1/api/friendship/"
 
 USER_NUMBER = 5
 
@@ -18,17 +21,17 @@ def create_users():
     for i in range(USER_NUMBER):
         data["email"] = f"user{i}@user.com"
         data["username"] = f"user{i}"
-        res = requests.post(authAPI, data=data)
+        res = requests.post(authAPI, data=data, verify=False)
     #     print(f"user{i} respons ==>", res.json(), res.status_code)
     # print(2 * "\t", "=======================================================", 2 * "\n")
 
 
 def get_auth_cookie(user):
     login_data = {"username": user, "password": "1234"}
-    res = requests.post(loginAPI, data=login_data)
+    res = requests.post(loginAPI, data=login_data, verify=False)
     jwt_token = res.cookies["jwt_token"]
     cooki = {"jwt_token": jwt_token}
-    print("====> \n", jwt_token)
+    print(f"====> {user} \n\033[32m", jwt_token, "\033[0m")
     return cooki
 
 
@@ -60,7 +63,9 @@ def create_friendship():
         cookie = get_auth_cookie(user_mail)
         for i in range(USER_NUMBER):
             friend["id_target"] = i + 1
-            res = requests.post(friendshipAPI, data=friend, cookies=cookie)
+            res = requests.post(
+                friendshipAPI, data=friend, cookies=cookie, verify=False
+            )
             # print(f"user{i} respons ==>", res.json(), res.status_code)
 
     cookie = {
@@ -68,7 +73,7 @@ def create_friendship():
     }
     for i in range(USER_NUMBER):
         friend["id_target"] = i + 1
-        res = requests.post(friendshipAPI, data=friend, cookies=cookie)
+        res = requests.post(friendshipAPI, data=friend, cookies=cookie, verify=False)
     # print(2 * "\t", "=======================================================")
 
 
