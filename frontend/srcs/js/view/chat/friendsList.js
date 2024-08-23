@@ -7,13 +7,13 @@ import { ConvElement } from "./convComponent.js";
 //NOTE: call here
 async function makeChatRoom(user) {
 	console.log("make chat room", user);
-	const userLi = findUserInList(user);
+	const userLi = findUserInList(user.id);
 	if (userLi) {
 		userLi.click();
 	} else {
 		const ulElement = document.querySelector(".list-group");
 
-		let respone = await API.createChatRoom(user.username);
+		let respone = await API.createChatRoom(user.id);
 		if (respone.ok) {
 			friendUpdate(user, ADD_ROOM);
 			respone = await respone.json();

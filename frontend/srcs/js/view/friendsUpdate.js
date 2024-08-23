@@ -34,8 +34,10 @@ export function socketResponsHandler(data) {
 		friendsRequests.updateDOM();
 	} else if ((event === BLK_USER || event === UNBLOCK) && allUsers) {
 		allUsers.updateDOM();
+		if (event === BLK_USER && list_users) list_users.loadConversations();
 	} else if ((event === BLK_FRND || event === ACC_REQ) && friendsList) {
 		friendsList.updateDOM();
+		if (event === BLK_FRND && list_users) list_users.loadConversations();
 	} else if (event === UNFRND && allUsers && friendsList) {
 		allUsers.updateDOM();
 		friendsList.updateDOM();

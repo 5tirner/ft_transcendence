@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 from .models import ChatRoom, Message
-from restuserm.models import Player
+from restuserm.models import Friendships, Player
 from django.db.models import Q
 
 
@@ -51,25 +51,33 @@ class MessageSerializer(serializers.ModelSerializer):
 
 
 class ChatRoomSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(write_only=True)
+    user_id = serializers.IntegerField(write_only=True)
     user = serializers.SerializerMethodField()
     last_message = serializers.SerializerMethodField()
 
     class Meta:
         model = ChatRoom
-        fields = ["id", "name", "user", "last_message", "username"]
+        fields = ["id", "name", "user", "last_message", "user_id"]
         read_only_fields = ["id", "name", "user", "last_message"]
 
     def create(self, validated_data):
         user_a = self.context["request"].user
-        username = validated_data.pop("username")
+        user_b_id = validated_data.pop("user_id")
         try:
-            user_b = Player.objects.get(username=username)
+            user_b = Player.objects.get(id=user_b_id)
         except Player.DoesNotExist:
-            raise serializers.ValidationError("User B does not exist")
+            raise serializers.ValidationError("User does not exist")
 
         if user_a == user_b:
             raise serializers.ValidationError("Can't create a room with yourself")
+
+        blocking_relationship = Friendships.objects.filter(
+            (Q(sender=user_a, receiver=user_b) | Q(sender=user_b, receiver=user_a)),
+            status=Friendships.Status.BLOCKED.value,
+        ).exists()
+
+        if blocking_relationship:
+            raise serializers.ValidationError("User does not exist")
 
         # Check if a chat room already exists between the two users
         chat_room = ChatRoom.objects.filter(

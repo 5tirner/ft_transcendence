@@ -38,9 +38,9 @@ const API = {
 		return API.commonPostFunc(`${API.authEndpoint}signups/`, userData);
 	},
 
-	createChatRoom: (username) => {
+	createChatRoom: (user_id) => {
 		return API.commonPostFunc(`${API.chatEndpoint}create/`, {
-			username: username
+			user_id: user_id
 		});
 	},
 

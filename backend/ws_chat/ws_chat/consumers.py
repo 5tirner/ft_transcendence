@@ -3,6 +3,9 @@ from django.conf import settings
 import httpx
 
 
+dupUsers = {}
+
+
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     GLOBAL_CHANEL = "online"
 
@@ -13,12 +16,19 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             str(self.scope["user_id"]), self.channel_name
         )
 
+        if self.scope["user_id"] not in dupUsers:
+            dupUsers[self.scope["user_id"]] = 1
+        else:
+            dupUsers[self.scope["user_id"]] += 1
+
         await self.update_player_status("ON", True)
         await self.accept()
 
     async def disconnect(self, close_code):
 
-        await self.update_player_status("OFF", False)
+        dupUsers[self.scope["user_id"]] -= 1
+        if dupUsers[self.scope["user_id"]] == 0:
+            await self.update_player_status("OFF", False)
         await self.channel_layer.group_discard(
             str(self.scope["user_id"]), self.channel_name
         )
@@ -58,14 +68,18 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 pass
             elif type == "friendship":
                 await self.send_friendship_update(content)
-                # await self.send_friendship_update()
         except Exception as e:
             pass
 
     async def send_friendship_update(self, content):
-        print(content)
         user = content["user_id"]
         event = content["event"]
+        if event == "block_u" or event == "block_f":
+            async with httpx.AsyncClient() as client:
+                await client.delete(
+                    f"http://chat:8000/api/chat/delete/{user}/",
+                    cookies=self.scope["cookie"],
+                )
         await self.channel_layer.group_send(
             str(user),
             {
