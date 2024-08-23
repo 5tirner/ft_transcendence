@@ -9,6 +9,11 @@ import threading
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
+
+# class friends(AsyncJsonWebsocketConsumer):
+    # async def connect(self):
+        # 
+
 def saveData(self):
     addUserToDB = pongGameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
     addUserToDB.save()
