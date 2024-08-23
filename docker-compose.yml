@@ -101,7 +101,7 @@ services:
                 HOST: ${HOST}
         image: server:latest
         ports:
-            - "443:443"
+            - "8000:443"
         volumes:
             - ./frontend/srcs:/var/www
             - media_data:/var/www/media

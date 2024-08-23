@@ -8,10 +8,10 @@ export const auth = {
 		await API.logout();
 	},
 	loginIntra: () => {
-		window.location.href = "https://127.0.0.1/api/oauth/intra/";
+		window.location.href = "https://127.0.0.1:8000/api/oauth/intra/";
 	},
 	loginGoogle: () => {
-		window.location.href = "https://127.0.0.1/api/google/";
+		window.location.href = "https://127.0.0.1:8000/api/google/";
 	},
 	isAuth: async () => {
 		const response = await API.isLogedIn();
