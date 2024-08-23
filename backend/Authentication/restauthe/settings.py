@@ -177,7 +177,7 @@ MEDIA_URL = "/media/"
 
 HOST = os.getenv("HOST")
 PORT = os.getenv("PORT")
-TRANSCE_HOST = f"https://{HOST}"
+TRANSCE_HOST = f"https://{HOST}:{PORT}"
 PUBLIC_PLAYER_URL = f"{TRANSCE_HOST}/static/media/zakaria.jpg"
 
 
