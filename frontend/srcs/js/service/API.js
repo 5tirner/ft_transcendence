@@ -1,12 +1,12 @@
 const API = {
-	authEndpoint: "http://127.0.0.1:8000/api/",
-	chatEndpoint: "http://127.0.0.1:8000/api/chat/",
-	friendshipEndpoint: "http://127.0.0.1:8000/api/friendship/",
-	tttStatEndpoint: "http://127.0.0.1:8000/TicTacToe/myProfile/",
-	tttHistoEndpoint: "http://127.0.0.1:8000/TicTacToe/History",
-	pongStatEndpoint: "http://127.0.0.1:8000/PongPong/myProfile",
-	pongHistoEndpoint: "http://127.0.0.1:8000/PongPong/History",
-	playersEndpoint: "http://127.0.0.1:8000/api/players/",
+	authEndpoint: "https://127.0.0.1/api/",
+	chatEndpoint: "https://127.0.0.1/api/chat/",
+	friendshipEndpoint: "https://127.0.0.1/api/friendship/",
+	tttStatEndpoint: "https://127.0.0.1/TicTacToe/myProfile/",
+	tttHistoEndpoint: "https://127.0.0.1/TicTacToe/History",
+	pongStatEndpoint: "https://127.0.0.1/PongPong/myProfile",
+	pongHistoEndpoint: "https://127.0.0.1/PongPong/History",
+	playersEndpoint: "https://127.0.0.1/api/players/",
 
 	// ADD HERE ALL THE OTHER API FUNCTIONS
 	commonPostFunc: async (endPoint, userData) => {
@@ -38,9 +38,9 @@ const API = {
 		return API.commonPostFunc(`${API.authEndpoint}signups/`, userData);
 	},
 
-	createChatRoom: (username) => {
+	createChatRoom: (user_id) => {
 		return API.commonPostFunc(`${API.chatEndpoint}create/`, {
-			username: username
+			user_id: user_id
 		});
 	},
 
@@ -54,7 +54,7 @@ const API = {
 	},
 
 	getUser: () => {
-		return API.commonGetFunc(`${API.authEndpoint}userData/`);
+		return API.makeGetRequest(`${API.authEndpoint}`);
 	},
 
 	getFriends: () => {
@@ -168,17 +168,21 @@ const API = {
 		}
 		return null;
 	},
-	uploadAvatar: async (image) => 
-	{
-	   const formData = new FormData();
-		formData.append('avatar', image)
-      console.log("Format Data: ", formData);
+
+	updateUserName: async (username) => {
+		return API.makePostRequest(API.authEndpoint, { player: { username } });
+	},
+
+	uploadAvatar: async (image) => {
+		const formData = new FormData();
+		formData.append("avatar", image);
+		console.log("Format Data: ", formData);
 		const opts = {
-		   method: 'post',
+			method: "post",
 			body: formData
-		}
-      const response = await fetch(API.authEndpoint, opts);
-      console.log(response);
+		};
+		const response = await fetch(API.authEndpoint, opts);
+		console.log(response);
 	}
 };
 

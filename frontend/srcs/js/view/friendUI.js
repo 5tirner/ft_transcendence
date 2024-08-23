@@ -8,6 +8,7 @@ export const BLK_FRND = "block_f";
 export const UNBLOCK = "unblock";
 export const UNFRND = "unfriend";
 export const ACC_REQ = "acc_f";
+export const ADD_ROOM = "add_room";
 
 export class FriendElement extends HTMLLIElement {
 	constructor() {
@@ -103,6 +104,8 @@ export class FriendElement extends HTMLLIElement {
 			else if (this.parentNode.id === "friends")
 				friendUpdate(this._data.data, BLK_FRND);
 			this.remove();
+			const convs = document.querySelector("chat-view");
+			if (convs) convs.loadConversations();
 		};
 		const unfriendEventHandler = async () => {
 			const res = await API.removeFriend(this._data.data.id);
@@ -283,6 +286,7 @@ export default class FriendView extends HTMLElement {
 	}
 
 	connectedCallback() {
+		console.log("create friend view");
 		this.header = this.createHeader("Friends Management");
 		this.mainContent = this.createMainContent();
 		["all", "friends", "requests", "blocked"].forEach((type) => {
@@ -310,6 +314,8 @@ export default class FriendView extends HTMLElement {
 		this.mainContent.appendChild(card);
 	}
 
-	disconnectedCallback() {}
+	disconnectedCallback() {
+		console.log("deleted");
+	}
 }
 customElements.define("friend-view", FriendView);

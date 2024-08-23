@@ -9,8 +9,6 @@ export default class Setting extends HTMLElement
       this.setAttribute("id", "setting-view");		
       this.render();
       this.initialize();
-      this.changeProfileImage();
-      this.changeUserName();
 	}
 	
 	disconnectedCallback()
@@ -89,55 +87,8 @@ export default class Setting extends HTMLElement
           margin: 3px 0;
           font-size: 14px;
         }
-        .common
-        {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          z-index: 102;
-          justify-content: center;
-          text-align: center;
-          align-items: center;
-          backdrop-filter: blur(10px);
-          display: flex;
-        }
-        .updateUsername form, .uploadProfileImage form
-        {
-          width: 500px;
-          height: 350px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
-          gap: 1rem;
-        }
-       
-        .updateUsername form input
-        {
-          color: white;
-          border: 2px solid var(--light-olive);
-          border-radius: 10px;
-          padding: 15px 10px;
-          background: transparent;
-          width: 80%;
-          font-size: 10px;
-        }
-        .updateUsername form input::placeholder
-        {
-          color: var(--light-olive);
-          font-size: 10px;
-        }
-        .updateUsername form input:active {
-          outline: none;
-        }
         
-        .updateUsername form input:focus {
-          outline: none;
-        }
-        
-        .profile-card .section .edit-btn, .save-btn, #updateimage button
+        .profile-card .section .edit-btn
         {
           font-size: 10px;
           text-transform: uppercase;
@@ -152,161 +103,112 @@ export default class Setting extends HTMLElement
           transition: all 0.1s ease, background 0.3s ease;
           font-family: "Press Start 2P", sans-serif !important;
         }
-        .save-btn
-        {
-          background-color: var(--dark-teal) !important;
-          color: var(--light-olive) !important;
-        }
-        .edit-btn
-        {
-          height: 30px;
-          liene-height: 1rem;
-        }
-        
-        #updateimage
-        {
-         color: var(--light-olive);
-         display: flex;
-         flex-direction: column;
-         gap: 40px;
-         font-size: 12px;
-         border: 2px solid var(--light-olive);
-         border-radius: 20px;
-        }
-        
-        #updateimage input[type=file]::file-selector-button {
-          margin-right: 20px;
-          border: none;
-          background: var(--dark-teal);
-          padding: 10px 20px;
-          border-radius: 10px;
-          color: var(--light-olive);
-          cursor: pointer;
-          transition: background .2s ease-in-out;
-        }
-        
-        #updateimage input[type=file]::file-selector-button:hover {
-          background: var(--teal);
-        }
-        // #updateimage form button
-        // {
-        // color: var(--light-olive);
-        // display: flex;
-        // flex-direction: column;
-        // gap: 40px;
-        // font-size: 12px;
-        // border: 2px solid var(--light-olive);
-        // border-radius: 20px;
-        // }
-      </style>  
+      </style>
+      
       <div class="profile-card">
-			<div class="section">
-				<img
-					src="${auth.avatar || "https://i.imgur.com/8bXZb8e.png"}"
-					alt="Profile Picture"
-					id="profileImage"
-				/>
-				<input
-					type="file"
-					id="fileInput"
-					style="display: none"
-					accept="image/*"
-					onchange="changeProfileImage(event)"
-					class="bx bx-pencil"
-				/>
-				
-				<a class="edit-image"> <i class='bx bx-pencil'></i> </a>
-				
-				<h4 class="fullname">${auth.fullname}</h4>
-				<p username="username">${auth.user}</p>
-				<div class="info">
-					<div>
-						<p>Name</p>
-						<p class="fullname">${auth.fullname}</p>
-					</div>
-					<button class="edit-btn">Edit</button>
-				</div>
-			</div>
-			
-			<div class="uploadProfileImage common" hidden>
-            <form id="updateimage">
-          		<label for="file">File to upload</label>
-          		<input type="file" id="file" accept="image/*">
-          		<button type="submit">Upload</button>
-        	   </form>
-			</div>
-			
-			<div class="updateUsername common" hidden="">
-				<form id="updateusername">
-					<input
-						type="text"
-						name="fullname"
-						id="input-fullname"
-						placeholder="Edit your name.."
-						required
-					/>
-					<button type="submit" name="Save" class="save-btn">Save</button>
-				</form>
-			</div>
-		</div> 
+       	<div class="section">
+        		<img
+         			src="${auth.avatar || "https://i.imgur.com/8bXZb8e.png"}"
+         			alt="Profile Picture"
+         			id="profileImage"
+            />
+          		<input
+           			type="file"
+           			id="fileInput"
+           			style="display: none"
+           			accept="image/*"
+           			onchange="changeProfileImage(event)"
+           			class="bx bx-pencil"
+              />
+        		
+        		<a class="edit-image"> <i class='bx bx-pencil'></i> </a>
+        		
+        		<h4 class="fullname">${auth.fullname}</h4>
+        		<p  class="username" username="username">${auth.user}</p>
+        		<div class="info">
+       			<div>
+        				<p>Name</p>
+        				<p class="fullname">${auth.fullname}</p>
+       			</div>
+       			<button class="edit-btn">Edit</button>
+        		</div>
+       	</div>
+      </div> 
     `;
 	}
 	
 	initialize()
 	{
     this.editIamgeButton = this.querySelector(".edit-image");
-   	this.editUsernameButton = this.querySelector(".edit-btn");
+    this.editUsernameButton = this.querySelector(".edit-btn");
+    this.target = this.querySelector('.username');
 	
-    this.changeImageDiv = this.querySelector('.uploadProfileImage');
-    this.changeUsernameDiv = this.querySelector(".updateUsername");
+    this.editUsernameButton.addEventListener('click', () => 
+    {
+      const elem = document.createElement('update-user');
+      this.append(elem);
+    })
+      
+    // this.changeImageDiv = this.querySelector('.uploadProfileImage');
+    // this.changeUsernameDiv = this.querySelector(".updateUsername");
 	
-    this.uploadImageForm = this.querySelector('#updateimage');
-    this.uploadImageForm = this.querySelector('#updateusername');
+    // this.updateAvatar = this.querySelector('#avatarform');
+    // this.updateUsername = this.querySelector('#usernameform');
     
-    this.toggleDiv(this.editIamgeButton, this.changeImageDiv);
-    this.toggleDiv(this.editUsernameButton, this.changeUsernameDiv);
+    // this.toggleDiv(this.editIamgeButton, this.changeImageDiv);
+    // this.toggleDiv(this.editUsernameButton, this.changeUsernameDiv);
 	}
 	
-	changeProfileImage()
-	{
-      let form = this.querySelector('#updateimage');
-
-      form.addEventListener('submit', this.handleSubmit);
-	}
+	// changeProfileImage()
+	// {
+ //    uploadImageForm.addEventListener('submit', this.handleSubmit);
+	// }
 	
-	changeUserName()
-	{
-	 
-	}
+	// changeUserName()
+	// {
+ //    this.updateUsername.addEventListener('submit', async (e) => {
+ //      e.preventDefault();
+ //      const value = this.querySelector('#input-fullname').value;
+ //      const updateUserNameResponse = await API.updateUserName(value);
+ //      const updateUserNameJson = await updateUserNameResponse.json();
+ //      if (updateUserNameJson.status == 200)
+ //        console.log("user updated successfuly");
+ //      else
+ //        console.log("user updated failed successfuly");
+      // const getUserData = await API.getUser();
+      // const username = await getUserData.json();
+ //      // console.log("username: ", username.player.username);
+ //    });
+	// }
 	
-	toggleDiv(btn, div)
-	{
-      btn.addEventListener("click", (e) => {
-         div.removeAttribute('hidden');
-         div.addEventListener("click", (e) => {
-            if (e.target === div)
-               div.setAttribute('hidden', '');
-         });
-      });
-	}
+// 	toggleDiv(btn, div)
+// 	{
+//       btn.addEventListener("click", (e) => {
+//          div.removeAttribute('hidden');
+//          div.addEventListener("click", (e) => {
+//             if (e.target === div)
+//               div.setAttribute('hidden', '');
+//          });
+//       });
+// 	}
 	
-	handleSubmit (event)
-	{
-	   let file = this.querySelector('#file');
-		event.preventDefault();
-		if (!file.value.length) return;
+// 	handleSubmit (event)
+// 	{
+// 	  let file = this.querySelector('#file');
+// 		event.preventDefault();
+// 		if (!file.value.length) return;
 
-      API.uploadAvatar(file.files[0]);
-      console.log("API IMAGE: ", file.files[0]);
-		// let uri = URL.createObjectURL(file.files[0]);
-		// // let img = document.createElement('img');
-		// // img.src = uri;
-		// // app.append(img);
-		// console.log(uri);
+//       API.uploadAvatar(file.files[0]);
+//       console.log("API IMAGE: ", file.files[0]);
+// 		// let uri = URL.createObjectURL(file.files[0]);
+// 		// // let img = document.createElement('img');
+// 		// // img.src = uri;
+// 		// // app.append(img);
+// 		// console.log(uri);
 
-		// // reader.onload = logFile;
+// 		// // reader.onload = logFile;
 
-		// // reader.readAsDataURL(file.files[0]);
-}
+// 		// // reader.readAsDataURL(file.files[0]);
+// }
 }
 customElements.define("setting-view", Setting);

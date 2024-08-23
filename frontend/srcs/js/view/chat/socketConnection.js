@@ -3,8 +3,10 @@ import { socketResponsHandler, updateOnlineStatus } from "../friendsUpdate.js";
 import { findUserInList, formatListDate, updateNotif } from "./chatList.js";
 import { createMessageBuble } from "./messages_loader.js";
 
-function moveConvListTop(username) {
-	const li = findUserInList(username);
+//NOTE: call here
+
+function moveConvListTop(user_id) {
+	const li = findUserInList(user_id);
 	if (li) {
 		const ul = li.parentNode;
 		ul.prepend(li);
@@ -12,7 +14,7 @@ function moveConvListTop(username) {
 }
 
 export function init_socket() {
-	const chatSocket = new WebSocket("ws://127.0.0.1:8000/ws/chat/");
+	const chatSocket = new WebSocket("wss://127.0.0.1/ws/chat/");
 	const inputField = document.querySelector(".message-input input");
 
 	document.friendship_ws = chatSocket;
@@ -22,32 +24,31 @@ export function init_socket() {
 		const mesgsElem = document.querySelector(".messages");
 		const chatUser = document.querySelector(".username-conv");
 		if (data.msg_type) {
-			if ((chatUser && data.user == chatUser.textContent) || data.sent) {
+			if ((chatUser && data.id == chatUser.user_id) || data.sent) {
 				msgdata.content = data.message;
 				msgdata.timestamp = new Date().toJSON();
 				createMessageBuble(mesgsElem, msgdata, data.sent);
-				changeLastDisplayedMessage(data, chatUser.textContent);
-				moveConvListTop(chatUser.textContent);
+				//TODO: change to using id
+				changeLastDisplayedMessage(data);
+				moveConvListTop(chatUser.user_id);
 				const roomid = document
 					.querySelector(".conve-header")
 					.getAttribute("data-room-id");
 				API.markMessagesAsRead(roomid);
 			} else {
 				changeLastDisplayedMessage(data, data.user);
-				moveConvListTop(data.user);
-				updateNotif(data.user);
+				moveConvListTop(data.id);
+				updateNotif(data.id);
 			}
 		} else if (data.status_type) {
 			updateOnlineStatus(data);
 		} else if (data.friendship_type) {
+			console.log("friendship ", data);
 			socketResponsHandler(data);
 		}
 	};
 	chatSocket.onclose = function (e) {
-		// console.log("the socket is clooooosed");
-		// console.error("chat socket closed: ", e);
 		if (!e.wasClean) {
-			// console.log("not clean closing ");
 			init_socket();
 		}
 	};
@@ -60,10 +61,13 @@ export function init_socket() {
 				const message = inputField.value;
 				const user =
 					document.querySelector(".username-conv").textContent;
+
+				const userId = document.querySelector(".username-conv").user_id;
 				chatSocket.send(
 					JSON.stringify({
 						message: message,
 						user: user,
+						user_id: userId,
 						room_id: roomId,
 						type: "chat"
 					})
@@ -74,21 +78,16 @@ export function init_socket() {
 	});
 }
 
-function changeLastDisplayedMessage(data, username) {
-	const listItems = document.querySelectorAll(".list-group-item");
+function changeLastDisplayedMessage(data) {
+	const li = findUserInList(data.id);
 
-	// Loop through each list item
-	for (const li of listItems) {
-		const user = li.querySelector(".username");
-		if (user.textContent == username) {
-			const content = data.message;
-			if (content.length > 8)
-				li.querySelector(".message").textContent =
-					content.slice(0, 5) + "...";
-			else li.querySelector(".message").textContent = content;
+	if (li) {
+		const content = data.message;
+		if (content.length > 8)
+			li.querySelector(".message").textContent =
+				content.slice(0, 5) + "...";
+		else li.querySelector(".message").textContent = content;
 
-			li.querySelector(".time").textContent = formatListDate(new Date());
-			break;
-		}
+		li.querySelector(".time").textContent = formatListDate(new Date());
 	}
 }

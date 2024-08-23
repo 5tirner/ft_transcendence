@@ -11,6 +11,7 @@ export function convHeader(userData, roomId) {
 		conv.style.display = "none";
 		document.querySelector(".messages").innerHTML = "";
 		document.querySelector(".username-conv").innerHTML = "";
+		document.querySelector(".username-conv").user_id = -1;
 	});
 	arrowIcon.classList.add("frame-icon");
 	arrowIcon.alt = "";
@@ -28,6 +29,7 @@ export function convHeader(userData, roomId) {
 	const usernameContainer = document.createElement("div");
 	usernameContainer.classList.add("username-conv");
 	usernameContainer.textContent = userData.username; // Assuming username is provided
+	usernameContainer.user_id = userData.id;
 	conversationHeader.appendChild(usernameContainer);
 
 	// Create the controller icon

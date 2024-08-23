@@ -75,7 +75,7 @@ def callback42(request):
             "client_id": settings.FORTYTWO_CLIENT_ID,
             "client_secret": settings.FORTYTWO_CLIENT_SECRET,
             "code": code,
-            "redirect_uri": "http://127.0.0.1:8000/api/oauth/callback/",
+            "redirect_uri": settings.FORTYTWO_REDIRECT_URI,
             "scope": "public profile",
         }
         response = requests.post(token_url, data=payload)
@@ -99,12 +99,10 @@ def callback42(request):
             }
             player = create_player(user_data)
             if player is None:
-                return redirect(
-                    f"http://{settings.TRANSCE_HOST}/login/", permanent=True
-                )
+                return redirect(f"{settings.TRANSCE_HOST}/login/", permanent=True)
             jwt_token = jwt_generation(player.id, player.two_factor)
             response = redirect(
-                f"http://127.0.0.1:8000/", permanent=True
+                settings.TRANSCE_HOST, permanent=True
             )  # Should add the 2FA in this redirection
             #  response = redirect(f"http://{settings.TRANSCE_HOST}/{'2fa' if player.two_factor else 'home'}/", permanent=True)
             response.set_cookie(
@@ -197,7 +195,7 @@ def callback_google(request):
 
             jwt_token = jwt_generation(player.id, player.two_factor)
             response = redirect(
-                f"http://127.0.0.1:8000/",
+                settings.TRANSCE_HOST,
                 permanent=True,
                 # f"http://127.0.0.1:8000/{'tfa' if player.two_factor else 'api/home'}/",
                 # permanent=True,

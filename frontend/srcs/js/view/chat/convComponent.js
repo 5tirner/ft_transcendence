@@ -75,12 +75,9 @@ export class ConvElement extends HTMLLIElement {
 	}
 
 	updateDOM() {
-		console.log(this._data);
 		if (this._data) {
 			this.userData.image.src = this._data.user.avatar;
 			this.userData.username.textContent = this._data.user.username;
-			// this.userData.userLastMsg.textContent =
-			// 	this._data.last_message.content;
 
 			const content = this._data.last_message.content;
 			if (content && content.length > 8) {
@@ -129,7 +126,7 @@ export class ConvElement extends HTMLLIElement {
 			);
 			loadMessages(messages, this._data.id);
 			API.markMessagesAsRead(this._data.id);
-			updateNotif(this._data.user.username, true);
+			updateNotif(this._data.user.id, true);
 		};
 		this.addEventListener("click", clickHandler);
 		this._clickListener = clickHandler;

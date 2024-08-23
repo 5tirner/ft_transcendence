@@ -1,5 +1,4 @@
 import API from "../service/API.js";
-// import { render_chat } from "../view/chat/chat.js";
 
 export const auth = {
 	user: null,
@@ -9,10 +8,10 @@ export const auth = {
 		await API.logout();
 	},
 	loginIntra: () => {
-		window.location.href = "http://127.0.0.1:8000/api/oauth/intra/";
+		window.location.href = "https://127.0.0.1/api/oauth/intra/";
 	},
 	loginGoogle: () => {
-		window.location.href = "http://127.0.0.1:8000/api/google/";
+		window.location.href = "https://127.0.0.1/api/google/";
 	},
 	isAuth: async () => {
 		const response = await API.isLogedIn();
@@ -24,7 +23,6 @@ export const auth = {
 			auth.loses = res.data.losses;
 			auth.wins = res.data.wins;
 			auth.fullname = `${res.data.first_name} ${res.data.last_name}`;
-			// render_chat();
 			return isLoged;
 		}
 		return false;
