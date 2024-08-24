@@ -96,8 +96,8 @@ export default class UserUpdate extends HTMLElement
           height: 15px;
           border-radius: 50%;
           position: absolute;
-          right: 12px;
-          top: 12px;
+          right: 10px;
+          top: 10px;
           overflow: hidden;
           cursor: pointer;
           background: #FF5D5B;
@@ -140,8 +140,8 @@ export default class UserUpdate extends HTMLElement
 	
 	initialize()
 	{
-    this.form = this.root.querySelector('#usernameform');
     this.close = this.root.querySelector('.close-btn');
+    this.form = this.root.querySelector('#usernameform');
     this.listner1 = (e) => {
         this.remove();
     }

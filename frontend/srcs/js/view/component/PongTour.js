@@ -1,6 +1,5 @@
-import { socket } from './assets/socket.js'
-export default class PongTour extends HTMLElement
-{
+import { socket } from "./assets/socket.js";
+export default class PongTour extends HTMLElement {
 	constructor() {
 		super();
 		this.root = this.attachShadow({ mode: "open" });
@@ -71,7 +70,7 @@ export default class PongTour extends HTMLElement
 		canvasContext.shadowBlur = 15;
 		canvasContext.shadowOffsetX = 5;
 		canvasContext.shadowOffsetY = 2;
-		socket.ws = new WebSocket("ws://" + location.host + "/PongTourWs/");
+		socket.ws = new WebSocket("wss://" + location.host + "/PongTourWs/");
 		function ballMove() {
 			if (xBallPos < 20 || xBallPos > 580) {
 				socket.ws.send(
@@ -210,7 +209,9 @@ export default class PongTour extends HTMLElement
 		};
 
 		function FinalRoundStart() {
-			const ws2 = new WebSocket("ws://" + location.host + "/PongTourWs/");
+			const ws2 = new WebSocket(
+				"wss://" + location.host + "/PongTourWs/"
+			);
 			ws2.onopen = function () {
 				console.log("Welcome To The Final Round");
 			};
@@ -221,3 +222,4 @@ export default class PongTour extends HTMLElement
 	}
 }
 customElements.define("tournament-game", PongTour);
+

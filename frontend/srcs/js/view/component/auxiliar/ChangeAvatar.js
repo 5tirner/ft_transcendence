@@ -48,7 +48,7 @@ export default class UpdateAvatar extends HTMLElement
           justify-content: center;
           align-items: center;
           flex-direction: column;
-          gap: 3rem;
+          gap: 3rem;z
           position: relative;
           color: var(--light-olive);
         }
@@ -149,33 +149,35 @@ export default class UpdateAvatar extends HTMLElement
 	
 	async changeAvatar()
 	{
-    const value = this.root.querySelector('#file').value;
-    const updateAvatarResponse = await API.updateAvatar(value);
+    const value = this.root.querySelector('#file').files[0];
+    console.log("value: ", value);
+    const updateAvatarResponse = await API.uploadAvatar(value);
     const updateAvatarJson = await updateAvatarResponse.json();
-    if (updateAvatarJson.status == 200)
-    {
-      const getUserData = await API.getUser();
-      const username = await getUserData.json();
-      this.target.innerHTML = username.player.username;
-      this.remove();
-      console.log("user updated successfuly");
-    }
-    else
-    {
-      const errorElem = document.createElement('div');
-      errorElem.setAttribute('style', 'position: absolute; top:50px;');
-      errorElem.innerHTML = `
-        <style>
-          p
-          {
-            color: var(--light-olive);
-          }
-        </style>
-        <p> invalid username </p>
-      `
-      this.form.insertBefore(errorElem, this.form.firstChild);
-      console.log("invalid username");
-    }
+    console.log("Response: ", updateAvatarJson);
+    // if (updateAvatarJson.status == 200)
+    // {
+    //   const getUserData = await API.getUser();
+    //   const username = await getUserData.json();
+    //   this.target.innerHTML = username.player.username;
+    //   this.remove();
+    //   console.log("user updated successfuly");
+    // }
+    // else
+    // {
+    //   const errorElem = document.createElement('div');
+    //   errorElem.setAttribute('style', 'position: absolute; top:50px;');
+    //   errorElem.innerHTML = `
+    //     <style>
+    //       p
+    //       {
+    //         color: var(--light-olive);
+    //       }
+    //     </style>
+    //     <p> invalid username </p>
+    //   `
+    //   this.form.insertBefore(errorElem, this.form.firstChild);
+    //   console.log("invalid username");
+    // }
 	}
 }
 customElements.define("update-avatar", UpdateAvatar);

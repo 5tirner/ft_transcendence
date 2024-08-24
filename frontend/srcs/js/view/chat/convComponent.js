@@ -1,8 +1,98 @@
 import { formatListDate } from "./chatList.js";
-import { convHeader } from "./conv_head.js";
 import { updateNotif } from "./chatList.js";
 import { loadMessages } from "./messages_loader.js";
 import API from "../../service/API.js";
+import { friendUpdate } from "../friendsUpdate.js";
+export const GAME_INV = "game_inv";
+export const ACC_GAME = "acc_game";
+
+export class ConvHeadElem extends HTMLDivElement {
+	constructor() {
+		super();
+		this._data = null;
+		this._roomId = null;
+	}
+
+	set data(value) {
+		this._data = value;
+		this.render();
+	}
+
+	get data() {
+		return this._data;
+	}
+
+	set roomId(value) {
+		this._roomId = value;
+		this.setAttribute("data-room-id", value);
+	}
+
+	get roomId() {
+		return this._roomId;
+	}
+
+	clickHandler = () => {
+		const conv = document.querySelector(".chat-conv-wrapper");
+		conv.style.display = "none";
+		document.querySelector(".messages").innerHTML = "";
+		document.querySelector(".username-conv").innerHTML = "";
+		document.querySelector(".username-conv").user_id = -1;
+	};
+	gameInviteHandler = () => {
+		friendUpdate(
+			{
+				username: window.Auth.user,
+				id: this._data.id,
+				avatar: window.Auth.avatar
+			},
+			GAME_INV
+		);
+	};
+
+	render() {
+		if (!this._data) return;
+
+		this.classList.add("conve-header");
+
+		// Clear any existing content
+		this.innerHTML = "";
+
+		// Create the arrow icon
+		const arrowIcon = document.createElement("img");
+		arrowIcon.classList.add("frame-icon");
+		arrowIcon.alt = "";
+		arrowIcon.src = "js/view/src/img/arrow.svg";
+		arrowIcon.addEventListener("click", this.clickHandler);
+		this.appendChild(arrowIcon);
+
+		// Create the user avatar
+		this.userAvatar = document.createElement("img");
+		this.userAvatar.classList.add("user-avatar");
+		this.userAvatar.alt = "user";
+		this.userAvatar.src = this._data.avatar;
+		this.appendChild(this.userAvatar);
+
+		// Create the username container
+		const usernameContainer = document.createElement("div");
+		usernameContainer.classList.add("username-conv");
+		usernameContainer.textContent = this._data.username;
+		usernameContainer.user_id = this._data.id;
+		this.appendChild(usernameContainer);
+
+		// Create the controller icon
+		const controllerIcon = document.createElement("img");
+		controllerIcon.classList.add("controler-icon");
+		controllerIcon.alt = "invite to game";
+		controllerIcon.src = "js/view/src/img/GameController.svg";
+		controllerIcon.addEventListener("click", this.gameInviteHandler);
+		this.appendChild(controllerIcon);
+	}
+	connectedCallback() {}
+
+	disconnectedCallback() {}
+}
+
+customElements.define("conv-head", ConvHeadElem, { extends: "div" });
 
 class convTimeAndNotifElem extends HTMLElement {
 	constructor() {
@@ -75,12 +165,9 @@ export class ConvElement extends HTMLLIElement {
 	}
 
 	updateDOM() {
-		console.log(this._data);
 		if (this._data) {
 			this.userData.image.src = this._data.user.avatar;
 			this.userData.username.textContent = this._data.user.username;
-			// this.userData.userLastMsg.textContent =
-			// 	this._data.last_message.content;
 
 			const content = this._data.last_message.content;
 			if (content && content.length > 8) {
@@ -118,18 +205,19 @@ export class ConvElement extends HTMLLIElement {
 			const conv = document.querySelector(".chat-conv-wrapper");
 			const messages = conv.querySelector(".messages");
 			const convHeadParent = conv.querySelector(".chat-conv");
-			const convHead = conv.querySelector(".conve-header");
+			let convHead = conv.querySelector(".conve-header");
 
 			conv.style.display = "block";
 
 			convHeadParent.removeChild(convHead);
-			convHeadParent.insertBefore(
-				convHeader(this._data.user, this._data.id),
-				convHeadParent.firstChild
-			);
+
+			convHead = new ConvHeadElem();
+			convHead.data = this._data.user;
+			convHead.roomId = this._data.id;
+			convHeadParent.insertBefore(convHead, convHeadParent.firstChild);
 			loadMessages(messages, this._data.id);
 			API.markMessagesAsRead(this._data.id);
-			updateNotif(this._data.user.username, true);
+			updateNotif(this._data.user.id, true);
 		};
 		this.addEventListener("click", clickHandler);
 		this._clickListener = clickHandler;

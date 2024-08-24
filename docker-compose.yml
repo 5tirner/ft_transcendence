@@ -96,9 +96,12 @@ services:
         build:
             context: ./frontend/server
             dockerfile: Dockerfile
+            args:
+                PORT: ${PORT}
+                HOST: ${HOST}
         image: server:latest
         ports:
-            - "8000:8000"
+            - "8000:443"
         volumes:
             - ./frontend/srcs:/var/www
             - media_data:/var/www/media

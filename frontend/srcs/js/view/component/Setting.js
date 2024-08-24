@@ -102,7 +102,7 @@ export default class Setting extends HTMLElement
           box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
           transition: all 0.1s ease, background 0.3s ease;
           font-family: "Press Start 2P", sans-serif !important;
-        }  
+        }
       </style>
       
       <div class="profile-card">

@@ -5,10 +5,10 @@ IMG = $(shell docker images -a -q)
 .PHONY:  up upd start down stop re  ps clean fclean
 
 upd:
-	@$(DC) up --no-attach server --no-attach postgres_db --no-attach auth --build --force-recreate -d
+	@$(DC) up --no-attach server --build --force-recreate -d
 
 up : down create_data_dir
-	@$(DC) up --no-attach server --no-attach postgres_db --no-attach auth --build --force-recreate
+	@$(DC) up --no-attach server --build --force-recreate
 
 
 down : stop

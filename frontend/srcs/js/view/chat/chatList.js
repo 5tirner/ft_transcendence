@@ -1,14 +1,13 @@
 import API from "../../service/API.js";
-import { convHeader } from "./conv_head.js";
 import { formatTime, loadMessages } from "./messages_loader.js";
 import { ConvElement } from "./convComponent.js";
 
-export function updateNotif(username, toRemove = false) {
+export function updateNotif(id, toRemove = false) {
 	const listItems = document.querySelectorAll(".list-group-item");
 
 	for (const li of listItems) {
-		const user = li.querySelector(".username");
-		if (user.textContent == username) {
+		const user = li.data.user.id;
+		if (user == id) {
 			const notif = li.querySelector(".notif");
 			if (toRemove) {
 				notif.classList.remove("visible");
@@ -48,29 +47,14 @@ export function formatListDate(date) {
 	}
 }
 
-export async function getConversations() {
-	const ulElement = document.querySelector('.list-group')
-  console.log("ulelemn",ulElement);
-	let response = await API.getConversatons();
-	if (response.ok) {
-		response = await response.json();
-		response.forEach((chatConv) => {
-		 console.log(response)
-			let conv = new ConvElement();
-			conv.data = chatConv;
-			ulElement.appendChild(conv);
-		});
-	}
-}
-
-export function findUserInList(username) {
+export function findUserInList(id) {
 	const listItems = document.querySelectorAll(".list-group-item");
 	if (!listItems) return null;
 
 	// Loop through each list item
 	for (const li of listItems) {
-		const user = li.querySelector(".username");
-		if (user.textContent == username) {
+		const user_id = li.data.user.id;
+		if (user_id == id) {
 			return li;
 		}
 	}

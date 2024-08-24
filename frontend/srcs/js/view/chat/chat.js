@@ -1,20 +1,13 @@
 import API from "../../service/API.js";
-import { getConversations } from "./chatList.js";
+import { ConvElement } from "./convComponent.js";
 import { fillFriensList, handlAddChatRoom } from "./friendsList.js";
 import { init_socket } from "./socketConnection.js";
 
-export async function render_chat() {
-	await getConversations();
-	init_socket();
-}
-
 export default class ChatComponent extends HTMLElement {
-	constructor()
-	{
+	constructor() {
 		super();
 	}
-	connectedCallback()
-	{
+	connectedCallback() {
 		this.className = "right-window";
 		this.setAttribute("id", "chat");
 		this.innerHTML = `
@@ -43,12 +36,26 @@ export default class ChatComponent extends HTMLElement {
 				</div>
 			</div>
 		`;
-		this.list_group = this.querySelector("ul")
-		console.log("teeest ",this.list_group)
+		this.list_group = this.querySelector("ul");
+		this.loadConversations();
+		init_socket();
 
 		const addChatRoom = this.querySelector(".add-message-icon");
 		if (addChatRoom)
 			addChatRoom.addEventListener("click", handlAddChatRoom);
+	}
+
+	async loadConversations() {
+		let response = await API.getConversatons();
+		this.list_group.innerHTML = "";
+		if (response.ok) {
+			response = await response.json();
+			response.forEach((chatConv) => {
+				let conv = new ConvElement();
+				conv.data = chatConv;
+				this.list_group.appendChild(conv);
+			});
+		}
 	}
 }
 customElements.define("chat-view", ChatComponent);

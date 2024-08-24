@@ -8,6 +8,7 @@ export const BLK_FRND = "block_f";
 export const UNBLOCK = "unblock";
 export const UNFRND = "unfriend";
 export const ACC_REQ = "acc_f";
+export const ADD_ROOM = "add_room";
 
 export class FriendElement extends HTMLLIElement {
 	constructor() {
@@ -103,6 +104,8 @@ export class FriendElement extends HTMLLIElement {
 			else if (this.parentNode.id === "friends")
 				friendUpdate(this._data.data, BLK_FRND);
 			this.remove();
+			const convs = document.querySelector("chat-view");
+			if (convs) convs.loadConversations();
 		};
 		const unfriendEventHandler = async () => {
 			const res = await API.removeFriend(this._data.data.id);

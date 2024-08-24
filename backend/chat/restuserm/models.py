@@ -48,10 +48,12 @@ class Friendships(AbstractBaseUser):
     class Status(Enum):
         PENDING = "PEN"
         ACCEPTED = "ACP"
+        BLOCKED = "BLK"
 
     STATUS_AVAILABLE = [
         (Status.PENDING.value, "PENDING"),
         (Status.ACCEPTED.value, "ACCEPTED"),
+        (Status.BLOCKED.value, "BLOCKED"),
     ]
     id = models.AutoField(primary_key=True)
     status = models.CharField(
