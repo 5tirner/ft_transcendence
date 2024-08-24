@@ -21,7 +21,7 @@ import AbortButton from "./view/component/auxiliar/AbortButton.js";
 import Setting from './view/component/Setting.js';
 import Profile from './view/component/Profile.js';
 import UserUpdate from './view/component/auxiliar/ChangeUsername.js';
-
+import UpdateAvatar from "./view/component/auxiliar/ChangeAvatar.js";
 import MainView from "./view/mainUI.js";
 
 window.router = router;

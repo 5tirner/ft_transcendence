@@ -1,29 +1,28 @@
 import API from "../../../service/API.js";
 
-export default class UserUpdate extends HTMLElement
+export default class UpdateAvatar extends HTMLElement
 {
-	constructor() { super(); this.root = this.attachShadow({ mode: "open" });}
-	
+	constructor() { super(); this.root = this.attachShadow({mode: 'open'})}
+
 	connectedCallback()
 	{
-    this.setAttribute("id", "update-user");
-    this.target = this.parentNode.querySelector('.username');
-    
+    this.setAttribute("id", "update-avatar");
+    this.target = this.parentNode.querySelector('#profileImage');
     this.render();
     this.initialize();
 	}
-	
+
 	disconnectedCallback()
 	{
-	  this.root.removeEventListener('click', this.listner1);
+    this.root.removeEventListener('click', this.listner1);
     this.form.removeEventListener('click', this.listner2);
 	}
-	
+
 	render()
 	{
 	  this.root.innerHTML = `
       <style>
-        .updateUsername
+        .updateAvatar
         {
           font-family: var(--body-font);
           position: absolute;
@@ -38,7 +37,7 @@ export default class UserUpdate extends HTMLElement
           backdrop-filter: blur(10px);
           display: flex;
         }
-        .updateUsername form
+        .updateAvatar form
         {
           width: 40%;
           height: 40%;
@@ -51,46 +50,47 @@ export default class UserUpdate extends HTMLElement
           flex-direction: column;
           gap: 3rem;
           position: relative;
+          color: var(--light-olive);
         }
-       
-        .updateUsername form input
+        .updateAvatar form input
         {
           font-family: var(--body-font);
           color: var(--light-olive);
-          border: 2px solid var(--light-olive);
+        }
+        .updateAvatar form input[type=file]::file-selector-button {
+          margin-right: 20px;
+          border: none;
+          background: var(--dark-teal);
+          padding: 10px 20px;
           border-radius: 10px;
-          padding: 15px 10px;
-          background: transparent;
-          width: 80%;
-          font-size: 10px;
-        }
-        .updateUsername form input::placeholder
-        {
           color: var(--light-olive);
-          font-size: 10px;
+          cursor: pointer;
+          transition: background .2s ease-in-out;
+          font-family: var(--body-font);
+          color: var(--light-olive);
+          box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
         }
-        .updateUsername form input:active {
-          outline: none;
+
+        .updateAvatar form input[type=file]::file-selector-button:hover {
+          background: var(--coral);
         }
-        
-        .updateUsername form input:focus {
-          outline: none;
-        }
-        .save-btn
+
+        .updateAvatar form button
         {
-          background-color: var(--dark-teal) !important;
+          background-color: var(--dg) !important;
           color: var(--light-olive) !important;
           font-size: 10px;
           text-transform: uppercase;
           border: none;
           padding: 10px 40px;
           cursor: pointer;
-          display: inline-block;
+          display: block;
           border-radius: 8px;
           box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
           transition: all 0.1s ease, background 0.3s ease;
-          font-family: "Press Start 2P", sans-serif !important;
+          font-family: var(--body-font);
         }
+        
         .close-btn {
           width: 15px;
           height: 15px;
@@ -119,46 +119,40 @@ export default class UserUpdate extends HTMLElement
         .close-btn:after {
           transform: translate(-50%, -50%) rotate(-45deg);
         }
-      </style>  
-      
-			<div class="updateUsername">
-				<form id="usernameform">
-				  <div class="close-btn"></div>
-					<input
-						type="text"
-						name="fullname"
-						id="input-fullname"
-						placeholder="Edit your name.."
-						required
-					/>
-					<button type="submit" name="Save" class="save-btn">Save</button>
-				</form>
+      </style>
+
+      <div class="updateAvatar">
+        <form id="avatarform">
+          <div class="close-btn"></div>
+      		<label for="file">File to upload</label>
+      		<input type="file" id="file" accept="image/*">
+      		<button type="submit">Upload</button>
+    	   </form>
 			</div>
-		</div> 
     `;
 	}
 	
 	initialize()
 	{
-    this.form = this.root.querySelector('#usernameform');
-    this.close = this.root.querySelector('.close-btn');
-    this.listner1 = (e) => {
+    this.form = this.root.querySelector('#avatarform');
+		this.close = this.root.querySelector('.close-btn');
+		this.listner1 = (e) => {
         this.remove();
     }
     this.listner2 = (e) => {
       e.preventDefault();
-      this.changeUserName();
+      this.changeAvatar();
     }
     this.close.addEventListener('click', this.listner1);
     this.form.addEventListener('submit', this.listner2);
 	}
 	
-	async changeUserName()
+	async changeAvatar()
 	{
-    const value = this.root.querySelector('#input-fullname').value;
-    const updateUserNameResponse = await API.updateUserName(value);
-    const updateUserNameJson = await updateUserNameResponse.json();
-    if (updateUserNameJson.status == 200)
+    const value = this.root.querySelector('#file').value;
+    const updateAvatarResponse = await API.updateAvatar(value);
+    const updateAvatarJson = await updateAvatarResponse.json();
+    if (updateAvatarJson.status == 200)
     {
       const getUserData = await API.getUser();
       const username = await getUserData.json();
@@ -184,4 +178,4 @@ export default class UserUpdate extends HTMLElement
     }
 	}
 }
-customElements.define("update-user", UserUpdate);
+customElements.define("update-avatar", UpdateAvatar);
