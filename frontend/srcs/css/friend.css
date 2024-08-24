@@ -1,0 +1,237 @@
+#middle-view>friend-view>p {
+    color: var(--light-olive);
+    margin: 0 auto;
+    padding: 0 30px 30px 30px;
+    font-size: large;
+    border-bottom: 1px solid rgba(100, 100, 100, 0.25);
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.friend-container {
+    height: 100%;
+    overflow-y: scroll;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 50px;
+    justify-content: space-between;
+    margin: 0 3%;
+    padding-bottom: 150px;
+}
+
+.friend-container::-webkit-scrollbar {
+    display: none;
+}
+
+
+.friend-card {
+    flex: 1 1 calc(50%);
+    box-sizing: border-box;
+    text-align: center;
+    padding: 20px;
+    background-color: var(--dark-teal);
+    color: var(--light-olive);
+    box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+    height: 400px;
+    overflow: auto;
+}
+
+.friend-card::-webkit-scrollbar {
+    display: none;
+}
+
+.friend-card ul {
+    padding: 0;
+}
+
+.friend-card li {
+    list-style: none;
+}
+
+.friend-card li:hover {
+    background-color: var(--teal)
+}
+
+.user-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    list-style: none;
+}
+
+.user-item .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.user-item .username {
+    font-weight: bold;
+    margin-right: auto;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+}
+
+.icon-button:hover {
+    color: #000;
+}
+
+.icon-button::before {
+    content: "Add friend";
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: visibility 0s, opacity 0.2s linear;
+}
+
+.icon-button::before {
+    content: "Block user";
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    white-space: nowrap;
+    transition: visibility 0s, opacity 0.2s linear;
+}
+
+.icon-button:hover::before {
+    visibility: visible;
+    opacity: 1;
+}
+
+
+.avatar-container {
+    position: relative;
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+}
+
+.online-status {
+    position: absolute;
+    bottom: 0;
+    right: 15px;
+    border: 3px solid var(--dark-teal);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #00ff00;
+    padding: 0;
+    margin: 0;
+}
+
+.user-item.offline .online-status {
+    background-color: #aaaaaa;
+}
+
+/* --light-olive: #d8dcb4; */
+/* --dark-purple: #381631; */
+/* --bright-pink: #e21c61; */
+/* --coral: #e26159; */
+/* --peach: #fea85f; */
+/* --teal: #5eb6ad; */
+/* --dark-teal: #1b958d; */
+/* --deep-blue: #105390; */
+
+/* style for game invite card */
+
+@keyframes slideInFromTop {
+    0% {
+        top: -150px;
+        /* Start off-screen (above the viewport) */
+        opacity: 0;
+        /* Start invisible */
+    }
+
+    100% {
+        top: 100px;
+        /* End position at the top of the page */
+        opacity: 1;
+        /* Fully visible */
+    }
+}
+
+
+/* #game-invite-card { */
+/* } */
+
+#game-invite-card {
+    position: absolute;
+    background-color: var(--peach);
+    z-index: 1;
+    top: 100px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    height: 150px;
+    border: 10px solid var(--light-olive);
+    border-radius: 0px 50px 0px 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    animation: slideInFromTop 0.5s ease-out;
+}
+
+.invite-button {
+    background-color: var(--dark-teal);
+    color: var(--light-olive);
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 10px;
+    cursor: pointer;
+}
+
+#accept-button {
+    background-color: var(--dark-teal);
+}
+
+#accept-button:hover {
+    background-color: var(--teal);
+}
+
+#reject-button {
+    background-color: var(--coral);
+}
+
+#reject-button:hover {
+    background-color: var(--bright-pink);
+}
+
+.invite-username {
+    color: var(--bright-pink);
+    font-weight: bold;
+}

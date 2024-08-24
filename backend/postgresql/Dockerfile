@@ -1,0 +1,7 @@
+FROM postgres:16-alpine
+
+ARG POSTGRES_DB \
+    POSTGRES_USER \
+    POSTGRS_PASSWORD
+
+EXPOSE 5432

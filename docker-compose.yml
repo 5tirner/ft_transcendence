@@ -1,0 +1,241 @@
+networks:
+    Net:
+        name: network
+
+# volumes:
+#     esdata:
+#         driver: local
+#         name: esdata
+#         o: bind
+
+services:
+    # -------------- ELASTIC ----------------#
+    #   elasticsearch:
+    #     build:
+    #       context: ./ELK/elastic/
+    #       dockerfile: Dockerfile
+    #     image: elasticsearch
+    #     container_name: elasticsearch
+    #     environment:
+    #       - ES_JAVA_OPTS=-Xmx256m -Xms256m
+    #       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
+    #       - discovery.type=single-node
+    #       - xpack.security.http.ssl.enabled=false
+    #       - xpack.license.self_generated.type=trial
+    #     networks:
+    #       - Net
+    #     ports:
+    #       - 9200:9200
+    #       - 9300:9300
+    #     restart: always
+    #     volumes:
+    #       # - ./ELK/elastic/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    #       - esdata:/usr/share/elasticsearch/data
+    # # -------------- KIBANA ----------------#
+    #   kibana:
+    #     depends_on:
+    #       - elasticsearch
+    #     image: docker.elastic.co/kibana/kibana:$ELK_VERSION
+    #     container_name: kibana
+    #     environment:
+    #       - ELASTICSEARCH_URL=$ELASTIC_URL
+    #       - ELASTICSEARCH_USERNAME=$KIBANA_USER
+    #       - ELASTICSEARCH_PASSWORD=$ELASTIC_PASSWORD
+    #       - "xpack.security.enabled=false"
+    #       - "xpack.license.self_generated.type=trial"
+    #     networks:
+    #       - Net
+    #     ports:
+    #       - 5601:5601
+    #     restart: always
+    #     volumes:
+    #       - ./ELK/kibana/kibana.yml:/usr/share/config/kibana.yml:ro
+    # # -------------- LOGSTASH ----------------#
+    #   logstash:
+    #     user: root
+    #     image: docker.elastic.co/logstash/logstash:$ELK_VERSION
+    #     container_name: logstash
+    #     networks:
+    #       - Net
+    #     ports:
+    #       - 9600:9600
+    #     environment:
+    #       - ELASTIC_URL=$ELASTIC_URL
+    #       - ELASTIC_USER=$ELASTIC_USER
+    #       - ELASTIC_PASSWORD=$ELASTIC_PASSWORD
+    #       # - xpack.monitoring.enable=false
+    #     depends_on:
+    #       - elasticsearch
+    #     volumes:
+    #       - ./ELK/logstash/ingest_data:/usr/share/logstash/ingest_data/
+    #       - ./ELK/logstash/:/usr/share/logstash/pipeline/
+    #     restart: always
+    # # ------------- ELASTIC SETUP ------------#
+    #   setup:
+    #     init: true
+    #     image: alpine
+    #     container_name: setup
+    #     networks:
+    #       - Net
+    #     depends_on:
+    #       - elasticsearch
+    #     entrypoint: [ "sh", "-c", "
+    #       apk add --no-cache curl &&
+    #       until curl -u $ELASTIC_USER:$ELASTIC_PASSWORD -X POST '$ELASTIC_URL/_security/user/kibana_system/_password'
+    #       -H 'Content-Type: application/json' -d '{\"password\":\"'\"$ELASTIC_PASSWORD\"'\"}';
+    #       do
+    #         echo 'Waiting for Elasticsearch...';
+    #         sleep 5;
+    #       done;
+    #       echo 'Password set successfully';
+    #       "]
+
+    server:
+        init: true
+        container_name: server
+        build:
+            context: ./frontend/server
+            dockerfile: Dockerfile
+            args:
+                PORT: ${PORT}
+                HOST: ${HOST}
+        image: server:latest
+        ports:
+            - "8000:443"
+        volumes:
+            - ./frontend/srcs:/var/www
+            - media_data:/var/www/media
+        networks:
+            - Net
+        restart: always
+        depends_on:
+            - postgres_db
+            - auth
+            - tictactoe
+            - pong
+            - chat
+            - ws_chat
+    pong:
+        init: true
+        image: pongimage
+        container_name: pongcntr
+        build: ./backend/Pong
+        networks:
+            - Net
+        depends_on:
+            - auth
+            - postgres_db
+        command:
+            sh -c "python3 manage.py makemigrations --noinput  && python3
+            manage.py migrate --noinput && python manage.py runserver
+            0.0.0.0:8000"
+    tictactoe:
+        init: true
+        image: tttimage
+        container_name: tttcntr
+        build: ./backend/TicTacToe
+        networks:
+            - Net
+        depends_on:
+            - auth
+            - postgres_db
+        command:
+            sh -c "python3 manage.py makemigrations --noinput  && python3
+            manage.py migrate --noinput && python manage.py runserver
+            0.0.0.0:8000"
+    postgres_db:
+        init: true
+        container_name: postgres_db
+        build:
+            context: ./backend/postgresql
+            dockerfile: Dockerfile
+            args:
+                POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+                POSTGRES_USER: ${POSTGRES_USER}
+                POSTGRES_DB: ${POSTGRES_DB}
+        image: postgres_db:latest
+        ports:
+            - "5432:5432"
+        env_file:
+            - .env
+        networks:
+            - Net
+        # volumes:
+        #     - postgres_db:/var/lib/postgresql/data
+        restart: always
+
+    auth:
+        init: true
+        container_name: auth
+        build:
+            context: ./backend/Authentication
+            dockerfile: Dockerfile
+        image: auth:latest
+        env_file:
+            - .env
+        ports:
+            - "5050:8000"
+        networks:
+            - Net
+        volumes:
+            - ./backend/Authentication:/app
+            - media_data:/app/media
+        depends_on:
+            - postgres_db
+        restart: always
+
+    chat:
+        init: true
+        container_name: chat
+        build:
+            context: ./backend/chat
+            dockerfile: Dockerfile
+        image: chat:12.5
+        env_file:
+            - .env
+        networks:
+            - Net
+        volumes:
+            - ./backend/chat:/app
+        depends_on:
+            - postgres_db
+            - auth
+        restart: always
+    ws_chat:
+        init: true
+        container_name: ws_chat
+        build:
+            context: ./backend/ws_chat
+            dockerfile: Dockerfile
+        command:
+            sh -c "python3 manage.py makemigrations --noinput  && python3
+            manage.py migrate --noinput && python manage.py runserver
+            0.0.0.0:8000"
+        image: ws_chat:12.5
+        env_file:
+            - .env
+        networks:
+            - Net
+        volumes:
+            - ./backend/ws_chat:/app
+        depends_on:
+            - postgres_db
+            - auth
+        restart: always
+volumes:
+    media_data:
+
+    postgres_db:
+        driver: local
+        name: postgres_db
+        driver_opts:
+            type: none
+            device: ${HOME}/data/postgres_db
+            o: bind
+# www:
+#     name: front_end
+#     driver: local
+#     driver_opts:
+#         type: none
+#         device: ${HOME}/data/www
+#         o: bind

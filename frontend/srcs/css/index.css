@@ -1,0 +1,253 @@
+@import "./chat_style.css";
+@import "./friend.css";
+
+@font-face {
+    font-family: 'Press Start 2P';
+    src: url('../assets/font/2P.ttf') format('truetype');
+}
+
+:root {
+    --header-height: 3rem;
+    --nav-width: 85px;
+    --body-font: "Press Start 2P", sans-serif !important;
+    --normal-font-size: 1rem;
+    --z-fixed: 100;
+    --light-olive: #d8dcb4;
+    --dark-purple: #381631;
+    --bright-pink: #e21c61;
+    --coral: #e26159;
+    --peach: #fea85f;
+    --teal: #5eb6ad;
+    --dark-teal: #1b958d;
+    --deep-blue: #105390;
+    --dg: #00aa52;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    background-color: var(--dark-purple) !important;
+    color: var(--dark-purple);
+    font-family: var(--body-font);
+    height: 100vh;
+    width: 100vw;
+    right: 0;
+    overflow: hidden;
+}
+
+/* ------------------------- Main UIs Start -------------------------*/
+#root {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    overflow: hidden;
+    font-family: var(--body-font);
+}
+
+#main-view
+{
+   height: 100%;
+   width: 100%;
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   /* overflow: hidden; */
+   font-family: var(--body-font);
+}
+
+#home-view {
+    background-color: var(--dark-purple);
+    width: 70%;
+    height: 100%;
+}
+
+#left-view {
+    height: 100%;
+    width: 75px;
+}
+
+#middle-view {
+    padding-top: 30px;
+    width: 100%;
+    /* overflow: hidden; */
+    font-family: var(--body-font);
+    border-left: 1px solid rgba(100, 100, 100, 0.25) !important;
+    border-right: 1px solid rgba(100, 100, 100, 0.25) !important;
+}
+
+#TheHistory {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+#right-view {
+    background-color: var(--dark-purple);
+    color: var(--light-olive);
+    min-width: 250px;
+}
+
+/* ------------------------- Main UIs End -------------------------*/
+
+nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+nav a {
+    color: #fff !important;
+    text-decoration: none;
+
+}
+
+.home-buttons {
+    width: fit-content;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 6px;
+    outline: none;
+    border: none;
+    color: #fff;
+    font-size: 12px;
+    background: rgb(190, 60, 237) !important;
+    background: linear-gradient(90deg,
+            rgba(190, 60, 237, 1) 43%,
+            rgb(158, 165, 179) 100%) !important;
+}
+
+.discover-btn {
+    padding: 15px 80px !important;
+    background: none;
+    font-size: 14px;
+}
+
+.login-btn {
+    padding: 8px 30px !important;
+    background: none;
+    font-size: 12px;
+}
+
+.home {
+    width: 100%;
+    height: calc(100vh - 100px);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    row-gap: 8%;
+    justify-content: center;
+}
+
+
+/* Sidebar View */
+.nav a {
+    position: relative;
+    text-decoration: none !important;
+}
+
+.nav {
+    /* background-color: var(--deep-blue); */
+    /* background-color: var(--dark-purple); */
+    color: var(--light-olive);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.nav_logo,
+.nav_link {
+    display: grid;
+    grid-template-columns: max-content max-content;
+    align-items: center;
+    column-gap: 1rem;
+    padding: 0.5rem 0 0.5rem 1.5rem;
+}
+
+.nav_logo {
+    margin-top: 1rem;
+}
+
+.nav_logo-icon {
+    font-size: 1.75rem;
+    color: var(--white-color);
+}
+
+.nav_logo-name {
+    color: var(--white-color);
+    font-weight: 700;
+}
+
+.nav_link {
+    position: relative;
+    color: var(--teal);
+    margin-bottom: 1.5rem;
+    transition: 0.3s;
+}
+
+.nav_link:hover {
+    color: var(--white-color);
+}
+
+.nav_icon {
+    font-size: 1.65rem;
+    color: var(--light-olive);
+    /* color: var(--teal); */
+}
+
+.active {
+    color: var(--white-color);
+}
+
+/* Game View */
+
+#game-view {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    flex-wrap: nowrap;
+}
+
+/* Game Modes */
+/* #game-mode
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+} */
+
+/* Platform View */
+#platform-view {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.page-not-found
+{
+  width: 100%;
+  height: 100%;
+  background-image: url('../js/view/src/img/404.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
