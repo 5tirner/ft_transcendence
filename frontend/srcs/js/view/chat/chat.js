@@ -46,12 +46,10 @@ export default class ChatComponent extends HTMLElement {
 	}
 
 	async loadConversations() {
-		console.log("update room");
 		let response = await API.getConversatons();
 		this.list_group.innerHTML = "";
 		if (response.ok) {
 			response = await response.json();
-			console.log(response);
 			response.forEach((chatConv) => {
 				let conv = new ConvElement();
 				conv.data = chatConv;

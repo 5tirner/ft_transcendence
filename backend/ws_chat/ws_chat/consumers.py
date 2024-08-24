@@ -1,6 +1,8 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from django.conf import settings
 import httpx
+import string
+import random
 
 
 dupUsers = {}
@@ -49,6 +51,13 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             },
         )
 
+    def generate_room_code(self):
+        return self.scope["user"] + "".join(
+            random.choices(
+                string.ascii_uppercase + string.ascii_lowercase + string.digits, k=10
+            )
+        )
+
     async def receive_json(self, content):
         try:
             type = content["type"]
@@ -72,25 +81,47 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             pass
 
     async def send_friendship_update(self, content):
+        # print(content)
         user = content["user_id"]
         event = content["event"]
+        generated_code = self.generate_room_code()
         if event == "block_u" or event == "block_f":
             async with httpx.AsyncClient() as client:
                 await client.delete(
                     f"http://chat:8000/api/chat/delete/{user}/",
                     cookies=self.scope["cookie"],
                 )
-        await self.channel_layer.group_send(
-            str(user),
-            {
+        if event == "acc_game":
+            print("accepted game", user, self.scope["user_id"])
+            data = {
                 "type": "friendship.update",
-                "event": event,
-            },
-        )
+                "event": "acc_game",
+                "room_code": generated_code,
+            }
+            await self.channel_layer.group_send(
+                str(user),
+                data,
+            )
+            await self.channel_layer.group_send(
+                str(self.scope["user_id"]),
+                data,
+            )
+        else:
+            await self.channel_layer.group_send(
+                str(user),
+                {
+                    "sender_id": self.scope["user_id"],
+                    "type": "friendship.update",
+                    "event": event,
+                    "user_id": user,
+                    "username": content["user"],
+                    "avatar": content["avatar"],
+                },
+            )
 
     async def friendship_update(self, event):
-        data = {"event": event["event"], "friendship_type": True}
-        await self.send_json(data)
+        event["friendship_type"] = True
+        await self.send_json(event)
 
     async def send_message_to_user(self, user_id, message, is_user):
         if not is_user:

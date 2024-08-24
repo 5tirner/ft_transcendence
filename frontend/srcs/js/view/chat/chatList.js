@@ -7,7 +7,6 @@ export function updateNotif(id, toRemove = false) {
 
 	for (const li of listItems) {
 		const user = li.data.user.id;
-		console.log(user, id);
 		if (user == id) {
 			const notif = li.querySelector(".notif");
 			if (toRemove) {

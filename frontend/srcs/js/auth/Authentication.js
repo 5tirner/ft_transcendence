@@ -22,6 +22,7 @@ export const auth = {
 			auth.avatar = res.data.avatar;
 			auth.loses = res.data.losses;
 			auth.wins = res.data.wins;
+			auth.id = res.data.id;
 			auth.fullname = `${res.data.first_name} ${res.data.last_name}`;
 			return isLoged;
 		}

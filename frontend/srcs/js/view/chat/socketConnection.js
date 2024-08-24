@@ -43,7 +43,6 @@ export function init_socket() {
 		} else if (data.status_type) {
 			updateOnlineStatus(data);
 		} else if (data.friendship_type) {
-			console.log("friendship ", data);
 			socketResponsHandler(data);
 		}
 	};
