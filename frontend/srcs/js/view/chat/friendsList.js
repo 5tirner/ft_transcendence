@@ -6,7 +6,6 @@ import { ConvElement } from "./convComponent.js";
 
 //NOTE: call here
 async function makeChatRoom(user) {
-	console.log("make chat room", user);
 	const userLi = findUserInList(user.id);
 	if (userLi) {
 		userLi.click();

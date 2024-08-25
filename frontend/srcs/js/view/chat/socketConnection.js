@@ -13,6 +13,8 @@ function moveConvListTop(user_id) {
 	}
 }
 
+let tracker = 0;
+
 export function init_socket() {
 	const chatSocket = new WebSocket("wss://127.0.0.1:8000/ws/chat/");
 	const inputField = document.querySelector(".message-input input");
@@ -28,7 +30,6 @@ export function init_socket() {
 				msgdata.content = data.message;
 				msgdata.timestamp = new Date().toJSON();
 				createMessageBuble(mesgsElem, msgdata, data.sent);
-				//TODO: change to using id
 				changeLastDisplayedMessage(data);
 				moveConvListTop(chatUser.user_id);
 				const roomid = document
@@ -43,13 +44,19 @@ export function init_socket() {
 		} else if (data.status_type) {
 			updateOnlineStatus(data);
 		} else if (data.friendship_type) {
-			console.log("friendship ", data);
 			socketResponsHandler(data);
 		}
 	};
 	chatSocket.onclose = function (e) {
-		if (!e.wasClean) {
-			init_socket();
+		if (!e.wasClean && e.code != 1006) {
+			// console.log("Socket closed unexpectedly");
+			if (tracker <= 30) {
+				tracker++;
+			} else tracker = 1;
+			console.log(tracker);
+			setTimeout(() => {
+				init_socket();
+			}, 1000 * tracker);
 		}
 	};
 	inputField.addEventListener("keydown", (event) => {

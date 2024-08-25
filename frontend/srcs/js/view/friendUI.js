@@ -286,7 +286,6 @@ export default class FriendView extends HTMLElement {
 	}
 
 	connectedCallback() {
-		console.log("create friend view");
 		this.header = this.createHeader("Friends Management");
 		this.mainContent = this.createMainContent();
 		["all", "friends", "requests", "blocked"].forEach((type) => {
@@ -314,8 +313,6 @@ export default class FriendView extends HTMLElement {
 		this.mainContent.appendChild(card);
 	}
 
-	disconnectedCallback() {
-		console.log("deleted");
-	}
+	disconnectedCallback() {}
 }
 customElements.define("friend-view", FriendView);

@@ -1,3 +1,6 @@
+import { ACC_GAME, GAME_INV } from "./chat/convComponent.js";
+import GameInvite from "./component/GameRequest.js";
+import { handleGameInvite } from "./component/auxiliar/handleGameInvite.js";
 import {
 	ADD,
 	BLK_FRND,
@@ -16,13 +19,13 @@ export function friendUpdate(user, event) {
 				event: event,
 				user: user.username,
 				user_id: user.id,
+				avatar: user.avatar,
 				type: "friendship"
 			})
 		);
 }
 
 export function socketResponsHandler(data) {
-	console.log(data);
 	const { event } = data;
 	const allUsers = document.getElementById("all-users");
 	const friendsList = document.getElementById("friends-list");
@@ -43,6 +46,17 @@ export function socketResponsHandler(data) {
 		friendsList.updateDOM();
 	} else if (event === ADD_ROOM && list_users) {
 		list_users.loadConversations();
+	} else if (event === GAME_INV) {
+		const gameInvite = new GameInvite();
+		gameInvite.data = data;
+		const inviteDrop = document.getElementById("invite-drop");
+		inviteDrop.appendChild(gameInvite);
+
+		setTimeout(() => {
+			gameInvite.remove();
+		}, 3000);
+	} else if (event === ACC_GAME) {
+		handleGameInvite(data);
 	}
 }
 

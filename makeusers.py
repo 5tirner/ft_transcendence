@@ -3,10 +3,10 @@ import urllib3
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-authAPI = "https://127.0.0.1/api/signups/"
-loginAPI = "https://127.0.0.1/api/logins/"
-creatChatroomAPI = "https://127.0.0.1/api/chat/create/"
-friendshipAPI = "https://127.0.0.1/api/friendship/"
+authAPI = "https://127.0.0.1:8000/api/signups/"
+loginAPI = "https://127.0.0.1:8000/api/logins/"
+creatChatroomAPI = "https://127.0.0.1:8000/api/chat/create/"
+friendshipAPI = "https://127.0.0.1:8000/api/friendship/"
 
 USER_NUMBER = 5
 

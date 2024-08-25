@@ -176,13 +176,15 @@ const API = {
 	uploadAvatar: async (image) => {
 		const formData = new FormData();
 		formData.append("avatar", image);
-		console.log("Format Data: ", formData);
+		const header = {
+		  "Content-Type": "multipart/form-data"
+		}
 		const opts = {
-			method: "post",
+		  method: "POST",
+		  header,
 			body: formData
-		};
-		const response = await fetch(API.authEndpoint, opts);
-		console.log(response);
+		}
+    return fetch(API.authEndpoint + 'avatar/', opts);
 	}
 };
 

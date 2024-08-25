@@ -339,9 +339,11 @@ class PlayerUploadAvatar(APIView):
                 return Response({"error": "No token provided", "statusCode": 401})
             id = jwt.decode(tokenid, settings.SECRET_KEY, algorithms=["HS256"])["id"]
             avatar_file = request.FILES.get("avatar")
+            print("req: ", request)
+            print("ava: ", avatar_file)
             if not avatar_file:
                 return Response(
-                    {"error": "No file provided"}, status=status.HTTP_400_BAD_REQUEST
+                    {"error": "No file Provided"}, status=status.HTTP_400_BAD_REQUEST
                 )
             filePath = os.path.join(settings.MEDIA_ROOT, avatar_file.name)
             default_storage.save(filePath, ContentFile(avatar_file.read()))

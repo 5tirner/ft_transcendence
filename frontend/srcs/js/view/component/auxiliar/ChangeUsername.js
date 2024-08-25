@@ -1,29 +1,27 @@
-import API from "../../../service/API.js"
+import API from "../../../service/API.js";
 
 export default class UserUpdate extends HTMLElement
 {
-	constructor() { super(); this.root = this.attachShadow({ mode: "open" });}
+	constructor() { super();}
 	
 	connectedCallback()
 	{
     this.setAttribute("id", "update-user");
     this.target = this.parentNode.querySelector('.username');
-    console.log("The object Target: ", this.target);
     
     this.render();
     this.initialize();
-    this.changeUserName();
 	}
 	
 	disconnectedCallback()
 	{
-	  this.root.removeEventListener('click', this.listner1);
-		this.form.removeEventListener('submit', this.listner2);
+	  this.removeEventListener('click', this.listner1);
+    this.form.removeEventListener('click', this.listner2);
 	}
 	
 	render()
 	{
-	  this.root.innerHTML = `
+	  this.innerHTML = `
       <style>
         .updateUsername
         {
@@ -42,24 +40,23 @@ export default class UserUpdate extends HTMLElement
         }
         .updateUsername form
         {
-          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
           width: 40%;
-          height: 50%;
+          height: 40%;
+          background-color: var(--dark-purple);
+          border: 2px solid var(--light-olive);
+          border-radius: 18px;
           display: flex;
-          background: var(--dark-purple);
           justify-content: center;
           align-items: center;
           flex-direction: column;
           gap: 3rem;
           position: relative;
-          border: 2px solid var(--light-olive);
-          border-radius: 20px;
         }
        
         .updateUsername form input
         {
           font-family: var(--body-font);
-          color: white;
+          color: var(--light-olive);
           border: 2px solid var(--light-olive);
           border-radius: 10px;
           padding: 15px 10px;
@@ -94,16 +91,44 @@ export default class UserUpdate extends HTMLElement
           transition: all 0.1s ease, background 0.3s ease;
           font-family: "Press Start 2P", sans-serif !important;
         }
+        .close-btn {
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+          position: absolute;
+          right: 10px;
+          top: 10px;
+          overflow: hidden;
+          cursor: pointer;
+          background: #FF5D5B;
+          border: 2px solid #CF544D;
+        }
+        .close-btn:before, .close-btn:after {
+          content: "";
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          border-radius: 4px;
+          width: 2px;
+          height: 70%;
+          background: var(--light-olive);
+        }
+        .close-btn:before {
+          transform: translate(-50%, -50%) rotate(45deg);
+        }
+        .close-btn:after {
+          transform: translate(-50%, -50%) rotate(-45deg);
+        }
       </style>  
       
 			<div class="updateUsername">
 				<form id="usernameform">
+				  <div class="close-btn"></div>
 					<input
 						type="text"
 						name="fullname"
 						id="input-fullname"
-						placeholder="Edit your name.."
-						required
+						placeholder="Edit your username.."
 					/>
 					<button type="submit" name="Save" class="save-btn">Save</button>
 				</form>
@@ -114,54 +139,61 @@ export default class UserUpdate extends HTMLElement
 	
 	initialize()
 	{
-	  this.container = this.root.querySelector('.updateUsername');
-    this.form = this.root.querySelector('#usernameform');
+    this.close = this.querySelector('.close-btn');
+    this.form = this.querySelector('#usernameform');
     this.listner1 = (e) => {
-      if (e.target === this.container)
         this.remove();
     }
-    this.root.addEventListener('click', this.listner1);
-	}
-	
-	changeUserName()
-	{
-	  this.listner2 = async (e) => {
+    this.listner2 = (e) => {
       e.preventDefault();
-      const value = this.root.querySelector('#input-fullname').value;
-      if (value.lenght == 0)
-      {
-        this.errorMsg();
-        return;
-      }
-      const updateUserNameResponse = await API.updateUserName(value);
-      const updateUserNameJson = await updateUserNameResponse.json();
-      if (updateUserNameJson.status == 200) {
-        const getUserData = await API.getUser();
-        const username = await getUserData.json();
-        this.target.innerHTML = username.player.username;
-        this.remove();
-      }
-      else
-        this.errorMsg();
+      this.changeUserName();
     }
+    this.close.addEventListener('click', this.listner1);
     this.form.addEventListener('submit', this.listner2);
 	}
 	
-	errorMsg()
+	async changeUserName()
 	{
-      const errorElem = document.createElement('div');
-      errorElem.setAttribute('style', 'position: absolute; top:50px;');
-      errorElem.innerHTML = `
-        <style>
-          p
-          {
-            color: var(--light-olive);
-          }
-        </style>
-        <p> invalid username </p>
-      `
-      this.form.insertBefore(errorElem, this.form.firstChild);
-      console.log("invalid username");
+    const value = this.querySelector('#input-fullname').value;
+    if (value.length === 0)
+    {
+      this.error('Username required');
+      return;
+    }
+    const updateUserNameResponse = await API.updateUserName(value);
+    const updateUserNameJson = await updateUserNameResponse.json();
+    if (updateUserNameJson.status == 200)
+    {
+      const getUserData = await API.getUser();
+      const username = await getUserData.json();
+      this.target.innerHTML = username.player.username;
+      this.remove();
+      console.log("user updated successfuly");
+    }
+    else
+    {
+      this.error("Invalid username");
+    }
+	}
+	
+	error(msg)
+	{
+    const notif = this.querySelector("notif-danger");
+    if (notif)
+      notif.remove();
+    const elem = document.createElement('notif-danger');
+    elem.setAttribute('msg', msg);
+    this.parentNode.appendChild(elem);
+	}
+	
+	success(msg)
+	{
+    const notif = this.querySelector("notif-success");
+    if (notif)
+      notif.remove()
+    const elem = document.createElement('notif-success');
+    elem.setAttribute('msg', msg);
+    this.parentNode.appendChild(elem);
 	}
 }
 customElements.define("update-user", UserUpdate);
