@@ -174,6 +174,7 @@ export default class UpdateAvatar extends HTMLElement
       this.remove();
     }
 	}
+	
 	notification(msg, type)
 	{
     const target = this.parentNode.querySelector(type);

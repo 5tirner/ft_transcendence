@@ -157,7 +157,7 @@ export default class UserUpdate extends HTMLElement
     const value = this.querySelector('#input-fullname').value;
     if (value.length === 0)
     {
-      this.error('Username required');
+      this.notification('Username required', 'notif-danger');
       return;
     }
     const updateUserNameResponse = await API.updateUserName(value);
@@ -167,31 +167,21 @@ export default class UserUpdate extends HTMLElement
       const getUserData = await API.getUser();
       const username = await getUserData.json();
       this.target.innerHTML = username.player.username;
+      this.notification('Username updated', 'notif-success');
       this.remove();
-      console.log("user updated successfuly");
     }
     else
     {
-      this.error("Invalid username");
+      this.notification('Invalid username', 'notif-danger');
     }
 	}
 	
-	error(msg)
+	notification(msg, type)
 	{
-    const notif = this.querySelector("notif-danger");
-    if (notif)
-      notif.remove();
-    const elem = document.createElement('notif-danger');
-    elem.setAttribute('msg', msg);
-    this.parentNode.appendChild(elem);
-	}
-	
-	success(msg)
-	{
-    const notif = this.querySelector("notif-success");
-    if (notif)
-      notif.remove()
-    const elem = document.createElement('notif-success');
+    const target = this.parentNode.querySelector(type);
+    if (target)
+      target.remove();
+    const elem = document.createElement(type);
     elem.setAttribute('msg', msg);
     this.parentNode.appendChild(elem);
 	}

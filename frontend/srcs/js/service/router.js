@@ -11,6 +11,10 @@ export const router =
 
 	redirecto: async (path) =>
 	{
+    const qr = await API.getQRcode();
+    console.log("QR: ", qr);
+    
+    
 		const userIsLogged = await auth.isAuth();
 		if (userIsLogged)
 		{
@@ -18,11 +22,6 @@ export const router =
 			if (pathname === "/") pathname = "/platform";
 			window.component.root.innerHtml = "";
 			window.component.root.appendChild(window.component.main);
-			// history.replaceState(
-  	// 			null,
-  	// 			null,
-  	// 			location.origin + "/"
-   //    );
 			router.goto(pathname);
 		}
 		else

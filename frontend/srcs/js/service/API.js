@@ -7,6 +7,7 @@ const API = {
 	pongStatEndpoint: "https://127.0.0.1:8000/PongPong/myProfile",
 	pongHistoEndpoint: "https://127.0.0.1:8000/PongPong/History",
 	playersEndpoint: "https://127.0.0.1:8000/api/players/",
+	TwoFactAuth: "https://127.0.0.1:8000/api/TFA/codeqr/",
 
 	// ADD HERE ALL THE OTHER API FUNCTIONS
 	commonPostFunc: async (endPoint, userData) => {
@@ -161,8 +162,7 @@ const API = {
 			credentials: "include" // Ensure cookies are included
 		};
 		try {
-			const response = await fetch(url, opts);
-			return response;
+			return await fetch(url, opts);
 		} catch (e) {
 			console.log(e);
 		}
@@ -185,6 +185,13 @@ const API = {
 			body: formData
 		}
     return fetch(API.authEndpoint + 'avatar/', opts);
+	},
+	
+	getQRcode: async () => {
+  	const qr = await API.makeGetRequest(`${API.TwoFactAuth}`);
+    const blob = await qr.blob();
+    const imageUrl = URL.createObjectURL(blob);
+    return imageUrl;
 	}
 };
 

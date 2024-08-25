@@ -13,6 +13,9 @@ export default class Setting extends HTMLElement
 	
 	disconnectedCallback()
 	{
+    this.editUsernameButton.removeEventListener('click', this.editUserListner);
+    this.editIamgeButton.removeEventListener('click', this.editImgListnet);
+    this.checkbox.removeEventListener('change', this.listener3);
 	}
 	
 	render()
@@ -30,9 +33,8 @@ export default class Setting extends HTMLElement
         .profile-card .section {
           border-radius: 20px;
           box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-          padding: 20px;
+          padding: 40px;
           width: 500px;
-          height: 350px;
           text-align: center;
           background-color: var(--dark-purple);
           position: relative;
@@ -112,6 +114,83 @@ export default class Setting extends HTMLElement
           transition: all 0.1s ease, background 0.3s ease;
           font-family: "Press Start 2P", sans-serif !important;
         }
+        .checkbox-wrapper-3 input[type="checkbox"] {
+          visibility: hidden;
+          display: none;
+        }
+      
+        .checkbox-wrapper-3 .toggle {
+          position: relative;
+          display: block;
+          width: 40px;
+          height: 20px;
+          cursor: pointer;
+          -webkit-tap-highlight-color: transparent;
+          transform: translate3d(0, 0, 0);
+        }
+        .checkbox-wrapper-3 .toggle:before {
+          content: "";
+          position: relative;
+          top: 3px;
+          left: 3px;
+          width: 34px;
+          height: 14px;
+          display: block;
+          background: #9A9999;
+          border-radius: 8px;
+          transition: background 0.2s ease;
+        }
+        .checkbox-wrapper-3 .toggle span {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 20px;
+          height: 20px;
+          display: block;
+          background: white;
+          border-radius: 10px;
+          box-shadow: 0 3px 8px rgba(154, 153, 153, 0.5);
+          transition: all 0.2s ease;
+        }
+        .checkbox-wrapper-3 .toggle span:before {
+          content: "";
+          position: absolute;
+          display: block;
+          margin: -18px;
+          width: 56px;
+          height: 56px;
+          background: rgba(79, 46, 220, 0.5);
+          border-radius: 50%;
+          transform: scale(0);
+          opacity: 1;
+          pointer-events: none;
+        }
+      
+        .checkbox-wrapper-3 #cbx-3:checked + .toggle:before {
+          background: var(--teal);
+        }
+        .checkbox-wrapper-3 #cbx-3:checked + .toggle span {
+          background: var(--dark-teal);
+          transform: translateX(20px);
+          transition: all 0.2s cubic-bezier(0.8, 0.4, 0.3, 1.25), background 0.15s ease;
+          box-shadow: 0 3px 8px rgba(79, 46, 220, 0.2);
+        }
+        .checkbox-wrapper-3 #cbx-3:checked + .toggle span:before {
+          transform: scale(1);
+          opacity: 0;
+          transition: all 0.4s ease;
+        }
+        .tfa
+        {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          padding: 20px 20px 0 20px;
+          p{
+            color: var(--light-olive);
+            font-size: 14px;
+          }
+        }
       </style>
       
       <div class="profile-card">
@@ -133,6 +212,13 @@ export default class Setting extends HTMLElement
        			</div>
        			<button class="edit-btn">Edit</button>
         		</div>
+            <div class="tfa">
+              <p>Two Factor Auth.</p>
+              <div class="checkbox-wrapper-3">
+                <input type="checkbox" id="cbx-3" checked />
+                <label for="cbx-3" class="toggle"><span></span></label>
+              </div>
+            </div>
        	</div>
       </div> 
     `;
@@ -140,21 +226,27 @@ export default class Setting extends HTMLElement
 	
 	initialize()
 	{
+    this.checkbox = this.querySelector("#cbx-3");
     this.editIamgeButton = this.querySelector(".edit-image");
     this.editUsernameButton = this.querySelector(".edit-btn");
     this.target = this.querySelector('.username');
-    const editUserListner = (e) => {
+    this.editUserListner = (e) => {
       e.preventDefault();
       const elem = document.createElement('update-user');
       this.append(elem);
     }
-    const editImgListnet = (e) => {
+    this.editImgListnet = (e) => {
       e.preventDefault();
       const elem = document.createElement('update-avatar');
       this.append(elem);
     }
-    this.editUsernameButton.addEventListener('click', editUserListner);
-    this.editIamgeButton.addEventListener('click', editImgListnet);
+    this.listener3 = (e) => {
+      console.log(e.target.checked)
+    }
+    
+    this.editUsernameButton.addEventListener('click', this.editUserListner);
+    this.editIamgeButton.addEventListener('click', this.editImgListnet);
+    this.checkbox.addEventListener('change', this.listener3);
 	}
 }
 customElements.define("setting-view", Setting);
