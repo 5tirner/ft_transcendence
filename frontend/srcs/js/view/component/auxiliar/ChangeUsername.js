@@ -139,15 +139,15 @@ export default class UserUpdate extends HTMLElement
 	
 	initialize()
 	{
-    this.close = this.querySelector('.close-btn');
     this.form = this.querySelector('#usernameform');
-    this.listner1 = (e) => {
-        this.remove();
-    }
     this.listner2 = (e) => {
       e.preventDefault();
       this.changeUserName();
     }
+    this.listner1 = (e) => {
+        this.remove();
+    }
+    this.close = this.querySelector('.close-btn');
     this.close.addEventListener('click', this.listner1);
     this.form.addEventListener('submit', this.listner2);
 	}

@@ -1,5 +1,6 @@
 import { auth } from "../../auth/Authentication.js";
 import API from "../../service/API.js"
+
 export default class Setting extends HTMLElement
 {
 	constructor() { super(); }
@@ -215,7 +216,7 @@ export default class Setting extends HTMLElement
             <div class="tfa">
               <p>Two Factor Auth.</p>
               <div class="checkbox-wrapper-3">
-                <input type="checkbox" id="cbx-3" checked />
+                <input type="checkbox" id="cbx-3"/>
                 <label for="cbx-3" class="toggle"><span></span></label>
               </div>
             </div>
@@ -240,8 +241,19 @@ export default class Setting extends HTMLElement
       const elem = document.createElement('update-avatar');
       this.append(elem);
     }
-    this.listener3 = (e) => {
-      console.log(e.target.checked)
+    this.listener3 = async (e) => {
+      console.log(e.target.checked);
+      if ( e.target.checked === true )
+      {
+        const container = this.querySelector('.profile-card .section');
+        const elem = document.createElement('t-f-a');
+        container.appendChild(elem);
+        
+      }
+      else
+      {
+        
+      }
     }
     
     this.editUsernameButton.addEventListener('click', this.editUserListner);

@@ -11,11 +11,7 @@ export const router =
 
 	redirecto: async (path) =>
 	{
-    const qr = await API.getQRcode();
-    console.log("QR: ", qr);
-    
-    
-		const userIsLogged = await auth.isAuth();
+    const userIsLogged = await auth.isAuth();
 		if (userIsLogged)
 		{
 			let pathname = window.location.pathname;

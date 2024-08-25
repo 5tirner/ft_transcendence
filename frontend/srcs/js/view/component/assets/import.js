@@ -12,6 +12,7 @@ import TicTacToe from "../TicTacToe.js";
 import Statistic from "../Statistic.js";
 import PongLocal from "../PongLocal.js";
 import GameInvite from "../GameRequest.js";
+import Tfa from "../TwoFactAuth.js";
 
 import ChatComponent from "../../chat/chat.js";
 
@@ -31,5 +32,5 @@ export {
   Sidebar, PongTour, Platform, TicTacToe, Statistic,
   PongLocal, GameInvite, TicAnim, PongAnim, ResultMsg,
   ConfirmMsg, AbortButton, UserUpdate, UpdateAvatar,
-  Success, ChatComponent, Danger
+  Success, ChatComponent, Danger, Tfa
 };

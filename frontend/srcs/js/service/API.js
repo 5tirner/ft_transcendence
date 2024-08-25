@@ -190,8 +190,10 @@ const API = {
 	getQRcode: async () => {
   	const qr = await API.makeGetRequest(`${API.TwoFactAuth}`);
     const blob = await qr.blob();
-    const imageUrl = URL.createObjectURL(blob);
-    return imageUrl;
+    return URL.createObjectURL(blob);
+	},
+	verifyTfa: async (code) => {
+    return await API.makePostRequest(`${API.authEndpoint}TFA/verify/`, {code});
 	}
 };
 
