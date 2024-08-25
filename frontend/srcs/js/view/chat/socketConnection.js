@@ -14,7 +14,7 @@ function moveConvListTop(user_id) {
 }
 
 export function init_socket() {
-	const chatSocket = new WebSocket("wss://127.0.0.1/ws/chat/");
+	const chatSocket = new WebSocket("wss://127.0.0.1:8000/ws/chat/");
 	const inputField = document.querySelector(".message-input input");
 
 	document.friendship_ws = chatSocket;
