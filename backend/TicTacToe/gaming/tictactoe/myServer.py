@@ -12,8 +12,10 @@ os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 def saveData(self):
     addUserToDb = gameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
     addUserToDb.save()
+    print(f"gameInfo += {gameInfo.objects.get(login=self.scope['user'])}")
     addUserPic = playerAndHisPic(login=self.scope['user'], pic=self.scope['pic'])
     addUserPic.save()
+    print(f"playerAndHisPic += {playerAndHisPic.objects.get(login=self.scope['user'])}")
 class myServerOnGame(AsyncWebsocketConsumer):
     playerWantsToPlay = list()
     playersOnMatchAndItsRoomId = dict()

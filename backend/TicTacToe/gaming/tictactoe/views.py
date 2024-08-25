@@ -18,7 +18,7 @@ def myProfile(req):
     if req.method == "GET":
         authApiResponse = isAuthUser(req)
         if authApiResponse is None:
-            return response.Response(status=status.HTTP_204_NO_CONTENT)
+            return response.Response(status=status.HTTP_401_UNAUTHORIZED)
         user_infos  = authApiResponse.json().get('data')
         print(user_infos)
         searchForUserInDataBase = gameInfo.objects.filter(login=user_infos.get('username')).first()
@@ -47,7 +47,7 @@ def userStatistic(req, login):
     print(f"Login={login}")
     authApiResponse = isAuthUser(req)
     if authApiResponse is None:
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
+        return response.Response(status=status.HTTP_401_UNAUTHORIZED)
     user_infos  = authApiResponse.json().get('data')
     print(user_infos)
     try:
@@ -62,7 +62,7 @@ def historic(req):
     print("-------------------------USER HESTORY----------------------------------")
     authApiResponse = isAuthUser(req)
     if authApiResponse is None:
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
+        return response.Response(status=status.HTTP_401_UNAUTHORIZED)
     user_infos  = authApiResponse.json().get('data')
     name = user_infos.get('username')
     allMatches = dict(dict())

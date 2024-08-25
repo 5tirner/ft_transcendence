@@ -6,4 +6,5 @@ wsPatterns = [
     path('PongTourWs/', pongTourServer.as_asgi()),
     path('localGameWs/', pongLocalServer.as_asgi()),
     path('finalPongTour/', Finalist.as_asgi()),
+    # path('frinds/<int:id>', )
 ]
