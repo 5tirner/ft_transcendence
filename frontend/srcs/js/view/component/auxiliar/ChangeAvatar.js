@@ -2,7 +2,7 @@ import API from "../../../service/API.js";
 
 export default class UpdateAvatar extends HTMLElement
 {
-	constructor() { super(); this.root = this.attachShadow({mode: 'open'})}
+  constructor() { super(); }
 
 	connectedCallback()
 	{
@@ -14,13 +14,13 @@ export default class UpdateAvatar extends HTMLElement
 
 	disconnectedCallback()
 	{
-    this.root.removeEventListener('click', this.listner1);
+    this.removeEventListener('click', this.listner1);
     this.form.removeEventListener('click', this.listner2);
 	}
 
 	render()
 	{
-	  this.root.innerHTML = `
+	  this.innerHTML = `
       <style>
         .updateAvatar
         {
@@ -48,7 +48,7 @@ export default class UpdateAvatar extends HTMLElement
           justify-content: center;
           align-items: center;
           flex-direction: column;
-          gap: 3rem;z
+          gap: 3rem;
           position: relative;
           color: var(--light-olive);
         }
@@ -134,8 +134,8 @@ export default class UpdateAvatar extends HTMLElement
 	
 	initialize()
 	{
-    this.form = this.root.querySelector('#avatarform');
-		this.close = this.root.querySelector('.close-btn');
+    this.form = this.querySelector('#avatarform');
+		this.close = this.querySelector('.close-btn');
 		this.listner1 = (e) => {
         this.remove();
     }
@@ -149,35 +149,39 @@ export default class UpdateAvatar extends HTMLElement
 	
 	async changeAvatar()
 	{
-    const value = this.root.querySelector('#file').files[0];
-    console.log("value: ", value);
+    const value = this.querySelector('#file').files[0];
+    if (value === undefined)
+    {
+      this.notification('File required', 'notif-danger');
+      return;
+    }
     const updateAvatarResponse = await API.uploadAvatar(value);
     const updateAvatarJson = await updateAvatarResponse.json();
-    console.log("Response: ", updateAvatarJson);
-    // if (updateAvatarJson.status == 200)
-    // {
-    //   const getUserData = await API.getUser();
-    //   const username = await getUserData.json();
-    //   this.target.innerHTML = username.player.username;
-    //   this.remove();
-    //   console.log("user updated successfuly");
-    // }
-    // else
-    // {
-    //   const errorElem = document.createElement('div');
-    //   errorElem.setAttribute('style', 'position: absolute; top:50px;');
-    //   errorElem.innerHTML = `
-    //     <style>
-    //       p
-    //       {
-    //         color: var(--light-olive);
-    //       }
-    //     </style>
-    //     <p> invalid username </p>
-    //   `
-    //   this.form.insertBefore(errorElem, this.form.firstChild);
-    //   console.log("invalid username");
-    // }
+    if (updateAvatarJson.statusCode == 200)
+    {
+      const getUserData = await API.getUser();
+      const dataJson = await getUserData.json();
+      let avatar = dataJson.player.avatar;
+      console.log("dataJson: ", dataJson);
+      this.target.setAttribute('src', avatar );
+      this.notification('Avatar updated', 'notif-success');
+      this.remove();
+      
+    }
+    else
+    {
+      this.notification('something went wrong', 'notif-danger');
+      this.remove();
+    }
+	}
+	notification(msg, type)
+	{
+    const target = this.parentNode.querySelector(type);
+    if (target)
+      target.remove();
+    const elem = document.createElement(type);
+    elem.setAttribute('msg', msg);
+    this.parentNode.appendChild(elem);
 	}
 }
 customElements.define("update-avatar", UpdateAvatar);

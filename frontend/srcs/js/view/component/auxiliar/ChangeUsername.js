@@ -2,7 +2,7 @@ import API from "../../../service/API.js";
 
 export default class UserUpdate extends HTMLElement
 {
-	constructor() { super(); this.root = this.attachShadow({ mode: "open" });}
+	constructor() { super();}
 	
 	connectedCallback()
 	{
@@ -15,13 +15,13 @@ export default class UserUpdate extends HTMLElement
 	
 	disconnectedCallback()
 	{
-	  this.root.removeEventListener('click', this.listner1);
+	  this.removeEventListener('click', this.listner1);
     this.form.removeEventListener('click', this.listner2);
 	}
 	
 	render()
 	{
-	  this.root.innerHTML = `
+	  this.innerHTML = `
       <style>
         .updateUsername
         {
@@ -128,8 +128,7 @@ export default class UserUpdate extends HTMLElement
 						type="text"
 						name="fullname"
 						id="input-fullname"
-						placeholder="Edit your name.."
-						required
+						placeholder="Edit your username.."
 					/>
 					<button type="submit" name="Save" class="save-btn">Save</button>
 				</form>
@@ -140,8 +139,8 @@ export default class UserUpdate extends HTMLElement
 	
 	initialize()
 	{
-    this.close = this.root.querySelector('.close-btn');
-    this.form = this.root.querySelector('#usernameform');
+    this.close = this.querySelector('.close-btn');
+    this.form = this.querySelector('#usernameform');
     this.listner1 = (e) => {
         this.remove();
     }
@@ -155,7 +154,12 @@ export default class UserUpdate extends HTMLElement
 	
 	async changeUserName()
 	{
-    const value = this.root.querySelector('#input-fullname').value;
+    const value = this.querySelector('#input-fullname').value;
+    if (value.length === 0)
+    {
+      this.error('Username required');
+      return;
+    }
     const updateUserNameResponse = await API.updateUserName(value);
     const updateUserNameJson = await updateUserNameResponse.json();
     if (updateUserNameJson.status == 200)
@@ -168,20 +172,28 @@ export default class UserUpdate extends HTMLElement
     }
     else
     {
-      const errorElem = document.createElement('div');
-      errorElem.setAttribute('style', 'position: absolute; top:50px;');
-      errorElem.innerHTML = `
-        <style>
-          p
-          {
-            color: var(--light-olive);
-          }
-        </style>
-        <p> invalid username </p>
-      `
-      this.form.insertBefore(errorElem, this.form.firstChild);
-      console.log("invalid username");
+      this.error("Invalid username");
     }
+	}
+	
+	error(msg)
+	{
+    const notif = this.querySelector("notif-danger");
+    if (notif)
+      notif.remove();
+    const elem = document.createElement('notif-danger');
+    elem.setAttribute('msg', msg);
+    this.parentNode.appendChild(elem);
+	}
+	
+	success(msg)
+	{
+    const notif = this.querySelector("notif-success");
+    if (notif)
+      notif.remove()
+    const elem = document.createElement('notif-success');
+    elem.setAttribute('msg', msg);
+    this.parentNode.appendChild(elem);
 	}
 }
 customElements.define("update-user", UserUpdate);

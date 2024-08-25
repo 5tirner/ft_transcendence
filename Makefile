@@ -1,6 +1,6 @@
 DC = docker compose -f docker-compose.yml
 
-IMG = $(shell docker images -a -q)
+# IMG = $(shell docker images -a -q)
 
 .PHONY:  up upd start down stop re  ps clean fclean
 
@@ -20,12 +20,6 @@ stop :
 start : 
 	@$(DC) start
 
-ps : 
-	@docker ps
-
-ls :
-	@docker images
-
 re: down upd
 
 create_data_dir:
@@ -34,8 +28,6 @@ create_data_dir:
 
 clean : down
 	docker container prune --force
-	docker rmi $(IMG)
 
-fclean: down clean
+fclean: clean
 	docker system prune -af
-

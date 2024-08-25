@@ -38,18 +38,27 @@ export default class Setting extends HTMLElement
           position: relative;
           border: 2px solid var(--light-olive);
         }
-        .profile-card img {
+        .profile-card .img-div
+        {
           border-radius: 50%;
           width: 100px;
           height: 100px;
-          object-fit: cover;
           position: relative;
           border: 2px solid var(--light-olive);
+          margin: 0 auto;
+        }
+        .profile-card .img-div img {
+          border-radius: 50%;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          position: relative;
+          border: 1px solid var(--light-olive);
         }
         .profile-card .edit-image {
           position: absolute;
-          top: 85px;
-          right: 200px;
+          top: 66px;
+          right: 0;
           border: none;
           border-radius: 50%;
           border: 2px solid var(--light-olive);
@@ -107,12 +116,13 @@ export default class Setting extends HTMLElement
       
       <div class="profile-card">
        	<div class="section">
-        		<img
-         			src="${auth.avatar || "https://i.imgur.com/8bXZb8e.png"}"
-         			alt="Profile Picture"
-         			id="profileImage"
-            />
-        		<a href="" class="edit-image"> <i class='bx bx-pencil'></i> </a>
+            <div class="img-div">
+          		<img
+           			src="${auth.avatar}"
+           			id="profileImage"
+              />
+              <a href="" class="edit-image"> <i class='bx bx-pencil'></i> </a>
+            </div>
         		
         		<h4 class="fullname">${auth.fullname}</h4>
         		<p  class="username" username="username">${auth.user}</p>
