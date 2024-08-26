@@ -1,5 +1,4 @@
 import { auth } from "../../auth/Authentication.js";
-import API from "../../service/API.js"
 
 export default class Setting extends HTMLElement
 {
@@ -214,9 +213,9 @@ export default class Setting extends HTMLElement
        			<button class="edit-btn">Edit</button>
         		</div>
             <div class="tfa">
-              <p>Two Factor Auth.</p>
+              <p>Two Factor Auth</p>
               <div class="checkbox-wrapper-3">
-                <input type="checkbox" id="cbx-3"/>
+                <input type="checkbox" id="cbx-3" ${auth.tfa ? 'checked' : ''}/>
                 <label for="cbx-3" class="toggle"><span></span></label>
               </div>
             </div>
@@ -243,16 +242,15 @@ export default class Setting extends HTMLElement
     }
     this.listener3 = async (e) => {
       console.log(e.target.checked);
-      if ( e.target.checked === true )
+      if ( e.target.checked == true )
       {
         const container = this.querySelector('.profile-card .section');
         const elem = document.createElement('t-f-a');
-        container.appendChild(elem);
-        
+        container.parentNode.appendChild(elem);
       }
       else
       {
-        
+        // cancling the 2FA
       }
     }
     

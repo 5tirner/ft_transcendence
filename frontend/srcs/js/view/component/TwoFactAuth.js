@@ -1,4 +1,7 @@
 import API from "../../service/API.js";
+import {danger} from "./assets/import.js";
+import {info} from "./assets/import.js";
+import {success} from "./assets/import.js";
 
 export default class Tfa extends HTMLElement
 {
@@ -8,13 +11,13 @@ export default class Tfa extends HTMLElement
   {
     this.render();
     this.init();
-    this.verifyTfaCode();
   }
   
   diconnectedCallback()
   {
     this.close.removeEventListener('click', this.listner1);
   }
+  
   async render()
   {
     this.innerHTML =
@@ -24,16 +27,28 @@ export default class Tfa extends HTMLElement
         {
           width: 100%;
           height: 100%;
-          background: var(--dark-purple);
           position: absolute;
-          border-radius: 18px;
-          top: 0;
-          left: 0;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
           display: flex;
-          flex-direction: column;
           justify-content: center;
           align-items: center;
+          backdrop-filter: blur(15px);
+        }
+        .t-f-a .wrapper
+        {
+          position: relative;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          border: 2px solid var(--light-olive);
+          width: 50%;
+          height: 50%;
           gap: 20px;
+          border-radius: 18px;
+          
         }
         .t-f-a img
         {
@@ -84,8 +99,8 @@ export default class Tfa extends HTMLElement
           font-family: "Press Start 2P", sans-serif !important;
         }
         .close-btn {
-          width: 15px;
-          height: 15px;
+          width: 20px;
+          height: 20px;
           border-radius: 50%;
           position: absolute;
           right: 10px;
@@ -113,42 +128,75 @@ export default class Tfa extends HTMLElement
         }
       </style>
       <div class="t-f-a">
-        <div class="close-btn"></div>
-        <img class="qrCode">
-        <input
-						type="text"
-						id="input-fullname"
-						placeholder="2FA Code"
-						minlength="6" maxlength="6"
-					/>
-					<button class="verify-btn">Verify and Enable</button>
+        <div class="wrapper">
+          <div class="close-btn"></div>
+          <input
+  						type="text"
+  						id="input-fullname"
+  						placeholder="2FA Code"
+  						minlength="6" maxlength="6"
+  					/>
+  					<button class="verify-btn">Verify and Enable</button>
+        </div>
       </div>
     `;
-    const hold = this.querySelector('.qrCode');
+    
+    
     const qrCode = await API.getQRcode();
-    hold.setAttribute('src', qrCode);
+    const wrapper = this.querySelector('.wrapper');
+    const img = document.createElement('img');
+    img.setAttribute('class', 'qrCode');
+    img.setAttribute('src', qrCode);
+    wrapper.prepend(img);
   }
   
   init()
   {
+    this.close = this.querySelector('.close-btn');
     this.input = this.querySelector('#input-fullname');
     this.verfyBtn = this.querySelector('.verify-btn');
     this.listener2 = (e) => {
+      if (this.input.value.length < 4)
+      {
+        if ( this.input.value.length == 0 )
+          this.notification(info, '2FA code required');
+        else
+          this.notification(info, '2FA code is short');
+        return;
+      }
       this.verifyTfaCode(this.input.value);
     } 
     this.listner1 = (e) => {
       this.remove();
     }
-    this.close = this.querySelector('.close-btn');
+    
     this.close.addEventListener('click', this.listner1);
-    this.verfyBtn.addEventListener('click', this.listener2)
+    this.verfyBtn.addEventListener('click', this.listener2);
   }
   
   async verifyTfaCode(value)
   {
     const res = await API.verifyTfa(value);
-    console.log("value: ", res);
+    const data = await res.json();
+    if ( data.statusCode == 200 )
+    {
+      // what shoud be done?
+    }
+    else
+    {
+      this.input.value = '';
+      this.notification(danger, 'Invalid 2FA code');
+    }
   }
+  
+  notification(type, msg)
+	{
+    type.msg = msg;
+    const target = this.parentNode.querySelector(type.localName);
+    if (target)
+      target.remove();
+    this.parentNode.appendChild(type);
+	}
   
 }
 customElements.define('t-f-a', Tfa);

@@ -17,13 +17,14 @@ export const auth = {
 		const response = await API.isLogedIn();
 		if (response && response.ok) {
 			const res = await response.json();
-      console.log("res: ", res);
+      console.log("player data: ", res.data);
 			const { isLoged } = res;
 			auth.user = res.data.username;
 			auth.avatar = res.data.avatar;
 			auth.loses = res.data.losses;
 			auth.wins = res.data.wins;
 			auth.id = res.data.id;
+      auth.tfa = res.data.two_factor;
 			auth.fullname = `${res.data.first_name} ${res.data.last_name}`;
 			return isLoged;
 		}

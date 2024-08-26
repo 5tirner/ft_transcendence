@@ -24,13 +24,37 @@ import AbortButton from "../auxiliar/AbortButton.js";
 import UserUpdate from "../auxiliar/ChangeUsername.js";
 import UpdateAvatar from "../auxiliar/ChangeAvatar.js";
 
-import Success from "../auxiliar/notification/Success.js";
-import Danger from "../auxiliar/notification/Danger.js";
+import Notification  from "../auxiliar/notification/Notification.js";
+
+const danger = new Notification("Error", 'bx-error', '#e26159');
+const info = new Notification("Important", 'bx-info-circle', '#1b958d');
+const success = new Notification("Success", 'bx-check-circle', '#0ad406');
 
 export {
-  Game, Home, Pong, Login, Setting, Profile, History,
-  Sidebar, PongTour, Platform, TicTacToe, Statistic,
-  PongLocal, GameInvite, TicAnim, PongAnim, ResultMsg,
-  ConfirmMsg, AbortButton, UserUpdate, UpdateAvatar,
-  Success, ChatComponent, Danger, Tfa
+  Game,
+  Home,
+  Pong,
+  Login,
+  Setting,
+  Profile,
+  History,
+  Sidebar,
+  PongTour,
+  Platform,
+  TicTacToe,
+  Statistic,
+  PongLocal,
+  GameInvite,
+  TicAnim,
+  PongAnim,
+  ResultMsg,
+  ConfirmMsg,
+  AbortButton,
+  UserUpdate,
+  UpdateAvatar,
+  ChatComponent,
+  Tfa,
+  danger,
+  info,
+  success
 };
