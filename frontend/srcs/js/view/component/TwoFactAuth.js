@@ -1,27 +1,25 @@
 import API from "../../service/API.js";
-import {danger} from "./assets/import.js";
-import {info} from "./assets/import.js";
-import {success} from "./assets/import.js";
+import { danger } from "./assets/import.js";
+import { info } from "./assets/import.js";
+import { success } from "./assets/import.js";
 
-export default class Tfa extends HTMLElement
-{
-  constructor() { super(); }
-  
-  connectedCallback()
-  {
-    this.render();
-    this.init();
-  }
-  
-  diconnectedCallback()
-  {
-    this.close.removeEventListener('click', this.listner1);
-  }
-  
-  async render()
-  {
-    this.innerHTML =
-    `
+export default class Tfa extends HTMLElement {
+	constructor() {
+		super();
+	}
+
+	connectedCallback() {
+		this.render();
+		this.init();
+	}
+
+	diconnectedCallback() {
+		this.close.removeEventListener("click", this.listner1);
+		this.close.removeEventListener("click", this.listener2);
+	}
+
+	async render() {
+		this.innerHTML = `
       <style>
         .t-f-a
         {
@@ -140,63 +138,59 @@ export default class Tfa extends HTMLElement
         </div>
       </div>
     `;
-    
-    
-    const qrCode = await API.getQRcode();
-    const wrapper = this.querySelector('.wrapper');
-    const img = document.createElement('img');
-    img.setAttribute('class', 'qrCode');
-    img.setAttribute('src', qrCode);
-    wrapper.prepend(img);
-  }
-  
-  init()
-  {
-    this.close = this.querySelector('.close-btn');
-    this.input = this.querySelector('#input-fullname');
-    this.verfyBtn = this.querySelector('.verify-btn');
-    this.listener2 = (e) => {
-      if (this.input.value.length < 4)
-      {
-        if ( this.input.value.length == 0 )
-          this.notification(info, '2FA code required');
-        else
-          this.notification(info, '2FA code is short');
-        return;
-      }
-      this.verifyTfaCode(this.input.value);
-    } 
-    this.listner1 = (e) => {
-      this.remove();
-    }
-    
-    this.close.addEventListener('click', this.listner1);
-    this.verfyBtn.addEventListener('click', this.listener2);
-  }
-  
-  async verifyTfaCode(value)
-  {
-    const res = await API.verifyTfa(value);
-    const data = await res.json();
-    if ( data.statusCode == 200 )
-    {
-      // what shoud be done?
-    }
-    else
-    {
-      this.input.value = '';
-      this.notification(danger, 'Invalid 2FA code');
-    }
-  }
-  
-  notification(type, msg)
-	{
-    type.msg = msg;
-    const target = this.parentNode.querySelector(type.localName);
-    if (target)
-      target.remove();
-    this.parentNode.appendChild(type);
+
+		const qrCode = await API.getQRcode();
+		const wrapper = this.querySelector(".wrapper");
+		const img = document.createElement("img");
+		img.setAttribute("class", "qrCode");
+		img.setAttribute("src", qrCode);
+		wrapper.prepend(img);
 	}
-  
+
+	init() {
+		this.close = this.querySelector(".close-btn");
+		this.input = this.querySelector("#input-fullname");
+		this.verfyBtn = this.querySelector(".verify-btn");
+		this.listener2 = (e) => {
+			if (this.input.value.length < 4) {
+				if (this.input.value.length == 0)
+					this.notification(info, "2FA code required");
+				else this.notification(info, "2FA code is short");
+				return;
+			}
+			this.verifyTfaCode(this.input.value);
+		};
+		this.listner1 = (e) => {
+			this.remove();
+		};
+
+		this.close.addEventListener("click", this.listner1);
+		this.verfyBtn.addEventListener("click", this.listener2);
+		this.addEventListener("keydown", (e) => {
+			if (e.key === "Enter") {
+				this.listener2();
+			}
+		});
+	}
+
+	async verifyTfaCode(value) {
+		const res = await API.verifyTfa(value);
+		const data = await res.json();
+		if (data.statusCode == 200) {
+			this.notification(success, "2FA is enabled");
+			this.remove();
+		} else {
+			this.input.value = "";
+			this.notification(danger, "Invalid 2FA code");
+		}
+	}
+
+	notification(type, msg) {
+		type.msg = msg;
+		const target = this.parentNode.querySelector(type.localName);
+		if (target) target.remove();
+		this.parentNode.appendChild(type);
+	}
 }
-customElements.define('t-f-a', Tfa);
+customElements.define("t-f-a", Tfa);
+

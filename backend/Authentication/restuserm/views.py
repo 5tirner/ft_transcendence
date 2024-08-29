@@ -100,11 +100,11 @@ def callback42(request):
             player = create_player(user_data)
             if player is None:
                 return redirect(f"{settings.TRANSCE_HOST}/login/", permanent=True)
+
+            # TODO: 2FA check before redirecting,do something here
+
             jwt_token = jwt_generation(player.id, player.two_factor)
-            response = redirect(
-                settings.TRANSCE_HOST, permanent=True
-            )  # Should add the 2FA in this redirection
-            #  response = redirect(f"http://{settings.TRANSCE_HOST}/{'2fa' if player.two_factor else 'home'}/", permanent=True)
+            response = redirect(settings.TRANSCE_HOST, permanent=True)
             response.set_cookie(
                 "jwt_token", value=jwt_token, httponly=True, secure=True
             )
