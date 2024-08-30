@@ -37,7 +37,7 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.beginPath();
 			this.canvasContext.arc(this.xBallPos, this.yBallPos, 10, 0, 6.2);
 			this.canvasContext.lineWidth = 0.5;
-			this.canvasContext.fillStyle = "#F0F8FF";
+			this.canvasContext.fillStyle = "#381631";
 			this.canvasContext.fill();
 			this.canvasContext.closePath();
 			this.canvasContext.strokeStyle = "rgb(140, 29, 260)";
@@ -48,7 +48,7 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.moveTo(20, this.paddl1Y);
 			this.canvasContext.lineTo(20, this.paddl1Y + 50);
 			this.canvasContext.closePath();
-			this.canvasContext.strokeStyle = "#F0F8FF";
+			this.canvasContext.strokeStyle = "#381631";
 			this.canvasContext.stroke();
 
 			this.canvasContext.beginPath();
@@ -56,7 +56,7 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.moveTo(580, this.paddl2Y);
 			this.canvasContext.lineTo(580, this.paddl2Y + 50);
 			this.canvasContext.closePath();
-			this.canvasContext.strokeStyle = "#F0F8FF";
+			this.canvasContext.strokeStyle = "#381631";
 			this.canvasContext.stroke();
 			requestAnimationFrame(this.drawElements.bind(this));
 		}
@@ -65,48 +65,54 @@ export default class Pong extends HTMLElement {
 	render() {
 		this.root.innerHTML = `
       <style>
-          :host {
-              display: block;
-              text-align: center;
-              margin: 0 auto;
-              font-family: var(--body-font);
-          }
-          #confirm-msg
-          {
-            backdrop-filter: blur(5px);
-            position: absolute;
-            top: 0;
-            left: 0;
-          }
-          canvas {
-              display: block;
-              margin: 20px auto;
-              background-color: #ccb4e2b0;
-              border: 2px solid #8009F0;
-              border-radius: 10px;
-              filter: brightness(90%);
-          }
-          h1 {
-              color: #8009F0;
-          }
-          .player-name {
-              position: absolute;
-              color: #8009F0;
-          }
-          .player1 {
-              left: 10px;
-              bottom: 10px;
-          }
-          .player2 {
-              right: 10px;
-              bottom: 10px;
-          }
+        :host {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 4.5rem;
+          width: 100%;
+          height: 100%;
+          color: var(--dark-teal);
+          font-family: "Press Start 2P", sans-serif !important;
+        }
+        #confirm-msg
+        {
+          backdrop-filter: blur(5px);
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+        canvas {
+          display: block;
+          margin: 20px auto;
+          background-color: var(--light-olive);
+          border: 2px solid var(--light-olive);
+          border-radius: 10px;
+          filter: brightness(90%);
+        }
+        
+        h1 {
+          text-align: center;
+          color: var(--light-olive);
+        }
+        .players
+        {
+          width: 100%;
+          display: flex;
+          justify-content: space-around;
+          color: var(--light-olive);
+        }
       </style>
       
       <h1>PONG GAME</h1>
       <canvas id="board" width="600" height="300">Your browser does not support canvas</canvas>
-      <h2 class="player-name player1" id="p1"></h2>
-      <h2 class="player-name player2" id="p2"></h2>
+      
+      <div class="players">
+        <h2 class="player-name player1" id="p1"></h2>
+        <h2 class="player-name player2" id="p2"></h2>
+      </div>
+  
       <abort-btn></abort-btn>
       <confirm-msg game="pong" id="confirm-msg"></confirm-msg>
       <div class="result"></div>

@@ -162,7 +162,10 @@ const API = {
 			credentials: "include" // Ensure cookies are included
 		};
 		try {
-			return await fetch(url, opts);
+			const res = await fetch(url, opts);
+			// !GET https://127.0.0.1:8000/PongPong/History/ 500 (Internal Server Error)
+      console.log(res);
+      return res;
 		} catch (e) {
 			console.log(e);
 		}

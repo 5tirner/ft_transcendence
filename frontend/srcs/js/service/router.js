@@ -106,6 +106,7 @@ export const router =
 				null,
 				location.origin + "/game"
        	);
+        
         return;
       }
     }
