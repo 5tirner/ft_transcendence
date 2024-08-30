@@ -1,32 +1,37 @@
 import { socket } from "./assets/socket.js";
-export default class PongLocal extends HTMLElement {
-	constructor() {
+export default class PongLocal extends HTMLElement
+{
+	constructor()
+	{
 		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
 
-	connectedCallback() {
+	connectedCallback()
+	{
 		this.setAttribute("id", "po-local-view");
 		this.render();
 		this.initialize();
 		this.setupWebSocket();
 	}
 
-	disconnectedCallback() {
+	disconnectedCallback()
+	{
 		console.log("Component was removed");
 
 		document.removeEventListener("keyup", this.applyMove);
 
 		this.isGameStarted = false;
 		socket.ws.removeEventListener("message", this.handleServerMessage);
-		this.startBtn.removeEventListener("click", (e) => this.start(e));
+		this.startBtn.removeEventListener("click", this.start);
 		clearInterval(this.SaveInterval);
 		socket.ws.onopen = null;
 		socket.ws.onclose = null;
 		socket.ws.onmessage = null;
 	}
 
-	render() {
+	render()
+	{
 		this.root.innerHTML = `
       <style>
         :host {
@@ -89,7 +94,8 @@ export default class PongLocal extends HTMLElement {
   `;
 	}
 
-	initialize() {
+	initialize()
+	{
 		socket.ws = new WebSocket("wss://" + location.host + "/localGameWs/");
 		this.startBtn = this.root.querySelector(".start-btn");
 		this.isGameStarted = false;
@@ -104,7 +110,8 @@ export default class PongLocal extends HTMLElement {
 		this.canvasContext = this.canvas.getContext("2d");
 	}
 
-	setupWebSocket() {
+	setupWebSocket()
+	{
 		socket.ws.onclose = function () {
 			this.isGameStarted = false;
 			console.log("BYE FROM SERVER");
@@ -125,7 +132,8 @@ export default class PongLocal extends HTMLElement {
 		document.addEventListener("keyup", (e) => this.applyMove(e));
 	}
 
-	drawElements() {
+	drawElements()
+	{
 		// console.log("Start Drawing Elements");
 		if (this.isGameStarted == true) {
 			this.ballMove();
@@ -163,13 +171,15 @@ export default class PongLocal extends HTMLElement {
 		}
 	}
 
-	start() {
+	start()
+	{
 		this.isGameStarted = true;
 		console.log("Game Started Now");
 		this.SaveInterval = setInterval(this.drawElements.bind(this), 20);
 	}
 
-	handleServerMessage(e) {
+	handleServerMessage(e)
+	{
 		const dataPars = JSON.parse(e.data);
 		if (dataPars.MoveFor == "PADDLES MOVE") {
 			if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
@@ -183,7 +193,8 @@ export default class PongLocal extends HTMLElement {
 		}
 	}
 
-	ballMove() {
+	ballMove()
+	{
 		// console.log("Start Moving The Ball");
 		if (this.xBallPos <= 0 || this.xBallPos >= 600) {
 			console.log("Sus 1");
@@ -208,7 +219,8 @@ export default class PongLocal extends HTMLElement {
 		}
 	}
 
-	applyMove(e) {
+	applyMove(e)
+	{
 		if (this.isGameStarted == true) {
 			// console.log("Apply Moves");
 			if (

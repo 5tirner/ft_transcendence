@@ -1,7 +1,8 @@
 import { socket } from "./assets/socket.js";
 
 export default class Pong extends HTMLElement {
-	constructor() {
+	constructor()
+	{
 		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
