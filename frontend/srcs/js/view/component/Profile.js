@@ -24,6 +24,7 @@ export default class Profile extends HTMLElement
                max-width: 800px;
                display: flex;
                align-items: center;
+               gap: 50px;
             }
             
             .user-info .avatar {
@@ -70,7 +71,7 @@ export default class Profile extends HTMLElement
                <p><strong>Username:</strong> ${auth.user}</p>
                <p><strong>Fullname:</strong> ${auth.fullname}</p>
                <div class="progress-bar">
-                  <div class="progress" style="width: 70%;"></div>
+                  <div class="progress"></div>
                </div>
                <p class="progress-text">Experience: 70%</p>
             </div>
