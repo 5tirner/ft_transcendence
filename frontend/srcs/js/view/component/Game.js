@@ -1,8 +1,14 @@
 export default class Game extends HTMLElement
 {
-	constructor() { super(); }
+	constructor()
+	{
+  	super();
+  	this.left = document.getElementById('left-view');
+    this.right = document.getElementById('right-view');
+	}
 	
-	connectedCallback() {
+	connectedCallback()
+	{
 		this.setAttribute("id", "game-view");
     this.render();
 	}
@@ -54,6 +60,14 @@ export default class Game extends HTMLElement
       </style>
       <div class="game-section"></div>
     `;
+    this.left.style.display = 'none';
+    this.right.style.display = 'none';
+  }
+  
+  disconnectedCallback()
+  {
+    this.left.style.display = 'flex';
+    this.right.style.display = 'block';
   }
 }
 customElements.define("game-view", Game);

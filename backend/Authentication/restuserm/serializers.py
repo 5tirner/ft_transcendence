@@ -63,4 +63,5 @@ class PlayerSerializerInfoVer(serializers.ModelSerializer):
             "avatar",
             "losses",
             "wins",
+            "two_factor"
         ]

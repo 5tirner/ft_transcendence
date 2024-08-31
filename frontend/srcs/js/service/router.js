@@ -11,18 +11,13 @@ export const router =
 
 	redirecto: async (path) =>
 	{
-		const userIsLogged = await auth.isAuth();
+    const userIsLogged = await auth.isAuth();
 		if (userIsLogged)
 		{
 			let pathname = window.location.pathname;
 			if (pathname === "/") pathname = "/platform";
 			window.component.root.innerHtml = "";
 			window.component.root.appendChild(window.component.main);
-			// history.replaceState(
-  	// 			null,
-  	// 			null,
-  	// 			location.origin + "/"
-   //    );
 			router.goto(pathname);
 		}
 		else
@@ -111,6 +106,7 @@ export const router =
 				null,
 				location.origin + "/game"
        	);
+        
         return;
       }
     }

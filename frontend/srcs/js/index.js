@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		main: document.createElement("main-view"),
 		midl: Object.assign(document.createElement("div"), {
 			id: "middle-view"
-		})
+		}),
 	};
 	router.redirecto(window.location.pathname);
 
