@@ -40,7 +40,7 @@ import requests
 import urllib.parse
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
-
+import requests
 
 @api_view(["GET"])
 @authentication_classes([])  # Remove all authentication classes
@@ -409,6 +409,7 @@ class PlayerInfos(APIView):
     @method_decorator(jwt_required_cookie)
     def post(self, request):
         try:
+            print("FETCH PALYER INFO API")
             change_check = False
             id = jwt.decode(request.token, settings.SECRET_KEY, algorithms=["HS256"])[
                 "id"
@@ -417,12 +418,18 @@ class PlayerInfos(APIView):
             player_id = Player.objects.get(id=id)
 
             if "username" in player_data:
+                print("USERNAME EDIT....")
                 username = player_data["username"].strip()
                 if not username or len(username) > 8:
                     return Response(
                         {"error": "Invalid username"},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
+                try:
+                    updateGameInfoUrl = "UpdateGameInfo/" + player_id.username
+                    requests.put(updateGameInfoUrl, data={'login': username})
+                except:
+                    print("BAD USE FOR ZASABRI UPDATE INFO ENDPOINT")
                 player_id.username = username
                 change_check = True
 

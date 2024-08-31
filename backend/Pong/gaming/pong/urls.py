@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import myProfile, userInfos, historic, PongTournement, FinalRound
+from .views import myProfile, userInfos, historic, PongTournement, FinalRound, updateInfo
 
 
 urlpatterns = [
@@ -9,6 +9,7 @@ urlpatterns = [
     # path('', PongGame),
     path('Tournement/', PongTournement),
     path('Final/', FinalRound),
+    path('UpdateGameInfo/<login>', updateInfo)
     # path('UpdateUserInfos/<login>')
     # path('TourHistory/', TournamentHistory),
     # path('local/', PongLocalGame),
