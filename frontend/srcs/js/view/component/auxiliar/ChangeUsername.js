@@ -1,5 +1,4 @@
 import API from "../../../service/API.js";
-import {danger, info,success} from '../assets/import.js'
 
 export default class UserUpdate extends HTMLElement
 {
@@ -158,36 +157,33 @@ export default class UserUpdate extends HTMLElement
     const value = this.querySelector('#input-fullname').value;
     if (value.length === 0)
     {
-      this.notification(info, "Username required");
+      this.notification('Username required', 'notif-danger');
       return;
     }
-    try{
-      const updateUserNameResponse = await API.updateUserName(value);
-      const updateUserNameJson = await updateUserNameResponse.json();
-      if (updateUserNameJson.status == 200)
-      {
-        const getUserData = await API.getUser();
-        const username = await getUserData.json();
-        this.target.innerHTML = username.player.username;
-        this.notification(success, 'Username updated successfully');
-        this.remove();
-      }
-      else
-      {
-        this.notification(danger, "Invalid username");
-      }
-    }
-    catch(err)
+    const updateUserNameResponse = await API.updateUserName(value);
+    const updateUserNameJson = await updateUserNameResponse.json();
+    if (updateUserNameJson.status == 200)
     {
-      this.notification(danger, "Something went wrong");
+      const getUserData = await API.getUser();
+      const username = await getUserData.json();
+      this.target.innerHTML = username.player.username;
+      this.notification('Username updated', 'notif-success');
+      this.remove();
+    }
+    else
+    {
+      this.notification('Invalid username', 'notif-danger');
     }
 	}
 	
-	notification(type, msg) {
-		type.msg = msg;
-		const target = this.parentNode.querySelector(type.localName);
-		if (target) target.remove();
-		this.parentNode.appendChild(type);
+	notification(msg, type)
+	{
+    const target = this.parentNode.querySelector(type);
+    if (target)
+      target.remove();
+    const elem = document.createElement(type);
+    elem.setAttribute('msg', msg);
+    this.parentNode.appendChild(elem);
 	}
 }
 customElements.define("update-user", UserUpdate);

@@ -3,9 +3,24 @@
 
 :root {
     /* chat style */
-    --color-white: #ffffff;
-    --font-size-3xs: 8px;
-    --font-size-xs: 10px;
+    /* --color-white: #ffffff; */
+    /* --font-size-3xs: 8px; */
+    /* --font-size-xs: 10px; */
+
+    --header-height: 3rem;
+    --nav-width: 85px;
+    --body-font: "Press Start 2P", sans-serif !important;
+    --normal-font-size: 1rem;
+    --z-fixed: 100;
+    --light-olive: #d8dcb4;
+    --dark-purple: #381631;
+    --bright-pink: #e21c61;
+    --coral: #e26159;
+    --peach: #fea85f;
+    --teal: #5eb6ad;
+    --dark-teal: #1b958d;
+    --deep-blue: #105390;
+    --dg: #00aa52;
 }
 
 
@@ -15,7 +30,7 @@
     width: 250px;
     max-width: 250px;
     background-color: #1D203E;
-    color: white;
+    color: var(--light-olive);
     height: 100vh;
 }
 
@@ -31,6 +46,8 @@
     height: 20px;
     font-size: 20px;
     width: 250px;
+    padding: 30px;
+    color: var(--light-olive);
 }
 
 .add-message-icon {
@@ -38,6 +55,7 @@
     left: 220px;
     width: 20px;
     height: 20px;
+    padding: 25px 0px 0px 0px;
 }
 
 .add-message-icon i {
@@ -49,17 +67,18 @@
 /* list of conversations style */
 
 li.list-group-item:hover {
-    color: white;
+    /* color: white; */
     background-color: #26285f;
 }
 
 li.list-group-item {
-    color: white;
+    /* color: white; */
     background-color: #0c0e26;
     width: 250px;
     height: 50px;
     border: 0;
     border-bottom: 1px solid #26285f;
+    cursor: pointer;
 }
 
 li.list-group-item:last-child {
@@ -82,6 +101,10 @@ li.list-group-item:last-child {
 .username {
     font-weight: bold;
     font-size: 14px;
+    text-decoration: underline;
+    text-overflow: hidden;
+    color: var(--light-olive);
+    cursor: pointer;
 }
 
 /*
@@ -100,7 +123,7 @@ li.list-group-item:last-child {
 .notif {
     width: 15px;
     height: 15px;
-    background-color: #7289DA;
+    background-color: var(--dg);
     color: white;
     border-radius: 50%;
     display: flex;

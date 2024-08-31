@@ -86,7 +86,7 @@ export default class Statistic extends HTMLElement
                     </tr>
                     <tr>
                         <td>Total Points</td>
-                        <td>${(pigData.wins * 2) + (pigData.draws * 1) + ( pigData.loses * 0 )}</td>
+                        <td>13200</td>
                     </tr>
                 </tbody>
             </table>
@@ -119,18 +119,13 @@ export default class Statistic extends HTMLElement
                     </tr>
                     <tr>
                         <td>Total Points</td>
-                        <td>${(ticData.wins * 2) + (ticData.draws * 1) + ( ticData.loses * -1 )}</td>
+                        <td>13200</td>
                     </tr>
                 </tbody>
             </table>
         </section>
       </div>
     `;
-    const exp = (ticData.gamesPlayed + pigData.gamesPlayed / 100);
-    const parentDivText = this.parentNode.querySelector('.progress-text');
-    const parentDivBar = this.parentNode.querySelector('.progress');
-    parentDivText.innerHTML = `Experience: ${exp}%`;
-    parentDivBar.style.width = `${exp}%`;
 	}
 }
 customElements.define("stat-ics", Statistic);

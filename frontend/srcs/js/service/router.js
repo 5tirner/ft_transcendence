@@ -70,6 +70,7 @@ export const router =
         const res = API.logout();
         
         document.friendship_ws.close();
+        console.log("Return to home");
         window.component.root.innerHTML = '';
         window.component.root.appendChild(window.component.home);
         history.replaceState(

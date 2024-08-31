@@ -6,6 +6,31 @@ import { friendUpdate } from "../friendsUpdate.js";
 export const GAME_INV = "game_inv";
 export const ACC_GAME = "acc_game";
 
+export class UserProfile extends HTMLElement {
+	constructor() {
+		super();
+		this.name = null;
+		this.avatar = null;
+	}
+
+	connectedCallback() {
+		this.name = Auth.user;
+		this.avatar = Auth.avatar;
+
+		this.className = "user-profile";
+		this.innerHTML = `
+            <div class="user-avatar">
+                <img src="${this.avatar}" alt="avatar" />
+            </div>
+            <div class="user-info">
+                <div class="user-name">${this.name}</div>
+            </div>
+        `;
+	}
+}
+
+customElements.define("user-profile", UserProfile);
+
 export class ConvHeadElem extends HTMLDivElement {
 	constructor() {
 		super();
@@ -201,12 +226,23 @@ export class ConvElement extends HTMLLIElement {
 	}
 
 	connectedCallback() {
+		const profileClickHandler = async (event) => {
+			if (
+				event.target.className == "controler-icon" ||
+				event.target.className === "frame-icon"
+			)
+				return;
+			const profile = new UserProfile();
+			const chat = document.querySelector("#chat");
+			chat.appendChild(profile);
+		};
 		const clickHandler = () => {
 			const conv = document.querySelector(".chat-conv-wrapper");
 			const messages = conv.querySelector(".messages");
 			const convHeadParent = conv.querySelector(".chat-conv");
 			let convHead = conv.querySelector(".conve-header");
 
+			convHeadParent.addEventListener("click", profileClickHandler);
 			conv.style.display = "block";
 
 			convHeadParent.removeChild(convHead);

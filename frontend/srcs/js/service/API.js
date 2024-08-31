@@ -159,13 +159,13 @@ const API = {
 			method: "GET",
 			mode: "same-origin",
 			headers,
-			credentials: "include" // Ensure cookies are included
+			credentials: "include"
 		};
 		try {
 			const res = await fetch(url, opts);
 			// !GET https://127.0.0.1:8000/PongPong/History/ 500 (Internal Server Error)
-      console.log(res);
-      return res;
+			console.log(res);
+			return res;
 		} catch (e) {
 			console.log(e);
 		}
@@ -180,23 +180,25 @@ const API = {
 		const formData = new FormData();
 		formData.append("avatar", image);
 		const header = {
-		  "Content-Type": "multipart/form-data"
-		}
+			"Content-Type": "multipart/form-data"
+		};
 		const opts = {
-		  method: "POST",
-		  header,
+			method: "POST",
+			header,
 			body: formData
-		}
-    return fetch(API.authEndpoint + 'avatar/', opts);
+		};
+		return fetch(API.authEndpoint + "avatar/", opts);
 	},
-	
+
 	getQRcode: async () => {
-  	const qr = await API.makeGetRequest(`${API.TwoFactAuth}`);
-    const blob = await qr.blob();
-    return URL.createObjectURL(blob);
+		const qr = await API.makeGetRequest(`${API.TwoFactAuth}`);
+		const blob = await qr.blob();
+		return URL.createObjectURL(blob);
 	},
 	verifyTfa: async (code) => {
-    return await API.makePostRequest(`${API.authEndpoint}TFA/verify/`, {code});
+		return await API.makePostRequest(`${API.authEndpoint}TFA/verify/`, {
+			code
+		});
 	}
 };
 
