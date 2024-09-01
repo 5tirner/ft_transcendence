@@ -18,7 +18,6 @@ def saveData(self):
     print(f"playerAndHisPic += {playerAndHisPic.objects.get(login=self.scope['user'])}")
 
 class freindReqPong(AsyncJsonWebsocketConsumer):
-    playerWantsToPlay = list()
     playersOnMatchAndItsRoomId = dict()
     playersOnMatchAndItsOppenent = dict()
     playersOnMatchAndItsDeriction = dict()
@@ -35,9 +34,25 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
             print(f"{self.scope['user']} Added Succusfully")
         print(f"Url Route RoomCode Of This User: {self.scope['url_route']['kwargs']}")
         roomcode = self.scope['url_route']['kwargs'].get('roomdcode')
+        try:
+            user = self.playersOnMatchAndItsRoomId.get(roomcode)
+            if user is None:
+                raise "User Not Found"
+            print(f"User: {user}")
+            self.playersOnMatchAndItsOppenent[user] = self.scope['user']
+            self.playersOnMatchAndItsOppenent[self.scope['user']] = user
+            self.playersOnMatchAndItsDeriction[self.scope['user']] = 'Left'
+            self.playersOnMatchAndItsDeriction[user] = 'Right'
+            player1 = user
+            player2 = self.scope['user']
+        except:
+            self.playersOnMatchAndItsRoomId[roomcode] = self.scope['user']
+            player1 = self.scope['user']
+            player2 = ''
         await self.channel_layer.group_add(roomcode, self.channel_name)
         await self.accept()
-        await self.channel_layer.group_send(roomcode, {'type': 'toFront', 'Data': {'This': 'Data'}})
+        dataToSend = {'player1': player1, 'player2': player2}
+        await self.channel_layer.group_send(roomcode, {'type': 'toFront', 'Data': dataToSend})
     async def receive(self, text_data, bytes_data=None):
         pass
     async def disconnect(self, code):
