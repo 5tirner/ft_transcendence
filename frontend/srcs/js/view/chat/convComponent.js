@@ -9,23 +9,77 @@ export const ACC_GAME = "acc_game";
 export class UserProfile extends HTMLElement {
 	constructor() {
 		super();
-		this.name = null;
-		this.avatar = null;
+		this._data = null;
 	}
 
-	connectedCallback() {
-		this.name = Auth.user;
-		this.avatar = Auth.avatar;
+	set data(value) {
+		this._data = value;
+		this.updateDOM();
+	}
 
+	get data() {
+		return { username: this.name, avatar: this.avatar };
+	}
+	backHandler = () => {
+		this.remove();
+	};
+
+	connectedCallback() {
 		this.className = "user-profile";
-		this.innerHTML = `
-            <div class="user-avatar">
-                <img src="${this.avatar}" alt="avatar" />
-            </div>
-            <div class="user-info">
-                <div class="user-name">${this.name}</div>
-            </div>
-        `;
+
+		this.header = document.createElement("div");
+		this.header.className = "user-info-header";
+
+		this.backButton = document.createElement("img");
+		this.backButton.className = "frame-icon";
+		this.backButton.src = "js/view/src/img/arrow.svg";
+		this.backButton.alt = "Back";
+		this.backButton.addEventListener("click", this.backHandler);
+		this.header.appendChild(this.backButton);
+
+		this.infoText = document.createElement("div");
+		this.infoText.className = "user-info";
+		this.infoText.textContent = "User Info";
+		this.header.appendChild(this.infoText);
+
+		this.appendChild(this.header);
+		// Create image container
+		this.imageContainer = document.createElement("div");
+		this.imageContainer.className = "image-container";
+
+		this.userImage = document.createElement("img");
+		// NOTE: update it in updateDOM method
+		this.userImage.src = "";
+		this.userImage.alt = "User Image";
+		this.imageContainer.appendChild(this.userImage);
+
+		// Create username section
+		this.usernameContainer = document.createElement("div");
+		this.usernameContainer.className = "username";
+
+		const usernameText = document.createElement("p");
+		// NOTE: update it in updateDOM method
+		usernameText.textContent = "";
+		this.usernameContainer.appendChild(usernameText);
+
+		this.appendChild(this.imageContainer);
+		this.appendChild(this.usernameContainer);
+	}
+
+	async updateDOM() {
+		const req = await API.getUserProfile(this._data);
+		if (req.status == 200) {
+			const data = await req.json();
+			const player = data.player.pop();
+			console.log(player);
+			this.userImage.src = player.avatar;
+			this.usernameContainer.querySelector("p").textContent =
+				player.username;
+		}
+	}
+
+	disconnectedCallback() {
+		this.backButton.removeEventListener("click", this.backHandler);
 	}
 }
 
@@ -227,13 +281,15 @@ export class ConvElement extends HTMLLIElement {
 
 	connectedCallback() {
 		const profileClickHandler = async (event) => {
+			console.log(event.target.className);
 			if (
 				event.target.className == "controler-icon" ||
 				event.target.className === "frame-icon"
 			)
 				return;
 			const profile = new UserProfile();
-			const chat = document.querySelector("#chat");
+			profile.data = this._data.user;
+			const chat = document.querySelector("#right-view");
 			chat.appendChild(profile);
 		};
 		const clickHandler = () => {
@@ -242,12 +298,12 @@ export class ConvElement extends HTMLLIElement {
 			const convHeadParent = conv.querySelector(".chat-conv");
 			let convHead = conv.querySelector(".conve-header");
 
-			convHeadParent.addEventListener("click", profileClickHandler);
 			conv.style.display = "block";
 
 			convHeadParent.removeChild(convHead);
 
 			convHead = new ConvHeadElem();
+			convHead.addEventListener("click", profileClickHandler);
 			convHead.data = this._data.user;
 			convHead.roomId = this._data.id;
 			convHeadParent.insertBefore(convHead, convHeadParent.firstChild);

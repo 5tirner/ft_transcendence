@@ -57,6 +57,9 @@ const API = {
 	getUser: () => {
 		return API.makeGetRequest(`${API.authEndpoint}`);
 	},
+	getUserProfile: ({ username }) => {
+		return API.commonGetFunc(`${API.authEndpoint}?username=${username}`);
+	},
 
 	getFriends: () => {
 		return API.commonGetFunc(`${API.friendshipEndpoint}?type=friends`);
@@ -164,7 +167,6 @@ const API = {
 		try {
 			const res = await fetch(url, opts);
 			// !GET https://127.0.0.1:8000/PongPong/History/ 500 (Internal Server Error)
-			console.log(res);
 			return res;
 		} catch (e) {
 			console.log(e);
