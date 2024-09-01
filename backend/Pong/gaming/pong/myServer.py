@@ -5,14 +5,9 @@ from .destroyGameInfo import destroyThisGameInformations
 from .generateCode import roomcode
 import random
 import threading
-# from asyncio import sleep
 
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
-
-# class friends(AsyncJsonWebsocketConsumer):
-#     async def connect(self):
-        
 
 def saveData(self):
     addUserToDB = pongGameInfo(login=self.scope['user'], codeToPlay=roomcode(self.scope['user']))
@@ -21,6 +16,36 @@ def saveData(self):
     addUserPic = playerAndHisPic(login=self.scope['user'], pic=self.scope['pic'])
     addUserPic.save()
     print(f"playerAndHisPic += {playerAndHisPic.objects.get(login=self.scope['user'])}")
+
+class freindReqPong(AsyncJsonWebsocketConsumer):
+    playerWantsToPlay = list()
+    playersOnMatchAndItsRoomId = dict()
+    playersOnMatchAndItsOppenent = dict()
+    playersOnMatchAndItsDeriction = dict()
+    async def connect(self):
+        print(f'----------User On Game Is: {self.scope["user"]}-------')
+        try:
+            pongGameInfo.objects.get(login=self.scope['user'])
+            print(f"Welcome Back {self.scope['user']}.")
+        except:
+            print(f"It's Your First Time Here {self.scope['user']}! Welcome.")
+            addUserToDbs = threading.Thread(target=saveData(self))
+            addUserToDbs.start()
+            addUserToDbs.join()
+            print(f"{self.scope['user']} Added Succusfully")
+        print(f"Url Route RoomCode Of This User: {self.scope['url_route']['kwargs']}")
+        roomcode = self.scope['url_route']['kwargs'].get('roomdcode')
+        await self.channel_layer.group_add(roomcode, self.channel_name)
+        await self.accept()
+        await self.channel_layer.group_send(roomcode, {'type': 'toFront', 'Data': {'This': 'Data'}})
+    async def receive(self, text_data, bytes_data=None):
+        pass
+    async def disconnect(self, code):
+        pass
+
+    async def toFront(self, data):
+        await self.send_json(data['Data'])
+
 class myPongserver(AsyncJsonWebsocketConsumer):
     playerWantsToPlay = list()
     playersOnMatchAndItsRoomId = dict()
