@@ -73,7 +73,7 @@ export default class Profile extends HTMLElement
                <div class="progress-bar">
                   <div class="progress"></div>
                </div>
-               <p class="progress-text">Experience: 70%</p>
+               <p class="progress-text"></p>
             </div>
          </section>
          <stat-ics></stat-ics>
