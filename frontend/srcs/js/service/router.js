@@ -1,6 +1,8 @@
 import { auth } from "../auth/Authentication.js";
 import API from "./API.js"
 
+import Pong from "../view/component/Pong.js";
+
 export const router =
 {
 	goto: (path, push = true) =>
@@ -84,11 +86,12 @@ export const router =
     }
    },
    
-   game: (_game) =>
+   game: (_game, roomCode = '') =>
 	{
     const elem = document.createElement('game-view');
     window.component.midl.innerHTML = "";
     window.component.midl.appendChild(elem);
+    const gameSec = elem.querySelector('.game-section');
       
     switch(_game)
     {
@@ -97,7 +100,6 @@ export const router =
       case 'po-local':
       case 'tournament':
       {
-        const gameSec = elem.querySelector('.game-section');
         const game = document.createElement(`${_game}-game`);
         gameSec.appendChild(game);
         history.replaceState(
@@ -105,8 +107,13 @@ export const router =
 				null,
 				location.origin + "/game"
        	);
-        
+          
         return;
+      }
+      case 'pong-friend':
+      {
+        const pongFriend = new Pong('/GameInvite/', roomCode);
+        gameSec.appendChild(pongFriend); 
       }
     }
 	},

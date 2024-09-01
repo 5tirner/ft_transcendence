@@ -1,12 +1,10 @@
 import { socket } from "./assets/socket.js";
 
-export default class Pong extends HTMLElement {
-	constructor( endPoint = '/PongGameWs/', roomCode = '' )
+export default class PongFriend extends HTMLElement {
+	constructor()
 	{
 		super();
 		this.root = this.attachShadow({ mode: "open" });
-    this.endPoint = endPoint;
-    this.roomCode = roomCode
 	}
 
 	connectedCallback() {
@@ -140,7 +138,8 @@ export default class Pong extends HTMLElement {
 	}
 
 	setupWebSocket() {
-		socket.ws = new WebSocket("wss://" + location.host + this.endPoint + this.roomCode);
+		// socket.ws = new WebSocket("wss://" + location.host + "/PongGameWs/");
+		socket.ws = new WebSocket("wss://" + location.host + '/GameInvite/' + room_code);
 		socket.ws.onclose = () => {
 			this.isFinsih = true;
 			this.isGameStarted = false;
@@ -149,6 +148,16 @@ export default class Pong extends HTMLElement {
 		};
 		socket.ws.onopen = () => console.log("Connected to Game Server");
 		socket.ws.onmessage = (e) => this.handleServerMessage(e);
+		
+		// ws.onopen = function()
+		// {
+		// 	console.log('Join To The Game By Using Code: ' + room_code);
+		// }
+		// ws.onmessage = function(e)
+		// {
+		// 	console.log('Data From Server:');
+		// 	console.log(e.data);
+		// }
 
 		document.addEventListener("keyup", (e) => this.applyMove(e));
 	}
@@ -199,7 +208,6 @@ export default class Pong extends HTMLElement {
 
 	handleServerMessage(e) {
 		const dataPars = JSON.parse(e.data);
-    console.log(dataPars);
 		if (this.isGameStarted == false && this.isFinsih == false) {
 			if (dataPars.player2.length == 0) {
 				console.log("Player1: " + dataPars.player1);
@@ -238,5 +246,5 @@ export default class Pong extends HTMLElement {
 		}
 	}
 }
-customElements.define("pong-game", Pong);
+customElements.define("pong-friend-game", PongFriend);
 

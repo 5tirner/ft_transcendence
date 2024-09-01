@@ -54,7 +54,7 @@ export function socketResponsHandler(data) {
 
 		setTimeout(() => {
 			gameInvite.remove();
-		}, 3000);
+		}, 10000);
 	} else if (event === ACC_GAME) {
 		handleGameInvite(data);
 	}

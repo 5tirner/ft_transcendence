@@ -12,6 +12,7 @@ import TicTacToe from "../TicTacToe.js";
 import Statistic from "../Statistic.js";
 import PongLocal from "../PongLocal.js";
 import GameInvite from "../GameRequest.js";
+import PongFriend from "../PongFriend.js";
 import Tfa from "../TwoFactAuth.js";
 
 import ChatComponent from "../../chat/chat.js";
@@ -54,6 +55,7 @@ export {
   UpdateAvatar,
   ChatComponent,
   Tfa,
+  PongFriend,
   danger,
   info,
   success
