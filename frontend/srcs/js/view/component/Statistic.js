@@ -126,7 +126,7 @@ export default class Statistic extends HTMLElement
         </section>
       </div>
     `;
-    const exp = (ticData.gamesPlayed + pigData.gamesPlayed / 100);
+    const exp = (ticData.gamesPlayed / 100 ) + (pigData.gamesPlayed / 100);
     const parentDivText = this.parentNode.querySelector('.progress-text');
     const parentDivBar = this.parentNode.querySelector('.progress');
     parentDivText.innerHTML = `Experience: ${exp}%`;
