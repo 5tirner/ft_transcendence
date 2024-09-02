@@ -61,7 +61,7 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.closePath();
 			this.canvasContext.strokeStyle = "#381631";
 			this.canvasContext.stroke();
-			requestAnimationFrame(this.drawElements.bind(this));
+			setTimeout(requestAnimationFrame(this.drawElements.bind(this)), 20);
 		}
 	}
 

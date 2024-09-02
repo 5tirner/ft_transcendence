@@ -44,7 +44,13 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
             self.playersOnMatchAndItsOppenent[self.scope['user']] = user
             self.playersOnMatchAndItsDeriction[self.scope['user']] = 'Right'
             self.playersOnMatchAndItsDeriction[user] = 'Left'
-            roomIdToPlay = pongGameInfo.objects.get(login=user).codeToPlay
+            inQue = pongGameInfo.objects.get(login=user)
+            appearNow = pongGameInfo.objects.get(login=self.scope['user'])
+            inQue.gamesPlayed += 1
+            inQue.save()
+            appearNow.gamesPlayed += 1
+            appearNow.save()
+            roomIdToPlay = inQue.codeToPlay
             self.playersOnMatchAndItsRoomId[user] = roomIdToPlay
             self.playersOnMatchAndItsRoomId[self.scope['user']] = roomIdToPlay
             self.roomcodeToJoin.pop(roomcode)
