@@ -1,5 +1,4 @@
 import API from "../../../service/API.js";
-import {danger, info,success} from '../assets/import.js'
 
 export default class UpdateAvatar extends HTMLElement
 {
@@ -153,43 +152,37 @@ export default class UpdateAvatar extends HTMLElement
     const value = this.querySelector('#file').files[0];
     if (value === undefined)
     {
-      this.notification(info, "Please select a file");
+      this.notification('File required', 'notif-danger');
       return;
     }
-    try
+    const updateAvatarResponse = await API.uploadAvatar(value);
+    const updateAvatarJson = await updateAvatarResponse.json();
+    if (updateAvatarJson.statusCode == 200)
     {
-      const updateAvatarResponse = await API.uploadAvatar(value);
-      const updateAvatarJson = await updateAvatarResponse.json();
-      console.log("THEOQW UP");
-      if (updateAvatarJson.statusCode == 200)
-      {
-        const getUserData = await API.getUser();
-        const dataJson = await getUserData.json();
-        let avatar = dataJson.player.avatar;
-        console.log("dataJson: ", dataJson);
-        this.target.setAttribute('src', avatar );
-        this.notification(success, "Avatar updated successfully");
-        this.remove();
-        
-      }
-      else
-      {
-        this.notification(danger, "Something went wrong");
-        this.remove();
-      }
+      const getUserData = await API.getUser();
+      const dataJson = await getUserData.json();
+      let avatar = dataJson.player.avatar;
+      console.log("dataJson: ", dataJson);
+      this.target.setAttribute('src', avatar );
+      this.notification('Avatar updated', 'notif-success');
+      this.remove();
+      
     }
-    catch(err)
+    else
     {
-      this.notification(danger, "try other image please");
+      this.notification('something went wrong', 'notif-danger');
+      this.remove();
     }
-    
 	}
 	
-	notification(type, msg) {
-		type.msg = msg;
-		const target = this.parentNode.querySelector(type.localName);
-		if (target) target.remove();
-		this.parentNode.appendChild(type);
+	notification(msg, type)
+	{
+    const target = this.parentNode.querySelector(type);
+    if (target)
+      target.remove();
+    const elem = document.createElement(type);
+    elem.setAttribute('msg', msg);
+    this.parentNode.appendChild(elem);
 	}
 }
 customElements.define("update-avatar", UpdateAvatar);
