@@ -86,7 +86,7 @@ export default class Statistic extends HTMLElement
                     </tr>
                     <tr>
                         <td>Total Points</td>
-                        <td>${(pigData.wins * 2) + (pigData.draws * 1) + ( pigData.loses * 0 )}</td>
+                        <td>13200</td>
                     </tr>
                 </tbody>
             </table>
@@ -119,7 +119,7 @@ export default class Statistic extends HTMLElement
                     </tr>
                     <tr>
                         <td>Total Points</td>
-                        <td>${(ticData.wins * 2) + (ticData.draws * 1) + ( ticData.loses * -1 )}</td>
+                        <td>13200</td>
                     </tr>
                 </tbody>
             </table>
