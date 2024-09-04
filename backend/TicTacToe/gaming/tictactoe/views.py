@@ -12,6 +12,43 @@ import json
 # def home(req):
 #     return render(req, 'home.html')
 
+@api_view(['POST'])
+def updateInfoTTT(req):
+    print("-------------------------USER INFOS UPDATE----------------------------------")
+    authApiResponse = isAuthUser(req)
+    if authApiResponse is None:
+        return response.Response(status=status.HTTP_204_NO_CONTENT)
+    user_infos = authApiResponse.json().get('data')
+    # print(f"- User Infos: {user_infos}")
+    # print(f"Data: {req.data}")
+    oldLogin = user_infos.get('username')
+    newLogin = req.data.get('newLogin')
+    try:
+        gameInfo.objects.get(login=oldLogin)
+        print(f"YOU AGAIN? -> {oldLogin}")
+    except:
+        print(f"HUH FIRSTTIME? -> {oldLogin}")
+        addUserToDB = gameInfo(login=oldLogin, codeToPlay=roomcode(oldLogin))
+        addUserToDB.save()
+        print(f"pongInfo += {gameInfo.objects.get(login=oldLogin)}")
+        addUserPic = playerAndHisPic(login=oldLogin, pic=user_infos.get('avatar'))
+        addUserPic.save()
+        print(f"playerAndHisPic += {playerAndHisPic.objects.get(login=oldLogin)}")
+    toEditGameName = gameInfo.objects.get(login=oldLogin)
+    toEditGameName.login = newLogin
+    toEditGameName.save()
+    toEditPicName = playerAndHisPic.objects.get(login=oldLogin)
+    toEditPicName.login = newLogin
+    toEditPicName.save()
+    for i in history.objects.all():
+        if i.you == oldLogin:
+            i.you = newLogin
+            i.save()
+        elif i.oppenent == oldLogin:
+            i.oppenent = newLogin
+            i.save()
+    return response.Response(status=status.HTTP_200_OK)
+
 @api_view(["GET"])
 def myProfile(req):
     print("-------------------------USER PROFILE----------------------------------")

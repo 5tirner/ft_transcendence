@@ -9,7 +9,7 @@ urlpatterns = [
     # path('', PongGame),
     path('Tournement/', PongTournement),
     path('Final/', FinalRound),
-    path('UpdateGameInfo/<login>', updateInfo)
+    path('UpdateGameInfo/', updateInfo)
     # path('UpdateUserInfos/<login>')
     # path('TourHistory/', TournamentHistory),
     # path('local/', PongLocalGame),

@@ -409,27 +409,32 @@ class PlayerInfos(APIView):
     @method_decorator(jwt_required_cookie)
     def post(self, request):
         try:
-            print("FETCH PALYER INFO API")
+            cookies = {'jwt_token': request.COOKIES.get('jwt_token')}
+            print(f"JSON WEB TOKEN: {cookies}")
+            print("->FETCH PALYER INFO API")
             change_check = False
             id = jwt.decode(request.token, settings.SECRET_KEY, algorithms=["HS256"])[
                 "id"
             ]
             player_data = request.data.get("player")
             player_id = Player.objects.get(id=id)
-
             if "username" in player_data:
-                print("USERNAME EDIT....")
+                print("USERNAME EDIT...")
                 username = player_data["username"].strip()
                 if not username or len(username) > 8:
                     return Response(
                         {"error": "Invalid username"},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
-                try:
-                    updateGameInfoUrl = "UpdateGameInfo/" + player_id.username
-                    requests.put(updateGameInfoUrl, data={'login': username})
-                except:
-                    print("BAD USE FOR ZASABRI UPDATE INFO ENDPOINT")
+                
+                print(f"Try Update Login {player_id.username} To {username} For Pong TABLES.")
+                EditGameInfos = requests.post("http://pongcntr:8000/PongPong/UpdateGameInfo/",
+                        cookies=cookies, json={'newLogin': username})
+                print(f"Code Status: {EditGameInfos.status_code}")
+                print(f"Try Update Login {player_id.username} To {username} For TICTACTOE TABLES.")
+                EditGameInfos = requests.post("http://tttcntr:8000/TicTacToe/UpdateGameInfo/",
+                        cookies=cookies, json={'newLogin': username})
+                print(f"Code Status: {EditGameInfos.status_code}")
                 player_id.username = username
                 change_check = True
 

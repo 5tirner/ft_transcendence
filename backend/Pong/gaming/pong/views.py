@@ -79,15 +79,42 @@ def userInfos(req, login):
 #         return response.Response(status=status.HTTP_204_NO_CONTENT)
 #     return render(req, 'local.html')
 
-@api_view(['PUT'])
-def updateInfo(req, login):
+@api_view(['POST'])
+def updateInfo(req):
+    print("-------------------------USER INFOS UPDATE----------------------------------")
     authApiResponse = isAuthUser(req)
     if authApiResponse is None:
         return response.Response(status=status.HTTP_204_NO_CONTENT)
-    theRightUser = pongGameInfo.objects.get(login=login)
-    
-    print(req.data)
-    return response.Response(status=status.HTTP_100_CONTINUE)
+    user_infos = authApiResponse.json().get('data')
+    # print(f"- User Infos: {user_infos}")
+    # print(f"Data: {req.data}")
+    oldLogin = user_infos.get('username')
+    newLogin = req.data.get('newLogin')
+    try:
+        pongGameInfo.objects.get(login=oldLogin)
+        print(f"YOU AGAIN? -> {oldLogin}")
+    except:
+        print(f"HUH FIRSTTIME? -> {oldLogin}")
+        addUserToDB = pongGameInfo(login=oldLogin, codeToPlay=roomcode(oldLogin))
+        addUserToDB.save()
+        print(f"pongInfo += {pongGameInfo.objects.get(login=oldLogin)}")
+        addUserPic = playerAndHisPic(login=oldLogin, pic=user_infos.get('avatar'))
+        addUserPic.save()
+        print(f"playerAndHisPic += {playerAndHisPic.objects.get(login=oldLogin)}")
+    toEditGameName = pongGameInfo.objects.get(login=oldLogin)
+    toEditGameName.login = newLogin
+    toEditGameName.save()
+    toEditPicName = playerAndHisPic.objects.get(login=oldLogin)
+    toEditPicName.login = newLogin
+    toEditPicName.save()
+    for i in pongHistory.objects.all():
+        if i.you == oldLogin:
+            i.you = newLogin
+            i.save()
+        elif i.oppenent == oldLogin:
+            i.oppenent = newLogin
+            i.save()
+    return response.Response(status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def historic(req):
