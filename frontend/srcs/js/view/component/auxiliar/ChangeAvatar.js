@@ -1,4 +1,5 @@
 import API from "../../../service/API.js";
+import { danger, info, success } from "../assets/import.js";
 
 export default class UpdateAvatar extends HTMLElement
 {
@@ -24,6 +25,7 @@ export default class UpdateAvatar extends HTMLElement
       <style>
         .updateAvatar
         {
+          overflow: hidden;
           font-family: var(--body-font);
           position: absolute;
           top: 0;
@@ -39,6 +41,7 @@ export default class UpdateAvatar extends HTMLElement
         }
         .updateAvatar form
         {
+          overflow: hidden;
           width: 40%;
           height: 40%;
           background-color: var(--dark-purple);
@@ -56,6 +59,8 @@ export default class UpdateAvatar extends HTMLElement
         {
           font-family: var(--body-font);
           color: var(--light-olive);
+          font-size: 10px;
+          overflow: hidden;
         }
         .updateAvatar form input[type=file]::file-selector-button {
           margin-right: 20px;
@@ -69,6 +74,7 @@ export default class UpdateAvatar extends HTMLElement
           font-family: var(--body-font);
           color: var(--light-olive);
           box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
+          
         }
 
         .updateAvatar form input[type=file]::file-selector-button:hover {
@@ -152,7 +158,7 @@ export default class UpdateAvatar extends HTMLElement
     const value = this.querySelector('#file').files[0];
     if (value === undefined)
     {
-      this.notification('File required', 'notif-danger');
+      this.notification('File required', danger);
       return;
     }
     const updateAvatarResponse = await API.uploadAvatar(value);
@@ -164,25 +170,24 @@ export default class UpdateAvatar extends HTMLElement
       let avatar = dataJson.player.avatar;
       console.log("dataJson: ", dataJson);
       this.target.setAttribute('src', avatar );
-      this.notification('Avatar updated', 'notif-success');
+      this.notification('Avatar updated', success);
       this.remove();
       
     }
     else
     {
-      this.notification('something went wrong', 'notif-danger');
+      this.notification('something went wrong', danger);
       this.remove();
     }
 	}
 	
 	notification(msg, type)
 	{
-    const target = this.parentNode.querySelector(type);
+    const target = this.parentNode.querySelector(type.localName);
     if (target)
       target.remove();
-    const elem = document.createElement(type);
-    elem.setAttribute('msg', msg);
-    this.parentNode.appendChild(elem);
+    type.msg = msg
+    this.parentNode.appendChild(type);
 	}
 }
 customElements.define("update-avatar", UpdateAvatar);

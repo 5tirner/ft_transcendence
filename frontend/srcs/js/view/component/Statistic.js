@@ -84,10 +84,6 @@ export default class Statistic extends HTMLElement
                         <td>Draw</td>
                         <td>${pigData.draws}</td>
                     </tr>
-                    <tr>
-                        <td>Total Points</td>
-                        <td>13200</td>
-                    </tr>
                 </tbody>
             </table>
         </section>
@@ -116,10 +112,6 @@ export default class Statistic extends HTMLElement
                     <tr>
                         <td>Draw</td>
                         <td>${ticData.draws}</td>
-                    </tr>
-                    <tr>
-                        <td>Total Points</td>
-                        <td>13200</td>
                     </tr>
                 </tbody>
             </table>

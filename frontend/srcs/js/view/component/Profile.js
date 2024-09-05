@@ -1,4 +1,5 @@
-import { auth } from "../../auth/Authentication.js";
+// import { auth } from "../../auth/Authentication.js";
+import API from "../../service/API.js";
 
 export default class Profile extends HTMLElement
 {
@@ -7,9 +8,23 @@ export default class Profile extends HTMLElement
 	connectedCallback()
 	{
 		this.setAttribute("id", "profile-view");
-      this.render();
+    this.render();
+    this.getUserData();
 	}
-	
+	async getUserData()
+	{
+    const res = await API.isLogedIn();
+    const data = await res.json();
+    
+    const image = this.querySelector('.avatar');
+    const username = this.querySelector('.username');
+    const fullname = this.querySelector('.fullname');
+    
+    image.setAttribute('src', data.data.avatar);
+    username.innerHTML = data.data.username;
+    fullname.innerHTML = data.data.first_name + " " + data.data.last_name;
+    // console.log("data: ", data);
+	}
 	render()
 	{
       this.innerHTML = `
@@ -65,10 +80,10 @@ export default class Profile extends HTMLElement
             }
          </style>
          <section class="user-info">
-            <img src="${auth.avatar}" alt="User Avatar" class="avatar">
+            <img src="" alt="User Avatar" class="avatar">
             <div class="info">
-               <p><strong>Username:</strong> ${auth.user}</p>
-               <p><strong>Fullname:</strong> ${auth.fullname}</p>
+               <p class="username"><strong>Username:</strong>...</p>
+               <p class="fullname"><strong>Fullname:</strong>...</p>
                <div class="progress-bar">
                   <div class="progress" style="width: 70%;"></div>
                </div>

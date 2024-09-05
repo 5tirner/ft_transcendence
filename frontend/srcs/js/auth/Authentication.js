@@ -17,7 +17,6 @@ export const auth = {
 		const response = await API.isLogedIn();
 		if (response && response.ok) {
 			const res = await response.json();
-      console.log("player data: ", res.data);
 			const { isLoged } = res;
 			auth.user = res.data.username;
 			auth.avatar = res.data.avatar;
