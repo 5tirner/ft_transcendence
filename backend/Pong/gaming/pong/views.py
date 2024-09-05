@@ -79,6 +79,17 @@ def userInfos(req, login):
 #         return response.Response(status=status.HTTP_204_NO_CONTENT)
 #     return render(req, 'local.html')
 
+
+@api_view(['POST'])
+def updateImage(req):
+    authApiResponse = isAuthUser(req)
+    if authApiResponse is None:
+        return response.Response(status=status.HTTP_404_NOT_FOUND)
+    userInfos = authApiResponse.json().get('data')
+    print(f"- IncomingData: {req.data}")
+    print(f"- User Infos: {userInfos}")
+    return response.Response(status=status.HTTP_200_OK)
+
 @api_view(['POST'])
 def updateInfo(req):
     print("-------------------------USER INFOS UPDATE----------------------------------")
