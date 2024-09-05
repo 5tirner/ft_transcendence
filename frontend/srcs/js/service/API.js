@@ -109,19 +109,15 @@ const API = {
 		return API.commonGetFunc(`${API.chatEndpoint}${room_id}`);
 	},
 	getTicTacToeStat: () => {
-		console.log("Fetching Tic user stats");
 		return API.commonGetFunc(`${API.tttStatEndpoint}`);
 	},
 	getTicTacToeHistory: () => {
-		console.log("Fetching Tic user History");
 		return API.commonGetFunc(`${API.tttHistoEndpoint}`);
 	},
 	getPigPagPogStat: () => {
-		console.log("Fetching Pong user stats");
 		return API.commonGetFunc(`${API.pongStatEndpoint}`);
 	},
 	getPigPagPogHistory: () => {
-		console.log("Fetching Pong user History");
 		return API.commonGetFunc(`${API.pongHistoEndpoint}`);
 	},
 	markMessagesAsRead: (room_id) => {
