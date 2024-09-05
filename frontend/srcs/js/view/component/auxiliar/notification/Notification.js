@@ -1,4 +1,4 @@
-export default class Danger extends HTMLElement {
+export default class Notification extends HTMLElement {
   msg;
   icon;
   color;
@@ -12,6 +12,11 @@ export default class Danger extends HTMLElement {
   {
     this.render();
     this.timer();
+  }
+  
+  disconnectedCallback()
+  {
+    clearTimeout(this.timeout);
   }
   
   render()
@@ -61,7 +66,7 @@ export default class Danger extends HTMLElement {
   
   timer()
   {
-    setTimeout(() => this.remove(), 3000);
+    this.timeout = setTimeout(() => this.remove(), 3000);
   }
 }
-customElements.define('notif-danger', Danger);
+customElements.define('notifi-cation', Notification);

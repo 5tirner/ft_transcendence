@@ -1,4 +1,5 @@
 import API from "../../../service/API.js";
+import { danger, info, success } from "../assets/import.js";
 
 export default class UserUpdate extends HTMLElement
 {
@@ -157,7 +158,7 @@ export default class UserUpdate extends HTMLElement
     const value = this.querySelector('#input-fullname').value;
     if (value.length === 0)
     {
-      this.notification('Username required', 'notif-danger');
+      this.notification('Username required', danger);
       return;
     }
     const updateUserNameResponse = await API.updateUserName(value);
@@ -167,23 +168,22 @@ export default class UserUpdate extends HTMLElement
       const getUserData = await API.getUser();
       const username = await getUserData.json();
       this.target.innerHTML = username.player.username;
-      this.notification('Username updated', 'notif-success');
+      this.notification('Username updated', success);
       this.remove();
     }
     else
     {
-      this.notification('Invalid username', 'notif-danger');
+      this.notification('Invalid username', danger);
     }
 	}
 	
 	notification(msg, type)
 	{
-    const target = this.parentNode.querySelector(type);
+    const target = this.parentNode.querySelector(type.localName);
     if (target)
       target.remove();
-    const elem = document.createElement(type);
-    elem.setAttribute('msg', msg);
-    this.parentNode.appendChild(elem);
+    type.msg = msg
+    this.parentNode.appendChild(type);
 	}
 }
 customElements.define("update-user", UserUpdate);
