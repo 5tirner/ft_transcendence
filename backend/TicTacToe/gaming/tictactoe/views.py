@@ -64,6 +64,7 @@ def myProfile(req):
             user = gameInfo(login=user_infos.get('username') ,codeToPlay=roomcode(user_infos.get('username')))
             user.save()
             userPic = playerAndHisPic(login=user_infos.get('username'), pic=user_infos.get('avatar'))
+            userPic.save()
         else:
             print('User Is Already Play Games And Stored In The Database')
             pass
