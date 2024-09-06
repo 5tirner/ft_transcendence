@@ -6,7 +6,7 @@ class gameInfoModelSerializer(serializers.ModelSerializer):
         model = gameInfo
         fields = ['login', 'wins', 'loses', 'draws', 'gamesPlayed', 'codeToPlay']
 
-class historyModelSirializer(serializers.ModelSerializer):
-    class Meta:
-        model = history
-        fields = ['you', 'oppenent', 'winner']
+# class historyModelSirializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = history
+#         fields = ['you', 'oppenent', 'winner']

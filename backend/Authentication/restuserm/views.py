@@ -102,7 +102,7 @@ def callback42(request):
                 return redirect(f"{settings.TRANSCE_HOST}/login/", permanent=True)
 
             # TODO: 2FA check before redirecting,do something here
-
+            
             jwt_token = jwt_generation(player.id, player.two_factor)
             response = redirect(settings.TRANSCE_HOST, permanent=True)
             response.set_cookie(

@@ -7,7 +7,22 @@ from .isAuthUser import isAuthUser
 from .generateCode import roomcode
 from django.http import JsonResponse
 import json
+import requests
 
+
+@api_view(['POST'])
+def addPlayer(req):
+    print(f"----------------------------------USER ADD--------------------------")
+    authRes = isAuthUser(req)
+    if authRes is None:
+        return response.Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+    # serial = pongGameInfoSerializer(data=req.data)
+    # if serial.is_valid():
+    #     serial.save()
+    #     return response.Response(status=status.HTTP_201_CREATED)
+    userInfos = authRes.json().get('data')
+    print(f"DATA INCOMING = {userInfos}")
+    return response.Response(status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 @api_view(['GET'])
 def myProfile(req):
     print("-------------------------USER PROFILE----------------------------------")
@@ -25,6 +40,8 @@ def myProfile(req):
             print("Glad To See You Here")
             addUser = pongGameInfo(login=userInfo.get('username'), codeToPlay=roomcode(userInfo.get('username')))
             addUser.save()
+            addUserPic = playerAndHisPic(login=userInfo.get('username'), pic=userInfo.get('avatar'))
+            addUserPic.save()
         print(f"Extract The User {userInfo.get('username')} From DataBase")
         element = pongGameInfo.objects.get(login=userInfo.get('username'))
         print(f"User On DataBase: {element}")
@@ -101,6 +118,9 @@ def updateInfo(req):
     # print(f"Data: {req.data}")
     oldLogin = user_infos.get('username')
     newLogin = req.data.get('newLogin')
+    if newLogin is None:
+        return response.Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+    print(f"NEW LOGIN IS -> {newLogin}")
     try:
         pongGameInfo.objects.get(login=oldLogin)
         print(f"YOU AGAIN? -> {oldLogin}")
@@ -162,33 +182,33 @@ def historic(req):
 #             matchNumbers += 1
 #     return JsonResponse(json.dumps(allMatches), safe=False)
 
-@api_view(['GET'])
-def PongTournement(req):
-    AuthApiRes = isAuthUser(req)
-    if AuthApiRes is None:
-        print("This User Does Not Authenticated")
-        return response.Response(status=status.HTTP_401_UNAUTHORIZED)
-    userInfo = AuthApiRes.json().get('data')
-    try:
-        pongGameInfo.objects.get(login=userInfo.get('username'))
-        print(f"Welcome Back {userInfo.get('username')}")
-    except:
-        print(f"First Game For {userInfo.get('username')}")
-        userAdd = pongGameInfo(login=userInfo.get('username'), codeToPlay=roomcode(userInfo.get('username')))
-        userAdd.save()
-    return render(req, 'gameTournement.html')
+# @api_view(['GET'])
+# def PongTournement(req):
+#     AuthApiRes = isAuthUser(req)
+#     if AuthApiRes is None:
+#         print("This User Does Not Authenticated")
+#         return response.Response(status=status.HTTP_401_UNAUTHORIZED)
+#     userInfo = AuthApiRes.json().get('data')
+#     try:
+#         pongGameInfo.objects.get(login=userInfo.get('username'))
+#         print(f"Welcome Back {userInfo.get('username')}")
+#     except:
+#         print(f"First Game For {userInfo.get('username')}")
+#         userAdd = pongGameInfo(login=userInfo.get('username'), codeToPlay=roomcode(userInfo.get('username')))
+#         userAdd.save()
+#     return render(req, 'gameTournement.html')
 
-def FinalRound(req):
-    AuthApiRes = isAuthUser(req)
-    if AuthApiRes is None:
-        print("This User Does Not Authenticated")
-        return response.Response(status=status.HTTP_401_UNAUTHORIZED)
-    userInfo = AuthApiRes.json().get('data')
-    try:
-        pongGameInfo.objects.get(login=userInfo.get('username'))
-        print(f"Welcome Back {userInfo.get('username')}")
-    except:
-        print(f"First Game For {userInfo.get('username')}")
-        userAdd = pongGameInfo(login=userInfo.get('username'), codeToPlay=roomcode(userInfo.get('username')))
-        userAdd.save()
-    return render(req, 'final.html')
+# def FinalRound(req):
+#     AuthApiRes = isAuthUser(req)
+#     if AuthApiRes is None:
+#         print("This User Does Not Authenticated")
+#         return response.Response(status=status.HTTP_401_UNAUTHORIZED)
+#     userInfo = AuthApiRes.json().get('data')
+#     try:
+#         pongGameInfo.objects.get(login=userInfo.get('username'))
+#         print(f"Welcome Back {userInfo.get('username')}")
+#     except:
+#         print(f"First Game For {userInfo.get('username')}")
+#         userAdd = pongGameInfo(login=userInfo.get('username'), codeToPlay=roomcode(userInfo.get('username')))
+#         userAdd.save()
+#     return render(req, 'final.html')

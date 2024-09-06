@@ -61,9 +61,9 @@ def myProfile(req):
         searchForUserInDataBase = gameInfo.objects.filter(login=user_infos.get('username')).first()
         if searchForUserInDataBase is None:
             print("Glad To See You!")
-            user = gameInfo(login=user_infos.get('username'),wins=0,
-            loses=0,draws=0,gamesPlayed=0,codeToPlay=roomcode(user_infos.get('username')))
+            user = gameInfo(login=user_infos.get('username') ,codeToPlay=roomcode(user_infos.get('username')))
             user.save()
+            userPic = playerAndHisPic(login=user_infos.get('username'), pic=user_infos.get('avatar'))
         else:
             print('User Is Already Play Games And Stored In The Database')
             pass
