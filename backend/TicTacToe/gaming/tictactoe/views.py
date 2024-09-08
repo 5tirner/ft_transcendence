@@ -43,9 +43,13 @@ def updateInfoTTT(req):
     for i in history.objects.all():
         if i.you == oldLogin:
             i.you = newLogin
+            if i.you == i.winner:
+                i.winner = newLogin
             i.save()
         elif i.oppenent == oldLogin:
             i.oppenent = newLogin
+            if i.you == i.winner:
+                i.winner = newLogin
             i.save()
     return response.Response(status=status.HTTP_200_OK)
 
@@ -79,21 +83,21 @@ def myProfile(req):
         print("Send Response")
         return response.Response(serial1.data,status=status.HTTP_200_OK)
 
-@api_view(["GET"])
-def userStatistic(req, login):
-    print("-------------------------USER CHECK OTHERS PROFILE----------------------------------")
-    print(f"Login={login}")
-    authApiResponse = isAuthUser(req)
-    if authApiResponse is None:
-        return response.Response(status=status.HTTP_401_UNAUTHORIZED)
-    user_infos  = authApiResponse.json().get('data')
-    print(user_infos)
-    try:
-        getUserFromDataBase = gameInfo.objects.get(login=login)
-    except:
-        return response.Response(status=status.HTTP_404_NOT_FOUND)
-    serial = gameInfoModelSerializer(getUserFromDataBase)
-    return response.Response(serial.data, status=status.HTTP_200_OK)
+# @api_view(["GET"])
+# def userStatistic(req, login):
+#     print("-------------------------USER CHECK OTHERS PROFILE----------------------------------")
+#     print(f"Login={login}")
+#     authApiResponse = isAuthUser(req)
+#     if authApiResponse is None:
+#         return response.Response(status=status.HTTP_401_UNAUTHORIZED)
+#     user_infos  = authApiResponse.json().get('data')
+#     print(user_infos)
+#     try:
+#         getUserFromDataBase = gameInfo.objects.get(login=login)
+#     except:
+#         return response.Response(status=status.HTTP_404_NOT_FOUND)
+#     serial = gameInfoModelSerializer(getUserFromDataBase)
+#     return response.Response(serial.data, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
 def historic(req):

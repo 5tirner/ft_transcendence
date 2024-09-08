@@ -10,19 +10,19 @@ import json
 import requests
 
 
-@api_view(['POST'])
-def addPlayer(req):
-    print(f"----------------------------------USER ADD--------------------------")
-    authRes = isAuthUser(req)
-    if authRes is None:
-        return response.Response(status=status.HTTP_406_NOT_ACCEPTABLE)
-    # serial = pongGameInfoSerializer(data=req.data)
-    # if serial.is_valid():
-    #     serial.save()
-    #     return response.Response(status=status.HTTP_201_CREATED)
-    userInfos = authRes.json().get('data')
-    print(f"DATA INCOMING = {userInfos}")
-    return response.Response(status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
+# @api_view(['POST'])
+# def addPlayer(req):
+#     print(f"----------------------------------USER ADD--------------------------")
+#     authRes = isAuthUser(req)
+#     if authRes is None:
+#         return response.Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+#     # serial = pongGameInfoSerializer(data=req.data)
+#     # if serial.is_valid():
+#     #     serial.save()
+#     #     return response.Response(status=status.HTTP_201_CREATED)
+#     userInfos = authRes.json().get('data')
+#     print(f"DATA INCOMING = {userInfos}")
+#     return response.Response(status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION)
 @api_view(['GET'])
 def myProfile(req):
     print("-------------------------USER PROFILE----------------------------------")
@@ -56,20 +56,20 @@ def myProfile(req):
     #         return response.Response(status=status.HTTP_201_CREATED)
     #     return response.Response(status=status.HTTP_204_NO_CONTENT)
 
-@api_view(['GET'])
-def userInfos(req, login):
-    print("-------------------------USER CHECK----------------------------------")
-    AuthResponse = isAuthUser(req)
-    if AuthResponse is None:
-        print("This User Does Not Authenticated")
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
-    try:
-        element = pongGameInfo.objects.get(login=login)
-        serial = pongGameInfoSerializer(element)
-        return response.Response(serial.data, status=status.HTTP_200_OK)
-    except:
-        print(f"can't Find {login} In DataBase")
-        return response.Response(status=status.HTTP_204_NO_CONTENT)
+# @api_view(['GET'])
+# def userInfos(req, login):
+#     print("-------------------------USER CHECK----------------------------------")
+#     AuthResponse = isAuthUser(req)
+#     if AuthResponse is None:
+#         print("This User Does Not Authenticated")
+#         return response.Response(status=status.HTTP_204_NO_CONTENT)
+#     try:
+#         element = pongGameInfo.objects.get(login=login)
+#         serial = pongGameInfoSerializer(element)
+#         return response.Response(serial.data, status=status.HTTP_200_OK)
+#     except:
+#         print(f"can't Find {login} In DataBase")
+#         return response.Response(status=status.HTTP_204_NO_CONTENT)
     
 
 # @api_view(['GET'])
@@ -141,9 +141,13 @@ def updateInfo(req):
     for i in pongHistory.objects.all():
         if i.you == oldLogin:
             i.you = newLogin
+            if i.you == i.winner:
+                i.winner = newLogin
             i.save()
         elif i.oppenent == oldLogin:
             i.oppenent = newLogin
+            if i.you == i.winner:
+                i.winner = newLogin
             i.save()
     return response.Response(status=status.HTTP_200_OK)
 
