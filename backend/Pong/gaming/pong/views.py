@@ -140,14 +140,14 @@ def updateInfo(req):
     toEditPicName.save()
     for i in pongHistory.objects.all():
         if i.you == oldLogin:
-            i.you = newLogin
             if i.you == i.winner:
                 i.winner = newLogin
+            i.you = newLogin
             i.save()
         elif i.oppenent == oldLogin:
-            i.oppenent = newLogin
-            if i.you == i.winner:
+            if i.oppenent == i.winner:
                 i.winner = newLogin
+            i.oppenent = newLogin
             i.save()
     return response.Response(status=status.HTTP_200_OK)
 
