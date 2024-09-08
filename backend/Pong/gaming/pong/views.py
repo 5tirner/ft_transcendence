@@ -99,12 +99,31 @@ def myProfile(req):
 
 @api_view(['POST'])
 def updateImage(req):
+    print("-------------------------USER PICTURE UPDATE----------------------------------")
     authApiResponse = isAuthUser(req)
     if authApiResponse is None:
         return response.Response(status=status.HTTP_404_NOT_FOUND)
     userInfos = authApiResponse.json().get('data')
     print(f"- IncomingData: {req.data}")
     print(f"- User Infos: {userInfos}")
+    userLogin = userInfos.get('username')
+    try:
+        pongGameInfo.objects.get(login=userLogin)
+        print(f"YOU AGAIN? -> {userLogin}")
+    except:
+        print(f"HUH FIRSTTIME? -> {userLogin}")
+        addUserToDB = pongGameInfo(login=userLogin, codeToPlay=roomcode(userLogin))
+        addUserToDB.save()
+        print(f"pongInfo += {pongGameInfo.objects.get(login=userLogin)}")
+        addUserPic = playerAndHisPic(login=userLogin, pic=userInfos.get('avatar'))
+        addUserPic.save()
+        print(f"playerAndHisPic += {playerAndHisPic.objects.get(login=userLogin)}")
+    newPic = req.data.get('newPic')
+    if newPic is None:
+        return response.Response(status=status.HTTP_406_NOT_ACCEPTABLE)
+    toEditPic  = playerAndHisPic.objects.get(login=userLogin)
+    toEditPic.pic = newPic
+    toEditPic.save()
     return response.Response(status=status.HTTP_200_OK)
 
 @api_view(['POST'])

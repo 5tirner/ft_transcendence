@@ -334,6 +334,8 @@ class PlayerUploadAvatar(APIView):
     @method_decorator(jwt_required_cookie, name="post")
     def post(self, request):
         try:
+            cookies = {'jwt_token': request.COOKIES.get('jwt_token')}
+            print(f"JSON WEB TOKEN: {cookies}")
             tokenid = request.COOKIES.get("jwt_token")
             if not tokenid:
                 return Response({"error": "No token provided", "statusCode": 401})
@@ -351,6 +353,10 @@ class PlayerUploadAvatar(APIView):
                 settings.PUBLIC_PLAYER_URL,
                 os.path.join(settings.MEDIA_URL, avatar_file.name),
             )
+            print("TRY TO UPDATE PICTURE")
+            pongUpdatePicApi = requests.post("http://pongcntr:8000/PongPong/updateGamePic/", cookies=cookies,
+                    json={'newPic': url_file})
+            print(f"pongUpdatePicApi Code Status {pongUpdatePicApi.status_code}")
             player = Player.objects.get(id=id)
             player.avatar = url_file
             player.save()
