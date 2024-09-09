@@ -357,6 +357,9 @@ class PlayerUploadAvatar(APIView):
             pongUpdatePicApi = requests.post("http://pongcntr:8000/PongPong/updateGamePic/", cookies=cookies,
                     json={'newPic': url_file})
             print(f"pongUpdatePicApi Code Status {pongUpdatePicApi.status_code}")
+            tttUpdatePicApi = requests.post("http://tttcntr:8000/TicTacToe/UpdateImageTTT/", cookies=cookies
+                                            , json={'newPic': url_file})
+            print(f"tttUpdatePicApi Code Status {tttUpdatePicApi.status_code}")
             player = Player.objects.get(id=id)
             player.avatar = url_file
             player.save()
