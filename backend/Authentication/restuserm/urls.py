@@ -25,6 +25,7 @@ urlpatterns = [
     path("usercheck/", views.check_user),
     path("players/", friends_management.ListAllUsersView.as_view()),
     path("players/block/", friends_management.BlockUserView.as_view()),
+    path("TFA/postlogin/", views.tfa_post_login.as_view(), name="tfa_post_login"),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

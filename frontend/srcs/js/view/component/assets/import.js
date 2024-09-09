@@ -14,6 +14,7 @@ import PongLocal from "../PongLocal.js";
 import GameInvite from "../GameRequest.js";
 import PongFriend from "../PongFriend.js";
 import Tfa from "../TwoFactAuth.js";
+import tfaView from "../2FA.js";
 
 import ChatComponent from "../../chat/chat.js";
 
@@ -25,38 +26,38 @@ import AbortButton from "../auxiliar/AbortButton.js";
 import UserUpdate from "../auxiliar/ChangeUsername.js";
 import UpdateAvatar from "../auxiliar/ChangeAvatar.js";
 
-import Notification  from "../auxiliar/notification/Notification.js";
+import Notification from "../auxiliar/notification/Notification.js";
 
-const danger = new Notification("Error", 'bx-error', '#e26159');
-const info = new Notification("Important", 'bx-info-circle', '#1b958d');
-const success = new Notification("Success", 'bx-check-circle', '#0ad406');
+const danger = new Notification("Error", "bx-error", "#e26159");
+const info = new Notification("Important", "bx-info-circle", "#1b958d");
+const success = new Notification("Success", "bx-check-circle", "#0ad406");
 
 export {
-  Game,
-  Home,
-  Pong,
-  Login,
-  Setting,
-  Profile,
-  History,
-  Sidebar,
-  PongTour,
-  Platform,
-  TicTacToe,
-  Statistic,
-  PongLocal,
-  GameInvite,
-  TicAnim,
-  PongAnim,
-  ResultMsg,
-  ConfirmMsg,
-  AbortButton,
-  UserUpdate,
-  UpdateAvatar,
-  ChatComponent,
-  Tfa,
-  PongFriend,
-  danger,
-  info,
-  success
+	Game,
+	Home,
+	Pong,
+	Login,
+	Setting,
+	Profile,
+	History,
+	Sidebar,
+	PongTour,
+	Platform,
+	TicTacToe,
+	Statistic,
+	PongLocal,
+	GameInvite,
+	TicAnim,
+	PongAnim,
+	ResultMsg,
+	ConfirmMsg,
+	AbortButton,
+	UserUpdate,
+	UpdateAvatar,
+	ChatComponent,
+	Tfa,
+	PongFriend,
+	danger,
+	info,
+	success
 };

@@ -42,6 +42,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
 import requests
 
+
 @api_view(["GET"])
 @authentication_classes([])  # Remove all authentication classes
 @permission_classes([AllowAny])  # Allow any permission
@@ -101,8 +102,18 @@ def callback42(request):
             if player is None:
                 return redirect(f"{settings.TRANSCE_HOST}/login/", permanent=True)
 
-            # TODO: 2FA check before redirecting,do something here
-            
+            if player.two_factor:
+
+                auth_token, created = Token.objects.get_or_create(user=player)
+                response = redirect(
+                    f"{settings.TRANSCE_HOST}/tfa",
+                    permanent=True,
+                )
+                response.set_cookie(
+                    "auth_token", value=auth_token.key, httponly=False, secure=True
+                )
+                return response
+
             jwt_token = jwt_generation(player.id, player.two_factor)
             response = redirect(settings.TRANSCE_HOST, permanent=True)
             response.set_cookie(
@@ -334,7 +345,7 @@ class PlayerUploadAvatar(APIView):
     @method_decorator(jwt_required_cookie, name="post")
     def post(self, request):
         try:
-            cookies = {'jwt_token': request.COOKIES.get('jwt_token')}
+            cookies = {"jwt_token": request.COOKIES.get("jwt_token")}
             print(f"JSON WEB TOKEN: {cookies}")
             tokenid = request.COOKIES.get("jwt_token")
             if not tokenid:
@@ -354,11 +365,17 @@ class PlayerUploadAvatar(APIView):
                 os.path.join(settings.MEDIA_URL, avatar_file.name),
             )
             print("TRY TO UPDATE PICTURE")
-            pongUpdatePicApi = requests.post("http://pongcntr:8000/PongPong/updateGamePic/", cookies=cookies,
-                    json={'newPic': url_file})
+            pongUpdatePicApi = requests.post(
+                "http://pongcntr:8000/PongPong/updateGamePic/",
+                cookies=cookies,
+                json={"newPic": url_file},
+            )
             print(f"pongUpdatePicApi Code Status {pongUpdatePicApi.status_code}")
-            tttUpdatePicApi = requests.post("http://tttcntr:8000/TicTacToe/UpdateImageTTT/", cookies=cookies
-                                            , json={'newPic': url_file})
+            tttUpdatePicApi = requests.post(
+                "http://tttcntr:8000/TicTacToe/UpdateImageTTT/",
+                cookies=cookies,
+                json={"newPic": url_file},
+            )
             print(f"tttUpdatePicApi Code Status {tttUpdatePicApi.status_code}")
             player = Player.objects.get(id=id)
             player.avatar = url_file
@@ -418,7 +435,7 @@ class PlayerInfos(APIView):
     @method_decorator(jwt_required_cookie)
     def post(self, request):
         try:
-            cookies = {'jwt_token': request.COOKIES.get('jwt_token')}
+            cookies = {"jwt_token": request.COOKIES.get("jwt_token")}
             print(f"JSON WEB TOKEN: {cookies}")
             print("->FETCH PALYER INFO API")
             change_check = False
@@ -435,14 +452,24 @@ class PlayerInfos(APIView):
                         {"error": "Invalid username"},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
-                
-                print(f"Try Update Login {player_id.username} To {username} For Pong TABLES.")
-                EditGameInfos = requests.post("http://pongcntr:8000/PongPong/UpdateGameInfo/",
-                        cookies=cookies, json={'newLogin': username})
+
+                print(
+                    f"Try Update Login {player_id.username} To {username} For Pong TABLES."
+                )
+                EditGameInfos = requests.post(
+                    "http://pongcntr:8000/PongPong/UpdateGameInfo/",
+                    cookies=cookies,
+                    json={"newLogin": username},
+                )
                 print(f"Code Status: {EditGameInfos.status_code}")
-                print(f"Try Update Login {player_id.username} To {username} For TICTACTOE TABLES.")
-                EditGameInfos = requests.post("http://tttcntr:8000/TicTacToe/UpdateGameInfo/",
-                        cookies=cookies, json={'newLogin': username})
+                print(
+                    f"Try Update Login {player_id.username} To {username} For TICTACTOE TABLES."
+                )
+                EditGameInfos = requests.post(
+                    "http://tttcntr:8000/TicTacToe/UpdateGameInfo/",
+                    cookies=cookies,
+                    json={"newLogin": username},
+                )
                 print(f"Code Status: {EditGameInfos.status_code}")
                 player_id.username = username
                 change_check = True
@@ -781,3 +808,38 @@ def check_user(request):
             "data": serialized.data,
         }
     )
+
+
+class tfa_post_login(APIView):
+    def post(self, request):
+        try:
+            code = request.data.get("code")
+            if not code:
+                return Response(
+                    {"error": "2FA code is required", "statusCode": 401},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+            if not tfa_code_check(request.user.id, code):
+                return Response(
+                    {"error": "2FA code is incorrect", "statusCode": 401},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
+
+            token = Token.objects.get(user=request.user)
+            token.delete()
+            user = request.user
+            player = Player.objects.get(id=user.id)
+            jwt_token = jwt_generation(player.id, True)
+            response = Response(
+                {
+                    "message": "The player has successfully verified",
+                    "statusCode": 200,
+                    "redirected": True,
+                }
+            )
+            response.set_cookie(
+                "jwt_token", value=jwt_token, httponly=True, secure=True
+            )
+            return response
+        except Exception as e:
+            return Response({"error": str(e), "statusCode": 500})

@@ -1,53 +1,53 @@
 import { auth } from "../auth/Authentication.js";
-import API from "./API.js"
+import API from "./API.js";
 
 import Pong from "../view/component/Pong.js";
 
-export const router =
-{
-	goto: (path, push = true) =>
-	{
+export const router = {
+	goto: (path, push = true) => {
 		router.routes(path, push);
 		window.scrollTo(0, 0);
 	},
 
-	redirecto: async (path) =>
-	{
-    const userIsLogged = await auth.isAuth();
-		if (userIsLogged)
-		{
+	redirecto: async (path) => {
+		const userIsLogged = await auth.isAuth();
+		if (userIsLogged) {
 			let pathname = window.location.pathname;
 			if (pathname === "/") pathname = "/platform";
 			window.component.root.innerHtml = "";
 			window.component.root.appendChild(window.component.main);
 			router.goto(pathname);
-		}
-		else
-		{
-      // if (path === "/") path = "/home";
-      // if (path !== '/home' && path !== '/login') // 404
-      //   router.pageNotFound();
-      // else
-      // {
-        console.log("Return to home");
-        window.component.root.innerHTML = '';
-        window.component.root.appendChild(window.component.home);
-      // }
+		} else {
+			// if (path === "/") path = "/home";
+			// if (path !== '/home' && path !== '/login') // 404
+			//   router.pageNotFound();
+			// else
+			// {
+
+			if (path === "/tfa") {
+				window.component.root.innerHtml = "";
+				const tfa = document.createElement("tfa-view");
+				window.component.root.appendChild(tfa);
+			} else {
+				console.log("Return to home");
+				window.component.root.innerHTML = "";
+				window.component.root.appendChild(window.component.home);
+			}
+			// }
 		}
 	},
 
-	routes: (currentLocation, push) =>
-	{
-		switch (currentLocation)
-		{
+	routes: (currentLocation, push) => {
+		switch (currentLocation) {
+			case "/tfa":
 			case "/platform":
 			case "/profile":
 			case "/setting":
 			case "/history":
 			case "/friend":
-			case "/game":
-			{
+			case "/game": {
 				if (currentLocation === "/game") currentLocation = "/platform";
+				if (currentLocation === "/tfa") currentLocation = "/platform";
 
 				//check if the component already exist -> working now but needs more testing
 				const component = window.component.midl.querySelector(
@@ -63,66 +63,56 @@ export const router =
 				const elem = document.createElement(
 					`${currentLocation.substring(1)}-view`
 				);
+				console.log("elem", elem);
 				window.component.midl.innerHTML = "";
 				window.component.midl.appendChild(elem);
 				return;
 			}
-			case '/logout':
-			{
-        const res = API.logout();
-        
-        document.friendship_ws.close();
-        console.log("Return to home");
-        window.component.root.innerHTML = '';
-        window.component.root.appendChild(window.component.home);
-        history.replaceState(
-  				null,
-  				null,
-  				location.origin + "/"
-       	);
-        return;
+			case "/logout": {
+				const res = API.logout();
+
+				document.friendship_ws.close();
+				console.log("Return to home");
+				window.component.root.innerHTML = "";
+				window.component.root.appendChild(window.component.home);
+				history.replaceState(null, null, location.origin + "/");
+				return;
 			}
 			default:
-        router.goto('/platform');
-    }
-   },
-   
-   game: (_game, roomCode = '') =>
-	{
-    const elem = document.createElement('game-view');
-    window.component.midl.innerHTML = "";
-    window.component.midl.appendChild(elem);
-    const gameSec = elem.querySelector('.game-section');
-      
-    switch(_game)
-    {
-      case 'pong':
-      case 'ttt':
-      case 'po-local':
-      case 'tournament':
-      {
-        const game = document.createElement(`${_game}-game`);
-        gameSec.appendChild(game);
-        history.replaceState(
-				null,
-				null,
-				location.origin + "/game"
-       	);
-          
-        return;
-      }
-      case 'pong-friend':
-      {
-        const pongFriend = new Pong('/GameInvite/', roomCode);
-        gameSec.appendChild(pongFriend); 
-      }
-    }
+				router.goto("/platform");
+		}
+	},
+
+	game: (_game, roomCode = "") => {
+		const elem = document.createElement("game-view");
+		window.component.midl.innerHTML = "";
+		window.component.midl.appendChild(elem);
+		const gameSec = elem.querySelector(".game-section");
+
+		switch (_game) {
+			case "pong":
+			case "ttt":
+			case "po-local":
+			case "tournament": {
+				const game = document.createElement(`${_game}-game`);
+				gameSec.appendChild(game);
+				history.replaceState(null, null, location.origin + "/game");
+
+				return;
+			}
+			case "pong-friend": {
+				const pongFriend = new Pong("/GameInvite/", roomCode);
+				gameSec.appendChild(pongFriend);
+			}
+		}
 	},
 	pageNotFound: () => {
-    const div = Object.assign(document.createElement('div'), {className: 'page-not-found'});
-    // const image = Object.assign(document.createElement('img'), {src: 'js/view/src/img/404.jpg'});
-    // div.appendChild(image);
-    window.component.root.innerHTML = '';
-    window.component.root.appendChild(div);
+		const div = Object.assign(document.createElement("div"), {
+			className: "page-not-found"
+		});
+		// const image = Object.assign(document.createElement('img'), {src: 'js/view/src/img/404.jpg'});
+		// div.appendChild(image);
+		window.component.root.innerHTML = "";
+		window.component.root.appendChild(div);
 	}
 };
