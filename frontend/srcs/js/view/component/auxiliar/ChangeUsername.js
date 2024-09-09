@@ -168,6 +168,7 @@ export default class UserUpdate extends HTMLElement
       const getUserData = await API.getUser();
       const username = await getUserData.json();
       this.target.innerHTML = username.player.username;
+      Auth.user = username.player.username;
       this.notification('Username updated', success);
       this.remove();
     }
