@@ -1,4 +1,5 @@
 import API from "../service/API.js";
+import { findUserInList } from "./chat/chatList.js";
 import { friendUpdate } from "./friendsUpdate.js";
 
 //const variables
@@ -101,11 +102,13 @@ export class FriendElement extends HTMLLIElement {
 			if (blockes) blockes.updateDOM();
 			if (this.parentNode.id === "users")
 				friendUpdate(this._data.data, BLK_USER);
-			else if (this.parentNode.id === "friends")
+			else if (this.parentNode.id === "friends") {
+				const list_users = document.querySelector("chat-view");
 				friendUpdate(this._data.data, BLK_FRND);
+				let frined = findUserInList(this._data.data.id);
+				frined.remove();
+			}
 			this.remove();
-			const convs = document.querySelector("chat-view");
-			if (convs) convs.loadConversations();
 		};
 		const unfriendEventHandler = async () => {
 			const res = await API.removeFriend(this._data.data.id);

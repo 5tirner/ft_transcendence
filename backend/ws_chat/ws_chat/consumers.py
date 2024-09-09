@@ -67,12 +67,24 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 room_id = content["room_id"]
                 user_id = content["user_id"]
 
-                # submit message to database
-                await self.submit_message(message, room_id)
-                # send message to the specified user channel
-                await self.send_message_to_user(user_id, message, False)
-                # send message to message sender
-                await self.send_message_to_user(user_id, message, True)
+                async with httpx.AsyncClient() as client:
+                    response = await client.get(
+                        f"{settings.CHAT_URI}is_blocked/{user_id}/",
+                        cookies=self.scope["cookie"],
+                    )
+                if response.status_code != 200:
+                    return None
+                resp_data = response.json()
+                print(resp_data)
+                user_blocked = resp_data["block_status"]
+
+                if not user_blocked:
+                    # submit message to database
+                    await self.submit_message(message, room_id)
+                    # send message to the specified user channel
+                    await self.send_message_to_user(user_id, message, False)
+                    # send message to message sender
+                    await self.send_message_to_user(user_id, message, True)
             elif type == "status":
                 pass
             elif type == "friendship":
@@ -81,7 +93,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             pass
 
     async def send_friendship_update(self, content):
-        # print(content)
         user = content["user_id"]
         event = content["event"]
         generated_code = self.generate_room_code()
@@ -149,7 +160,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         except Exception as e:
             pass
 
-    # Receive message from room group
     async def chat_message(self, event):
         data = {
             "id": event["id"],
@@ -158,7 +168,6 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
             "sent": event["user_msg"],
             "msg_type": True,
         }
-        # Send message to WebSocket along with user info
         await self.send_json(data)
 
     async def chat_status(self, event):

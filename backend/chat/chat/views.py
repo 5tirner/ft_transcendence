@@ -10,13 +10,14 @@ from rest_framework.generics import (
     get_object_or_404,
 )
 
-from restuserm.models import Player
+from restuserm.models import Player, Friendships
 
 from .serializers import (
     ConversationsSerializer,
     MessageSerializer,
     ChatRoomSerializer,
     SubmitMessageSerializer,
+    FriendshipsSerializer,
 )
 from .models import ChatRoom, Message
 from django.db.models.functions import Coalesce
@@ -83,3 +84,26 @@ class DeleteConversation(DestroyAPIView):
         )
 
         return chat_room
+
+
+# check friendship table to see if user is blocked with the current user
+class IsBlocked(RetrieveAPIView):
+    serializer_class = FriendshipsSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        user_id = self.kwargs["user_id"]
+        return Friendships.objects.filter(
+            Q(sender=user, receiver=user_id) | Q(sender=user_id, receiver=user)
+        )
+
+    def get(self, request, *args, **kwargs):
+        # Get the friendship object between the two users
+        queryset = self.get_queryset().first()
+
+        if queryset:
+            serializer = self.get_serializer(queryset)
+            return Response(serializer.data)
+        else:
+            # If no relationship exists, return block_status as False
+            return Response({"block_status": False, "status": "No relationship exists"})

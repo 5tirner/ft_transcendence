@@ -118,3 +118,14 @@ class SubmitMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = ["chatroom", "sender", "content"]
+
+
+class FriendshipsSerializer(serializers.ModelSerializer):
+    block_status = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Friendships
+        fields = ["status", "block_status"]
+
+    def get_block_status(self, obj):
+        return obj.status == Friendships.Status.BLOCKED.value
