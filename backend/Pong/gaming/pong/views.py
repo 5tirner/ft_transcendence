@@ -235,3 +235,21 @@ def historic(req):
 #         userAdd = pongGameInfo(login=userInfo.get('username'), codeToPlay=roomcode(userInfo.get('username')))
 #         userAdd.save()
 #     return render(req, 'final.html')
+# 
+#
+
+
+# MotherHugger ostora
+
+from .models import Tournament
+
+def create_tournament(request):
+    if request.method == 'POST':
+        players = json.loads(request.body).get('players')
+        if len(players) != 4:
+            return JsonResponse({'error': 'You must submit exactly 4 players.'}, status=400)
+        
+        tournament = Tournament.objects.create(players=json.dumps(players))
+        return JsonResponse({'tournament_id': tournament.id})
+    
+    return render(request, 'game/tournament.html')

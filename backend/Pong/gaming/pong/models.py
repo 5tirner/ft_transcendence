@@ -16,3 +16,11 @@ class pongHistory(models.Model):
     you = models.CharField(max_length=20)
     oppenent = models.CharField(max_length=20)
     winner = models.CharField(max_length=20)
+    
+    
+    
+# MotherHugger ostora
+
+class Tournament(models.Model):
+    players = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)

@@ -241,7 +241,6 @@ export default class Setting extends HTMLElement
       this.append(elem);
     }
     this.listener3 = async (e) => {
-      console.log(e.target.checked);
       if ( e.target.checked == true )
       {
         const container = this.querySelector('.profile-card .section');

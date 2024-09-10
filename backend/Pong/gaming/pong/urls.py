@@ -12,6 +12,8 @@ urlpatterns = [
     # path('Final/', FinalRound),
     path('UpdateGameInfo/', updateInfo),
     path('updateGamePic/', updateImage),
+    # path('tournament/', tournaments),
+    # path('create_tournament/', create_tournament, name='create_tournament'),
     # path('UpdateUserInfos/<login>')
     # path('TourHistory/', TournamentHistory),
     # path('local/', PongLocalGame),
