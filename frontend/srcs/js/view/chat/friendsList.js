@@ -57,8 +57,23 @@ export class PopupFriendList extends HTMLElement {
 	connectedCallback() {
 		this.setAttribute("id", "friends-list");
 		this.innerHTML = `
+        <div class="pop-up-wrapper">
 			<div class="pop-up">
-			</div>`;
+			</div>
+        </div>`;
+
+		const wrapper = this.querySelector(".pop-up-wrapper");
+
+		wrapper.addEventListener("click", (event) => {
+			if (event.target === wrapper) {
+				this.remove();
+			}
+		});
+		document.addEventListener("keydown", (event) => {
+			if (event.key === "Escape") {
+				this.remove();
+			}
+		});
 	}
 }
 customElements.define("pop-up-friend-list", PopupFriendList);
@@ -66,7 +81,7 @@ customElements.define("pop-up-friend-list", PopupFriendList);
 export async function handlAddChatRoom(event) {
 	let popup = document.querySelector("pop-up-friend-list");
 	if (popup) {
-		popup.remove();
+		// popup.remove();
 	} else {
 		popup = document.createElement("pop-up-friend-list");
 		document.querySelector("body").appendChild(popup);
