@@ -76,7 +76,6 @@ export default class PongTour extends HTMLElement {
     const ctx = canvas.getContext("2d");
 
     function connectWebSocket() {
-      console.log("wss://" + location.host + "/Tournaments/");
       socket.ws = new WebSocket("wss://" + location.host + "/Tournaments/");
       socket.ws.onopen = function () {
         console.log("WebSocket connection opened");

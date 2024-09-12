@@ -525,240 +525,240 @@ class pongLocalServer(AsyncJsonWebsocketConsumer):
 
 
 #Need To Hundle Tournement
-class pongTourServer(AsyncJsonWebsocketConsumer):
-    TheWinners = list()
-    tournementGroups = list(dict())
-    playersOnMatchAndItsRoomId = dict()
-    playersOnMatchAndItsOppenent = dict()
-    playersOnMatchAndItsDeriction = dict()
+# class pongTourServer(AsyncJsonWebsocketConsumer):
+#     TheWinners = list()
+#     tournementGroups = list(dict())
+#     playersOnMatchAndItsRoomId = dict()
+#     playersOnMatchAndItsOppenent = dict()
+#     playersOnMatchAndItsDeriction = dict()
     
-    async def connect(self):
-        print(f"[-----{self.scope['user']} Try To Connect On Tournement Server].------")
-        if self.playersOnMatchAndItsDeriction.get(self.scope['user']) is not None:
-            print(f"{self.scope['user']} Already In Another Game")
-            self.scope['user'] = "Bad One"
-            await self.accept()
-            await self.close()
-            return
-        if len(self.tournementGroups) == 0:
-            print(f"{self.scope['user']} Is The First One Joined To This Tour")
-            self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
-        elif len(self.tournementGroups) < 4:
-            for i in self.tournementGroups:
-                if i.get('name') == self.scope['user']:
-                    self.scope['user'] = "Bad One"
-                    await self.accept()
-                    await self.close()
-                    return
-            print(f"{self.scope['user']} Will Joined To This List Of Players:")
-            print(f"-> {self.tournementGroups}")
-            self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
-            if len(self.tournementGroups) == 4:
-                player1 = self.tournementGroups[0].get('name')
-                player2 = self.tournementGroups[1].get('name')
-                player3 = self.tournementGroups[2].get('name')
-                player4 = self.tournementGroups[3].get('name')
-                print("---------------------- Players On Tour ---------------------")
-                print(player1)
-                print(player2)
-                print(player3)
-                print(player4)
-                self.playersOnMatchAndItsRoomId[player1] = pongGameInfo.objects.get(login=player1).codeToPlay
-                self.playersOnMatchAndItsRoomId[player3] = pongGameInfo.objects.get(login=player1).codeToPlay
-                self.playersOnMatchAndItsOppenent[player1] = player3
-                self.playersOnMatchAndItsOppenent[player3] = player1
-                self.playersOnMatchAndItsDeriction[player1] = "Left"
-                self.playersOnMatchAndItsDeriction[player3]  = "Right"
-                await self.channel_layer.group_add(self.playersOnMatchAndItsRoomId.get(player1),
-                                             self.tournementGroups[0].get('channel_name'))
-                await self.channel_layer.group_add(self.playersOnMatchAndItsRoomId.get(player1),
-                                             self.tournementGroups[2].get('channel_name'))
-                self.playersOnMatchAndItsRoomId[player2] = pongGameInfo.objects.get(login=player2).codeToPlay
-                self.playersOnMatchAndItsRoomId[player4] = pongGameInfo.objects.get(login=player2).codeToPlay
-                self.playersOnMatchAndItsOppenent[player2] = player4
-                self.playersOnMatchAndItsOppenent[player4] = player2
-                self.playersOnMatchAndItsDeriction[player2] = "Left"
-                self.playersOnMatchAndItsDeriction[player4]  = "Right"
-                await self.channel_layer.group_add(self.playersOnMatchAndItsRoomId.get(player2),
-                                             self.tournementGroups[1].get('channel_name'))
-                await self.channel_layer.group_add(self.playersOnMatchAndItsRoomId.get(player2),
-                                             self.tournementGroups[3].get('channel_name'))
-        await self.accept()
-        if len(self.tournementGroups) == 4:
-            self.tournementGroups.clear()
-            try:
-                toFront1 = {'player1': player1, 'player2': player3, 'roomid': self.playersOnMatchAndItsRoomId.get(player1)}
-                toFront2 = {'player1': player2, 'player2': player4, 'roomid': self.playersOnMatchAndItsRoomId.get(player2)}
-                await self.channel_layer.group_send(self.playersOnMatchAndItsRoomId.get(player1),
-                        {'type': 'ToFrontOnConnect', 'Data': toFront1})
-                await self.channel_layer.group_send(self.playersOnMatchAndItsRoomId.get(player2),
-                        {'type': 'ToFrontOnConnect', 'Data': toFront2})
-            except:
-                pass
+#     async def connect(self):
+#         print(f"[-----{self.scope['user']} Try To Connect On Tournement Server].------")
+#         if self.playersOnMatchAndItsDeriction.get(self.scope['user']) is not None:
+#             print(f"{self.scope['user']} Already In Another Game")
+#             self.scope['user'] = "Bad One"
+#             await self.accept()
+#             await self.close()
+#             return
+#         if len(self.tournementGroups) == 0:
+#             print(f"{self.scope['user']} Is The First One Joined To This Tour")
+#             self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
+#         elif len(self.tournementGroups) < 4:
+#             for i in self.tournementGroups:
+#                 if i.get('name') == self.scope['user']:
+#                     self.scope['user'] = "Bad One"
+#                     await self.accept()
+#                     await self.close()
+#                     return
+#             print(f"{self.scope['user']} Will Joined To This List Of Players:")
+#             print(f"-> {self.tournementGroups}")
+#             self.tournementGroups.append({'name': self.scope['user'], 'channel_name': self.channel_name})
+#             if len(self.tournementGroups) == 4:
+#                 player1 = self.tournementGroups[0].get('name')
+#                 player2 = self.tournementGroups[1].get('name')
+#                 player3 = self.tournementGroups[2].get('name')
+#                 player4 = self.tournementGroups[3].get('name')
+#                 print("---------------------- Players On Tour ---------------------")
+#                 print(player1)
+#                 print(player2)
+#                 print(player3)
+#                 print(player4)
+#                 self.playersOnMatchAndItsRoomId[player1] = pongGameInfo.objects.get(login=player1).codeToPlay
+#                 self.playersOnMatchAndItsRoomId[player3] = pongGameInfo.objects.get(login=player1).codeToPlay
+#                 self.playersOnMatchAndItsOppenent[player1] = player3
+#                 self.playersOnMatchAndItsOppenent[player3] = player1
+#                 self.playersOnMatchAndItsDeriction[player1] = "Left"
+#                 self.playersOnMatchAndItsDeriction[player3]  = "Right"
+#                 await self.channel_layer.group_add(self.playersOnMatchAndItsRoomId.get(player1),
+#                                              self.tournementGroups[0].get('channel_name'))
+#                 await self.channel_layer.group_add(self.playersOnMatchAndItsRoomId.get(player1),
+#                                              self.tournementGroups[2].get('channel_name'))
+#                 self.playersOnMatchAndItsRoomId[player2] = pongGameInfo.objects.get(login=player2).codeToPlay
+#                 self.playersOnMatchAndItsRoomId[player4] = pongGameInfo.objects.get(login=player2).codeToPlay
+#                 self.playersOnMatchAndItsOppenent[player2] = player4
+#                 self.playersOnMatchAndItsOppenent[player4] = player2
+#                 self.playersOnMatchAndItsDeriction[player2] = "Left"
+#                 self.playersOnMatchAndItsDeriction[player4]  = "Right"
+#                 await self.channel_layer.group_add(self.playersOnMatchAndItsRoomId.get(player2),
+#                                              self.tournementGroups[1].get('channel_name'))
+#                 await self.channel_layer.group_add(self.playersOnMatchAndItsRoomId.get(player2),
+#                                              self.tournementGroups[3].get('channel_name'))
+#         await self.accept()
+#         if len(self.tournementGroups) == 4:
+#             self.tournementGroups.clear()
+#             try:
+#                 toFront1 = {'player1': player1, 'player2': player3, 'roomid': self.playersOnMatchAndItsRoomId.get(player1)}
+#                 toFront2 = {'player1': player2, 'player2': player4, 'roomid': self.playersOnMatchAndItsRoomId.get(player2)}
+#                 await self.channel_layer.group_send(self.playersOnMatchAndItsRoomId.get(player1),
+#                         {'type': 'ToFrontOnConnect', 'Data': toFront1})
+#                 await self.channel_layer.group_send(self.playersOnMatchAndItsRoomId.get(player2),
+#                         {'type': 'ToFrontOnConnect', 'Data': toFront2})
+#             except:
+#                 pass
 
-    async def receive_json(self, dataFromClient, bytes_data=None):
-        try:
-            thisUser = self.scope['user']
-            oppenent = self.playersOnMatchAndItsOppenent.get(self.scope['user'])
-            roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
-            if dataFromClient.get('gameStatus') == "onprogress":
-                BallRoute = dataFromClient.get('BallRoute')
-                BallDirection = dataFromClient.get('BallDir')
-                ballx = dataFromClient.get('ballx')
-                bally = dataFromClient.get('bally')
-                paddle1 = dataFromClient.get('paddle1')
-                paddle2 = dataFromClient.get('paddle2') 
-                if dataFromClient.get('move') == "UP":
-                    if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
-                        paddle1 -= 20
-                    else:
-                        paddle2 -= 20
-                elif dataFromClient.get('move') == "DOWN":
-                    if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
-                        paddle1 += 20
-                    else:
-                        paddle2 += 20
-                elif dataFromClient.get('move') == "BALL":
-                    if BallRoute == "UP":
-                        if bally - 2 >= 10:
-                            bally -= 2
-                        else:
-                            BallRoute = "DOWN"
-                    elif BallRoute == "DOWN":
-                        if bally + 2 <= 290:
-                            bally += 2
-                        else:
-                            BallRoute = "UP"
-                    if (BallDirection == "LEFT"):
-                        ballx -= 2
-                        if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
-                            if (bally < paddle1 + 25):
-                                BallRoute = "UP"
-                            elif (bally > paddle1 + 25):
-                                BallRoute = "DOWN"
-                            BallDirection = "RIGHT"
-                    elif (BallDirection == "RIGHT"):
-                        ballx += 2
-                        if ballx == 570 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
-                            if (bally < paddle2 + 25):
-                                BallRoute = "UP"
-                            elif (bally > paddle2 + 25):
-                                BallRoute = "DOWN"
-                            BallDirection = "LEFT"
-                toFront = {
-                        'Round': 'SemiFinal',
-                        'MoveFor': dataFromClient.get('WhatIGiveYou'),
-                        'paddle1': paddle1,
-                        'paddle2': paddle2,
-                        'player1': thisUser,
-                        'player2': oppenent,
-                        'Ballx': ballx, 'Bally' :bally,
-                        'BallDir': BallDirection, 'BallRoute': BallRoute,
-                    }
-                await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnConnect', 'Data': toFront})
-            elif dataFromClient.get('gameStatus') == "closed":
-                print(f"{self.scope['user']} Left")
-                if self.playersOnMatchAndItsOppenent.get(thisUser) is not None:
-                    print(f"{thisUser} Will Lose The Match Cuase He Left The Game")
-                    roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
-                    leftedGame, Win = pongGameInfo.objects.get(login=thisUser), pongGameInfo.objects.get(login=oppenent)
-                    leftedGame.loses += 1
-                    leftedGame.save()
-                    Win.wins +=1
-                    Win.save()
-                    print(f"Add Historic Of The Match Between {thisUser} and {oppenent}")
-                    user1 = pongHistory(you=thisUser,oppenent=oppenent,winner=oppenent)
-                    user2 = pongHistory(you=oppenent,oppenent=thisUser,winner=oppenent)
-                    user1.save()
-                    user2.save()
-                    print(f"Try Destroy Data")
-                    destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
-                                                self.playersOnMatchAndItsRoomId,
-                                                self.playersOnMatchAndItsDeriction, thisUser, oppenent)
-                    print(f"Data For {thisUser} Destroyed")
-                    await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
-                else:
-                    try:
-                        self.tournementGroups.remove(thisUser)
-                        print(f"{thisUser} Left Without Playing")
-                        await self.close()
-                    except:
-                        print(f"{thisUser} Not In The Q At All")
-            elif dataFromClient.get('gameStatus') == "End":
-                if self.playersOnMatchAndItsDeriction.get(thisUser) == "Left" and dataFromClient.get('Side') == "LEFT":
-                    loser = thisUser
-                    winner = oppenent
-                elif self.playersOnMatchAndItsDeriction.get(thisUser) == "Right" and dataFromClient.get('Side') == "RIGHT":
-                    loser = thisUser
-                    winner = oppenent
-                else:
-                    winner = thisUser
-                    loser = oppenent
-                if winner is None or loser is None:
-                    return
-                print(f"Player Side {self.playersOnMatchAndItsDeriction.get(thisUser)}")
-                print(f"Goal Side {dataFromClient.get('Side')}")
-                print(f"The Game Is End, {winner} Won {loser}")
-                self.TheWinners.append(winner)
-                print(f"Added To Winners List: {winner}")
-                try:
-                    roomId = self.playersOnMatchAndItsRoomId.get(thisUser)
-                    Wuser = pongGameInfo.objects.get(login=winner)
-                    Luser = pongGameInfo.objects.get(login=loser)
-                    Wuser.wins += 1
-                    Wuser.save()
-                    Luser.loses += 1
-                    Luser.save()
-                    print(f"Add Historic Of The Match Between {thisUser} and {oppenent}")
-                    user1 = pongHistory(you=thisUser,oppenent=oppenent,winner=winner)
-                    user2 = pongHistory(you=oppenent,oppenent=thisUser,winner=winner)
-                    user1.save()
-                    user2.save()
-                    destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
-                                                self.playersOnMatchAndItsRoomId,
-                                                self.playersOnMatchAndItsDeriction , thisUser, oppenent)
-                    toFront = {
-                        'Round': 'Final',
-                        'Winner': winner,
-                        'Loser': loser,
-                    }
-                    await self.channel_layer.group_send(roomId, {'type': 'FinalRound', 'Data': toFront})
-                except:
-                    print(f"{thisUser} Already End And This Match Counted")
-            elif dataFromClient.get('gameStatus') == "NextRound":
-                if self.scope['user'] in self.TheWinners:
-                    await self.send_json({'Round': "FinalRound"})
-                else:
-                    await self.send_json({'Round': "NoRound"})
-        except:
-            pass
+#     async def receive_json(self, dataFromClient, bytes_data=None):
+#         try:
+#             thisUser = self.scope['user']
+#             oppenent = self.playersOnMatchAndItsOppenent.get(self.scope['user'])
+#             roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
+#             if dataFromClient.get('gameStatus') == "onprogress":
+#                 BallRoute = dataFromClient.get('BallRoute')
+#                 BallDirection = dataFromClient.get('BallDir')
+#                 ballx = dataFromClient.get('ballx')
+#                 bally = dataFromClient.get('bally')
+#                 paddle1 = dataFromClient.get('paddle1')
+#                 paddle2 = dataFromClient.get('paddle2') 
+#                 if dataFromClient.get('move') == "UP":
+#                     if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
+#                         paddle1 -= 20
+#                     else:
+#                         paddle2 -= 20
+#                 elif dataFromClient.get('move') == "DOWN":
+#                     if self.playersOnMatchAndItsRoomId.get(thisUser) == pongGameInfo.objects.get(login=thisUser).codeToPlay:
+#                         paddle1 += 20
+#                     else:
+#                         paddle2 += 20
+#                 elif dataFromClient.get('move') == "BALL":
+#                     if BallRoute == "UP":
+#                         if bally - 2 >= 10:
+#                             bally -= 2
+#                         else:
+#                             BallRoute = "DOWN"
+#                     elif BallRoute == "DOWN":
+#                         if bally + 2 <= 290:
+#                             bally += 2
+#                         else:
+#                             BallRoute = "UP"
+#                     if (BallDirection == "LEFT"):
+#                         ballx -= 2
+#                         if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
+#                             if (bally < paddle1 + 25):
+#                                 BallRoute = "UP"
+#                             elif (bally > paddle1 + 25):
+#                                 BallRoute = "DOWN"
+#                             BallDirection = "RIGHT"
+#                     elif (BallDirection == "RIGHT"):
+#                         ballx += 2
+#                         if ballx == 570 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
+#                             if (bally < paddle2 + 25):
+#                                 BallRoute = "UP"
+#                             elif (bally > paddle2 + 25):
+#                                 BallRoute = "DOWN"
+#                             BallDirection = "LEFT"
+#                 toFront = {
+#                         'Round': 'SemiFinal',
+#                         'MoveFor': dataFromClient.get('WhatIGiveYou'),
+#                         'paddle1': paddle1,
+#                         'paddle2': paddle2,
+#                         'player1': thisUser,
+#                         'player2': oppenent,
+#                         'Ballx': ballx, 'Bally' :bally,
+#                         'BallDir': BallDirection, 'BallRoute': BallRoute,
+#                     }
+#                 await self.channel_layer.group_send(roomidForThisUser, {'type': 'ToFrontOnConnect', 'Data': toFront})
+#             elif dataFromClient.get('gameStatus') == "closed":
+#                 print(f"{self.scope['user']} Left")
+#                 if self.playersOnMatchAndItsOppenent.get(thisUser) is not None:
+#                     print(f"{thisUser} Will Lose The Match Cuase He Left The Game")
+#                     roomidForThisUser = self.playersOnMatchAndItsRoomId.get(thisUser)
+#                     leftedGame, Win = pongGameInfo.objects.get(login=thisUser), pongGameInfo.objects.get(login=oppenent)
+#                     leftedGame.loses += 1
+#                     leftedGame.save()
+#                     Win.wins +=1
+#                     Win.save()
+#                     print(f"Add Historic Of The Match Between {thisUser} and {oppenent}")
+#                     user1 = pongHistory(you=thisUser,oppenent=oppenent,winner=oppenent)
+#                     user2 = pongHistory(you=oppenent,oppenent=thisUser,winner=oppenent)
+#                     user1.save()
+#                     user2.save()
+#                     print(f"Try Destroy Data")
+#                     destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+#                                                 self.playersOnMatchAndItsRoomId,
+#                                                 self.playersOnMatchAndItsDeriction, thisUser, oppenent)
+#                     print(f"Data For {thisUser} Destroyed")
+#                     await self.channel_layer.group_send(roomidForThisUser, {'type': 'endGame', 'Data': "EMPTY"})
+#                 else:
+#                     try:
+#                         self.tournementGroups.remove(thisUser)
+#                         print(f"{thisUser} Left Without Playing")
+#                         await self.close()
+#                     except:
+#                         print(f"{thisUser} Not In The Q At All")
+#             elif dataFromClient.get('gameStatus') == "End":
+#                 if self.playersOnMatchAndItsDeriction.get(thisUser) == "Left" and dataFromClient.get('Side') == "LEFT":
+#                     loser = thisUser
+#                     winner = oppenent
+#                 elif self.playersOnMatchAndItsDeriction.get(thisUser) == "Right" and dataFromClient.get('Side') == "RIGHT":
+#                     loser = thisUser
+#                     winner = oppenent
+#                 else:
+#                     winner = thisUser
+#                     loser = oppenent
+#                 if winner is None or loser is None:
+#                     return
+#                 print(f"Player Side {self.playersOnMatchAndItsDeriction.get(thisUser)}")
+#                 print(f"Goal Side {dataFromClient.get('Side')}")
+#                 print(f"The Game Is End, {winner} Won {loser}")
+#                 self.TheWinners.append(winner)
+#                 print(f"Added To Winners List: {winner}")
+#                 try:
+#                     roomId = self.playersOnMatchAndItsRoomId.get(thisUser)
+#                     Wuser = pongGameInfo.objects.get(login=winner)
+#                     Luser = pongGameInfo.objects.get(login=loser)
+#                     Wuser.wins += 1
+#                     Wuser.save()
+#                     Luser.loses += 1
+#                     Luser.save()
+#                     print(f"Add Historic Of The Match Between {thisUser} and {oppenent}")
+#                     user1 = pongHistory(you=thisUser,oppenent=oppenent,winner=winner)
+#                     user2 = pongHistory(you=oppenent,oppenent=thisUser,winner=winner)
+#                     user1.save()
+#                     user2.save()
+#                     destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+#                                                 self.playersOnMatchAndItsRoomId,
+#                                                 self.playersOnMatchAndItsDeriction , thisUser, oppenent)
+#                     toFront = {
+#                         'Round': 'Final',
+#                         'Winner': winner,
+#                         'Loser': loser,
+#                     }
+#                     await self.channel_layer.group_send(roomId, {'type': 'FinalRound', 'Data': toFront})
+#                 except:
+#                     print(f"{thisUser} Already End And This Match Counted")
+#             elif dataFromClient.get('gameStatus') == "NextRound":
+#                 if self.scope['user'] in self.TheWinners:
+#                     await self.send_json({'Round': "FinalRound"})
+#                 else:
+#                     await self.send_json({'Round': "NoRound"})
+#         except:
+#             pass
 
 
-    async def disconnect(self, code):
-        print(f"DISCONNECT: User {self.scope['user']} Lost Connection")
-        try:
-            roomidForThisUser = self.playersOnMatchAndItsRoomId.get(self.scope["user"])
-            player1, player2 = self.scope['user'], self.playersOnMatchAndItsOppenent.get(self.scope['user'])
-            try:
-                self.playerWantsToPlay.remove(self.scope['user'])
-                print(f"{self.scope['user']} Removed From Q")
-            except:
-                print(f"{self.scope['user']} Play And Finish Alraedy")
-            destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
-                            self.playersOnMatchAndItsRoomId, self.playersOnMatchAndItsDeriction,
-                            player1, player2)
-            if roomidForThisUser is not None:
-                await self.channel_layer.group_discard(roomidForThisUser, self.channel_name)
-                print("Channel Discard")
-        except:
-            pass
+#     async def disconnect(self, code):
+#         print(f"DISCONNECT: User {self.scope['user']} Lost Connection")
+#         try:
+#             roomidForThisUser = self.playersOnMatchAndItsRoomId.get(self.scope["user"])
+#             player1, player2 = self.scope['user'], self.playersOnMatchAndItsOppenent.get(self.scope['user'])
+#             try:
+#                 self.playerWantsToPlay.remove(self.scope['user'])
+#                 print(f"{self.scope['user']} Removed From Q")
+#             except:
+#                 print(f"{self.scope['user']} Play And Finish Alraedy")
+#             destroyThisGameInformations(self.playersOnMatchAndItsOppenent,
+#                             self.playersOnMatchAndItsRoomId, self.playersOnMatchAndItsDeriction,
+#                             player1, player2)
+#             if roomidForThisUser is not None:
+#                 await self.channel_layer.group_discard(roomidForThisUser, self.channel_name)
+#                 print("Channel Discard")
+#         except:
+#             pass
 
-    async def ToFrontOnConnect(self, data):
-        # print("Sending Data To Clinet...")
-        await self.send_json(data['Data'])
+#     async def ToFrontOnConnect(self, data):
+#         # print("Sending Data To Clinet...")
+#         await self.send_json(data['Data'])
     
-    async def FinalRound(self, data):
-        await self.send_json(data['Data'])
+#     async def FinalRound(self, data):
+#         await self.send_json(data['Data'])
 
 class Finalist(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -779,7 +779,7 @@ import asyncio
 
 class TournamentConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        print("MOTHER HUGGER OSTORRA")
+        print("MOTHER HUGGER OSTO")
         await self.accept()
         self.players = []
         self.matchups = []
