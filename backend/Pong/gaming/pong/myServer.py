@@ -852,7 +852,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
     async def start_next_match(self):
         if self.current_game_loop_task:
             self.current_game_loop_task.cancel()
-        
         if self.current_stage == "semi_finals":
             if self.current_match < len(self.matchups):
                 player1, player2 = self.matchups[self.current_match]

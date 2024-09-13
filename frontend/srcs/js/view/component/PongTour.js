@@ -7,68 +7,68 @@ export default class PongTour extends HTMLElement {
   connectedCallback() {
     this.setAttribute("id", "tournament-view");
     this.root.innerHTML = `
-      <style>
-          body {
-              font-family: Arial, sans-serif;
-              max-width: 600px;
-              margin: 0 auto;
-              padding: 20px;
-          }
-          .input-container, .canvas-container {
-              background-color: #f9f9f9;
-              border: 1px solid #ddd;
-              border-radius: 8px;
-              padding: 15px;
-              margin-bottom: 20px;
-          }
-          .input-container {
-              margin-bottom: 10px;
-          }
-          .player-input {
-              margin-bottom: 10px;
-          }
-          .results {
-              margin-top: 20px;
-          }
-          canvas {
-              display: block;
-              margin: 0 auto;
-              border: 1px solid #000;
-          }
-      </style>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .input-container, .canvas-container, .results {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .player-input {
+            margin-bottom: 10px;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #000;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
 
       <div style="margin-bottom: 100px;">
           <h1 style="text-align: center; color: rgb(128, 9, 240);">PONG-TOUR-PONG</h1>
       </div>
 
-      <div class="input-container">
-          <div id="playerInputs">
-              <div class="player-input">
-                  <label for="player1">Player 1:</label>
-                  <input type="text" id="player1" placeholder="Enter name">
-              </div>
-              <div class="player-input">
-                  <label for="player2">Player 2:</label>
-                  <input type="text" id="player2" placeholder="Enter name">
-              </div>
-              <div class="player-input">
-                  <label for="player3">Player 3:</label>
-                  <input type="text" id="player3" placeholder="Enter name">
-              </div>
-              <div class="player-input">
-                  <label for="player4">Player 4:</label>
-                  <input type="text" id="player4" placeholder="Enter name">
-              </div>
-          </div>
-          <button id="startTournament">Start Tournament</button>
-      </div>
+    <div class="input-container" id="playerForm">
+        <div id="playerInputs">
+            <div class="player-input">
+                <label for="player1">Player 1:</label>
+                <input type="text" id="player1" placeholder="Enter name">
+            </div>
+            <div class="player-input">
+                <label for="player2">Player 2:</label>
+                <input type="text" id="player2" placeholder="Enter name">
+            </div>
+            <div class="player-input">
+                <label for="player3">Player 3:</label>
+                <input type="text" id="player3" placeholder="Enter name">
+            </div>
+            <div class="player-input">
+                <label for="player4">Player 4:</label>
+                <input type="text" id="player4" placeholder="Enter name">
+            </div>
+        </div>
+        <button id="startTournament">Start Tournament</button>
+    </div>
 
       Results Section
-      <div class="results" id="results"></div>
+      <div class="results hidden" id="results"></div>
 
-      <div class="canvas-container" style="margin-bottom: 50px;">
-          <canvas id="pongCanvas" width="800" height="400"></canvas>
-      </div>
+    <div class="canvas-container hidden" id="gameCanvasContainer">
+        <canvas id="pongCanvas" width="800" height="400"></canvas>
+    </div>
       <abort-btn></abort-btn>
       <confirm-msg game="tournament"></confirm-msg>
     `;
@@ -82,12 +82,12 @@ export default class PongTour extends HTMLElement {
         console.log("WebSocket connection opened");
       };
       function displayTournamentResults(semiFinals, thirdPlace, finalMatch) {
+        // const resultsDiv = document.getElementById('results');
+        resultsDiv.classList.remove('hidden');
 
         resultsDiv.innerHTML += "<h3>Semi-Finals</h3>";
-        console.log("semiFInal: ", semiFinals);
         semiFinals.forEach((match, index) => {
-          console.log("match: ", match);
-          resultsDiv.innerHTML += `<p>Match ${index + 1}: ${match[0]} vs ${match[1]} - Winner: ${match.winner}</p>`;
+            resultsDiv.innerHTML += `<p>Match ${index + 1}: ${match[0]} vs ${match[1]} - Winner: ${match.winner}</p>`;
         });
 
         resultsDiv.innerHTML += "<h3>Third-Place Match</h3>";
@@ -95,32 +95,24 @@ export default class PongTour extends HTMLElement {
 
         resultsDiv.innerHTML += "<h3>Final Match</h3>";
         resultsDiv.innerHTML += `<p>${finalMatch[0]} vs ${finalMatch[1]} - Winner: ${finalMatch.winner}</p>`;
-      }
+    }
 
-      socket.ws.onmessage = function (event) {
+    socket.ws.onmessage = function(event) {
         const data = JSON.parse(event.data);
 
-        if (data.status === "success") console.log("Matchups: ", data.matchups);
-        else if (data.status === "start_match") {
-          alert(`Match starting: ${data.player1} vs ${data.player2}`);
-          resetMovementFlags();
-          updateGameState(data);
-          gameLoop();
-        } else if (data.status === "match_result") {
-          displayMatchResult(data.stage, data.match_number, data.winner);
-        } else if (data.status === "tournament_complete") {
-          alert(`Tournament Complete! Winner: ${data.winner}`);
-          console.log("he go inside this if that match the result");
-          console.log("data.semi_final_results: ", data.semi_final_results);
-          console.log("data.third_place_result: ", data.third_place_result);
-          console.log("data.final_result: ", data.final_result);
-          displayTournamentResults(
-            data.semi_final_results,
-            data.third_place_result,
-            data.final_result,
-          ); // document.getElementById('results').innerHTML += `<p><strong>Tournament Winner: ${data.winner}</strong></p>`;
-        } else updateGameState(data);
-      };
+        if (data.status === 'start_match') {
+            alert(`Match starting: ${data.player1} vs ${data.player2}`);
+            resetMovementFlags();
+            updateGameState(data);
+            gameLoop();
+        } else if (data.status === 'tournament_complete') {
+            hideCanvas();
+            alert(`Tournament Complete! Winner: ${data.winner}`);
+            displayTournamentResults(data.semi_final_results, data.third_place_result, data.final_result);
+        } else {
+            updateGameState(data);
+        }
+    };
 
       socket.ws.onclose = function () {
         console.log("WebSocket connection closed");
@@ -131,16 +123,6 @@ export default class PongTour extends HTMLElement {
       };
     }
 
-    function displayMatchResult(stage, matchNumber, winner) {
-      const stageName =
-        stage === "semi_finals"
-          ? "Semi-final"
-          : matchNumber === 1
-            ? "3rd Place"
-            : "Final";
-      const resultText = `<p>${stageName} ${matchNumber}: Winner - ${winner}</p>`;
-      this.root.querySelector("#results").innerHTML += resultText;
-    }
     function updateGameState(gameState) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawPaddle(0, gameState.paddle1Y);
@@ -182,7 +164,8 @@ export default class PongTour extends HTMLElement {
       upArrowPressed = false;
       downArrowPressed = false;
     }
-    function gameLoop() {
+    function gameLoop()
+    {
       requestAnimationFrame(gameLoop);
       if (socket.ws.readyState === WebSocket.OPEN) {
         if (wPressed || sPressed) {
@@ -210,25 +193,34 @@ export default class PongTour extends HTMLElement {
     let downArrowPressed = false;
     let wPressed = false;
     let sPressed = false;
+    
 
+    const hide = () => {
+      this.root.querySelector('#playerForm').classList.add('hidden');
+      this.root.querySelector('#gameCanvasContainer').classList.remove('hidden');
+    }
+    const hideCanvas = () => {
+      this.root.querySelector('#gameCanvasContainer').classList.add('hidden');
+    }
     this.root
-      .querySelector("#startTournament")
-      .addEventListener("click",  () => {
+    .querySelector("#startTournament")
+    .addEventListener("click",  () => {
         const players = [];
         for (let i = 1; i <= 4; i++) {
           const player = this.root.querySelector(`#player${i}`).value.trim();
           if (player) players.push(player);
         }
-
+        
         if (players.length < 4) {
           alert("Please enter all four player names.");
           return;
         }
-        const uniqueUsernameOfPlyaer = new Set(players);
-        if (uniqueUsernameOfPlyaer.size !== players.length) {
-          event.preventDefault();
-          alert("Duplicate usernames are not allowed!");
+        const uniquePlayers = new Set(players);
+        if (uniquePlayers.size !== players.length) {
+          alert('Duplicate player names are not allowed!');
+          return;
         }
+        hide();
         socket.ws.send(
           JSON.stringify({
             action: "submit_players",
