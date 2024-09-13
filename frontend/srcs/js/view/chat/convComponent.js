@@ -18,53 +18,40 @@ export class UserProfile extends HTMLElement {
 	}
 
 	get data() {
-		return { username: this.name, avatar: this.avatar };
+		return {
+			username: this.username,
+			avatar: this.avatar,
+			email: this.email,
+			firstName: this.firstName,
+			lastName: this.lastName
+		};
 	}
+
 	backHandler = () => {
 		this.remove();
 	};
 
 	connectedCallback() {
 		this.className = "user-profile";
+		this.innerHTML = `
+            <div class="user-info-header">
+                <img class="frame-icon" src="js/view/src/img/arrow.svg" alt="Back">
+                <div class="user-info">User Info</div>
+            </div>
+            <div class="image-container">
+                <img src="" alt="User Image">
+            </div>
+            <div class="user-details">
+                <p class="username"></p>
+                <p class="full-name"></p>
+                <p class="email"></p>
+            </div>
+        `;
 
-		this.header = document.createElement("div");
-		this.header.className = "user-info-header";
-
-		this.backButton = document.createElement("img");
-		this.backButton.className = "frame-icon";
-		this.backButton.src = "js/view/src/img/arrow.svg";
-		this.backButton.alt = "Back";
-		this.backButton.addEventListener("click", this.backHandler);
-		this.header.appendChild(this.backButton);
-
-		this.infoText = document.createElement("div");
-		this.infoText.className = "user-info";
-		this.infoText.textContent = "User Info";
-		this.header.appendChild(this.infoText);
-
-		this.appendChild(this.header);
-		// Create image container
-		this.imageContainer = document.createElement("div");
-		this.imageContainer.className = "image-container";
-
-		this.userImage = document.createElement("img");
-		// NOTE: update it in updateDOM method
-		this.userImage.src = "";
-		this.userImage.alt = "User Image";
-		this.imageContainer.appendChild(this.userImage);
-
-		// Create username section
-		this.usernameContainer = document.createElement("div");
-		this.usernameContainer.className = "username";
-
-		const usernameText = document.createElement("p");
-		usernameText.className = "username-text";
-		// NOTE: update it in updateDOM method
-		usernameText.textContent = "";
-		this.usernameContainer.appendChild(usernameText);
-
-		this.appendChild(this.imageContainer);
-		this.appendChild(this.usernameContainer);
+		this.querySelector(".frame-icon").addEventListener(
+			"click",
+			this.backHandler
+		);
 	}
 
 	async updateDOM() {
@@ -72,15 +59,29 @@ export class UserProfile extends HTMLElement {
 		if (req.status == 200) {
 			const data = await req.json();
 			const player = data.player.pop();
-			console.log(player);
-			this.userImage.src = player.avatar;
-			this.usernameContainer.querySelector("p").textContent =
+
+			this.querySelector(".image-container img").src = player.avatar;
+			this.querySelector(".user-details .username").textContent =
 				player.username;
+			this.querySelector(".user-details .full-name").textContent =
+				`Name: ${player.first_name} ${player.last_name}`;
+			this.querySelector(".user-details .email").textContent =
+				`Email: ${player.email}`;
+
+			// Store the data for the getter
+			this.username = player.username;
+			this.avatar = player.avatar;
+			this.email = player.email;
+			this.firstName = player.first_name;
+			this.lastName = player.last_name;
 		}
 	}
 
 	disconnectedCallback() {
-		this.backButton.removeEventListener("click", this.backHandler);
+		this.querySelector(".frame-icon").removeEventListener(
+			"click",
+			this.backHandler
+		);
 	}
 }
 
