@@ -58,6 +58,7 @@ export class UserProfile extends HTMLElement {
 		this.usernameContainer.className = "username";
 
 		const usernameText = document.createElement("p");
+		usernameText.className = "username-text";
 		// NOTE: update it in updateDOM method
 		usernameText.textContent = "";
 		this.usernameContainer.appendChild(usernameText);
@@ -154,7 +155,12 @@ export class ConvHeadElem extends HTMLDivElement {
 		// Create the username container
 		const usernameContainer = document.createElement("div");
 		usernameContainer.classList.add("username-conv");
-		usernameContainer.textContent = this._data.username;
+		if (this._data.username.length > 8) {
+			usernameContainer.textContent =
+				this._data.username.slice(0, 5) + "...";
+		} else {
+			usernameContainer.textContent = this._data.username;
+		}
 		usernameContainer.user_id = this._data.id;
 		this.appendChild(usernameContainer);
 
@@ -246,7 +252,12 @@ export class ConvElement extends HTMLLIElement {
 	updateDOM() {
 		if (this._data) {
 			this.userData.image.src = this._data.user.avatar;
-			this.userData.username.textContent = this._data.user.username;
+			if (this._data.user.username.length > 8) {
+				this.userData.username.textContent =
+					this._data.user.username.slice(0, 5) + "...";
+			} else {
+				this.userData.username.textContent = this._data.user.username;
+			}
 
 			const content = this._data.last_message.content;
 			if (content && content.length > 8) {
