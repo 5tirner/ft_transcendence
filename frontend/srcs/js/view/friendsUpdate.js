@@ -38,13 +38,11 @@ export function socketResponsHandler(data) {
 	} else if ((event === BLK_USER || event === UNBLOCK) && allUsers) {
 		allUsers.updateDOM();
 		if (event === BLK_USER && list_users) {
-			console.log("block user");
 			list_users.loadConversations();
 		}
 	} else if ((event === BLK_FRND || event === ACC_REQ) && friendsList) {
 		friendsList.updateDOM();
 		if (event === BLK_FRND && list_users) {
-			console.log("block friend");
 			list_users.loadConversations();
 		}
 	} else if (event === UNFRND && allUsers && friendsList) {
