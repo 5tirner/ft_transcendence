@@ -72,6 +72,7 @@ export default class PongTour extends HTMLElement {
       <abort-btn></abort-btn>
       <confirm-msg game="tournament"></confirm-msg>
     `;
+    const resultsDiv = this.root.querySelector("#results");
     const canvas = this.root.querySelector("#pongCanvas");
     const ctx = canvas.getContext("2d");
 
@@ -81,7 +82,6 @@ export default class PongTour extends HTMLElement {
         console.log("WebSocket connection opened");
       };
       function displayTournamentResults(semiFinals, thirdPlace, finalMatch) {
-        const resultsDiv = this.root.querySelector("#results");
 
         resultsDiv.innerHTML += "<h3>Semi-Finals</h3>";
         console.log("semiFInal: ", semiFinals);
@@ -110,6 +110,10 @@ export default class PongTour extends HTMLElement {
           displayMatchResult(data.stage, data.match_number, data.winner);
         } else if (data.status === "tournament_complete") {
           alert(`Tournament Complete! Winner: ${data.winner}`);
+          console.log("he go inside this if that match the result");
+          console.log("data.semi_final_results: ", data.semi_final_results);
+          console.log("data.third_place_result: ", data.third_place_result);
+          console.log("data.final_result: ", data.final_result);
           displayTournamentResults(
             data.semi_final_results,
             data.third_place_result,
