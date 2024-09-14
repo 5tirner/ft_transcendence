@@ -12,9 +12,9 @@ from .models import Player
 
 
 def generate_new_username(username) -> str:
-    random_suffix = "".join(random.choices(string.ascii_letters + string.digits), k=3)
-    return username + random_suffix
-
+    if username == "ysabr":
+        return username + "69"
+    return username + ''.join(random.choices(string.digits, k=3))
 
 def create_player(player_data: Dict[str, str]):
     try:
@@ -23,12 +23,19 @@ def create_player(player_data: Dict[str, str]):
             player = Player.objects.get(email=email)
             return player
         username = player_data["username"]
-        if Player.objects.filter(username=username).exists():
+        print("tesssssst same username")
+
+        if Player.objects.filter(username=username).first() is not None:
             while True:
+                print("generate new name")
+
                 update_username = generate_new_username(username)
-                if not Player.objects.filter(username=update_username).exists():
+                print(f"Sugg UserName {update_username}")
+                if Player.objects.filter(username=update_username).first() is None:
                     username = update_username
+                    print(f"New User Will Joined With UserName = {username}")
                     break
+
         first_name = player_data["first_name"]
         last_name = player_data["last_name"]
         avatar = player_data["avatar"]
@@ -39,6 +46,7 @@ def create_player(player_data: Dict[str, str]):
             last_name=last_name,
             avatar=avatar,
         )
+
         return player
     except Exception as e:
         return None
