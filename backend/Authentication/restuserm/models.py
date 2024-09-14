@@ -17,7 +17,7 @@ class Player(AbstractBaseUser):
     ]
 
     id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=20, blank=False, null=False, unique=False)
+    username = models.CharField(max_length=20, blank=False, null=False, unique=True)
     email = models.EmailField(max_length=30, blank=False, null=False, unique=True)
     first_name = models.CharField(max_length=20, blank=False, null=False)
     last_name = models.CharField(max_length=20, blank=False, null=False)

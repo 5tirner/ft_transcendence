@@ -447,12 +447,11 @@ class PlayerInfos(APIView):
             if "username" in player_data:
                 print("USERNAME EDIT...")
                 username = player_data["username"].strip()
-                if not username or len(username) > 8:
+                if not username or len(username) > 12:
                     return Response(
                         {"error": "Invalid username"},
                         status=status.HTTP_400_BAD_REQUEST,
                     )
-
                 print(
                     f"Try Update Login {player_id.username} To {username} For Pong TABLES."
                 )
