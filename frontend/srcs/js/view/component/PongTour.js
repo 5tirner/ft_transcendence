@@ -63,8 +63,7 @@ export default class PongTour extends HTMLElement {
         <button id="startTournament">Start Tournament</button>
     </div>
 
-      Results Section
-      <div class="results hidden" id="results"></div>
+    <div class="results hidden" id="results"></div>
 
     <div class="canvas-container hidden" id="gameCanvasContainer">
         <canvas id="pongCanvas" width="800" height="400"></canvas>
@@ -81,39 +80,42 @@ export default class PongTour extends HTMLElement {
       socket.ws.onopen = function () {
         console.log("WebSocket connection opened");
       };
-      function displayTournamentResults(semiFinals, thirdPlace, finalMatch) {
-        // const resultsDiv = document.getElementById('results');
-        resultsDiv.classList.remove('hidden');
 
-        resultsDiv.innerHTML += "<h3>Semi-Finals</h3>";
-        semiFinals.forEach((match, index) => {
-            resultsDiv.innerHTML += `<p>Match ${index + 1}: ${match[0]} vs ${match[1]} - Winner: ${match.winner}</p>`;
+      function displayTournamentResults(semiFinals, thirdPlace, finalMatch) {
+        resultsDiv.classList.remove('hidden');
+        resultsDiv.innerHTML = "<h3>Semi-Finals</h3>";
+        console.log("semiFinals: ", semiFinals);
+        semiFinals.forEach((result, index) => {
+          console.log("RESULT: ", result);
+            resultsDiv.innerHTML += `<p>Match ${index + 1}: ${result.match[0]} vs ${result.match[1]} - Winner: ${result.winner}</p>`;
         });
 
         resultsDiv.innerHTML += "<h3>Third-Place Match</h3>";
-        resultsDiv.innerHTML += `<p>${thirdPlace[0]} vs ${thirdPlace[1]} - Winner: ${thirdPlace.winner}</p>`;
+        resultsDiv.innerHTML += `<p>${thirdPlace.match[0]} vs ${thirdPlace.match[1]} - Winner: ${thirdPlace.winner}</p>`;
 
         resultsDiv.innerHTML += "<h3>Final Match</h3>";
-        resultsDiv.innerHTML += `<p>${finalMatch[0]} vs ${finalMatch[1]} - Winner: ${finalMatch.winner}</p>`;
+        resultsDiv.innerHTML += `<p>${finalMatch.match[0]} vs ${finalMatch.match[1]} - Winner: ${finalMatch.winner}</p>`;
     }
 
     socket.ws.onmessage = function(event) {
         const data = JSON.parse(event.data);
-
+        console.log("data.status: ", data.status);
         if (data.status === 'start_match') {
             alert(`Match starting: ${data.player1} vs ${data.player2}`);
             resetMovementFlags();
             updateGameState(data);
             gameLoop();
         } else if (data.status === 'tournament_complete') {
-            hideCanvas();
             alert(`Tournament Complete! Winner: ${data.winner}`);
+            console.log("data.semi_final_results", data.semi_final_results);
+            console.log("data.third_place_result", data.third_place_result);
+            console.log("data.semi_final_results", data.semi_final_results);
+            hideCanvas();
             displayTournamentResults(data.semi_final_results, data.third_place_result, data.final_result);
         } else {
             updateGameState(data);
         }
     };
-
       socket.ws.onclose = function () {
         console.log("WebSocket connection closed");
       };
@@ -122,7 +124,9 @@ export default class PongTour extends HTMLElement {
         console.log("WebSocket error observed:", error);
       };
     }
-
+    const hideCanvas = () => {
+      this.root.querySelector('#gameCanvasContainer').classList.add('hidden');
+    }
     function updateGameState(gameState) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       drawPaddle(0, gameState.paddle1Y);
@@ -198,9 +202,6 @@ export default class PongTour extends HTMLElement {
     const hide = () => {
       this.root.querySelector('#playerForm').classList.add('hidden');
       this.root.querySelector('#gameCanvasContainer').classList.remove('hidden');
-    }
-    const hideCanvas = () => {
-      this.root.querySelector('#gameCanvasContainer').classList.add('hidden');
     }
     this.root
     .querySelector("#startTournament")

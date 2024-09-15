@@ -779,12 +779,14 @@ import asyncio
 
 class TournamentConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        print("MOTHER HUGGER OSTO")
         await self.accept()
         self.players = []
         self.matchups = []
+        self.semi_final_matchups = []
+        self.final_matchups = []
         self.winners = []
         self.losers = []
+        self.semi_final_winners = []
         self.current_stage = "semi_finals"  # Track the current stage of the tournament
         self.current_match = 0
         self.current_game_loop_task = None  # Keep track of the current game loop task
@@ -809,7 +811,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        print(f"data: {data}")
         action = data.get('action')
 
         if action == 'submit_players':
@@ -819,6 +820,8 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                 (self.players[0], self.players[1]),
                 (self.players[2], self.players[3])
             ]
+            # Store semi-final matchups separately
+            self.semi_final_matchups = self.matchups.copy()
             await self.send(text_data=json.dumps({
                 'status': 'success',
                 'matchups': self.matchups,
@@ -829,16 +832,15 @@ class TournamentConsumer(AsyncWebsocketConsumer):
             self.current_match = 0
             self.winners = []
             self.losers = []
+            self.semi_final_winners = []
             await self.start_next_match()
 
         elif action == 'paddle_movement':
             self.handle_paddle_movement(data.get('player'), data.get('direction'))
 
     def handle_paddle_movement(self, player, direction):
-        # Slow down the paddle movement by reducing the step size
         step_size = 2  # Adjust this value to control the paddle speed
         if player == 'player1':
-            print(f"player: {player} directiom: {direction}")
             if direction == 'up':
                 self.game_state['paddle1Y'] = max(self.game_state['paddle1Y'] - step_size, 0)
             elif direction == 'down':
@@ -852,8 +854,10 @@ class TournamentConsumer(AsyncWebsocketConsumer):
     async def start_next_match(self):
         if self.current_game_loop_task:
             self.current_game_loop_task.cancel()
+        
         if self.current_stage == "semi_finals":
             if self.current_match < len(self.matchups):
+                # Start semi-final matches
                 player1, player2 = self.matchups[self.current_match]
                 self.reset_game_state(player1, player2)
                 await self.send(text_data=json.dumps({
@@ -863,16 +867,20 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                 }))
                 self.current_game_loop_task = asyncio.create_task(self.run_game_loop())
             else:
-                # After semi-finals, set up the 3rd place and final matches
+                # Transition to finals
                 self.current_stage = "finals"
                 self.current_match = 0
-                self.matchups = [
+                # Correctly assign players for the finals and third-place match
+                self.final_matchups = [
                     (self.losers[0], self.losers[1]),  # Third-place match
                     (self.winners[0], self.winners[1])  # Final match
                 ]
+                self.matchups = self.final_matchups  # Set matchups to final matchups
                 await self.start_next_match()
+        
         elif self.current_stage == "finals":
             if self.current_match < len(self.matchups):
+                # Start third-place or final matches
                 player1, player2 = self.matchups[self.current_match]
                 self.reset_game_state(player1, player2)
                 await self.send(text_data=json.dumps({
@@ -882,14 +890,19 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                 }))
                 self.current_game_loop_task = asyncio.create_task(self.run_game_loop())
             else:
-                tournament_winner = self.winners[-1]
+                # Tournament complete
+                tournament_winner = self.tournament_winner
+                third_place_winner = self.third_place_winner
                 await self.send(text_data=json.dumps({
                     'status': 'tournament_complete',
                     'winner': tournament_winner,
-                    'semi_final_results': self.matchups[:2],
-                    'third_place_result': self.matchups[0],
-                    'final_result': self.matchups[1],
+                    'semi_final_results': [
+                        {'match': self.semi_final_matchups[i], 'winner': self.semi_final_winners[i]} for i in range(len(self.semi_final_matchups))
+                    ],
+                    'third_place_result': {'match': self.final_matchups[0], 'winner': third_place_winner},
+                    'final_result': {'match': self.final_matchups[1], 'winner': tournament_winner},
                 }))
+
     async def run_game_loop(self):
         while not self.game_state['gameOver']:
             self.update_ball_position()
@@ -935,17 +948,26 @@ class TournamentConsumer(AsyncWebsocketConsumer):
     def end_match(self, winner):
         self.game_state['gameOver'] = True
         self.game_state['winner'] = winner
+        print("Winner: ", winner)
 
+        current_matchup = self.matchups[self.current_match]
+        loser = current_matchup[0] if winner != current_matchup[0] else current_matchup[1]
+        
         if self.current_stage == "semi_finals":
+            # Append the winner to the winners list and the loser to the losers list
             self.winners.append(winner)
-            loser = self.matchups[self.current_match][0] if winner != self.matchups[self.current_match][0] else self.matchups[self.current_match][1]
             self.losers.append(loser)
+            self.semi_final_winners.append(winner)
+            print(f"Semi-final winners: {self.winners}, losers: {self.losers}")
 
         elif self.current_stage == "finals":
             if self.current_match == 0:  # Third place match
-                self.losers.append(winner)
+                # The first match in finals is the third-place match
+                print(f"Third-place winner: {winner}")
+                self.third_place_winner = winner
             else:  # Final match
-                self.winners.append(winner)
+                print(f"Final match winner: {winner}")
+                self.tournament_winner = winner
 
         self.current_match += 1
         asyncio.create_task(self.start_next_match())
@@ -976,3 +998,4 @@ class TournamentConsumer(AsyncWebsocketConsumer):
 
     async def send_game_state(self):
         await self.send(text_data=json.dumps(self.game_state))
+
