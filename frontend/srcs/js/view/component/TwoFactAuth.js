@@ -161,6 +161,9 @@ export default class Tfa extends HTMLElement {
 			this.verifyTfaCode(this.input.value);
 		};
 		this.listner1 = (e) => {
+      const checkMark = this.parentNode.querySelector('#cbx-3');
+      if (checkMark)
+          checkMark.checked = false;
 			this.remove();
 		};
 
@@ -179,9 +182,11 @@ export default class Tfa extends HTMLElement {
 		if (data.statusCode == 200) {
 			this.notification(success, "2FA is enabled");
 			this.remove();
+      
 		} else {
 			this.input.value = "";
 			this.notification(danger, "Invalid 2FA code");
+      console.log("check mark: ", checkMark);
 		}
 	}
 
