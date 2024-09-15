@@ -1,11 +1,12 @@
-from channels.generic.websocket import AsyncJsonWebsocketConsumer
+from channels.generic.websocket import AsyncJsonWebsocketConsumer, AsyncWebsocketConsumer
 from .models import pongGameInfo, pongHistory, playerAndHisPic
 import os
 from .destroyGameInfo import destroyThisGameInformations
 from .generateCode import roomcode
 import random
 import threading
-
+import json
+import asyncio
 os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 
 
@@ -455,76 +456,82 @@ class myPongserver(AsyncJsonWebsocketConsumer):
         await self.send_json(data['Data'])
         await self.close()
 
-class pongLocalServer(AsyncJsonWebsocketConsumer):
-    randomAdd = random.choice([1, 2])
-    async def connect(self):
-        print(f"{self.scope['user']} Try To Play Local Server")
-        await self.accept()
-    async def receive_json(self, dataFromClient, bytes_data=None):
-        if dataFromClient.get('gameStatus') == "onprogress":
-            BallRoute = dataFromClient.get('BallRoute')
-            BallDirection = dataFromClient.get('BallDir')
-            ballx = dataFromClient.get('ballx')
-            bally = dataFromClient.get('bally')
-            paddle1 = dataFromClient.get('paddle1')
-            paddle2 = dataFromClient.get('paddle2')
-            if dataFromClient.get('move') == "W":
-                paddle1 -= 20
-            elif dataFromClient.get('move') == "S":
-                paddle1 += 20
-            elif dataFromClient.get('move') == "UP":
-                paddle2 -= 20
-            elif dataFromClient.get('move') == "DOWN":
-                paddle2 += 20
-            elif dataFromClient.get('move') == "BALL":
-                if BallRoute == "UP":
-                    if bally - self.randomAdd >= 10:
-                        bally -= self.randomAdd
-                    else:
-                        BallRoute = "DOWN"
-                elif BallRoute == "DOWN":
-                    if bally + self.randomAdd <= 290:
-                        bally += self.randomAdd
-                    else:
-                        BallRoute = "UP"
-                if (BallDirection == "LEFT"):
-                    ballx -= 5
-                    if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
-                        if (bally < paddle1 + 25):
-                            BallRoute = "UP"
-                        elif (bally > paddle1 + 25):
-                            BallRoute = "DOWN"
-                        BallDirection = "RIGHT"
-                        self.randomAdd = random.choice([1, 2])
-                elif (BallDirection == "RIGHT"):
-                    ballx += 5
-                    if ballx == 570 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
-                        if (bally < paddle2 + 25):
-                            BallRoute = "UP"
-                        elif (bally > paddle2 + 25):
-                            BallRoute = "DOWN"
-                        BallDirection = "LEFT"
-                        self.randomAdd = random.choice([1, 2])
-            tofront = {
-                'MoveFor': dataFromClient.get('WhatIGiveYou'),
-                'paddle1': paddle1,
-                'paddle2': paddle2,
-                'Ballx': ballx, 'Bally' :bally,
-                'BallDir': BallDirection, 'BallRoute': BallRoute,
-            }
-            try:
-                await self.send_json(tofront)
-                # await sleep(1)
-            except:
-                print("Can't Send Data")
-        elif dataFromClient.get('gameStatus') == "End":
-            await self.disconnect(1000)
-    async def disconnect(self, code):
-        print(f"Local Game End")
-        await self.close(code)
+# class pongLocalServer(AsyncJsonWebsocketConsumer):
+#     randomAdd = random.choice([1, 2])
+#     async def connect(self):
+#         print(f"{self.scope['user']} Try To Play Local Server")
+#         await self.accept()
+#     async def receive_json(self, dataFromClient, bytes_data=None):
+#         if dataFromClient.get('gameStatus') == "onprogress":
+#             BallRoute = dataFromClient.get('BallRoute')
+#             BallDirection = dataFromClient.get('BallDir')
+#             ballx = dataFromClient.get('ballx')
+#             bally = dataFromClient.get('bally')
+#             paddle1 = dataFromClient.get('paddle1')
+#             paddle2 = dataFromClient.get('paddle2')
+#             if dataFromClient.get('move') == "W":
+#                 paddle1 -= 20
+#             elif dataFromClient.get('move') == "S":
+#                 paddle1 += 20
+#             elif dataFromClient.get('move') == "UP":
+#                 paddle2 -= 20
+#             elif dataFromClient.get('move') == "DOWN":
+#                 paddle2 += 20
+#             elif dataFromClient.get('move') == "BALL":
+#                 if BallRoute == "UP":
+#                     if bally - self.randomAdd >= 10:
+#                         bally -= self.randomAdd
+#                     else:
+#                         BallRoute = "DOWN"
+#                 elif BallRoute == "DOWN":
+#                     if bally + self.randomAdd <= 290:
+#                         bally += self.randomAdd
+#                     else:
+#                         BallRoute = "UP"
+#                 if (BallDirection == "LEFT"):
+#                     ballx -= 5
+#                     if ballx == 30 and bally + 10 >= paddle1 and bally - 10 <= paddle1 + 50:
+#                         if (bally < paddle1 + 25):
+#                             BallRoute = "UP"
+#                         elif (bally > paddle1 + 25):
+#                             BallRoute = "DOWN"
+#                         BallDirection = "RIGHT"
+#                         self.randomAdd = random.choice([1, 2])
+#                 elif (BallDirection == "RIGHT"):
+#                     ballx += 5
+#                     if ballx == 570 and bally + 10 >= paddle2 and bally - 10 <= paddle2 + 50:
+#                         if (bally < paddle2 + 25):
+#                             BallRoute = "UP"
+#                         elif (bally > paddle2 + 25):
+#                             BallRoute = "DOWN"
+#                         BallDirection = "LEFT"
+#                         self.randomAdd = random.choice([1, 2])
+#             tofront = {
+#                 'MoveFor': dataFromClient.get('WhatIGiveYou'),
+#                 'paddle1': paddle1,
+#                 'paddle2': paddle2,
+#                 'Ballx': ballx, 'Bally' :bally,
+#                 'BallDir': BallDirection, 'BallRoute': BallRoute,
+#             }
+#             try:
+#                 await self.send_json(tofront)
+#                 # await sleep(1)
+#             except:
+#                 print("Can't Send Data")
+#         elif dataFromClient.get('gameStatus') == "End":
+#             await self.disconnect(1000)
+#     async def disconnect(self, code):
+#         print(f"Local Game End")
+#         await self.close(code)
 
+
+
+
+
+#Ysabr local game
 class PongConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        print("TEsT")
         await self.accept()
         print("WebSocket connection accepted")
 
@@ -870,10 +877,7 @@ class Finalist(AsyncJsonWebsocketConsumer):
         
         
 #  Motherhugger ostora
-import json
-import random
-from channels.generic.websocket import AsyncWebsocketConsumer
-import asyncio
+
 
 class TournamentConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -1022,7 +1026,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                 if self.game_state['paddle1Y'] < self.game_state['ballY'] < self.game_state['paddle1Y'] + 75:
                     self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
                     deltaY = self.game_state['ballY'] - (self.game_state['paddle1Y'] + 75 / 2)
-                    self.game_state['ballSpeedY'] += deltaY * 0.09  # Slight variation in speed based on hit point
+                    self.game_state['ballSpeedY'] += deltaY * 0.02  # Slight variation in speed based on hit point
                 else:
                     self.game_state['score2'] += 1
                     self.reset_ball()
@@ -1031,7 +1035,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                 if self.game_state['paddle2Y'] < self.game_state['ballY'] < self.game_state['paddle2Y'] + 75:
                     self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
                     deltaY = self.game_state['ballY'] - (self.game_state['paddle2Y'] + 75 / 2)
-                    self.game_state['ballSpeedY'] += deltaY * 0.09  # Slight variation in speed based on hit point
+                    self.game_state['ballSpeedY'] += deltaY * 0.02  # Slight variation in speed based on hit point
                 else:
                     self.game_state['score1'] += 1
                     self.reset_ball()

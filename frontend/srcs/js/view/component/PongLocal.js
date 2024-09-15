@@ -6,248 +6,235 @@ export default class PongLocal extends HTMLElement
 		super();
 		this.root = this.attachShadow({ mode: "open" });
 	}
-
-	connectedCallback()
-	{
-		this.setAttribute("id", "po-local-view");
-		this.render();
-		this.initialize();
-		this.setupWebSocket();
-	}
-
-	disconnectedCallback()
-	{
-		console.log("Component was removed");
-
-		document.removeEventListener("keyup", this.applyMove);
-
-		this.isGameStarted = false;
-		socket.ws.removeEventListener("message", this.handleServerMessage);
-		this.startBtn.removeEventListener("click", this.start);
-		clearInterval(this.SaveInterval);
-		socket.ws.onopen = null;
-		socket.ws.onclose = null;
-		socket.ws.onmessage = null;
-	}
-
-	render()
-	{
+	connectedCallback() {
+		this.setAttribute('id', 'pong-view');
 		this.root.innerHTML = `
-      <style>
-        :host {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 4.5rem;
-          width: 100%;
-          height: 100%;
-          color: var(--dark-teal);
-          font-family: "Press Start 2P", sans-serif !important;
-        }
-        #confirm-msg
-        {
-          backdrop-filter: blur(5px);
-          position: absolute;
-          top: 0;
-          left: 0;
-        }
-        canvas {
-          display: block;
-          margin: 20px auto;
-          background-color: var(--light-olive);
-          border: 2px solid var(--light-olive);
-          border-radius: 10px;
-          filter: brightness(90%);
-          position: relative;
-        }
-        h1 {
-          text-align: center;
-          color: var(--light-olive);
-        }
-        button
-        {
-          font-size: 14px;
-          font-weight: 300;
-          text-transform: uppercase;
-          letter-spacing: 1px;
-          border: none;
-          cursor: pointer;
-          display: inline-block;
-          cursor: pointer;
-          padding: 10px 60px;
-          border-radius: 8px;
-          background-color: var(--dark-teal);
-          color: var(--light-olive);
-          box-shadow: 0 0 0 3px #2f2e41, 0 6px 0 #2f2e41;
-          transition: all 0.1s ease, background 0.3s ease;
-          font-family: "Press Start 2P", sans-serif !important;
-          position: absolute;
-          transform: translateX(80%, 50%);
-        }
-      </style>
-      <h1>PONG LOCAL</h1>
-      <canvas id="board" width="600" height="300"></canvas>  
-      <button onclick="style.display = 'none'" class="start-btn">START PLAYING</button>
-      <abort-btn></abort-btn>
-      <confirm-msg game="po-local" id="confirm-msg"></confirm-msg>
-  `;
-	}
-
-	initialize()
-	{
-		socket.ws = new WebSocket("wss://" + location.host + "/localGameWs/");
-		this.startBtn = this.root.querySelector(".start-btn");
-		this.isGameStarted = false;
-		this.xBallPos = 380;
-		this.yBallPos = 150;
-		this.BallDirection = "LEFT";
-		this.paddl1Y = 125;
-		this.paddl2Y = 125;
-		this.SaveInterval = 0;
-		this.BallRoute = "LINE";
-		this.canvas = this.root.querySelector("#board");
-		this.canvasContext = this.canvas.getContext("2d");
-	}
-
-	setupWebSocket()
-	{
-		socket.ws.onclose = function () {
-			this.isGameStarted = false;
-			console.log("BYE FROM SERVER");
-			clearInterval(this.SaveInterval);
-		};
-		socket.ws.onopen = function () {
-			console.log("User On Game");
-		};
-
-		socket.ws.onclose = function () {
-			this.isGameStarted = false;
-			console.log("BYE FROM SERVER");
-			clearInterval(this.SaveInterval);
-		};
-		socket.ws.onmessage = (e) => this.handleServerMessage(e);
-
-		this.startBtn.addEventListener("click", (e) => this.start(e));
-		document.addEventListener("keyup", (e) => this.applyMove(e));
-	}
-
-	drawElements()
-	{
-		// console.log("Start Drawing Elements");
-		if (this.isGameStarted == true) {
-			this.ballMove();
-			this.canvasContext.clearRect(
-				0,
-				0,
-				this.canvas.width,
-				this.canvas.height
-			);
-
-			this.canvasContext.beginPath();
-			this.canvasContext.arc(this.xBallPos, this.yBallPos, 10, 0, 6.2);
-			this.canvasContext.lineWidth = 0.5;
-			this.canvasContext.fillStyle = "#381631";
-			this.canvasContext.fill();
-			this.canvasContext.closePath();
-			this.canvasContext.strokeStyle = "rgb(140, 29, 260)";
-			this.canvasContext.stroke();
-
-			this.canvasContext.beginPath();
-			this.canvasContext.lineWidth = 8;
-			this.canvasContext.moveTo(20, this.paddl1Y);
-			this.canvasContext.lineTo(20, this.paddl1Y + 50);
-			this.canvasContext.closePath();
-			this.canvasContext.strokeStyle = "#381631";
-			this.canvasContext.stroke();
-
-			this.canvasContext.beginPath();
-			this.canvasContext.lineWidth = 8;
-			this.canvasContext.moveTo(580, this.paddl2Y);
-			this.canvasContext.lineTo(580, this.paddl2Y + 50);
-			this.canvasContext.closePath();
-			this.canvasContext.strokeStyle = "#381631";
-			this.canvasContext.stroke();
-		}
-	}
-
-	start()
-	{
-		this.isGameStarted = true;
-		console.log("Game Started Now");
-		this.SaveInterval = setInterval(this.drawElements.bind(this), 20);
-	}
-
-	handleServerMessage(e)
-	{
-		const dataPars = JSON.parse(e.data);
-		if (dataPars.MoveFor == "PADDLES MOVE") {
-			if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
-				this.paddl1Y = dataPars.paddle1;
-			if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
-				this.paddl2Y = dataPars.paddle2;
-		} else {
-			(this.xBallPos = dataPars.Ballx), (this.yBallPos = dataPars.Bally);
-			this.BallDirection = dataPars.BallDir;
-			this.BallRoute = dataPars.BallRoute;
-		}
-	}
-
-	ballMove()
-	{
-		// console.log("Start Moving The Ball");
-		if (this.xBallPos <= 0 || this.xBallPos >= 600) {
-			console.log("Sus 1");
-			this.removeEventListener("keyup", (e) => this.applyMove(e));
-			this.isGameStarted = false;
-			socket.ws.send(JSON.stringify({ gameStatus: "End" }));
-			clearInterval(this.SaveInterval);
-		} else if (this.isGameStarted == true) {
-			//   console.log("Sus 2");
-			const ToServer = {
-				WhatIGiveYou: "BALL MOVE",
-				gameStatus: "onprogress",
-				move: "BALL",
-				paddle1: this.paddl1Y,
-				paddle2: this.paddl2Y,
-				ballx: this.xBallPos,
-				bally: this.yBallPos,
-				BallDir: this.BallDirection,
-				BallRoute: this.BallRoute
-			};
-			socket.ws.send(JSON.stringify(ToServer));
-		}
-	}
-
-	applyMove(e)
-	{
-		if (this.isGameStarted == true) {
-			// console.log("Apply Moves");
-			if (
-				e.key == "ArrowUp" ||
-				e.key == "ArrowDown" ||
-				e.key == "w" ||
-				e.key == "s"
-			) {
-				const ToServer = {
-					WhatIGiveYou: "PADDLES MOVE",
-					gameStatus: "onprogress",
-					move: "",
-					paddle1: this.paddl1Y,
-					paddle2: this.paddl2Y,
-					ballx: this.xBallPos,
-					bally: this.yBallPos,
-					BallDir: this.BallDirection,
-					BallRoute: this.BallRoute
-				};
-				if (e.key == "ArrowUp") ToServer.move = "UP";
-				else if (e.key == "ArrowDown") ToServer.move = "DOWN";
-				else if (e.key == "w" || e.key == "W") ToServer.move = "W";
-				else if (e.key == "s" || e.key == "S") ToServer.move = "S";
-				socket.ws.send(JSON.stringify(ToServer));
+		  <style>
+			body {
+				background-color: #282c34;
+				color: #61dafb;
+				font-family: Arial, sans-serif;
+				text-align: center;
+				margin: 0;
+				overflow: hidden;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				height: 100vh;
 			}
+			#game-container {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			#pongCanvas {
+				border: 2px solid #61dafb;
+				background-color: #000;
+				border-radius: 10px;
+			}
+			.hidden {
+				display: none;
+			}
+			#winner-message
+			{
+				color: var(--light-olive);
+			}
+		  </style>
+			 <div id="game-container">
+			<h1 id="winner-message" class="hidden">Player Wins!</h1>
+			<canvas id="pongCanvas" width="800" height="400"></canvas>
+		</div>
+		  <abort-btn></abort-btn>
+		  <confirm-msg game="pong"></confirm-msg>
+		`;
+		// this.startBtn = this.root.querySelector('.start-btn');
+		const canvas = this.root.querySelector('#pongCanvas');
+		const context = canvas.getContext('2d');
+		const winnerMessage = this.root.querySelector('#winner-message');
+		
+		const paddleWidth = 10;
+		const paddleHeight = 75;
+		// const paddleSpeed = 8;
+		
+		const playerX1 = 0;
+		const playerX2 = canvas.width - paddleWidth;
+		let playerY1 = (canvas.height - paddleHeight) / 2;
+		let playerY2 = (canvas.height - paddleHeight) / 2;
+		
+		let ballX = canvas.width / 2;
+		let ballY = canvas.height / 2;
+		const ballRadius = 10;
+	
+		let ballSpeedX = 2;
+		let ballSpeedY = 2;
+	
+		let score1 = 0;
+		let score2 = 0;
+		// const winningScore = 3;
+	
+		let player1Up = false;
+		let player1Down = false;
+		let player2Up = false;
+		let player2Down = false;
+	
+		let gameOver = false;
+	
+		let ws;
+	
+		function connectWebSocket()
+		{
+			ws = new WebSocket('wss://' + window.location.host + '/localGameWs/');
+	
+			ws.onopen = function() {
+				console.log('WebSocket connection opened');
+			};
+	
+			ws.onmessage = function(event)
+			{
+				const data = JSON.parse(event.data);
+				// console.log('Data received:', data);
+				playerY1 = data.paddle1Y;
+				playerY2 = data.paddle2Y;
+				ballX = data.ballX;
+				ballY = data.ballY;
+				ballSpeedX = data.ballSpeedX;
+				ballSpeedY = data.ballSpeedY;
+				score1 = data.score1;
+				score2 = data.score2;
+				player1Up = data.player1Up;
+				player2Up = data.player2Up;
+				player1Down = data.player1Down;
+				player2Down = data.player2Down;
+				gameOver = data.gameOver;
+				winnerMessage.textContent = data.winnerMessage;
+				if (gameOver)
+					winnerMessage.classList.remove('hidden');
+			};
+	
+			ws.onclose = function() {
+				console.log('WebSocket connection closed');
+			};
+	
+			ws.onerror = function(error) {
+				console.log('WebSocket error observed:', error);
+			};
 		}
-	}
+	
+		connectWebSocket();
+	
+		function draw()
+		{
+			context.clearRect(0, 0, canvas.width, canvas.height);
+	
+			// Draw background of the game
+			context.fillStyle = "#000000";
+			context.fillRect(0, 0, canvas.width, canvas.height);
+	
+			// Draw paddles
+			context.fillStyle = 'white';
+			context.fillRect(playerX1, playerY1, paddleWidth, paddleHeight);
+			context.fillRect(playerX2, playerY2, paddleWidth, paddleHeight);
+	
+			// Draw ball
+			context.beginPath();
+			context.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+			context.fill();
+			context.closePath();
+	
+			// Draw score
+			context.font = "30px Arial";
+			context.fillText(score1, 300, 50);
+			context.fillText(score2, 500, 50);
+
+			// Draw players
+			context.font = "25px Arial";
+			context.fillStyle = 'white';
+			context.fillText("Player 1", 20, 50);
+			context.fillText("Player 2", 700, 50);
+		}
+	
+		function resetBall() {
+			ballX = canvas.width / 2;
+			ballY = canvas.height / 2;
+			ballSpeedX = -ballSpeedX;
+			ballSpeedY = 2;
+			// console.log('Ball reset:', { ballX, ballY, ballSpeedX, ballSpeedY });
+		}
+	
+		function update() {
+			if (gameOver)
+				return;
+	
+			const gameState = {
+				paddle1Y: playerY1,
+				paddle2Y: playerY2,
+				player1Up: player1Up,
+				player2Up: player2Up,
+				player1Down:player1Down,
+				player2Down:player2Down,
+				ballX: ballX,
+				ballY: ballY,
+				ballSpeedX: ballSpeedX,
+				ballSpeedY: ballSpeedY,
+				score1: score1,
+				score2: score2,
+				gameOver: gameOver,
+				winnerMessage: winnerMessage.textContent
+			};
+	
+			// console.log('Sending game state:', gameState);
+			if (ws.readyState === WebSocket.OPEN)
+				ws.send(JSON.stringify(gameState));
+		}
+	
+		function gameLoop() {
+			update();
+			draw();
+			requestAnimationFrame(gameLoop);
+		}
+	
+		document.addEventListener('keydown', function(event) {
+			// console.log(`Key down: ${event.key}`);
+			switch(event.key) {
+				case 'w':
+					player1Up = true;
+					break;
+				case 's':
+					player1Down = true;
+					break;
+				case 'ArrowUp':
+					player2Up = true;
+					break;
+				case 'ArrowDown':
+					player2Down = true;
+					break;
+			}
+		});
+	
+		document.addEventListener('keyup', function(event) {
+			// console.log(`Key up: ${event.key}`);
+			switch(event.key) {
+				case 'w':
+					player1Up = false;
+					break;
+				case 's':
+					player1Down = false;
+					break;
+				case 'ArrowUp':
+					player2Up = false;
+					break;
+				case 'ArrowDown':
+					player2Down = false;
+					break;
+			}
+		});
+	
+		gameLoop();
+	  }
+	  disconnectedCallback()
+	  {
+		document.removeEventListener("keyup", this.applyDown);
+	  }
 }
 customElements.define("po-local-game", PongLocal);
 
