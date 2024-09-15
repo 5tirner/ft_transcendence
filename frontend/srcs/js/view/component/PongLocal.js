@@ -150,7 +150,7 @@ export default class PongLocal extends HTMLElement
 			context.font = "25px Arial";
 			context.fillStyle = 'white';
 			context.fillText("Player 1", 20, 50);
-			context.fillText("Player 2", 700, 50);
+			context.fillText("Player 2", 680, 50);
 		}
 	
 		function resetBall() {
