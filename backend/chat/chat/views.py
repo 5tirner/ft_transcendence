@@ -6,7 +6,6 @@ from rest_framework.generics import (
     ListAPIView,
     RetrieveAPIView,
     CreateAPIView,
-    UpdateAPIView,
     get_object_or_404,
 )
 
