@@ -531,7 +531,6 @@ class myPongserver(AsyncJsonWebsocketConsumer):
 #Ysabr local game
 class PongConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        print("TEsT")
         await self.accept()
         print("WebSocket connection accepted")
 
@@ -580,6 +579,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         # Send updated game state to the WebSocket
         await self.send(text_data=json.dumps(self.game_state))
 
+
     def update_ball_position(self):
         if not self.game_state['gameOver']:
             # Update ball position
@@ -590,25 +590,31 @@ class PongConsumer(AsyncWebsocketConsumer):
             if self.game_state['ballY'] + 10 > 400 or self.game_state['ballY'] - 10 < 0:
                 self.game_state['ballSpeedY'] = -self.game_state['ballSpeedY']
 
-
-            # Ball collision with paddles
-            if self.game_state['ballX'] - 10 < 10:
-                if self.game_state['paddle1Y'] < self.game_state['ballY'] < self.game_state['paddle1Y'] + 75:
-                    self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
-                    deltaY = self.game_state['ballY'] - (self.game_state['paddle1Y'] + 75 / 2)
-                    self.game_state['ballSpeedY'] = deltaY * 0.02
-                else:
-                    self.game_state['score2'] += 1
-                    self.reset_ball()
-
-            elif self.game_state['ballX'] + 10 > 800 - 10:
-                if self.game_state['paddle2Y'] < self.game_state['ballY'] < self.game_state['paddle2Y'] + 75:
+            # Ball collision with paddle 2 (right side)
+            if self.game_state['ballX'] + self.game_state['ballSpeedX'] > 800 - 10 - 10:  # Ball moving towards the right edge
+                if self.game_state['paddle2Y'] <= self.game_state['ballY'] <= self.game_state['paddle2Y'] + 75:
+                    # Ball hits paddle 2, bounce back
                     self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
                     deltaY = self.game_state['ballY'] - (self.game_state['paddle2Y'] + 75 / 2)
                     self.game_state['ballSpeedY'] = deltaY * 0.02
-                else:
+                elif self.game_state['ballX'] > 800:  # Ball goes out of bounds on the right
+                    # Ball missed the paddle, score for player 1
                     self.game_state['score1'] += 1
                     self.reset_ball()
+
+            # Ball collision with paddle 1 (left side)
+            elif self.game_state['ballX'] + self.game_state['ballSpeedX'] < 10 + 10:  # Ball moving towards the left edge
+                if self.game_state['paddle1Y'] <= self.game_state['ballY'] <= self.game_state['paddle1Y'] + 75:
+                    # Ball hits paddle 1, bounce back
+                    self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
+                    deltaY = self.game_state['ballY'] - (self.game_state['paddle1Y'] + 75 / 2)
+                    self.game_state['ballSpeedY'] = deltaY * 0.02
+                elif self.game_state['ballX'] < 0:  # Ball goes out of bounds on the left
+                    # Ball missed the paddle, score for player 2
+                    self.game_state['score2'] += 1
+                    self.reset_ball()
+
+
 
     def reset_ball(self):
         self.game_state['ballX'] = 800 / 2
