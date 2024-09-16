@@ -29,7 +29,6 @@ export const router = {
 				const tfa = document.createElement("tfa-view");
 				window.component.root.appendChild(tfa);
 			} else {
-				console.log("Return to home");
 				window.component.root.innerHTML = "";
 				window.component.root.appendChild(window.component.home);
 			}
