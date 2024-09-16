@@ -43,8 +43,16 @@ export class UserProfile extends HTMLElement {
             </div>
             <div class="user-details">
                 <p class="username"></p>
-                <p class="full-name"></p>
-                <p class="email"></p>
+                <!-- <p class="full-name"></p> -->
+                <!-- <p class="email"></p> -->
+                <div>
+                    <span class="label">Name</span>
+                    <span class="value">Brahim Elkartouch</span>
+                </div>
+                <div>
+                    <span class="label">Email</span>
+                    <span class="value">belkarto@student.1337.ma</span>
+                </div>
             </div>
         `;
 
