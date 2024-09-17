@@ -38,7 +38,8 @@ export default class History extends HTMLElement
 					console.log("key: ", key);
 					console.log("value: ", value);
 
-					if (value.winner === value.oppenent) result = "lose";
+          if (value.winner === '') result = 'draw';
+					else if (value.winner === value.oppenent) result = "lose";
 					else result = "win";
 					elem += `
           <tr>

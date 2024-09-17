@@ -167,7 +167,7 @@ class myServerOnGame(AsyncWebsocketConsumer):
                 p2.draws += 1
                 p2.save()
                 print(f"Add Historic Of The Match Between {thisUser} and {hisOppenent}")
-                user1,user2 =history(you=thisUser,oppenent=hisOppenent,winner="DRAW"),history(you=hisOppenent,oppenent=thisUser,winner="DRAW")
+                user1,user2 =history(you=thisUser,oppenent=hisOppenent,winner=""),history(you=hisOppenent,oppenent=thisUser,winner="")
                 user1.save()
                 user2.save()
                 try:
