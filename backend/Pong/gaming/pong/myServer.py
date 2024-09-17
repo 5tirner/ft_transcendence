@@ -425,7 +425,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                         else:
                             BallRoute = "UP"
                     if BallDirection == "LEFT":
-                        ballx -= 5
+                        ballx -= 1
                         if (
                             ballx == 30
                             and bally + 10 >= paddle1
@@ -437,7 +437,7 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                                 BallRoute = "DOWN"
                             BallDirection = "RIGHT"
                     elif BallDirection == "RIGHT":
-                        ballx += 5
+                        ballx += 1
                         if (
                             ballx == 570
                             and bally + 10 >= paddle2

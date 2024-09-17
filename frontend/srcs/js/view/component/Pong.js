@@ -29,24 +29,10 @@ export default class Pong extends HTMLElement {
 
 	async drawElements() {
 		// console.log("DO IT");
-		const livePerform = performance.now();
-		const delta = Math.min(
-			(livePerform - this.startPerformance) / this.duration,
-			1
-		);
-		if (this.isGameStarted == true && this.isFinsih == false) {
-			this.canvasContext.clearRect(
-				0,
-				0,
-				this.canvas.width,
-				this.canvas.height
-			);
-			console.log("DELTA=> ", delta);
-			if (delta < 1) {
-				this.ballMove();
-			} else {
-				this.duration += 50;
-			}
+		if (this.isGameStarted == true && this.isFinsih == false)
+		{
+			this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			this.ballMove();
 			this.canvasContext.beginPath();
 			this.canvasContext.arc(this.xBallPos, this.yBallPos, 10, 0, 6.2);
 			this.canvasContext.lineWidth = 0.5;
@@ -55,7 +41,7 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.closePath();
 			this.canvasContext.strokeStyle = "rgb(140, 29, 260)";
 			this.canvasContext.stroke();
-
+			
 			this.canvasContext.beginPath();
 			this.canvasContext.lineWidth = 8;
 			this.canvasContext.moveTo(20, this.paddl1Y);
@@ -63,7 +49,7 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.closePath();
 			this.canvasContext.strokeStyle = "#381631";
 			this.canvasContext.stroke();
-
+			
 			this.canvasContext.beginPath();
 			this.canvasContext.lineWidth = 8;
 			this.canvasContext.moveTo(580, this.paddl2Y);
@@ -71,10 +57,13 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.closePath();
 			this.canvasContext.strokeStyle = "#381631";
 			this.canvasContext.stroke();
-			// if (delta < 1.1)
-			// {
-			// 	requestAnimationFrame(this.drawElements.bind(this));
-			// }
+			const livePerform = performance.now();
+			const delta = Math.min((livePerform - this.startPerformance) / this.duration,1);
+			// console.log("DELTA=> ", delta);
+			if (delta <= 1)
+			{
+				requestAnimationFrame(this.drawElements.bind(this));
+			}
 			// else
 			// {
 			// 	this.duration += 100;
@@ -158,7 +147,7 @@ export default class Pong extends HTMLElement {
 		this.result = this.root.querySelector(".result");
 		this.SaveInterval = 0;
 		this.startPerformance = performance.now();
-		this.duration = 1000;
+		this.duration = 1500;
 	}
 
 	setupWebSocket() {
@@ -241,11 +230,12 @@ export default class Pong extends HTMLElement {
 				this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
 				this.domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
 				// requestAnimationFrame(this.drawElements.bind(this));
-				this.SaveInterval = setInterval(
-					this.drawElements.bind(this),
-					10
-				);
+				// this.SaveInterval = setInterval(
+				// 	this.drawElements.bind(this),
+				// 	10
+				// );
 				// console.log("Start");
+				requestAnimationFrame(this.drawElements.bind(this));
 			}
 		} else if (dataPars.MoveFor == "end") {
 			this.isFinsih == true;
