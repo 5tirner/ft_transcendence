@@ -1,12 +1,11 @@
 import { socket } from "./assets/socket.js";
 
 export default class Pong extends HTMLElement {
-	constructor( endPoint = '/PongGameWs/', roomCode = '' )
-	{
+	constructor(endPoint = "/PongGameWs/", roomCode = "") {
 		super();
 		this.root = this.attachShadow({ mode: "open" });
-    this.endPoint = endPoint;
-    this.roomCode = roomCode
+		this.endPoint = endPoint;
+		this.roomCode = roomCode;
 	}
 
 	connectedCallback() {
@@ -31,7 +30,10 @@ export default class Pong extends HTMLElement {
 	async drawElements() {
 		// console.log("DO IT");
 		const livePerform = performance.now();
-		const delta = Math.min((livePerform - this.startPerformance) / this.duration, 1);
+		const delta = Math.min(
+			(livePerform - this.startPerformance) / this.duration,
+			1
+		);
 		if (this.isGameStarted == true && this.isFinsih == false) {
 			this.canvasContext.clearRect(
 				0,
@@ -39,13 +41,10 @@ export default class Pong extends HTMLElement {
 				this.canvas.width,
 				this.canvas.height
 			);
-			console.log("DELTA=> ", delta)
-			if (delta < 1)
-			{
+			console.log("DELTA=> ", delta);
+			if (delta < 1) {
 				this.ballMove();
-			}
-			else
-			{
+			} else {
 				this.duration += 50;
 			}
 			this.canvasContext.beginPath();
@@ -56,7 +55,7 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.closePath();
 			this.canvasContext.strokeStyle = "rgb(140, 29, 260)";
 			this.canvasContext.stroke();
-			
+
 			this.canvasContext.beginPath();
 			this.canvasContext.lineWidth = 8;
 			this.canvasContext.moveTo(20, this.paddl1Y);
@@ -64,7 +63,7 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.closePath();
 			this.canvasContext.strokeStyle = "#381631";
 			this.canvasContext.stroke();
-			
+
 			this.canvasContext.beginPath();
 			this.canvasContext.lineWidth = 8;
 			this.canvasContext.moveTo(580, this.paddl2Y);
@@ -163,7 +162,9 @@ export default class Pong extends HTMLElement {
 	}
 
 	setupWebSocket() {
-		socket.ws = new WebSocket("wss://" + location.host + this.endPoint + this.roomCode);
+		socket.ws = new WebSocket(
+			"wss://" + location.host + this.endPoint + this.roomCode
+		);
 		socket.ws.onclose = () => {
 			clearInterval(this.SaveInterval);
 			this.isFinsih = true;
@@ -223,7 +224,7 @@ export default class Pong extends HTMLElement {
 
 	handleServerMessage(e) {
 		const dataPars = JSON.parse(e.data);
-    // console.log(dataPars);
+		// console.log(dataPars);
 		if (this.isGameStarted == false && this.isFinsih == false) {
 			if (dataPars.player2.length == 0) {
 				console.log("Player1: " + dataPars.player1);
@@ -240,7 +241,10 @@ export default class Pong extends HTMLElement {
 				this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
 				this.domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
 				// requestAnimationFrame(this.drawElements.bind(this));
-				this.SaveInterval = setInterval(this.drawElements.bind(this), 20);
+				this.SaveInterval = setInterval(
+					this.drawElements.bind(this),
+					10
+				);
 				// console.log("Start");
 			}
 		} else if (dataPars.MoveFor == "end") {
@@ -252,22 +256,19 @@ export default class Pong extends HTMLElement {
 			this.result.appendChild(resultComp);
 		} else if (this.isGameStarted == true && this.isFinsih == false) {
 			if (dataPars.MoveFor == "PADDLES MOVE") {
-				if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
-				{
+				if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5) {
 					this.paddl1Y = dataPars.paddle1;
 				}
-				if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
-				{
+				if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5) {
 					this.paddl2Y = dataPars.paddle2;
 				}
-			}
-			else
-			{
-				this.xBallPos = dataPars.Ballx, this.yBallPos = dataPars.Bally;
-				this.BallDirection = dataPars.BallDir,this.BallRoute = dataPars.BallRoute;
+			} else {
+				(this.xBallPos = dataPars.Ballx),
+					(this.yBallPos = dataPars.Bally);
+				(this.BallDirection = dataPars.BallDir),
+					(this.BallRoute = dataPars.BallRoute);
 			}
 		}
 	}
 }
 customElements.define("pong-game", Pong);
-
