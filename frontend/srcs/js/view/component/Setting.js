@@ -248,6 +248,7 @@ export default class Setting extends HTMLElement {
 				container.parentNode.appendChild(elem);
 			} else {
 				await API.disableTfa();
+        auth.tfa = false;
 			}
 		};
 

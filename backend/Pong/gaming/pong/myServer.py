@@ -226,6 +226,8 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
         await self.send_json(data['Data'])
         await self.close()
 
+
+
 class myPongserver(AsyncJsonWebsocketConsumer):
     playerWantsToPlay = list()
     playersOnMatchAndItsRoomId = dict()
@@ -456,6 +458,14 @@ class myPongserver(AsyncJsonWebsocketConsumer):
         await self.send_json(data['Data'])
         await self.close()
 
+
+
+
+
+
+
+
+
 # class pongLocalServer(AsyncJsonWebsocketConsumer):
 #     randomAdd = random.choice([1, 2])
 #     async def connect(self):
@@ -596,7 +606,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                     # Ball hits paddle 2, bounce back
                     self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
                     deltaY = self.game_state['ballY'] - (self.game_state['paddle2Y'] + 75 / 2)
-                    self.game_state['ballSpeedY'] = deltaY * 0.02
+                    self.game_state['ballSpeedY'] = deltaY * 0.05
                 elif self.game_state['ballX'] > 800:  # Ball goes out of bounds on the right
                     # Ball missed the paddle, score for player 1
                     self.game_state['score1'] += 1
@@ -608,7 +618,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                     # Ball hits paddle 1, bounce back
                     self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
                     deltaY = self.game_state['ballY'] - (self.game_state['paddle1Y'] + 75 / 2)
-                    self.game_state['ballSpeedY'] = deltaY * 0.02
+                    self.game_state['ballSpeedY'] = deltaY * 0.05
                 elif self.game_state['ballX'] < 0:  # Ball goes out of bounds on the left
                     # Ball missed the paddle, score for player 2
                     self.game_state['score2'] += 1

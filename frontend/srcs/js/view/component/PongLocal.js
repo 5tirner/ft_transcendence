@@ -88,9 +88,9 @@ export default class PongLocal extends HTMLElement
 			ws.onopen = function() {
 				console.log('WebSocket connection opened');
 			};
-	
 			ws.onmessage = function(event)
 			{
+				// console.log(event.data);
 				const data = JSON.parse(event.data);
 				// console.log('Data received:', data);
 				playerY1 = data.paddle1Y;
