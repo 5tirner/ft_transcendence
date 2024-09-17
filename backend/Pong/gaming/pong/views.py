@@ -141,6 +141,12 @@ def updateInfo(req):
         return response.Response(status=status.HTTP_406_NOT_ACCEPTABLE)
     print(f"NEW LOGIN IS -> {newLogin}")
     try:
+        pongGameInfo.objects.get(login=newLogin)
+        print(f"You Can't Update To This Login: {newLogin}, Already Used!")
+        return response.Response(status=status.HTTP_403_FORBIDDEN)
+    except:
+        print(f"You Can Go Forward To Update You Name To {newLogin}")
+    try:
         pongGameInfo.objects.get(login=oldLogin)
         print(f"YOU AGAIN? -> {oldLogin}")
     except:
@@ -151,24 +157,27 @@ def updateInfo(req):
         addUserPic = playerAndHisPic(login=oldLogin, pic=user_infos.get('avatar'))
         addUserPic.save()
         print(f"playerAndHisPic += {playerAndHisPic.objects.get(login=oldLogin)}")
-    toEditGameName = pongGameInfo.objects.get(login=oldLogin)
-    toEditGameName.login = newLogin
-    toEditGameName.save()
-    toEditPicName = playerAndHisPic.objects.get(login=oldLogin)
-    toEditPicName.login = newLogin
-    toEditPicName.save()
-    for i in pongHistory.objects.all():
-        if i.you == oldLogin:
-            if i.you == i.winner:
-                i.winner = newLogin
-            i.you = newLogin
-            i.save()
-        elif i.oppenent == oldLogin:
-            if i.oppenent == i.winner:
-                i.winner = newLogin
-            i.oppenent = newLogin
-            i.save()
-    return response.Response(status=status.HTTP_200_OK)
+    try:
+        toEditGameName = pongGameInfo.objects.get(login=oldLogin)
+        toEditGameName.login = newLogin
+        toEditGameName.save()
+        toEditPicName = playerAndHisPic.objects.get(login=oldLogin)
+        toEditPicName.login = newLogin
+        toEditPicName.save()
+        for i in pongHistory.objects.all():
+            if i.you == oldLogin:
+                if i.you == i.winner:
+                    i.winner = newLogin
+                i.you = newLogin
+                i.save()
+            elif i.oppenent == oldLogin:
+                if i.oppenent == i.winner:
+                    i.winner = newLogin
+                i.oppenent = newLogin
+                i.save()
+        return response.Response(status=status.HTTP_200_OK)
+    except Exception as E:
+        print(f"The Upadte Failed Cause Of: {E.__cause__}")
 
 @api_view(['GET'])
 def historic(req):
