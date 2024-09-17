@@ -617,7 +617,6 @@ class myPongserver(AsyncJsonWebsocketConsumer):
         await self.send_json(data["Data"])
         await self.close()
 
-
 # class pongLocalServer(AsyncJsonWebsocketConsumer):
 #     randomAdd = random.choice([1, 2])
 #     async def connect(self):
@@ -690,7 +689,6 @@ class myPongserver(AsyncJsonWebsocketConsumer):
 # Ysabr local game
 class PongConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        print("TEsT")
         await self.accept()
         print("WebSocket connection accepted")
 
@@ -718,18 +716,14 @@ class PongConsumer(AsyncWebsocketConsumer):
         if data.get("resetGame"):
             self.reset_game()
         else:
-            if data.get("player1Up"):
-                self.game_state["paddle1Y"] = max(self.game_state["paddle1Y"] - 8, 0)
-            if data.get("player1Down"):
-                self.game_state["paddle1Y"] = min(
-                    self.game_state["paddle1Y"] + 8, 400 - 75
-                )
-            if data.get("player2Up"):
-                self.game_state["paddle2Y"] = max(self.game_state["paddle2Y"] - 8, 0)
-            if data.get("player2Down"):
-                self.game_state["paddle2Y"] = min(
-                    self.game_state["paddle2Y"] + 8, 400 - 75
-                )
+            if data.get('player1Up'):
+                self.game_state['paddle1Y'] = max(self.game_state['paddle1Y'] - 8, 0)
+            if data.get('player1Down'):
+                self.game_state['paddle1Y'] = min(self.game_state['paddle1Y'] + 8, 400 - 75)
+            if data.get('player2Up'):
+                self.game_state['paddle2Y'] = max(self.game_state['paddle2Y'] - 8, 0)
+            if data.get('player2Down'):
+                self.game_state['paddle2Y'] = min(self.game_state['paddle2Y'] + 8, 400 - 75)
 
             self.update_ball_position()
 
@@ -743,6 +737,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         # Send updated game state to the WebSocket
         await self.send(text_data=json.dumps(self.game_state))
 
+
     def update_ball_position(self):
         if not self.game_state["gameOver"]:
             # Update ball position
@@ -750,38 +745,27 @@ class PongConsumer(AsyncWebsocketConsumer):
             self.game_state["ballY"] += self.game_state["ballSpeedY"]
 
             # Ball collision with top and bottom walls
-            if self.game_state["ballY"] + 10 > 400 or self.game_state["ballY"] - 10 < 0:
-                self.game_state["ballSpeedY"] = -self.game_state["ballSpeedY"]
+            if self.game_state['ballY'] + 10 > 400 or self.game_state['ballY'] - 10 < 0:
+                self.game_state['ballSpeedY'] = -self.game_state['ballSpeedY']
+
 
             # Ball collision with paddles
-            if self.game_state["ballX"] - 10 < 10:
-                if (
-                    self.game_state["paddle1Y"]
-                    < self.game_state["ballY"]
-                    < self.game_state["paddle1Y"] + 75
-                ):
-                    self.game_state["ballSpeedX"] = -self.game_state["ballSpeedX"]
-                    deltaY = self.game_state["ballY"] - (
-                        self.game_state["paddle1Y"] + 75 / 2
-                    )
-                    self.game_state["ballSpeedY"] = deltaY * 0.02
+            if self.game_state['ballX'] - 10 < 10:
+                if self.game_state['paddle1Y'] < self.game_state['ballY'] < self.game_state['paddle1Y'] + 75:
+                    self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
+                    deltaY = self.game_state['ballY'] - (self.game_state['paddle1Y'] + 75 / 2)
+                    self.game_state['ballSpeedY'] = deltaY * 0.02
                 else:
-                    self.game_state["score2"] += 1
+                    self.game_state['score2'] += 1
                     self.reset_ball()
 
-            elif self.game_state["ballX"] + 10 > 800 - 10:
-                if (
-                    self.game_state["paddle2Y"]
-                    < self.game_state["ballY"]
-                    < self.game_state["paddle2Y"] + 75
-                ):
-                    self.game_state["ballSpeedX"] = -self.game_state["ballSpeedX"]
-                    deltaY = self.game_state["ballY"] - (
-                        self.game_state["paddle2Y"] + 75 / 2
-                    )
-                    self.game_state["ballSpeedY"] = deltaY * 0.02
+            elif self.game_state['ballX'] + 10 > 800 - 10:
+                if self.game_state['paddle2Y'] < self.game_state['ballY'] < self.game_state['paddle2Y'] + 75:
+                    self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
+                    deltaY = self.game_state['ballY'] - (self.game_state['paddle2Y'] + 75 / 2)
+                    self.game_state['ballSpeedY'] = deltaY * 0.02
                 else:
-                    self.game_state["score1"] += 1
+                    self.game_state['score1'] += 1
                     self.reset_ball()
 
     def reset_ball(self):
@@ -1124,24 +1108,16 @@ class TournamentConsumer(AsyncWebsocketConsumer):
 
     def handle_paddle_movement(self, player, direction):
         step_size = 2  # Adjust this value to control the paddle speed
-        if player == "player1":
-            if direction == "up":
-                self.game_state["paddle1Y"] = max(
-                    self.game_state["paddle1Y"] - step_size, 0
-                )
-            elif direction == "down":
-                self.game_state["paddle1Y"] = min(
-                    self.game_state["paddle1Y"] + step_size, 400 - 75
-                )
-        elif player == "player2":
-            if direction == "up":
-                self.game_state["paddle2Y"] = max(
-                    self.game_state["paddle2Y"] - step_size, 0
-                )
-            elif direction == "down":
-                self.game_state["paddle2Y"] = min(
-                    self.game_state["paddle2Y"] + step_size, 400 - 75
-                )
+        if player == 'player1':
+            if direction == 'up':
+                self.game_state['paddle1Y'] = max(self.game_state['paddle1Y'] - step_size, 0)
+            elif direction == 'down':
+                self.game_state['paddle1Y'] = min(self.game_state['paddle1Y'] + step_size, 400 - 75)
+        elif player == 'player2':
+            if direction == 'up':
+                self.game_state['paddle2Y'] = max(self.game_state['paddle2Y'] - step_size, 0)
+            elif direction == 'down':
+                self.game_state['paddle2Y'] = min(self.game_state['paddle2Y'] + step_size, 400 - 75)
 
     async def start_next_match(self):
         if self.current_game_loop_task:
@@ -1234,38 +1210,26 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                 self.game_state["ballSpeedY"] = -self.game_state["ballSpeedY"]
 
             # Ball collision with paddles
-            if self.game_state["ballX"] - 10 <= 10:  # Left paddle (Player 1)
-                if (
-                    self.game_state["paddle1Y"]
-                    < self.game_state["ballY"]
-                    < self.game_state["paddle1Y"] + 75
-                ):
-                    self.game_state["ballSpeedX"] = -self.game_state["ballSpeedX"]
-                    deltaY = self.game_state["ballY"] - (
-                        self.game_state["paddle1Y"] + 75 / 2
-                    )
-                    self.game_state["ballSpeedY"] += (
-                        deltaY * 0.02
-                    )  # Slight variation in speed based on hit point
-                else:
-                    self.game_state["score2"] += 1
+            if self.game_state['ballX'] - 10 <= 10:  # Left paddle (Player 1)
+                if self.game_state['paddle1Y'] < self.game_state['ballY'] < self.game_state['paddle1Y'] + 75:
+                    self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
+                    paddle_center = self.game_state['paddle1Y'] + 75 / 2
+                    relative_intersect_y = (self.game_state['ballY'] - paddle_center) / (75 / 2)
+                    max_speed_y = 0.5  # Adjust this value as needed
+                    self.game_state['ballSpeedY'] = relative_intersect_y * max_speed_y
+                elif self.game_state['ballX'] < 0:
+                    self.game_state['score2'] += 1
                     self.reset_ball()
 
-            elif self.game_state["ballX"] + 10 >= 800 - 10:  # Right paddle (Player 2)
-                if (
-                    self.game_state["paddle2Y"]
-                    < self.game_state["ballY"]
-                    < self.game_state["paddle2Y"] + 75
-                ):
-                    self.game_state["ballSpeedX"] = -self.game_state["ballSpeedX"]
-                    deltaY = self.game_state["ballY"] - (
-                        self.game_state["paddle2Y"] + 75 / 2
-                    )
-                    self.game_state["ballSpeedY"] += (
-                        deltaY * 0.02
-                    )  # Slight variation in speed based on hit point
-                else:
-                    self.game_state["score1"] += 1
+            elif self.game_state['ballX'] + 10 >= 800 - 10:  # Right paddle (Player 2)
+                if self.game_state['paddle2Y'] < self.game_state['ballY'] < self.game_state['paddle2Y'] + 75:
+                    self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
+                    paddle_center = self.game_state['paddle2Y'] + 75 / 2
+                    relative_intersect_y = (self.game_state['ballY'] - paddle_center) / (75 / 2)
+                    max_speed_y = 0.5  # Adjust this value as needed
+                    self.game_state['ballSpeedY'] = relative_intersect_y * max_speed_y
+                elif self.game_state['ballX'] > 800:
+                    self.game_state['score1'] += 1
                     self.reset_ball()
 
             # Check if someone won

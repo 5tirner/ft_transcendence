@@ -88,9 +88,9 @@ export default class PongLocal extends HTMLElement
 			ws.onopen = function() {
 				console.log('WebSocket connection opened');
 			};
-	
 			ws.onmessage = function(event)
 			{
+				// console.log(event.data);
 				const data = JSON.parse(event.data);
 				// console.log('Data received:', data);
 				playerY1 = data.paddle1Y;
@@ -153,13 +153,13 @@ export default class PongLocal extends HTMLElement
 			context.fillText("Player 2", 680, 50);
 		}
 	
-		function resetBall() {
-			ballX = canvas.width / 2;
-			ballY = canvas.height / 2;
-			ballSpeedX = -ballSpeedX;
-			ballSpeedY = 2;
-			// console.log('Ball reset:', { ballX, ballY, ballSpeedX, ballSpeedY });
-		}
+		// function resetBall() {
+		// 	ballX = canvas.width / 2;
+		// 	ballY = canvas.height / 2;
+		// 	ballSpeedX = -ballSpeedX;
+		// 	ballSpeedY = 2;
+		// 	// console.log('Ball reset:', { ballX, ballY, ballSpeedX, ballSpeedY });
+		// }
 	
 		function update() {
 			if (gameOver)
