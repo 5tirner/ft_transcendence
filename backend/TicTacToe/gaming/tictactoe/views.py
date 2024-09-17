@@ -49,6 +49,12 @@ def updateInfoTTT(req):
     oldLogin = user_infos.get('username')
     newLogin = req.data.get('newLogin')
     try:
+        gameInfo.objects.get(login=newLogin)
+        print(f"You Can't Update To This Login: {newLogin}, Already Used!")
+        return response.Response(status=status.HTTP_403_FORBIDDEN)
+    except:
+        print(f"You Can Go Forward To Update You Name To {newLogin}")
+    try:
         gameInfo.objects.get(login=oldLogin)
         print(f"YOU AGAIN? -> {oldLogin}")
     except:

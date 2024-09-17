@@ -41,7 +41,7 @@ services:
         env_file:
             - .env
         command:
-            sh -c "python3 manage.py makemigrations --noinput  && python3
+            sh -c "sleep 2 && python3 manage.py makemigrations --noinput  && python3
             manage.py migrate --noinput && python manage.py runserver
             0.0.0.0:8000"
     tictactoe:
@@ -57,7 +57,7 @@ services:
         env_file:
             - .env
         command:
-            sh -c "python3 manage.py makemigrations --noinput  && python3
+            sh -c "sleep 2 && python3 manage.py makemigrations --noinput  && python3
             manage.py migrate --noinput && python manage.py runserver
             0.0.0.0:8000"
     postgres_db:
@@ -80,7 +80,6 @@ services:
         # volumes:
         #     - postgres_db:/var/lib/postgresql/data
         restart: always
-
     auth:
         init: true
         container_name: auth

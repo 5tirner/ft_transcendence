@@ -1,4 +1,5 @@
-def destroyThisGameInformations(playersOnMatchAndItsOppenent, playersOnMatchAndItsRoomId, playersOnMatchAndItsDeriction, p1, p2):
+def destroyThisGameInformations(playersOnMatchAndItsOppenent, playersOnMatchAndItsRoomId, playersOnMatchAndItsDeriction,
+                                playerAndHisPaddle, p1, p2):
     try:
         playersOnMatchAndItsOppenent.pop(p1)
     except:
@@ -21,5 +22,13 @@ def destroyThisGameInformations(playersOnMatchAndItsOppenent, playersOnMatchAndI
         pass
     try:
         playersOnMatchAndItsDeriction.pop(p2)
+    except:
+        pass
+    try:
+        playerAndHisPaddle.pop(p1)
+    except:
+        pass
+    try:
+        playerAndHisPaddle.pop(p2)
     except:
         pass

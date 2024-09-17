@@ -28,7 +28,10 @@ export default class Pong extends HTMLElement {
 		cancelAnimationFrame(window);
 	}
 
-	drawElements() {
+	async drawElements() {
+		// console.log("DO IT");
+		const livePerform = performance.now();
+		const delta = Math.min((livePerform - this.startPerformance) / this.duration, 1);
 		if (this.isGameStarted == true && this.isFinsih == false) {
 			this.canvasContext.clearRect(
 				0,
@@ -36,7 +39,15 @@ export default class Pong extends HTMLElement {
 				this.canvas.width,
 				this.canvas.height
 			);
-			this.ballMove();
+			console.log("DELTA=> ", delta)
+			if (delta < 1)
+			{
+				this.ballMove();
+			}
+			else
+			{
+				this.duration += 50;
+			}
 			this.canvasContext.beginPath();
 			this.canvasContext.arc(this.xBallPos, this.yBallPos, 10, 0, 6.2);
 			this.canvasContext.lineWidth = 0.5;
@@ -45,7 +56,7 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.closePath();
 			this.canvasContext.strokeStyle = "rgb(140, 29, 260)";
 			this.canvasContext.stroke();
-
+			
 			this.canvasContext.beginPath();
 			this.canvasContext.lineWidth = 8;
 			this.canvasContext.moveTo(20, this.paddl1Y);
@@ -53,7 +64,7 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.closePath();
 			this.canvasContext.strokeStyle = "#381631";
 			this.canvasContext.stroke();
-
+			
 			this.canvasContext.beginPath();
 			this.canvasContext.lineWidth = 8;
 			this.canvasContext.moveTo(580, this.paddl2Y);
@@ -61,7 +72,16 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.closePath();
 			this.canvasContext.strokeStyle = "#381631";
 			this.canvasContext.stroke();
-			setTimeout(requestAnimationFrame(this.drawElements.bind(this)), 20);
+			// if (delta < 1.1)
+			// {
+			// 	requestAnimationFrame(this.drawElements.bind(this));
+			// }
+			// else
+			// {
+			// 	this.duration += 100;
+			// 	console.log("This Duration Reach: ", this.duration);
+			// 	requestAnimationFrame(this.drawElements.bind(this));
+			// }
 		}
 	}
 
@@ -137,11 +157,15 @@ export default class Pong extends HTMLElement {
 		this.paddl2Y = 125;
 		this.BallRoute = "LINE";
 		this.result = this.root.querySelector(".result");
+		this.SaveInterval = 0;
+		this.startPerformance = performance.now();
+		this.duration = 1000;
 	}
 
 	setupWebSocket() {
 		socket.ws = new WebSocket("wss://" + location.host + this.endPoint + this.roomCode);
 		socket.ws.onclose = () => {
+			clearInterval(this.SaveInterval);
 			this.isFinsih = true;
 			this.isGameStarted = false;
 			cancelAnimationFrame(window);
@@ -208,13 +232,16 @@ export default class Pong extends HTMLElement {
 				this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
 				this.domElm2.innerHTML = "PLAYER2: Wait...";
 			} else if (dataPars.player2.length != 0) {
+				this.startPerformance = performance.now();
 				this.isGameStarted = true;
 				console.log("Player1: " + dataPars.player1);
 				console.log("Player2: " + dataPars.player2);
 				console.log("RoomId: " + dataPars.roomid);
 				this.domElm1.innerHTML = "PLAYER1: " + dataPars.player1;
 				this.domElm2.innerHTML = "PLAYER2: " + dataPars.player2;
-				requestAnimationFrame(this.drawElements.bind(this));
+				// requestAnimationFrame(this.drawElements.bind(this));
+				this.SaveInterval = setInterval(this.drawElements.bind(this), 20);
+				// console.log("Start");
 			}
 		} else if (dataPars.MoveFor == "end") {
 			this.isFinsih == true;
@@ -226,14 +253,18 @@ export default class Pong extends HTMLElement {
 		} else if (this.isGameStarted == true && this.isFinsih == false) {
 			if (dataPars.MoveFor == "PADDLES MOVE") {
 				if (dataPars.paddle1 <= 255 && dataPars.paddle1 >= -5)
+				{
 					this.paddl1Y = dataPars.paddle1;
+				}
 				if (dataPars.paddle2 <= 255 && dataPars.paddle2 >= -5)
+				{
 					this.paddl2Y = dataPars.paddle2;
-			} else {
-				(this.xBallPos = dataPars.Ballx),
-					(this.yBallPos = dataPars.Bally);
-				this.BallDirection = dataPars.BallDir;
-				this.BallRoute = dataPars.BallRoute;
+				}
+			}
+			else
+			{
+				this.xBallPos = dataPars.Ballx, this.yBallPos = dataPars.Bally;
+				this.BallDirection = dataPars.BallDir,this.BallRoute = dataPars.BallRoute;
 			}
 		}
 	}
