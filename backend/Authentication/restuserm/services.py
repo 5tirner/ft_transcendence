@@ -12,8 +12,6 @@ from .models import Player
 
 
 def generate_new_username(username) -> str:
-    if username == "ysabr":
-        return username + "69"
     return username + ''.join(random.choices(string.digits, k=3))
 
 def create_player(player_data: Dict[str, str]):

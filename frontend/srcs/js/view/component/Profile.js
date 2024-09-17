@@ -1,33 +1,30 @@
 // import { auth } from "../../auth/Authentication.js";
 import API from "../../service/API.js";
 
-export default class Profile extends HTMLElement
-{
-	constructor() { super(); }
-	
-	connectedCallback()
-	{
+export default class Profile extends HTMLElement {
+	constructor() {
+		super();
+	}
+
+	connectedCallback() {
 		this.setAttribute("id", "profile-view");
-    this.render();
-    this.getUserData();
+		this.render();
+		this.getUserData();
 	}
-	async getUserData()
-	{
-    const res = await API.isLogedIn();
-    const data = await res.json();
-    
-    const image = this.querySelector('.avatar');
-    const username = this.querySelector('.username');
-    const fullname = this.querySelector('.fullname');
-    
-    image.setAttribute('src', data.data.avatar);
-    username.innerHTML = data.data.username;
-    fullname.innerHTML = data.data.first_name + " " + data.data.last_name;
-    // console.log("data: ", data);
+	async getUserData() {
+		const res = await API.isLogedIn();
+		const data = await res.json();
+
+		const image = this.querySelector(".avatar");
+		const username = this.querySelector(".username");
+		const fullname = this.querySelector(".fullname");
+
+		image.setAttribute("src", data.data.avatar);
+		username.innerHTML = data.data.username;
+		fullname.innerHTML = data.data.first_name + " " + data.data.last_name;
 	}
-	render()
-	{
-      this.innerHTML = `
+	render() {
+		this.innerHTML = `
          <style>
             .user-info {
                background-color: var(--dark-purple);
@@ -95,3 +92,4 @@ export default class Profile extends HTMLElement
 	}
 }
 customElements.define("profile-view", Profile);
+

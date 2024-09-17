@@ -1,4 +1,5 @@
 import API from "../../service/API.js";
+import {auth} from '../../auth/Authentication.js'
 import { danger } from "./assets/import.js";
 import { info } from "./assets/import.js";
 import { success } from "./assets/import.js";
@@ -161,6 +162,9 @@ export default class Tfa extends HTMLElement {
 			this.verifyTfaCode(this.input.value);
 		};
 		this.listner1 = (e) => {
+      const checkMark = this.parentNode.querySelector('#cbx-3');
+      if (checkMark)
+          checkMark.checked = false;
 			this.remove();
 		};
 
@@ -178,7 +182,9 @@ export default class Tfa extends HTMLElement {
 		const data = await res.json();
 		if (data.statusCode == 200) {
 			this.notification(success, "2FA is enabled");
+      auth.tfa = true;
 			this.remove();
+      
 		} else {
 			this.input.value = "";
 			this.notification(danger, "Invalid 2FA code");

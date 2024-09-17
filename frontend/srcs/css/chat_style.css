@@ -382,3 +382,30 @@ li.list-group-item:last-child {
     height: 100%;
     object-fit: cover;
 }
+
+.user-details {
+    font-family: var(--body-font);
+    max-width: 250px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    text-align: center;
+}
+
+/* .user-details div { */
+/*     margin-bottom: 15px; */
+/* } */
+
+.label {
+    color: var(--deep-blue);
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.value {
+    display: block;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.4;
+}

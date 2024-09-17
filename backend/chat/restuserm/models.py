@@ -1,5 +1,3 @@
-# Create your models here.
-
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from enum import Enum
@@ -19,7 +17,7 @@ class Player(AbstractBaseUser):
     ]
 
     id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=20, blank=False, null=False, unique=False)
+    username = models.CharField(max_length=20, blank=False, null=False, unique=True)
     email = models.EmailField(max_length=30, blank=False, null=False, unique=True)
     first_name = models.CharField(max_length=20, blank=False, null=False)
     last_name = models.CharField(max_length=20, blank=False, null=False)
@@ -45,6 +43,7 @@ class Player(AbstractBaseUser):
 
 
 class Friendships(AbstractBaseUser):
+
     class Status(Enum):
         PENDING = "PEN"
         ACCEPTED = "ACP"
@@ -55,6 +54,7 @@ class Friendships(AbstractBaseUser):
         (Status.ACCEPTED.value, "ACCEPTED"),
         (Status.BLOCKED.value, "BLOCKED"),
     ]
+
     id = models.AutoField(primary_key=True)
     status = models.CharField(
         max_length=3, choices=STATUS_AVAILABLE, default=Status.PENDING.value
@@ -71,6 +71,7 @@ class Friendships(AbstractBaseUser):
 
 
 class PlayerGameMatch(AbstractBaseUser):
+
     id = models.AutoField(primary_key=True)
     id_player = models.ForeignKey(
         Player, on_delete=models.CASCADE, null=False, blank=False
@@ -87,6 +88,47 @@ class PlayerGameMatch(AbstractBaseUser):
 
 
 class Match(AbstractBaseUser):
+
     class State(Enum):
         PLAYED = "PLYD"
         UNPLAYED = "UPLY"
+
+        @classmethod
+        def cases(cls):
+            return [(case.value, case.name) for case in cls]
+
+    class Game(Enum):
+        PONG = "PON"
+        TICTACTOE = "TIC"
+
+        @classmethod
+        def cases(cls):
+            return [(case.value, case.name) for case in cls]
+
+    id = models.AutoField(primary_key=True)
+    state = models.CharField(
+        max_length=4,
+        choices=State.cases(),
+        null=False,
+        blank=False,
+        default=State.UNPLAYED.value,
+    )
+    round = models.IntegerField(default=1)
+    game = models.CharField(
+        max_length=3,
+        choices=Game.cases(),
+        null=False,
+        blank=False,
+        default=Game.PONG.value,
+    )
+    # <-------------- ziko add tournament models.ForeignKey here -------------->
+
+
+# from django.contrib.auth.models import User
+# from django.db import models
+
+# class UserProfile(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     display_name = models.CharField(max_length=100)
+#     avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+#     # Add any other fields as needed

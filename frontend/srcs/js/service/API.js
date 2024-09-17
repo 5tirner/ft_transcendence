@@ -226,6 +226,11 @@ const API = {
 			body: JSON.stringify({ code })
 		};
 		return fetch(`${API.authEndpoint}TFA/postlogin/`, opts);
+	},
+	disableTfa: async () => {
+		return await API.makePostRequest(API.authEndpoint, {
+			player: { two_factor: false }
+		});
 	}
 };
 

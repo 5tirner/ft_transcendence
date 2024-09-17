@@ -1,26 +1,28 @@
 import { auth } from "../../auth/Authentication.js";
+import API from "../../service/API.js";
 
-export default class Setting extends HTMLElement
-{
-	constructor() { super(); }
-	
-	connectedCallback()
-	{
-      this.setAttribute("id", "setting-view");		
-      this.render();
-      this.initialize();
+export default class Setting extends HTMLElement {
+	constructor() {
+		super();
 	}
-	
-	disconnectedCallback()
-	{
-    this.editUsernameButton.removeEventListener('click', this.editUserListner);
-    this.editIamgeButton.removeEventListener('click', this.editImgListnet);
-    this.checkbox.removeEventListener('change', this.listener3);
+
+	connectedCallback() {
+		this.setAttribute("id", "setting-view");
+		this.render();
+		this.initialize();
 	}
-	
-	render()
-	{
-	  this.innerHTML = `
+
+	disconnectedCallback() {
+		this.editUsernameButton.removeEventListener(
+			"click",
+			this.editUserListner
+		);
+		this.editIamgeButton.removeEventListener("click", this.editImgListnet);
+		this.checkbox.removeEventListener("change", this.listener3);
+	}
+
+	render() {
+		this.innerHTML = `
       <style>
         .profile-card {
           display: flex;
@@ -215,7 +217,7 @@ export default class Setting extends HTMLElement
             <div class="tfa">
               <p>Two Factor Auth</p>
               <div class="checkbox-wrapper-3">
-                <input type="checkbox" id="cbx-3" ${auth.tfa ? 'checked' : ''}/>
+                <input type="checkbox" id="cbx-3" ${auth.tfa ? "checked" : ""}/>
                 <label for="cbx-3" class="toggle"><span></span></label>
               </div>
             </div>
@@ -223,39 +225,35 @@ export default class Setting extends HTMLElement
       </div> 
     `;
 	}
-	
-	initialize()
-	{
-    this.checkbox = this.querySelector("#cbx-3");
-    this.editIamgeButton = this.querySelector(".edit-image");
-    this.editUsernameButton = this.querySelector(".edit-btn");
-    this.target = this.querySelector('.username');
-    this.editUserListner = (e) => {
-      e.preventDefault();
-      const elem = document.createElement('update-user');
-      this.append(elem);
-    }
-    this.editImgListnet = (e) => {
-      e.preventDefault();
-      const elem = document.createElement('update-avatar');
-      this.append(elem);
-    }
-    this.listener3 = async (e) => {
-      if ( e.target.checked == true )
-      {
-        const container = this.querySelector('.profile-card .section');
-        const elem = document.createElement('t-f-a');
-        container.parentNode.appendChild(elem);
-      }
-      else
-      {
-        // cancling the 2FA
-      }
-    }
-    
-    this.editUsernameButton.addEventListener('click', this.editUserListner);
-    this.editIamgeButton.addEventListener('click', this.editImgListnet);
-    this.checkbox.addEventListener('change', this.listener3);
+
+	initialize() {
+		this.checkbox = this.querySelector("#cbx-3");
+		this.editIamgeButton = this.querySelector(".edit-image");
+		this.editUsernameButton = this.querySelector(".edit-btn");
+		this.target = this.querySelector(".username");
+		this.editUserListner = (e) => {
+			e.preventDefault();
+			const elem = document.createElement("update-user");
+			this.append(elem);
+		};
+		this.editImgListnet = (e) => {
+			e.preventDefault();
+			const elem = document.createElement("update-avatar");
+			this.append(elem);
+		};
+		this.listener3 = async (e) => {
+			if (e.target.checked == true) {
+				const container = this.querySelector(".profile-card .section");
+				const elem = document.createElement("t-f-a");
+				container.parentNode.appendChild(elem);
+			} else {
+				await API.disableTfa();
+			}
+		};
+
+		this.editUsernameButton.addEventListener("click", this.editUserListner);
+		this.editIamgeButton.addEventListener("click", this.editImgListnet);
+		this.checkbox.addEventListener("change", this.listener3);
 	}
 }
 customElements.define("setting-view", Setting);
