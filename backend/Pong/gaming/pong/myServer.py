@@ -755,7 +755,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                     self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
                     deltaY = self.game_state['ballY'] - (self.game_state['paddle1Y'] + 75 / 2)
                     self.game_state['ballSpeedY'] = deltaY * 0.02
-                else:
+                elif self.game_state['ballX'] < 0:
                     self.game_state['score2'] += 1
                     self.reset_ball()
 
@@ -764,7 +764,7 @@ class PongConsumer(AsyncWebsocketConsumer):
                     self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
                     deltaY = self.game_state['ballY'] - (self.game_state['paddle2Y'] + 75 / 2)
                     self.game_state['ballSpeedY'] = deltaY * 0.02
-                else:
+                elif self.game_state['ballX'] > 800:
                     self.game_state['score1'] += 1
                     self.reset_ball()
 
@@ -1219,7 +1219,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                     relative_intersect_y = (self.game_state['ballY'] - paddle_center) / (75 / 2)
                     max_speed_y = 0.5  # Adjust this value as needed
                     self.game_state['ballSpeedY'] = relative_intersect_y * max_speed_y
-                elif self.game_state['ballX'] < 0:
+                else:
                     self.game_state['score2'] += 1
                     self.reset_ball()
 
@@ -1230,7 +1230,7 @@ class TournamentConsumer(AsyncWebsocketConsumer):
                     relative_intersect_y = (self.game_state['ballY'] - paddle_center) / (75 / 2)
                     max_speed_y = 0.5  # Adjust this value as needed
                     self.game_state['ballSpeedY'] = relative_intersect_y * max_speed_y
-                elif self.game_state['ballX'] > 800:
+                else:
                     self.game_state['score1'] += 1
                     self.reset_ball()
 
