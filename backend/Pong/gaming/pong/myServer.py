@@ -49,6 +49,12 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
             if user is None:
                 raise "User Not Found"
             print(f"User: {user}")
+            if self.playersOnMatchAndItsOppenent.get(self.scope['user']) is not None:
+                print(f"{self.scope['user']} Already In A Game")
+                self.scope['user'] = '   '
+                await self.accept()
+                await self.close()
+                return
             self.playersOnMatchAndItsOppenent[user] = self.scope["user"]
             self.playersOnMatchAndItsOppenent[self.scope["user"]] = user
             self.playersOnMatchAndItsDeriction[self.scope["user"]] = "Right"
@@ -66,6 +72,12 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
             player1 = user
             player2 = self.scope["user"]
         except:
+            if self.playersOnMatchAndItsOppenent.get(self.scope['user']) is not None:
+                print(f"{self.scope['user']} Already In A Game")
+                self.scope['user'] = '   '
+                await self.accept()
+                await self.close()
+                return
             self.roomcodeToJoin[roomcode] = self.scope["user"]
             player1 = self.scope["user"]
             player2 = ""
@@ -118,7 +130,7 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
                         else:
                             BallRoute = "UP"
                     if BallDirection == "LEFT":
-                        ballx -= 20
+                        ballx -= 1
                         if (
                             ballx == 30
                             and bally + 10 >= paddle1
@@ -130,7 +142,7 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
                                 BallRoute = "DOWN"
                             BallDirection = "RIGHT"
                     elif BallDirection == "RIGHT":
-                        ballx += 5
+                        ballx += 1
                         if (
                             ballx == 570
                             and bally + 10 >= paddle2
@@ -182,6 +194,7 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
                     destroyThisGameInformations(
                         self.playersOnMatchAndItsOppenent,
                         self.playersOnMatchAndItsRoomId,
+                        self.playersOnMatchAndItsDeriction,
                         self.playersOnMatchAndItsDeriction,
                         thisUser,
                         oppenent,
@@ -248,9 +261,11 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
                     user2 = pongHistory(you=oppenent, oppenent=thisUser, winner=winner)
                     user1.save()
                     user2.save()
+                    print("-> Game HIstory Added")
                     destroyThisGameInformations(
                         self.playersOnMatchAndItsOppenent,
                         self.playersOnMatchAndItsRoomId,
+                        self.playersOnMatchAndItsDeriction,
                         self.playersOnMatchAndItsDeriction,
                         thisUser,
                         oppenent,
@@ -278,14 +293,10 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
             player1, player2 = self.scope[
                 "user"
             ], self.playersOnMatchAndItsOppenent.get(self.scope["user"])
-            # try:
-            #     self.playerWantsToPlay.remove(self.scope['user'])
-            #     print(f"{self.scope['user']} Removed From Q")
-            # except:
-            #     print(f"{self.scope['user']} Play And Finish Alraedy")
             destroyThisGameInformations(
                 self.playersOnMatchAndItsOppenent,
                 self.playersOnMatchAndItsRoomId,
+                self.playersOnMatchAndItsDeriction,
                 self.playersOnMatchAndItsDeriction,
                 player1,
                 player2,
@@ -329,10 +340,9 @@ class myPongserver(AsyncJsonWebsocketConsumer):
             player1, player2 = self.scope["user"], ""
             print("Vide Q")
             if self.playersOnMatchAndItsOppenent.get(player1) is not None:
-                self.scope["user"] = "Bad One"
+                self.scope["user"] = "   "
                 await self.accept()
                 await self.close()
-                return
             else:
                 roomid = pongGameInfo.objects.get(login=self.scope["user"]).codeToPlay
                 self.playerWantsToPlay.append(self.scope["user"])
@@ -348,15 +358,13 @@ class myPongserver(AsyncJsonWebsocketConsumer):
             player1, player2 = self.playerWantsToPlay[0], self.scope["user"]
             print("Player Waiting...")
             if player1 == player2:
-                self.scope["user"] = "Bad One"
+                self.scope["user"] = "   "
                 await self.accept()
                 await self.close()
-                return
             elif self.playersOnMatchAndItsRoomId.get(player2) is not None:
-                self.scope["user"] = "Bad One"
+                self.scope["user"] = "   "
                 await self.accept()
                 await self.close()
-                return
             else:
                 print(
                     f"{self.scope['user']} Will Joinned To The Player {self.playerWantsToPlay[0]}"
@@ -801,7 +809,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 #         print(f"[-----{self.scope['user']} Try To Connect On Tournement Server].------")
 #         if self.playersOnMatchAndItsDeriction.get(self.scope['user']) is not None:
 #             print(f"{self.scope['user']} Already In Another Game")
-#             self.scope['user'] = "Bad One"
+#             self.scope['user'] = "   "
 #             await self.accept()
 #             await self.close()
 #             return
@@ -811,7 +819,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 #         elif len(self.tournementGroups) < 4:
 #             for i in self.tournementGroups:
 #                 if i.get('name') == self.scope['user']:
-#                     self.scope['user'] = "Bad One"
+#                     self.scope['user'] = "   "
 #                     await self.accept()
 #                     await self.close()
 #                     return

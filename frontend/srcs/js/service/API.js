@@ -15,15 +15,15 @@ function getCookie(cname) {
 }
 
 const API = {
-	authEndpoint: "https://127.0.0.1:8000/api/",
-	chatEndpoint: "https://127.0.0.1:8000/api/chat/",
-	friendshipEndpoint: "https://127.0.0.1:8000/api/friendship/",
-	tttStatEndpoint: "https://127.0.0.1:8000/TicTacToe/myProfile/",
-	tttHistoEndpoint: "https://127.0.0.1:8000/TicTacToe/History",
-	pongStatEndpoint: "https://127.0.0.1:8000/PongPong/myProfile",
-	pongHistoEndpoint: "https://127.0.0.1:8000/PongPong/History",
-	playersEndpoint: "https://127.0.0.1:8000/api/players/",
-	TwoFactAuth: "https://127.0.0.1:8000/api/TFA/codeqr/",
+	authEndpoint:  location.origin +"/api/",
+	chatEndpoint:  location.origin +"/api/chat/",
+	friendshipEndpoint:  location.origin +"/api/friendship/",
+	tttStatEndpoint:  location.origin +"/TicTacToe/myProfile/",
+	tttHistoEndpoint:  location.origin +"/TicTacToe/History",
+	pongStatEndpoint:  location.origin +"/PongPong/myProfile",
+	pongHistoEndpoint:  location.origin +"/PongPong/History",
+	playersEndpoint:  location.origin +"/api/players/",
+	TwoFactAuth:  location.origin +"/api/TFA/codeqr/",
 
 	// ADD HERE ALL THE OTHER API FUNCTIONS
 	commonPostFunc: async (endPoint, userData) => {
