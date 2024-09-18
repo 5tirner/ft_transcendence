@@ -82,7 +82,7 @@ body {
 #middle-view {
     padding-top: 30px;
     width: 100%;
-    /* overflow: hidden; */
+    overflow: auto;
     font-family: var(--body-font);
     border-left: 1px solid rgba(100, 100, 100, 0.25) !important;
     border-right: 1px solid rgba(100, 100, 100, 0.25) !important;

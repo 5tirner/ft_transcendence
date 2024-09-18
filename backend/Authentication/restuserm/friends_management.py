@@ -5,6 +5,7 @@ from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.views import Response, status
+from rest_framework.views import APIView
 
 
 from restuserm.friends_serializers import (
@@ -109,3 +110,44 @@ class BlockUserView(CreateAPIView):
         return Response(
             {"error": "No blocked friendship found"}, status=status.HTTP_404_NOT_FOUND
         )
+
+
+class CheckBlockView(APIView):
+    permission_classes = [AllowAny]  # No authentication required
+
+    @method_decorator(jwt_required_cookie)
+    def post(self, request, *args, **kwargs):
+        user_a_id = request.data.get("user_a_id")
+        user_b_id = request.data.get("user_b_id")
+
+        if not user_a_id or not user_b_id:
+            return Response(
+                {"detail": "Both user_a_id and user_b_id are required."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        # Check if user A has blocked user B
+        if self.is_blocked(user_a_id, user_b_id):
+            return Response(
+                {
+                    "blocked": True,
+                    "detail": f"User {user_a_id} has blocked User {user_b_id}",
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        return Response(
+            {
+                "blocked": False,
+                "detail": f"User {user_a_id} has not blocked User {user_b_id}",
+            },
+            status=status.HTTP_200_OK,
+        )
+
+    def is_blocked(self, user_a_id, user_b_id):
+        """Check if user A has blocked user B using the Friendship model."""
+        return Friendships.objects.filter(
+            sender_id=user_a_id,
+            receiver_id=user_b_id,
+            status=Friendships.Status.BLOCKED.value,
+        ).exists()

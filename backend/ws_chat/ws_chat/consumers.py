@@ -68,15 +68,16 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
                 user_id = content["user_id"]
 
                 async with httpx.AsyncClient() as client:
-                    response = await client.get(
-                        f"{settings.CHAT_URI}is_blocked/{user_id}/",
+                    response = await client.post(
+                        f"{settings.AUTH}friendship/checkblock/",
+                        json={"user_a_id": self.scope["user_id"], "user_b_id": user_id},
                         cookies=self.scope["cookie"],
                     )
                 if response.status_code != 200:
                     return None
                 resp_data = response.json()
                 print(resp_data)
-                user_blocked = resp_data["block_status"]
+                user_blocked = resp_data["blocked"]
 
                 if not user_blocked:
                     # submit message to database
@@ -153,7 +154,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def submit_message(self, msg, room_id):
         # submit message API
         SM_URL = settings.CHAT_URI + "create/msg/"
-        data = {"chatroom": room_id, "sender": self.scope["user_id"], "content": msg}
+        data = {"chatroom": room_id, "sender_id": self.scope["user_id"], "content": msg}
         try:
             async with httpx.AsyncClient() as client:
                 res = await client.post(SM_URL, cookies=self.scope["cookie"], json=data)
