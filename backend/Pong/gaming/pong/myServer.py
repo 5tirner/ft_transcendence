@@ -130,7 +130,7 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
                         else:
                             BallRoute = "UP"
                     if BallDirection == "LEFT":
-                        ballx -= 1
+                        ballx -= 2
                         if (
                             ballx == 30
                             and bally + 10 >= paddle1
@@ -142,7 +142,7 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
                                 BallRoute = "DOWN"
                             BallDirection = "RIGHT"
                     elif BallDirection == "RIGHT":
-                        ballx += 1
+                        ballx += 2
                         if (
                             ballx == 570
                             and bally + 10 >= paddle2
