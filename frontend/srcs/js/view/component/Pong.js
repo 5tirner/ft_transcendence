@@ -154,6 +154,7 @@ export default class Pong extends HTMLElement {
 		socket.ws = new WebSocket(
 			"wss://" + location.host + this.endPoint + this.roomCode
 		);
+		console.log("I Got You");
 		window.pong_ws = socket.ws;
 		socket.ws.onclose = () => {
 			// clearInterval(this.SaveInterval);

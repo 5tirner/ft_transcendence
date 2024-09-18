@@ -142,6 +142,8 @@ export default class PongFriend extends HTMLElement {
 		// socket.ws = new WebSocket("wss://" + location.host + "/PongGameWs/");
 		
 		socket.ws = new WebSocket("wss://" + location.host + '/GameInvite/' + room_code);
+		console.log("Save The Ws");
+		window.frinedWs = socket.ws;
 		socket.ws.onclose = () => {
 			this.isFinsih = true;
 			this.isGameStarted = false;
