@@ -773,6 +773,8 @@ class PongConsumer(AsyncWebsocketConsumer):
         self.game_state["ballY"] = 400 / 2
         self.game_state["ballSpeedX"] = -self.game_state["ballSpeedX"]
         self.game_state["ballSpeedY"] = 1
+        self.game_state["paddle2Y"] = (400 - 75) / 2
+        self.game_state["paddle1Y"] = (400 - 75) / 2
 
     def reset_game(self):
         self.game_state = {
