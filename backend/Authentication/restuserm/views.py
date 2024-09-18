@@ -202,14 +202,12 @@ def callback_google(request):
             }
             player = create_player(player_data)
             if player is None:
-                return redirect("https://127.0.0.1:8000/login", permanent=True)
+                return redirect(f"{settings.TRANSCE_HOST}/login/", permanent=True)
 
             jwt_token = jwt_generation(player.id, player.two_factor)
             response = redirect(
                 settings.TRANSCE_HOST,
                 permanent=True,
-                # f"http://127.0.0.1:8000/{'tfa' if player.two_factor else 'api/home'}/",
-                # permanent=True,
             )
             response.set_cookie(
                 "jwt_token", value=jwt_token, httponly=True, secure=True

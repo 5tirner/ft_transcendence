@@ -121,7 +121,7 @@ export default class TicTacToe extends HTMLElement {
 
 	setupWebSocket() {
 		socket.ws = new WebSocket("wss://" + location.host + "/GameWS/");
-
+		window.ttt_ws = socket.ws;
 		socket.ws.onopen = () => {
 			console.log("User Joined The Game");
 		};

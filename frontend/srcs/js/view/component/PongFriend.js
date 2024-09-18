@@ -8,6 +8,7 @@ export default class PongFriend extends HTMLElement {
 	}
 
 	connectedCallback() {
+		
 		this.setAttribute("id", "pong-view");
 		this.render();
 		this.initializeGame();
@@ -139,6 +140,7 @@ export default class PongFriend extends HTMLElement {
 
 	setupWebSocket() {
 		// socket.ws = new WebSocket("wss://" + location.host + "/PongGameWs/");
+		
 		socket.ws = new WebSocket("wss://" + location.host + '/GameInvite/' + room_code);
 		socket.ws.onclose = () => {
 			this.isFinsih = true;
