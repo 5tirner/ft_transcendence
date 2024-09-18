@@ -15,15 +15,15 @@ function getCookie(cname) {
 }
 
 const API = {
-	authEndpoint:  location.origin +"/api/",
-	chatEndpoint:  location.origin +"/api/chat/",
-	friendshipEndpoint:  location.origin +"/api/friendship/",
-	tttStatEndpoint:  location.origin +"/TicTacToe/myProfile/",
-	tttHistoEndpoint:  location.origin +"/TicTacToe/History",
-	pongStatEndpoint:  location.origin +"/PongPong/myProfile",
-	pongHistoEndpoint:  location.origin +"/PongPong/History",
-	playersEndpoint:  location.origin +"/api/players/",
-	TwoFactAuth:  location.origin +"/api/TFA/codeqr/",
+	authEndpoint: location.origin + "/api/",
+	chatEndpoint: location.origin + "/api/chat/",
+	friendshipEndpoint: location.origin + "/api/friendship/",
+	tttStatEndpoint: location.origin + "/TicTacToe/myProfile/",
+	tttHistoEndpoint: location.origin + "/TicTacToe/History",
+	pongStatEndpoint: location.origin + "/PongPong/myProfile",
+	pongHistoEndpoint: location.origin + "/PongPong/History",
+	playersEndpoint: location.origin + "/api/players/",
+	TwoFactAuth: location.origin + "/api/TFA/codeqr/",
 
 	// ADD HERE ALL THE OTHER API FUNCTIONS
 	commonPostFunc: async (endPoint, userData) => {
@@ -178,7 +178,6 @@ const API = {
 		};
 		try {
 			const res = await fetch(url, opts);
-			// !GET https://127.0.0.1:8000/PongPong/History/ 500 (Internal Server Error)
 			return res;
 		} catch (e) {
 			console.log(e);
