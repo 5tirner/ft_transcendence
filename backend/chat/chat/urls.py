@@ -8,5 +8,4 @@ urlpatterns = [
     path("create/", views.CreateConversation.as_view()),
     path("create/msg/", views.SubmitMessage.as_view()),
     path("delete/<int:user_id>/", views.DeleteConversation.as_view()),
-    path("is_blocked/<int:user_id>/", views.IsBlocked.as_view()),
 ]

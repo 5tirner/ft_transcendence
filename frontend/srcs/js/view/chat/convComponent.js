@@ -43,15 +43,13 @@ export class UserProfile extends HTMLElement {
             </div>
             <div class="user-details">
                 <p class="username"></p>
-                <!-- <p class="full-name"></p> -->
-                <!-- <p class="email"></p> -->
                 <div>
                     <span class="label">Name</span>
-                    <span class="value">Brahim Elkartouch</span>
+                    <span class="value profile-username">Brahim Elkartouch</span>
                 </div>
                 <div>
                     <span class="label">Email</span>
-                    <span class="value">belkarto@student.1337.ma</span>
+                    <span class="value profile-mail">belkarto@student.1337.ma</span>
                 </div>
             </div>
         `;
@@ -68,13 +66,11 @@ export class UserProfile extends HTMLElement {
 			const data = await req.json();
 			const player = data.player.pop();
 
+			console.log(player);
 			this.querySelector(".image-container img").src = player.avatar;
-			this.querySelector(".user-details .username").textContent =
+			this.querySelector(".profile-username").textContent =
 				player.username;
-			this.querySelector(".user-details .full-name").textContent =
-				`Name: ${player.first_name} ${player.last_name}`;
-			this.querySelector(".user-details .email").textContent =
-				`Email: ${player.email}`;
+			this.querySelector(".profile-mail").textContent = player.email;
 
 			// Store the data for the getter
 			this.username = player.username;

@@ -202,7 +202,7 @@ def callback_google(request):
             }
             player = create_player(player_data)
             if player is None:
-                return redirect("http://127.0.0.1:8000/login", permanent=True)
+                return redirect("https://127.0.0.1:8000/login", permanent=True)
 
             jwt_token = jwt_generation(player.id, player.two_factor)
             response = redirect(

@@ -38,10 +38,11 @@ export default class History extends HTMLElement
 					console.log("key: ", key);
 					console.log("value: ", value);
 
-					if (value.winner === value.oppenent) result = "lose";
+          if (value.winner === '') result = 'draw';
+					else if (value.winner === value.oppenent) result = "lose";
 					else result = "win";
 					elem += `
-          <tr>
+           <tr>
             <td class="opponent">
               <img src="${value.pic || "https://www.gravatar.com/avatar/2c7d99fe281ecd3bcd65ab915bac6dd5?s=250"}" alt="avatar">
                ${value.oppenent}

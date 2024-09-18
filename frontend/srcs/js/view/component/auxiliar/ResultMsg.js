@@ -141,7 +141,6 @@ export default class ResultMsg extends HTMLElement
         </div>
       </div>
     `;
-    
     const game = this.getAttribute("game");
     const returnHome = this.root.querySelector(".home-button");
    	returnHome.addEventListener("click", (e) => {
