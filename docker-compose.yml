@@ -16,6 +16,7 @@ services:
     ports:
       - "8000:443"
     volumes:
+      - ./frontend/srcs:/var/www
       - media_data:/var/www/media
     networks:
       - Net
