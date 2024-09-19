@@ -4,12 +4,14 @@ DC = docker compose -f docker-compose.yml
 
 .PHONY:  up upd start down stop re  ps clean fclean
 
-upd:
+upd: down create_data_dir build
 	@$(DC) up --no-attach server --build --force-recreate -d
 
-up : down create_data_dir
+up : down create_data_dir build
 	@$(DC) up --no-attach server --build --force-recreate
 
+build:
+	@$(DC) build --force-rm --parallel
 
 down : stop
 	@$(DC) down --remove-orphans -v
