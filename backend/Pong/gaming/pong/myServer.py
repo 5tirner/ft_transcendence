@@ -82,12 +82,15 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
             player1 = self.scope["user"]
             player2 = ""
             roomIdToPlay = pongGameInfo.objects.get(login=self.scope["user"]).codeToPlay
-        await self.channel_layer.group_add(roomIdToPlay, self.channel_name)
-        await self.accept()
-        dataToSend = {"player1": player1, "player2": player2, "roomid": roomIdToPlay}
-        await self.channel_layer.group_send(
-            roomIdToPlay, {"type": "toFront", "Data": dataToSend}
-        )
+        try:
+            await self.channel_layer.group_add(roomIdToPlay, self.channel_name)
+            await self.accept()
+            dataToSend = {"player1": player1, "player2": player2, "roomid": roomIdToPlay}
+            await self.channel_layer.group_send(
+                roomIdToPlay, {"type": "toFront", "Data": dataToSend}
+            )
+        except:
+            pass
 
     async def receive_json(self, dataFromClient, bytes_data=None):
         try:
@@ -118,7 +121,7 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
                         paddle1 += 20
                     else:
                         paddle2 += 20
-                elif dataFromClient.get("move") == "BALL":
+                elif 1 == 1:
                     if BallRoute == "UP":
                         if bally - 2 >= 10:
                             bally -= 2
@@ -164,6 +167,7 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
                     "BallDir": BallDirection,
                     "BallRoute": BallRoute,
                 }
+                asyncio.sleep(0.3)
                 await self.channel_layer.group_send(
                     roomidForThisUser, {"type": "toFront", "Data": toFront}
                 )
@@ -290,9 +294,7 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
         print(f"DISCONNECT: User {self.scope['user']} Lost Connection")
         try:
             roomidForThisUser = self.playersOnMatchAndItsRoomId.get(self.scope["user"])
-            player1, player2 = self.scope[
-                "user"
-            ], self.playersOnMatchAndItsOppenent.get(self.scope["user"])
+            player1, player2 = self.scope["user"], self.playersOnMatchAndItsOppenent.get(self.scope["user"])
             destroyThisGameInformations(
                 self.playersOnMatchAndItsOppenent,
                 self.playersOnMatchAndItsRoomId,
@@ -310,12 +312,19 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
             pass
 
     async def toFront(self, data):
-        await self.send_json(data["Data"])
+        # print(f"{self.scope['user']} Will Send Data")
+        try:
+            await self.send_json(data["Data"])
+        except:
+            pass
 
     async def endGame(self, data):
-        print(f"ENDGAME: WebSocket Will Be Closed Client: {self.scope['user']}")
-        await self.send_json(data["Data"])
-        await self.close()
+        try:
+            print(f"ENDGAME: WebSocket Will Be Closed Client: {self.scope['user']}")
+            await self.send_json(data["Data"])
+            await self.close()
+        except:
+            pass
 
 
 class myPongserver(AsyncJsonWebsocketConsumer):

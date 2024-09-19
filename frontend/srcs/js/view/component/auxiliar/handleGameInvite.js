@@ -6,7 +6,8 @@ export function handleGameInvite({ room_code }) {
 	console.log(window.pong_ws)
 	if (window.pong_ws)
 	{
-			window.pong_ws.send(JSON.stringify({'gameStatus': 'closed'}));
+		console.log("Enter Other Game");
+		window.pong_ws.send(JSON.stringify({'gameStatus': 'closed'}));
 	}
 	if (window.ttt_ws)
 	{
