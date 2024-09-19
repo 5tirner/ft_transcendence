@@ -1,17 +1,13 @@
 export function handleGameInvite({ room_code }) {
-	// this
-	// const ws = new WebSocket("wss://" + location.host + '/GameInvite/' + room_code);
-	
-	console.log(window.ttt_ws)
-	console.log(window.pong_ws)
-	if (window.pong_ws)
-	{
-		console.log("Enter Other Game");
-		window.pong_ws.send(JSON.stringify({'gameStatus': 'closed'}));
+	if (window.pong_ws) {
+		window.pong_ws.send(JSON.stringify({ gameStatus: "closed" }));
+		window.pong_ws.close();
+		window.pong_ws = undefined;
 	}
-	if (window.ttt_ws)
-	{
-		window.ttt_ws.send(JSON.stringify({'gameStatus': 'closed'}));
+	if (window.ttt_ws) {
+		window.ttt_ws.send(JSON.stringify({ gameStatus: "closed" }));
+		window.ttt_ws.close();
+		window.ttt_ws = undefined;
 	}
 	window.router.game("pong-friend", room_code);
 }
