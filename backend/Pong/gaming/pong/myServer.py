@@ -1060,7 +1060,6 @@ class Finalist(AsyncJsonWebsocketConsumer):
 
 #  Motherhugger ostora
 
-
 class TournamentConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         await self.accept()
@@ -1229,34 +1228,48 @@ class TournamentConsumer(AsyncWebsocketConsumer):
             if self.game_state["ballY"] - 10 < 0 or self.game_state["ballY"] + 10 > 400:
                 self.game_state["ballSpeedY"] = -self.game_state["ballSpeedY"]
 
-            # Ball collision with paddles
-            if self.game_state['ballX'] - 10 <= 10:  # Left paddle (Player 1)
-                if self.game_state['paddle1Y'] < self.game_state['ballY'] < self.game_state['paddle1Y'] + 75:
-                    self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
+            left_paddle_x = 10 
+            right_paddle_x = 790
+
+            # Check collision with left paddle
+            if self.game_state['ballX'] - 10 <= left_paddle_x:
+                if self.game_state['paddle1Y'] - 10 <= self.game_state['ballY'] <= self.game_state['paddle1Y'] + 75 + 10:
+                    # Collision detected
+                    self.game_state['ballSpeedX'] = abs(self.game_state['ballSpeedX'])  # Ensure it'smoving right
+                    # Adjust ball position to prevent sticking 
+                    self.game_state['ballX'] = left_paddle_x + 10
+                    # Adjust ballSpeedY based on where it hit the paddle
                     paddle_center = self.game_state['paddle1Y'] + 75 / 2
                     relative_intersect_y = (self.game_state['ballY'] - paddle_center) / (75 / 2)
-                    max_speed_y = 0.5  # Adjust this value as needed
+                    max_speed_y = 0.5  # Increased for more dynamic movement
                     self.game_state['ballSpeedY'] = relative_intersect_y * max_speed_y
                 else:
+                    # Missed the paddle
                     self.game_state['score2'] += 1
                     self.reset_ball()
 
-            elif self.game_state['ballX'] + 10 >= 800 - 10:  # Right paddle (Player 2)
-                if self.game_state['paddle2Y'] < self.game_state['ballY'] < self.game_state['paddle2Y'] + 75:
-                    self.game_state['ballSpeedX'] = -self.game_state['ballSpeedX']
+            # Check collision with right paddle
+            elif self.game_state['ballX'] + 10 >= right_paddle_x:
+                if self.game_state['paddle2Y'] - 10 <= self.game_state['ballY'] <= self.game_state['paddle2Y'] + 75 + 10:
+                    # Collision detected
+                    self.game_state['ballSpeedX'] = -abs(self.game_state['ballSpeedX'])  # Ensure it's moving left
+                    # Adjust ball position to prevent sticking
+                    self.game_state['ballX'] = right_paddle_x - 10
+                    # Adjust ballSpeedY based on where it hit the paddle
                     paddle_center = self.game_state['paddle2Y'] + 75 / 2
                     relative_intersect_y = (self.game_state['ballY'] - paddle_center) / (75 / 2)
-                    max_speed_y = 0.5  # Adjust this value as needed
+                    max_speed_y = 0.5  # Increased for more dynamic movement
                     self.game_state['ballSpeedY'] = relative_intersect_y * max_speed_y
                 else:
+                    # Missed the paddle
                     self.game_state['score1'] += 1
                     self.reset_ball()
 
-            # Check if someone won
-            if self.game_state["score1"] >= 1:
+            winning_score = 1
+            if self.game_state["score1"] >= winning_score:
                 self.end_match(self.game_state["player1"])
 
-            elif self.game_state["score2"] >= 1:
+            elif self.game_state["score2"] >= winning_score:
                 self.end_match(self.game_state["player2"])
 
     def end_match(self, winner):
@@ -1270,7 +1283,6 @@ class TournamentConsumer(AsyncWebsocketConsumer):
         )
 
         if self.current_stage == "semi_finals":
-            # Append the winner to the winners list and the loser to the losers list
             self.winners.append(winner)
             self.losers.append(loser)
             self.semi_final_winners.append(winner)
@@ -1295,6 +1307,8 @@ class TournamentConsumer(AsyncWebsocketConsumer):
         self.game_state["ballSpeedY"] = random.choice([-2, 2])
         self.game_state["paddle1Y"] = (400 - 75) / 2
         self.game_state["paddle2Y"] = (400 - 75) / 2
+        self.game_state["gameOver"] = False
+        self.game_state["winner"] = ""
 
     def reset_game_state(self, player1, player2):
         self.game_state = {
@@ -1314,3 +1328,4 @@ class TournamentConsumer(AsyncWebsocketConsumer):
 
     async def send_game_state(self):
         await self.send(text_data=json.dumps(self.game_state))
+
