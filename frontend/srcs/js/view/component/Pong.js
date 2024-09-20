@@ -17,6 +17,7 @@ export default class Pong extends HTMLElement {
 
 	disconnectedCallback() {
 		console.log("Component was removed");
+		window.pong_ws = undefined;
 		document.removeEventListener("keyup", this.applyMove);
 		this.isGameStarted = false;
 		this.isFinsih = true;
@@ -57,20 +58,27 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.closePath();
 			this.canvasContext.strokeStyle = "#381631";
 			this.canvasContext.stroke();
-			if ((this.duration > 4) &&
-				(this.rounds == 3000 || this.rounds == 6000 || this.rounds == 9000
-				|| this.rounds == 11000 || this.rounds == 14000))
-			{
-				console.log("Start Add Speed");
-				this.duration -= 2;
-			}
-			this.rounds++;
-			setTimeout(this.drawElements.bind(this), this.duration);
+			// if ((this.duration > 2) &&
+			// 	(this.rounds == 2000 || this.rounds == 4000 || this.rounds == 6000
+			// 	|| this.rounds == 8000))
+			// {
+			// 	console.log("Start Add Speed");
+			// 	this.duration -= 2;
+			// }
 			// const livePerform = performance.now();
 			// const delta = Math.min(livePerform - this.startPerformance / this.duration);
 			// if (delta < 1)
 			// {
+			// this.rounds++;
+			// 	this.startPerformance = livePerform;
+			setTimeout(this.drawElements.bind(this), 5);
+			// }
+			// else
+			// {
 			// 	requestAnimationFrame(this.drawElements.bind(this));
+			// }
+			// if (delta < 1)
+			// {
 			// }
 			// else
 			// {
@@ -154,7 +162,7 @@ export default class Pong extends HTMLElement {
 		this.result = this.root.querySelector(".result");
 		this.SaveInterval = 0;
 		this.startPerformance = performance.now();
-		this.duration = 14;
+		this.duration = 10;
 		this.rounds = 0;
 	}
 
