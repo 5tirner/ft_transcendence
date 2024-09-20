@@ -22,6 +22,17 @@ class PlayerSerializerInfo(serializers.ModelSerializer):
         ]
 
 
+class PlayerSerializerInfoSmall(serializers.ModelSerializer):
+    class Meta:
+        model = Player
+        fields = [
+            "id",
+            "username",
+            "email",
+            "avatar",
+        ]
+
+
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
@@ -63,5 +74,5 @@ class PlayerSerializerInfoVer(serializers.ModelSerializer):
             "avatar",
             "losses",
             "wins",
-            "two_factor"
+            "two_factor",
         ]
