@@ -31,8 +31,8 @@ export default class Pong extends HTMLElement {
 		// console.log("DO IT");
 		if (this.isGameStarted == true && this.isFinsih == false)
 		{
-			this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			this.ballMove();
+			this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
 			this.canvasContext.beginPath();
 			this.canvasContext.arc(this.xBallPos, this.yBallPos, 10, 0, 6.2);
 			this.canvasContext.lineWidth = 0.5;
@@ -154,6 +154,7 @@ export default class Pong extends HTMLElement {
 		socket.ws = new WebSocket(
 			"wss://" + location.host + this.endPoint + this.roomCode
 		);
+		console.log("I Got You");
 		window.pong_ws = socket.ws;
 		socket.ws.onclose = () => {
 			// clearInterval(this.SaveInterval);

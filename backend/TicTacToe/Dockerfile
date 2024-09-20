@@ -1,22 +1,33 @@
-FROM python:3
+FROM python:3.12-slim as builder
 
-#Python will no longer write these files to disk
 ENV PYTHONDONTWRITEBYTECODE=1
-
-#ensures that the python output i.e. the stdout and stderr streams are sent straight to terminal (e.g. your container log)
-#without being first buffered and that you can see the output of your application
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /code
+WORKDIR /app
 
-COPY requirements.txt /code/
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    build-essential libpq-dev && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN pip install -r requirements.txt
+COPY requirements.txt /app/
+RUN pip install --upgrade pip && \
+    pip install --user --no-cache-dir -r requirements.txt
 
-COPY ./gaming /code/
+FROM python:3.12-slim
 
-# COPY ./script.sh /bin
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# RUN chmod +x /bin/script.sh
+WORKDIR /app
 
-# CMD [ "script.sh" ]
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    netcat-traditional && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /root/.local /root/.local
+
+COPY ./gaming /app/
+
+ENV PATH=/root/.local/bin:$PATH
