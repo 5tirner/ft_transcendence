@@ -123,17 +123,17 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
                         paddle2 += 20
                 else:
                     if BallRoute == "UP":
-                        if bally - 2 >= 10:
-                            bally -= 2
+                        if bally - 1 >= 10:
+                            bally -= 1
                         else:
                             BallRoute = "DOWN"
                     elif BallRoute == "DOWN":
-                        if bally + 2 <= 290:
-                            bally += 2
+                        if bally + 1 <= 290:
+                            bally += 1
                         else:
                             BallRoute = "UP"
                     if BallDirection == "LEFT":
-                        ballx -= 5
+                        ballx -= 1
                         if (
                             ballx == 30
                             and bally + 10 >= paddle1
@@ -145,7 +145,7 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
                                 BallRoute = "DOWN"
                             BallDirection = "RIGHT"
                     elif BallDirection == "RIGHT":
-                        ballx += 5
+                        ballx += 1
                         if (
                             ballx == 570
                             and bally + 10 >= paddle2
@@ -167,7 +167,6 @@ class freindReqPong(AsyncJsonWebsocketConsumer):
                     "BallDir": BallDirection,
                     "BallRoute": BallRoute,
                 }
-                # asyncio.sleep(0.3)
                 await self.channel_layer.group_send(
                     roomidForThisUser, {"type": "toFront", "Data": toFront}
                 )
@@ -448,11 +447,11 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                                 BallRoute = "UP"
                             elif bally > paddle1 + 25:
                                 BallRoute = "DOWN"
-                            elif bally == paddle1 + 25 or bally == paddle1:
-                                if BallRoute == "DOWN":
-                                    BallRoute = "UP"
-                                else:
-                                    BallRoute = "DOWN"
+                            # elif bally == paddle1 + 25 or bally == paddle1:
+                            #     if BallRoute == "DOWN":
+                            #         BallRoute = "UP"
+                            #     else:
+                            #         BallRoute = "DOWN"
                             BallDirection = "RIGHT"
                     elif BallDirection == "RIGHT":
                         ballx += 1
@@ -461,11 +460,11 @@ class myPongserver(AsyncJsonWebsocketConsumer):
                                 BallRoute = "UP"
                             elif bally > paddle2 + 25:
                                 BallRoute = "DOWN"
-                            elif bally == paddle1 + 25 or bally == paddle1:
-                                if BallRoute == "DOWN":
-                                    BallRoute = "UP"
-                                else:
-                                    BallRoute = "DOWN"
+                            # elif bally == paddle1 + 25 or bally == paddle1:
+                            #     if BallRoute == "DOWN":
+                            #         BallRoute = "UP"
+                            #     else:
+                            #         BallRoute = "DOWN"
                             BallDirection = "LEFT"
                 toFront = {
                     "MoveFor": dataFromClient.get("WhatIGiveYou"),
