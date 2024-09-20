@@ -175,14 +175,16 @@ PORT = os.getenv("PORT")
 TRANSCE_HOST = f"https://{HOST}:{PORT}"
 PUBLIC_PLAYER_URL = f"{TRANSCE_HOST}/static/media/zakaria.jpg"
 
+INTRA_SECRET_KEY = os.getenv("INTRA_SECRET_KEY")
+INTRA_CLIENT_ID = os.getenv("INTRA_CLIENT_ID")
 
 # 42/Google authentication variables
 
 FORTYTWO_CLIENT_ID = (
-    "u-s4t2ud-b1c2bdb2771df0818d7d0dc87844315b1d77080e0a0050846fe685bca7cdbbb0"
+    INTRA_CLIENT_ID
 )
 FORTYTWO_CLIENT_SECRET = (
-    "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"
+    INTRA_SECRET_KEY
 )
 # FORTYTWO_REDIRECT_URI = 'https://api.intra.42.fr/oauth/authorize'
 FORTYTWO_REDIRECT_URI = f"{TRANSCE_HOST}/api/oauth/callback/"

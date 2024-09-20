@@ -27,7 +27,7 @@ export default class Pong extends HTMLElement {
 		cancelAnimationFrame(window);
 	}
 
-	async drawElements() {
+	drawElements() {
 		// console.log("DO IT");
 		if (this.isGameStarted == true && this.isFinsih == false)
 		{
@@ -57,18 +57,18 @@ export default class Pong extends HTMLElement {
 			this.canvasContext.closePath();
 			this.canvasContext.strokeStyle = "#381631";
 			this.canvasContext.stroke();
-			const livePerform = performance.now();
-			const delta = Math.min((livePerform - this.startPerformance) / this.duration,1);
-			// console.log("DELTA=> ", delta);
-			if (delta <= 1)
-			{
-				requestAnimationFrame(this.drawElements.bind(this));
-			}
+			this.duration = 16;
+			setTimeout(this.drawElements.bind(this), 10);
+			// const livePerform = performance.now();
+			// const delta = Math.min(livePerform - this.startPerformance / this.duration);
+			// if (delta < 1)
+			// {
+			// 	requestAnimationFrame(this.drawElements.bind(this));
+			// }
 			// else
 			// {
-			// 	this.duration += 100;
-			// 	console.log("This Duration Reach: ", this.duration);
-			// 	requestAnimationFrame(this.drawElements.bind(this));
+			// 	await new Promise(r => setTimeout(r, 60));
+			// 	requestAnimationFrame(this.drawElements.bind(this))
 			// }
 		}
 	}
@@ -147,7 +147,7 @@ export default class Pong extends HTMLElement {
 		this.result = this.root.querySelector(".result");
 		this.SaveInterval = 0;
 		this.startPerformance = performance.now();
-		this.duration = 1500;
+		this.duration = 0;
 	}
 
 	setupWebSocket() {
@@ -237,7 +237,7 @@ export default class Pong extends HTMLElement {
 				// 	10
 				// );
 				// console.log("Start");
-				requestAnimationFrame(this.drawElements.bind(this));
+				this.drawElements();
 			}
 		} else if (dataPars.MoveFor == "end") {
 			this.isFinsih == true;

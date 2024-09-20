@@ -45,11 +45,11 @@ export class UserProfile extends HTMLElement {
                 <p class="username"></p>
                 <div>
                     <span class="label">Name</span>
-                    <span class="value profile-username">Brahim Elkartouch</span>
+                    <span class="value profile-username"></span>
                 </div>
                 <div>
                     <span class="label">Email</span>
-                    <span class="value profile-mail">belkarto@student.1337.ma</span>
+                    <span class="value profile-mail"></span>
                 </div>
             </div>
         `;
