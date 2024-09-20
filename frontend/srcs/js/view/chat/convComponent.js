@@ -64,7 +64,8 @@ export class UserProfile extends HTMLElement {
 		const req = await API.getUserProfile(this._data);
 		if (req.status == 200) {
 			const data = await req.json();
-			const player = data.player.pop();
+			console.log(data);
+			const player = data.player;
 
 			console.log(player);
 			this.querySelector(".image-container img").src = player.avatar;

@@ -6,6 +6,8 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.views import Response, status
 from rest_framework.views import APIView
+from rest_framework.decorators import api_view
+from .serializers import PlayerSerializerInfoSmall
 
 
 from restuserm.friends_serializers import (
@@ -151,3 +153,24 @@ class CheckBlockView(APIView):
             receiver_id=user_b_id,
             status=Friendships.Status.BLOCKED.value,
         ).exists()
+
+
+@authentication_classes([])  # Remove all authentication classes
+@permission_classes([AllowAny])
+class UserView(APIView):
+
+    @method_decorator(jwt_required_cookie)
+    def get(self, request, pk=None):
+        try:
+            # Get the player based on the primary key from the URL
+            player = Player.objects.get(pk=pk)
+            serializer = PlayerSerializerInfoSmall(player)
+            return Response(
+                {
+                    "player": serializer.data,
+                    "message": "User has been found successfully",
+                    "status": 200,
+                }
+            )
+        except Player.DoesNotExist:
+            return Response({"message": "User not found", "status": 404})

@@ -73,8 +73,8 @@ const API = {
 	getUser: () => {
 		return API.makeGetRequest(`${API.authEndpoint}`);
 	},
-	getUserProfile: ({ username }) => {
-		return API.commonGetFunc(`${API.authEndpoint}?username=${username}`);
+	getUserProfile: ({ id }) => {
+		return API.commonGetFunc(`${API.authEndpoint}user/${id}/`);
 	},
 
 	getFriends: () => {
