@@ -1,7 +1,4 @@
 def isLegalClick(board, symbol, user):
-    # print(f"Data Type: {type(data)}")
-    # print(f"Data:\n{data}")
-    # board = data.get('board')
     x, o = 0, 0
     for i in board:
         if i == "X":

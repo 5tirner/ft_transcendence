@@ -1,7 +1,5 @@
 DC = docker compose -f docker-compose.yml
 
-# IMG = $(shell docker images -a -q)
-
 .PHONY:  up upd start down stop re  ps clean fclean
 
 upd: down create_data_dir build
